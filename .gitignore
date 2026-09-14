@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+.vite/
+
+# WebStorm settings
+.idea/
+
+# Secret keys / env files
+.env
+.env.local
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

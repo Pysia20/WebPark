@@ -3,6 +3,13 @@
 	"version": "1.0.0",
 	"type": "module",
 	"dependencies": {
+		"@types/express": "^5.0.6",
+		"express": "^5.2.1",
+		"socketio": "^1.0.0",
 		"tsx": "^4.23.13"
+	},
+	"scripts": {
+		"start": "tsx src/index.ts",
+		"dev": ""
 	}
 }

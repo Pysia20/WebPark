@@ -1,5 +1,8 @@
 {
-  "name": "server",
-  "version": "1.0.0",
-  "type": "module"
+	"name": "server",
+	"version": "1.0.0",
+	"type": "module",
+	"dependencies": {
+		"tsx": "^4.23.13"
+	}
 }

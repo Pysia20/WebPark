@@ -1,4 +1,9 @@
 packages:
-   - "client"
-   - "server"
-   - "shared"
+   - 'client'
+   - 'server'
+   - 'shared'
+
+allowBuilds:
+  esbuild: true
+
+minimumReleaseAge: 0

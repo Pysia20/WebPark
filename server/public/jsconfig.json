@@ -1,0 +1,9 @@
+{
+	"compilerOptions": {
+		"checkJs": true
+	},
+	"typeAcquisition": {
+		"enable": true,
+		"include": ["socket.io-client"]
+	}
+}

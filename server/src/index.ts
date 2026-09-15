@@ -17,10 +17,12 @@ movement.register(io);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const publicPath = path.join(__dirname, "..", "public");
+const PUBLIC_PATH = path.join(__dirname, "..", "public");
+const SHARED_PATH = path.join(PUBLIC_PATH, "..", "..", "shared");
 
 app.use(Express.json());
-app.use("/static", Express.static(publicPath));
+app.use("/static", Express.static(PUBLIC_PATH));
+app.use("/shared", Express.static(SHARED_PATH));
 
 // app.get("/", (req: Request, res: Response) => {
 // 	res.sendStatus(200);

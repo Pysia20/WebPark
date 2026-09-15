@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-/** @type {import('socket.io-client').Socket} */
+/** @type {import("socket.io-client").Socket} */
 const socket = io("http://localhost:3000/player");
 
 socket.on("connect", () => {
@@ -16,13 +16,23 @@ const ctx = (() => {
 	}
 })();
 
+const INPUTS = {
+	A: false,
+	D: false,
+	SPACE: false,
+};
+
 const PLAYER_SPEED = 100;
 const GRAVITY = 20;
 const JUMP_FORCE = 1000;
+const DRAG = 20;
 
 let toStop = false;
 let IS_GROUNDED = false;
 let CANCEL_GRAVITY_FRAME = true;
+
+let lastTime = performance.now();
+let lastPacketSent = lastTime;
 
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
@@ -42,28 +52,28 @@ const players = [];
 
 let currentPlayer = { ...playerTemplate };
 
-let lastTime = performance.now();
-
 addEventListener("keydown", (e) => {
 	if (event.repeat) return;
 	if (e.key === "d") {
-		currentPlayer.velocity.x += PLAYER_SPEED;
+		INPUTS.D = true;
 	}
 	if (e.key === "a") {
-		currentPlayer.velocity.x += -PLAYER_SPEED;
+		INPUTS.A = true;
 	}
-	if (e.key === " " && IS_GROUNDED) {
-		currentPlayer.velocity.y -= JUMP_FORCE;
-		IS_GROUNDED = false;
+	if (e.key === " ") {
+		INPUTS.SPACE = true;
 	}
 });
 
 addEventListener("keyup", (e) => {
 	if (e.key === "d") {
-		currentPlayer.velocity.x -= PLAYER_SPEED;
+		INPUTS.D = false;
 	}
 	if (e.key === "a") {
-		currentPlayer.velocity.x -= -PLAYER_SPEED;
+		INPUTS.A = false;
+	}
+	if (e.key === " ") {
+		INPUTS.SPACE = false;
 	}
 });
 
@@ -75,9 +85,30 @@ function clampPosition() {
 	}
 }
 
-function update(currentTime) {
+function addVelocities() {
+	if (INPUTS.A) {
+		currentPlayer.velocity.x = -PLAYER_SPEED;
+	}
+
+	if (INPUTS.D) {
+		currentPlayer.velocity.x = PLAYER_SPEED;
+	}
+
+	if (!INPUTS.A && !INPUTS.D) {
+		currentPlayer.velocity.x = 0;
+	}
+
+	currentPlayer.velocity.x = clamp(currentPlayer.velocity.x, -PLAYER_SPEED, PLAYER_SPEED);
+
+	console.log(IS_GROUNDED);
+	if (INPUTS.SPACE && IS_GROUNDED) {
+		currentPlayer.velocity.y -= JUMP_FORCE;
+		IS_GROUNDED = false;
+	}
+}
+
+async function update(currentTime) {
 	const deltaTime = (currentTime - lastTime) / 1000;
-	lastTime = currentTime;
 
 	if (!CANCEL_GRAVITY_FRAME) {
 		currentPlayer.velocity.y += GRAVITY;
@@ -86,10 +117,26 @@ function update(currentTime) {
 
 	currentPlayer.pos.x += currentPlayer.velocity.x * deltaTime;
 	currentPlayer.pos.y += currentPlayer.velocity.y * deltaTime;
+
 	clampPosition();
+	addVelocities();
+
+	let packet = {
+		inputs: INPUTS,
+		pos: currentPlayer.pos,
+		velocity: currentPlayer.velocity,
+		time: Date.now(),
+	};
+
+	if (currentTime >= lastPacketSent + 500) {
+		const response = await socket.emitWithAck("tick", packet);
+		console.log(response);
+		lastPacketSent = currentTime;
+	}
 
 	drawCanvas();
 
+	lastTime = currentTime;
 	if (!toStop) {
 		requestAnimationFrame(update);
 	}

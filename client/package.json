@@ -1,5 +1,16 @@
 {
   "name": "client",
   "version": "1.0.0",
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "howler": "^2.2.4",
+    "pixi.js": "^8.20.1"
+  },
+  "devDependencies": {
+    "@types/howler": "^2.2.13",
+    "vite": "^8.3.0"
+  }
 }

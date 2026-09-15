@@ -29,7 +29,7 @@ app.ticker.add((time) => {
         tempPlayer.targetX -= 2
         console.log("test")
     }
-    if (getCurrentInputs()["Jump"]) {
+    if (getCurrentInputs()["Jump"]) { //TEMP
         tempPlayer.targetY -= 10
     }
     if (tempPlayer.posY < app.stage.height) { //TEMP

@@ -16,6 +16,9 @@ importers:
       pixi.js:
         specifier: ^8.20.1
         version: 8.20.1
+      socket.io-client:
+        specifier: ^4.8.3
+        version: 4.8.3
     devDependencies:
       '@types/howler':
         specifier: ^2.2.13

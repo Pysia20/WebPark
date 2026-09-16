@@ -1,11 +1,10 @@
 import {Sprite, Texture} from "pixi.js";
+import { Vector2 } from "../../shared/commonModels"
 
 export class Player {
     id: number
-    posX: number = 0.0
-    posY: number = 0.0
-    targetX: number = 0.0
-    targetY: number = 0.0
+    pos: Vector2 = {x: 0.0, y: 0.0}
+    targetPos: Vector2 = {x: 0.0, y: 0.0}
     color: Record<string, number>
     sprite: Sprite
     isHost: boolean
@@ -22,8 +21,8 @@ export class Player {
     }
 
     updatePos() {
-        this.posX += (this.targetX - this.posX) * this.LERP_SPEED
-        this.posY += (this.targetY - this.posY) * this.LERP_SPEED
-        this.sprite.position.set(this.posX,this.posY)
+        this.pos.x += (this.targetPos.x - this.pos.x) * this.LERP_SPEED
+        this.pos.x += (this.targetPos.y - this.pos.y) * this.LERP_SPEED
+        this.sprite.position.set(this.pos.x,this.pos.y)
     }
 }

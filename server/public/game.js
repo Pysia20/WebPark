@@ -1,12 +1,5 @@
 // @ts-nocheck
 
-/** @type {import("socket.io-client").Socket} */
-const socket = io("http://localhost:3000/player");
-
-socket.on("connect", () => {
-	console.log("sent");
-});
-
 const canvas = document.getElementById("canvas");
 const ctx = (() => {
 	if (canvas instanceof HTMLCanvasElement) {
@@ -100,7 +93,6 @@ function addVelocities() {
 
 	currentPlayer.velocity.x = clamp(currentPlayer.velocity.x, -PLAYER_SPEED, PLAYER_SPEED);
 
-	console.log(IS_GROUNDED);
 	if (INPUTS.SPACE && IS_GROUNDED) {
 		currentPlayer.velocity.y -= JUMP_FORCE;
 		IS_GROUNDED = false;
@@ -128,11 +120,11 @@ async function update(currentTime) {
 		time: Date.now(),
 	};
 
-	if (currentTime >= lastPacketSent + 500) {
-		const response = await socket.emitWithAck("tick", packet);
-		console.log(response);
-		lastPacketSent = currentTime;
-	}
+	// if (currentTime >= lastPacketSent + 500) {
+	// 	const response = await socket.emitWithAck("tick", packet);
+	// 	console.log(response);
+	// 	lastPacketSent = currentTime;
+	// }
 
 	drawCanvas();
 

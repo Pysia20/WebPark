@@ -4,15 +4,20 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Document</title>
-		<style>
-			canvas {
-				border: 1px solid black;
-			}
-		</style>
 	</head>
 	<body>
-		<canvas width="300px" height="300px" id="canvas"></canvas>
+		<div class="join">
+			<h1>Join a room</h1>
+			<input id="nick" placeholder="nick" />
+			<input id="roomID" placeholder="room id" />
+			<button id="join">Join room</button>
+		</div>
+		<div class="create">
+			<h1>Create a room</h1>
+			<input id="createNick" placeholder="nick" />
+			<button id="create">Create room</button>
+		</div>
 		<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-		<script src="script.js"></script>
+		<script src="index.js"></script>
 	</body>
 </html>

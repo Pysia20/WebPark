@@ -30,6 +30,10 @@ socket.on("userJoined", (data) => {
 	info.innerHTML += `<li>${data} joined the room.</li>`;
 });
 
+socket.on("userLeft", (data) => {
+	info.innerHTML += `<li>${data.nick} left the room. Bye!</li>`;
+});
+
 // GAME
 
 /*

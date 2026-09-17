@@ -39,11 +39,25 @@ export function register(io: Server) {
 			room.addPlayer(new Player(data.userUUID, data.userNick));
 			socket.to(data.roomID).emit("userJoined", data.userNick);
 
+			socket.data.roomID = data.roomID;
+			socket.data.userNick = data.userNick;
+			socket.data.userUUID = data.userUUID;
+
 			console.log(`User: ${data.userNick} (${data.userUUID}) joined the room ${data.roomID}`);
 		});
 
 		socket.on("disconnect", (e) => {
-			// console.log(`User of id ${socket.id} disconnected.`);
+			console.log(`User of id ${socket.id} disconnected.`);
+			console.log(`userNick: ${socket.data.userNick}`);
+			console.log(`userUUID: ${socket.data.userUUID}`);
+			console.log(`roomID: ${socket.data.roomID}`);
+
+			socket.to(socket.data.roomID).emit("userLeft", {
+				nick: socket.data.userNick,
+				uuid: socket.data.userUUID,
+			});
+
+			games.get(socket.data.roomID)?.removePlayer(socket.data.userUUID);
 		});
 
 		socket.on("tick", (e, callback) => {

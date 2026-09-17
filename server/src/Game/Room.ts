@@ -15,4 +15,7 @@ export class Room {
 	public addPlayer(p: Player) {
 		this.players.set(p.getID(), p);
 	}
+	public removePlayer(uuid: string) {
+		this.players.delete(uuid);
+	}
 }

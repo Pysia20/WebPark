@@ -8,15 +8,16 @@ export interface PlayerInputs {
 
 // What the backend sends to the client
 export interface ServerData {
+	playerData:	ServerPlayerData[];
+}
+
+export interface ServerPlayerData {
+	playerId: number;
 	pos: Vector2;
 	velocity: Vector2;
-	map: Object | undefined;
 }
 
 // What the client sends to the backend
 export interface ClientData {
-	needsMap: boolean;
 	inputs: PlayerInputs;
-	id: number;
-	pos: Vector2;
 }

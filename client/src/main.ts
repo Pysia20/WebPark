@@ -9,6 +9,8 @@ const app = new PIXI.Application()
 await app.init({
     width: 1280,
     height: 720,
+    resolution: window.devicePixelRatio || 1,
+    autoDensity: true,
     backgroundColor: 0x222222
 })
 document.body.appendChild(app.canvas)
@@ -17,7 +19,7 @@ const playerPlaceholder = await PIXI.Assets.load("/public/sprites/playerPlacehol
 const tempPlayer = new Player(0, {"r": 0,"g": 0,"b": 0}, playerPlaceholder) //TEMP
 app.stage.addChild(tempPlayer.sprite) //TEMP
 
-let dataToSend: ClientData = {needsMap: false,inputs: getCurrentInputs(), id: tempPlayer.id, pos: tempPlayer.pos}
+let dataToSend: ClientData = {inputs: getCurrentInputs()}
 let recivedData: ServerData
 
 setInterval(() => emitInputs(dataToSend), (1000 / 20)) //(1000/20)=20 times a second, (1000/30)=30 times a second etc

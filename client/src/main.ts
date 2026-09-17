@@ -13,13 +13,11 @@ await app.init({
 })
 document.body.appendChild(app.canvas)
 
-//Almost everything under this connect will be changed once I can connect to the server, the server handles inputs
-
 const playerPlaceholder = await PIXI.Assets.load("/public/sprites/playerPlaceholder.png") //TEMP
 const tempPlayer = new Player(0, {"r": 0,"g": 0,"b": 0}, playerPlaceholder) //TEMP
 app.stage.addChild(tempPlayer.sprite) //TEMP
 
-let dataToSend: ClientData = {inputs: getCurrentInputs(), id: tempPlayer.id, pos: tempPlayer.pos}
+let dataToSend: ClientData = {needsMap: false,inputs: getCurrentInputs(), id: tempPlayer.id, pos: tempPlayer.pos}
 let recivedData: ServerData
 
 setInterval(() => emitInputs(dataToSend), (1000 / 20)) //(1000/20)=20 times a second, (1000/30)=30 times a second etc

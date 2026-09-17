@@ -22,7 +22,7 @@ export class Player {
 
     updatePos() {
         this.pos.x += (this.targetPos.x - this.pos.x) * this.LERP_SPEED
-        this.pos.x += (this.targetPos.y - this.pos.y) * this.LERP_SPEED
+        this.pos.y += (this.targetPos.y - this.pos.y) * this.LERP_SPEED
         this.sprite.position.set(this.pos.x,this.pos.y)
     }
 }

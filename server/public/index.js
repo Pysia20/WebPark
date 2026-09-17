@@ -1,17 +1,5 @@
 //@ts-nocheck
 
-// /** @type {import("socket.io-client").Socket} */
-// const socket = io("http://localhost:3000/player");
-
-// socket.on("connect", () => {
-// 	console.log("Web socket created");
-
-// 	const uuid = sessionStorage.getItem("userUUID");
-// 	socket.emit("registerUser", {
-// 		uuid: uuid,
-// 	});
-// });
-
 document.getElementById("create").addEventListener("click", async () => {
 	const nick = document.getElementById("createNick").value;
 
@@ -20,8 +8,16 @@ document.getElementById("create").addEventListener("click", async () => {
 	let response = await (
 		await fetch("/createRoom", {
 			method: "post",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				nick: nick,
+			}),
 		})
 	).json();
 
-	window.location.replace("/game/" + response["roomID"]);
+	sessionStorage.setItem("userUUID", response["userUUID"]);
+
+	window.location.href = "/game/" + response["roomID"];
 });

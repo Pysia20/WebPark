@@ -1,5 +1,24 @@
 // @ts-nocheck
 
+const roomID = window.location.pathname.split("/")[2];
+
+document.getElementById("roomIDH1").textContent = roomID;
+
+/** @type {import("socket.io-client").Socket} */
+const socket = io("http://localhost:3000/player");
+
+socket.on("connect", () => {
+	console.log("Web socket created");
+
+	const uuid = sessionStorage.getItem("userUUID");
+	socket.emit("registerUser", {
+		roomID: roomID,
+		userUuid: uuid,
+	});
+});
+
+// GAME
+
 const canvas = document.getElementById("canvas");
 const ctx = (() => {
 	if (canvas instanceof HTMLCanvasElement) {

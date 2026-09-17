@@ -2,6 +2,8 @@ import * as PIXI from 'pixi.js'
 
 import { Player } from "./player"
 import { getCurrentInputs } from "./inputs"
+import { emitInputs, getPlayerData } from "./network";
+import { ClientData, ServerData } from "../../shared/commonModels"
 
 const app = new PIXI.Application()
 await app.init({
@@ -14,27 +16,29 @@ document.body.appendChild(app.canvas)
 //Almost everything under this connect will be changed once I can connect to the server, the server handles inputs
 
 const playerPlaceholder = await PIXI.Assets.load("/public/sprites/playerPlaceholder.png") //TEMP
-
 const tempPlayer = new Player(0, {"r": 0,"g": 0,"b": 0}, playerPlaceholder) //TEMP
-
 app.stage.addChild(tempPlayer.sprite) //TEMP
 
+let dataToSend: ClientData = {inputs: getCurrentInputs(), id: tempPlayer.id, pos: tempPlayer.pos}
+let recivedData: ServerData
+
+setInterval(() => emitInputs(dataToSend), (1000 / 20)) //(1000/20)=20 times a second, (1000/30)=30 times a second etc
+
 app.ticker.add((time) => {
+    recivedData = getPlayerData()
+
     tempPlayer.updatePos()
-    if (getCurrentInputs()["Right"]) { //TEMP
-        tempPlayer.targetX += 2
-        console.log("test")
+    if (getCurrentInputs()["right"]) { //TEMP
+        tempPlayer.targetPos.x += 2
     }
-    if (getCurrentInputs()["Left"]) { //TEMP
-        tempPlayer.targetX -= 2
-        console.log("test")
+    if (getCurrentInputs()["left"]) { //TEMP
+        tempPlayer.targetPos.x -= 2
     }
-    if (getCurrentInputs()["Jump"]) { //TEMP
-        tempPlayer.targetY -= 10
+    if (getCurrentInputs()["jump"]) { //TEMP
+        tempPlayer.targetPos.y -= 10
     }
-    if (tempPlayer.posY < app.stage.height) { //TEMP
-        tempPlayer.targetY += 10
+    if (tempPlayer.pos.y < app.stage.height) { //TEMP
+        tempPlayer.targetPos.y += 10
         console.log(app.stage.height)
-        console.log(tempPlayer.targetY)
     }
 })

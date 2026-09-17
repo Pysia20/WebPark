@@ -13,15 +13,21 @@ socket.on("connect", () => {
 
 	const uuid = sessionStorage.getItem("userUUID");
 	const nick = sessionStorage.getItem("userNick");
-	socket.emit("registerUser", {
-		roomID: roomID,
-		userUuid: uuid,
-		userNick: nick,
-	});
+	socket.emit(
+		"registerUser",
+		{
+			roomID: roomID,
+			userUUID: uuid,
+			userNick: nick,
+		},
+		(e) => {
+			console.log(e);
+		},
+	);
 });
 
 socket.on("userJoined", (data) => {
-	info.textContent += `<li>${data} joined the room.</li>`;
+	info.innerHTML += `<li>${data} joined the room.</li>`;
 });
 
 // GAME

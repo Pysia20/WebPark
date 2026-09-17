@@ -1,24 +1,49 @@
 import { Server } from "socket.io";
+
 import { ClientData } from "../../shared/commonModels";
 import map from "../../shared/testMap.json";
+import { v4 as uuid } from "uuid";
+import { games } from "./Global";
+import { RegisterUserData, RegisterUserDataZod } from "./Models";
+import { Room } from "./Game/Room";
+import { Player } from "./Game/Player";
 
 export function register(io: Server) {
 	const endpoint = io.of("/player");
 
 	endpoint.on("connect", (socket) => {
-		console.log(`User of id ${socket.id} connected.`);
+		// console.log(`User of id ${socket.id} connected.`);
 
-		socket.on("createRoom", (e) => {});
+		socket.on("registerUser", (data: RegisterUserData, callback) => {
+			try {
+				RegisterUserDataZod.parse(data);
+			} catch (e) {
+				callback({
+					status: "error",
+					message: "Provided data is incorrectly formatted",
+				});
+				return;
+			}
 
-		socket.on("joinRoom", (e) => {
-			const roomName: string = "room";
+			const room: Room | undefined = games.get(data.roomID);
 
-			socket.join(roomName);
-			socket.to(roomName).emit("roomInfo", `User of id: ${socket.id} joined the room.`);
+			if (room === undefined) {
+				callback({
+					status: "error",
+					message: "Room doesn't exist",
+				});
+				return;
+			}
+
+			socket.join(data.roomID);
+			room.addPlayer(new Player(data.userUUID, data.userNick));
+			socket.to(data.roomID).emit("userJoined", data.userNick);
+
+			console.log(`User: ${data.userNick} (${data.userUUID}) joined the room ${data.roomID}`);
 		});
 
 		socket.on("disconnect", (e) => {
-			console.log(`User of id ${socket.id} disconnected.`);
+			// console.log(`User of id ${socket.id} disconnected.`);
 		});
 
 		socket.on("tick", (e, callback) => {

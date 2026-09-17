@@ -1,5 +1,6 @@
 // @ts-nocheck
 
+const info = document.getElementById("infoList");
 const roomID = window.location.pathname.split("/")[2];
 
 document.getElementById("roomIDH1").textContent = roomID;
@@ -11,14 +12,21 @@ socket.on("connect", () => {
 	console.log("Web socket created");
 
 	const uuid = sessionStorage.getItem("userUUID");
+	const nick = sessionStorage.getItem("userNick");
 	socket.emit("registerUser", {
 		roomID: roomID,
 		userUuid: uuid,
+		userNick: nick,
 	});
+});
+
+socket.on("userJoined", (data) => {
+	info.textContent += `<li>${data} joined the room.</li>`;
 });
 
 // GAME
 
+/*
 const canvas = document.getElementById("canvas");
 const ctx = (() => {
 	if (canvas instanceof HTMLCanvasElement) {
@@ -162,3 +170,4 @@ function drawCanvas() {
 }
 
 requestAnimationFrame(update);
+*/

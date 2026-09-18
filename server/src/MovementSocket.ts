@@ -1,10 +1,10 @@
 import { Server } from "socket.io";
 
-import { ClientData } from "../../shared/commonModels";
+import { ClientData, PlayerInputs } from "../../shared/commonModels";
 import map from "../../shared/testMap.json";
 import { v4 as uuid } from "uuid";
 import { games } from "./Global";
-import { RegisterUserData, RegisterUserDataZod } from "./Models";
+import { InputsZod, RegisterUserData, RegisterUserDataZod } from "./Models";
 import { Room } from "./Game/Room";
 import { Player } from "./Game/Player";
 
@@ -64,6 +64,16 @@ export function register(io: Server) {
 					.to(socket.data.roomID)
 					.emit("log", `<li>User ${socket.data.userNick} stopped being ready.</li>`);
 			}
+		});
+
+		socket.on("input", (inputs: PlayerInputs) => {
+			try {
+				InputsZod.parse(inputs);
+			} catch {
+				return;
+			}
+
+			games.get(socket.data.roomID)?.addInputsToStack(socket.data.userUUID, inputs);
 		});
 
 		socket.on("disconnect", (e) => {

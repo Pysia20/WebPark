@@ -1,6 +1,7 @@
 export type Vector2 = { x: number; y: number };
 
 export interface PlayerInputs {
+	userUUID: string;
 	left: boolean;
 	right: boolean;
 	jump: boolean;
@@ -8,7 +9,7 @@ export interface PlayerInputs {
 
 // What the backend sends to the client
 export interface ServerData {
-	playerData:	ServerPlayerData[];
+	playerData: ServerPlayerData[];
 }
 
 export interface ServerPlayerData {

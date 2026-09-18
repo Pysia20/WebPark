@@ -25,4 +25,8 @@ export class Player {
 	public setIsReady(v: boolean) {
 		this.isReady = v;
 	}
+
+	public getPos(): Vector2 {
+		return this.pos;
+	}
 }

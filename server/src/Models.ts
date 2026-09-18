@@ -17,3 +17,11 @@ export const JoinRoomRequestZod = z
 	.strict();
 
 export type JoinRoomRequest = z.infer<typeof JoinRoomRequestZod>;
+
+export const InputsZod = z
+	.object({
+		left: z.boolean(),
+		right: z.boolean(),
+		jump: z.boolean(),
+	})
+	.strict();

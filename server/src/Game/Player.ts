@@ -7,6 +7,7 @@ export class Player {
 	private velocity: Vector2 = { x: 0, y: 0 };
 	private color: string = "";
 	private roomID: string | undefined;
+	private isReady: boolean = false;
 
 	constructor(id: string, nick: string) {
 		this.id = id;
@@ -15,5 +16,13 @@ export class Player {
 
 	public getID(): string {
 		return this.id;
+	}
+
+	public getIsReady(): boolean {
+		return this.isReady;
+	}
+
+	public setIsReady(v: boolean) {
+		this.isReady = v;
 	}
 }

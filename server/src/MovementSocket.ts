@@ -37,7 +37,7 @@ export function register(io: Server) {
 
 			socket.join(data.roomID);
 			room.addPlayer(new Player(data.userUUID, data.userNick));
-			socket.to(data.roomID).emit("userJoined", data.userNick);
+			socket.to(data.roomID).emit("log", `<li>${data.userNick}</li>`);
 
 			socket.data.roomID = data.roomID;
 			socket.data.userNick = data.userNick;
@@ -46,26 +46,37 @@ export function register(io: Server) {
 			console.log(`User: ${data.userNick} (${data.userUUID}) joined the room ${data.roomID}`);
 		});
 
+		socket.on("playerReady", (uuid) => {
+			if (socket.data.roomID) {
+				games.get(socket.data.roomID)?.setPlayerReady(uuid, true);
+
+				socket
+					.to(socket.data.roomID)
+					.emit("log", `<li>User ${socket.data.userNick} is ready.</li>`);
+			}
+		});
+
+		socket.on("playerUnReady", (uuid) => {
+			if (socket.data.roomID) {
+				games.get(socket.data.roomID)?.setPlayerReady(uuid, false);
+
+				socket
+					.to(socket.data.roomID)
+					.emit("log", `<li>User ${socket.data.userNick} stopped being ready.</li>`);
+			}
+		});
+
 		socket.on("disconnect", (e) => {
 			console.log(`User of id ${socket.id} disconnected.`);
 			console.log(`userNick: ${socket.data.userNick}`);
 			console.log(`userUUID: ${socket.data.userUUID}`);
 			console.log(`roomID: ${socket.data.roomID}`);
 
-			socket.to(socket.data.roomID).emit("userLeft", {
-				nick: socket.data.userNick,
-				uuid: socket.data.userUUID,
-			});
+			socket
+				.to(socket.data.roomID)
+				.emit("log", `User: ${socket.data.userNick} left the room. Bye!`);
 
 			games.get(socket.data.roomID)?.removePlayer(socket.data.userUUID);
-		});
-
-		socket.on("tick", (e, callback) => {
-			console.log(e);
-
-			callback({
-				status: "ok?",
-			});
 		});
 	});
 }

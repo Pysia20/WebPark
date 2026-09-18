@@ -2,6 +2,7 @@
 
 const info = document.getElementById("infoList");
 const roomID = window.location.pathname.split("/")[2];
+let isReady = false;
 
 document.getElementById("roomIDH1").textContent = roomID;
 
@@ -26,12 +27,22 @@ socket.on("connect", () => {
 	);
 });
 
-socket.on("userJoined", (data) => {
-	info.innerHTML += `<li>${data} joined the room.</li>`;
+socket.on("log", (data) => {
+	info.innerHTML += data;
 });
 
-socket.on("userLeft", (data) => {
-	info.innerHTML += `<li>${data.nick} left the room. Bye!</li>`;
+document.getElementById("readyUp").addEventListener("click", () => {
+	const readyText = document.getElementById("readyText");
+
+	if (!isReady) {
+		readyText.innerHTML = "Ready: Yes";
+		socket.emit("playerReady", sessionStorage.getItem("userUUID"));
+		isReady = true;
+	} else {
+		readyText.innerHTML = "Ready: No";
+		socket.emit("playerUnReady", sessionStorage.getItem("userUUID"));
+		isReady = false;
+	}
 });
 
 // GAME

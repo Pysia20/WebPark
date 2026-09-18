@@ -18,4 +18,16 @@ export class Room {
 	public removePlayer(uuid: string) {
 		this.players.delete(uuid);
 	}
+	public isEveryoneReady(): boolean {
+		this.players.forEach((player) => {
+			if (!player.getIsReady()) {
+				return false;
+			}
+		});
+
+		return true;
+	}
+	public setPlayerReady(uuid: string, v: boolean) {
+		this.players.get(uuid)?.setIsReady(v);
+	}
 }

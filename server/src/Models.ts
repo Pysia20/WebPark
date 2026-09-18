@@ -23,5 +23,6 @@ export const InputsZod = z
 		left: z.boolean(),
 		right: z.boolean(),
 		jump: z.boolean(),
+		userUUID: z.uuid(),
 	})
 	.strict();

@@ -18,6 +18,10 @@ export class Player {
 		return this.id;
 	}
 
+	public getNick(): string {
+		return this.nick;
+	}
+
 	public getIsReady(): boolean {
 		return this.isReady;
 	}
@@ -28,5 +32,17 @@ export class Player {
 
 	public getPos(): Vector2 {
 		return this.pos;
+	}
+
+	public getVelocity(): Vector2 {
+		return this.velocity;
+	}
+
+	public setPos(v: Vector2) {
+		this.pos = v;
+	}
+
+	public setVelocity(v: Vector2) {
+		this.velocity = v;
 	}
 }

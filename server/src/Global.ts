@@ -35,3 +35,7 @@ export function generateRoomCode() {
 
 	throw Error("Too many attempts at generating uniqe room ID.");
 }
+
+export function clamp(v: number, min: number, max: number) {
+	return Math.min(max, Math.max(v, min));
+}

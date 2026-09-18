@@ -37,7 +37,7 @@ export function register(io: Server) {
 
 			socket.join(data.roomID);
 			room.addPlayer(new Player(data.userUUID, data.userNick));
-			socket.to(data.roomID).emit("log", `<li>${data.userNick}</li>`);
+			socket.to(data.roomID).emit("log", `<li>${data.userNick} joined the room </li>`);
 
 			socket.data.roomID = data.roomID;
 			socket.data.userNick = data.userNick;
@@ -48,11 +48,19 @@ export function register(io: Server) {
 
 		socket.on("playerReady", (uuid) => {
 			if (socket.data.roomID) {
-				games.get(socket.data.roomID)?.setPlayerReady(uuid, true);
+				const room: Room | undefined = games.get(socket.data.roomID);
+
+				if (room === undefined) return;
+
+				room.setPlayerReady(uuid, true);
 
 				socket
 					.to(socket.data.roomID)
 					.emit("log", `<li>User ${socket.data.userNick} is ready.</li>`);
+
+				if (room.isEveryoneReady()) {
+					room.startGameLoop(endpoint);
+				}
 			}
 		});
 
@@ -70,6 +78,7 @@ export function register(io: Server) {
 			try {
 				InputsZod.parse(inputs);
 			} catch {
+				console.log("Error");
 				return;
 			}
 

@@ -1,3 +1,5 @@
 export const PLAYER_CONFIG = {
-	SPEED: 1,
+	ACCELERATION: 10,
+	MAX_HORIZONTAL_SPEED: 30,
+	DRAG: 3,
 };

@@ -1,9 +1,11 @@
 import { Namespace } from "socket.io";
 import { Player } from "./Player";
 import { PlayerInputs, Vector2 } from "../../../shared/commonModels";
+import { PLAYER_CONFIG } from "../../../shared/commonVariables";
+import { clamp } from "../Global";
 
 export class Room {
-	private TICKRATE: number = 20; // Per second
+	private TICKRATE: number = 30; // Per second
 
 	private id: string;
 	private players: Map<string, Player> = new Map<string, Player>();
@@ -28,22 +30,74 @@ export class Room {
 	}
 
 	public isEveryoneReady(): boolean {
+		let isReady = true;
+
 		this.players.forEach((player) => {
+			console.log(player.getIsReady());
 			if (!player.getIsReady()) {
-				return false;
+				isReady = false;
 			}
 		});
 
-		return true;
+		return isReady;
 	}
 
 	public setPlayerReady(uuid: string, v: boolean) {
 		this.players.get(uuid)?.setIsReady(v);
 	}
 
+	private physicsUpdate() {
+		for (let i = 0; i < this.inputs.length; i++) {
+			const input = this.inputs[i];
+			const player: Player | undefined = this.players.get(input.userUUID);
+
+			if (player === undefined) {
+				continue;
+			}
+
+			const pos: Vector2 = player.getPos();
+			const velocity: Vector2 = player.getVelocity();
+
+			const newPos: Vector2 = { ...pos };
+			const newVel: Vector2 = { ...velocity };
+
+			if (input.right) {
+				newVel.x += PLAYER_CONFIG.ACCELERATION;
+			}
+			if (input.left) {
+				newVel.x -= PLAYER_CONFIG.ACCELERATION;
+			}
+
+			if (newVel.x > PLAYER_CONFIG.DRAG) {
+				newVel.x -= PLAYER_CONFIG.DRAG;
+			} else if (newVel.x < -PLAYER_CONFIG.DRAG) {
+				newVel.x += PLAYER_CONFIG.DRAG;
+			} else {
+				newVel.x = 0;
+			}
+
+			newVel.x = clamp(
+				newVel.x,
+				-PLAYER_CONFIG.MAX_HORIZONTAL_SPEED,
+				PLAYER_CONFIG.MAX_HORIZONTAL_SPEED,
+			);
+
+			newPos.x += newVel.x * (1 / this.TICKRATE);
+			newPos.y += newVel.y * (1 / this.TICKRATE);
+
+			newPos.x = clamp(newPos.x, 0, 300);
+			newPos.y = clamp(newPos.y, 0, 300);
+
+			player.setPos(newPos);
+			player.setVelocity(newVel);
+		}
+	}
+
 	public startGameLoop(io: Namespace) {
 		this.gameLoop = setInterval(
 			async () => {
+				this.physicsUpdate();
+
 				const roomData = {
 					players: {} as Record<string, any>,
 				};
@@ -51,11 +105,12 @@ export class Room {
 				this.players.forEach((player: Player, uuid: string) => {
 					const pos = player.getPos();
 					roomData.players[uuid] = {
+						nick: player.getNick(),
 						pos: pos,
 					};
 				});
 
-				io.to(this.id).emit("tick");
+				io.to(this.id).emit("tick", roomData);
 			},
 			(1 / this.TICKRATE) * 1000,
 		);
@@ -63,10 +118,6 @@ export class Room {
 
 	public stopGameLoop() {
 		this.gameLoop?.close();
-	}
-
-	private physicsUpdate() {
-		this.inputs.forEach((input: PlayerInputs) => {});
 	}
 
 	public addInputsToStack(userUUID: string, inputs: PlayerInputs) {

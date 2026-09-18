@@ -2,7 +2,22 @@
 
 const info = document.getElementById("infoList");
 const roomID = window.location.pathname.split("/")[2];
+
 let isReady = false;
+const inputs = {
+	left: false,
+	right: false,
+	jump: false,
+};
+
+const canvas = document.getElementById("canvas");
+const ctx = (() => {
+	if (canvas instanceof HTMLCanvasElement) {
+		return canvas.getContext("2d");
+	} else {
+		throw new Error("HTML Element of id 'canvas' is not a HTMLCanvasElement.");
+	}
+})();
 
 document.getElementById("roomIDH1").textContent = roomID;
 
@@ -45,17 +60,67 @@ document.getElementById("readyUp").addEventListener("click", () => {
 	}
 });
 
+socket.on("tick", (data) => {
+	ctx.clearRect(0, 0, 300, 300);
+
+	const clientUUID = sessionStorage.getItem("userUUID");
+
+	for (const [playerUUID, values] of Object.entries(data["players"])) {
+		if (playerUUID === clientUUID) {
+			ctx.strokeStyle = "blue";
+		} else {
+			ctx.strokeStyle = "yellow";
+		}
+		ctx.fillRect(values.pos.x, values.pos.y, 10, 10);
+		console.log(playerUUID, values);
+	}
+});
+
+addEventListener("keydown", (e) => {
+	if (e.repeat) return;
+	let somethingChanged = false;
+
+	if (e.key === "d") {
+		inputs.right = true;
+		somethingChanged = true;
+	}
+	if (e.key === "a") {
+		inputs.left = true;
+		somethingChanged = true;
+	}
+	if (e.key === " ") {
+		inputs.jump = true;
+		somethingChanged = true;
+	}
+
+	if (somethingChanged)
+		socket.emit("input", { userUUID: sessionStorage.getItem("userUUID"), ...inputs });
+});
+
+addEventListener("keyup", (e) => {
+	let somethingChanged = false;
+
+	if (e.key === "d") {
+		inputs.right = false;
+		somethingChanged = true;
+	}
+	if (e.key === "a") {
+		inputs.left = false;
+		somethingChanged = true;
+	}
+	if (e.key === " ") {
+		inputs.jump = false;
+		somethingChanged = true;
+	}
+
+	if (somethingChanged)
+		socket.emit("input", { userUUID: sessionStorage.getItem("userUUID"), ...inputs });
+});
+
 // GAME
 
 /*
-const canvas = document.getElementById("canvas");
-const ctx = (() => {
-	if (canvas instanceof HTMLCanvasElement) {
-		return canvas.getContext("2d");
-	} else {
-		throw new Error("HTML Element of id 'canvas' is not a HTMLCanvasElement.");
-	}
-})();
+
 
 const INPUTS = {
 	A: false,
@@ -89,7 +154,7 @@ const playerTemplate = {
 	},
 };
 
-const players = [];
+const players = [];inputs
 
 let currentPlayer = { ...playerTemplate };
 

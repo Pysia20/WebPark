@@ -5,13 +5,13 @@ export class Player {
     id: number
     pos: Vector2 = {x: 0.0, y: 0.0}
     targetPos: Vector2 = {x: 0.0, y: 0.0}
-    color: Record<string, number>
+    color: string
     sprite: Sprite
     isHost: boolean
 
     LERP_SPEED: number = 0.3
 
-    constructor(id: number, color: Record<string, number>, texture: Texture) {
+    constructor(id: number, color: string, texture: Texture) {
         this.id = id
         this.color = color
         this.isHost = (id == 0)

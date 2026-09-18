@@ -1,8 +1,9 @@
 import * as PIXI from 'pixi.js'
 
-import { Player } from "./player"
-import { getCurrentInputs } from "./inputs"
-import { emitInputs, getPlayerData } from "./network";
+import { Player } from "./Player"
+import { getCurrentInputs } from "./Inputs"
+import { emitInputs, getPlayerData } from "./Network";
+import { Coordinator } from "./Coordinator";
 import { ClientData, ServerData } from "../../shared/commonModels"
 
 const app = new PIXI.Application()
@@ -15,18 +16,20 @@ await app.init({
 })
 document.body.appendChild(app.canvas)
 
-const playerPlaceholder = await PIXI.Assets.load("/public/sprites/playerPlaceholder.png") //TEMP
-const tempPlayer = new Player(0, {"r": 0,"g": 0,"b": 0}, playerPlaceholder) //TEMP
+const playerPlaceholder: PIXI.Texture = await PIXI.Assets.load("/public/sprites/playerPlaceholder.png") //TEMP
+const tempPlayer: Player = new Player(0, "#000000", playerPlaceholder) //TEMP
 app.stage.addChild(tempPlayer.sprite) //TEMP
 
 let dataToSend: ClientData = {inputs: getCurrentInputs()}
-let recivedData: ServerData
+const coordinator: Coordinator = new Coordinator(getPlayerData(), playerPlaceholder)
 
 setInterval(() => emitInputs(dataToSend), (1000 / 20)) //(1000/20)=20 times a second, (1000/30)=30 times a second etc
 
 app.ticker.add((time) => {
-    recivedData = getPlayerData()
+    coordinator.update_players(getPlayerData())
+    coordinator.update_positions()
 
+    /*
     tempPlayer.updatePos()
     if (getCurrentInputs()["right"]) { //TEMP
         tempPlayer.targetPos.x += 2
@@ -41,4 +44,5 @@ app.ticker.add((time) => {
         tempPlayer.targetPos.y += 10
         console.log(app.stage.height)
     }
+     */
 })

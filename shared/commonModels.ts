@@ -1,7 +1,7 @@
 export type Vector2 = { x: number; y: number };
 
 export interface PlayerInputs {
-	userUUID: string;
+	userUUID?: string;
 	left: boolean;
 	right: boolean;
 	jump: boolean;

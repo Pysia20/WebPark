@@ -1,15 +1,16 @@
 import { Player } from "./Player";
 import { ServerData } from "../../shared/commonModels"
-import {Application, Texture} from "pixi.js";
+import { Application } from "pixi.js";
+import { PlayerTextures } from "./Assets";
 
 export class Coordinator {
     players: Map<number, Player> = new Map
     serverData: ServerData | undefined
-    playerTexture: Texture
+    playerTextures: PlayerTextures
     world: Application
 
-    constructor(playerTexture: Texture, world: Application) {
-        this.playerTexture = playerTexture
+    constructor(playerTextures: PlayerTextures, world: Application) {
+        this.playerTextures = playerTextures
         this.world = world
     }
 
@@ -20,8 +21,10 @@ export class Coordinator {
             const tempPlayer = this.players.get(playerData.playerId)
             if (tempPlayer) {
                 tempPlayer.targetPos = playerData.pos
+                tempPlayer.updateDirection(playerData.velocity)
             } else {
-                const newPlayer: Player = new Player(this.players.size, "#000000", this.playerTexture)
+                const newPlayer: Player = new Player(this.players.size, "#000000", this.playerTextures)
+                newPlayer.pos = playerData.pos
                 this.players.set(playerData.playerId, newPlayer)
                 this.world.stage.addChild(newPlayer.sprite)
             }

@@ -3,7 +3,8 @@ import * as PIXI from 'pixi.js'
 import { getCurrentInputs } from "./Inputs"
 import { emitInputs, getPlayerData } from "./Network";
 import { Coordinator } from "./Coordinator";
-import { ClientData, ServerData } from "../../shared/commonModels"
+import { ClientData } from "../../shared/commonModels"
+import { loadAssets } from "./Assets";
 
 const app = new PIXI.Application()
 await app.init({
@@ -15,8 +16,9 @@ await app.init({
 })
 document.body.appendChild(app.canvas)
 
-const playerPlaceholder: PIXI.Texture = await PIXI.Assets.load("/public/sprites/playerPlaceholder.png") //TEMP (only the image)
-const coordinator: Coordinator = new Coordinator(playerPlaceholder, app)
+const assets = await loadAssets()
+
+const coordinator: Coordinator = new Coordinator(assets.playerTextures, app)
 
 let previousSent: ClientData = {inputs: {left: false, jump: false, right: false}}
 let dataToSend: ClientData = {inputs: getCurrentInputs()}

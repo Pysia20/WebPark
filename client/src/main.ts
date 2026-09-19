@@ -25,7 +25,8 @@ setInterval(() => emitInputs(dataToSend), (1000 / 20)) //(1000/20)=20 times a se
 
 const testSingleData: ServerPlayerData[] = [{playerId: 0, pos: {x: 10.0, y: 10.0}, velocity: {x: 0.0, y: 0.0}}, {playerId: 1, pos: {x: 20.0, y: 20.0}, velocity: {x: 0.0, y: 0.0}}] //TEMP
 const testData: ServerData = {playerData: testSingleData} //TEMP
-    app.ticker.add((time) => {
+
+app.ticker.add((time) => {
 
     coordinator.update_players(testData)
     coordinator.update_positions()

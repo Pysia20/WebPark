@@ -1,16 +1,16 @@
 import { io } from "socket.io-client"
 import { ServerData, ClientData } from  "../../shared/commonModels"
 
-const socket = io("http://localhost:3000") //will need to change the address later
-let playerData: ServerData
+const socket = io("http://localhost:3000") //will need to change the address later (probably anyway)
+let playerData: ServerData | undefined
 
 socket.on("connect_error", (error) => {
     console.log("Failed connection! error:", error)
 })
 
- socket.on("connect", () => {
+socket.on("connect", () => {
      console.log("Connected! id:", socket.id)
- })
+})
 
 socket.on("disconnect", (reason) => {
     console.log("Disconnected! reason:", reason)

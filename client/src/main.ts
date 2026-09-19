@@ -1,10 +1,9 @@
 import * as PIXI from 'pixi.js'
 
-import { Player } from "./Player"
 import { getCurrentInputs } from "./Inputs"
 import { emitInputs, getPlayerData } from "./Network";
 import { Coordinator } from "./Coordinator";
-import {ClientData, ServerData, ServerPlayerData} from "../../shared/commonModels"
+import { ClientData, ServerData } from "../../shared/commonModels"
 
 const app = new PIXI.Application()
 await app.init({
@@ -16,38 +15,23 @@ await app.init({
 })
 document.body.appendChild(app.canvas)
 
-const playerPlaceholder: PIXI.Texture = await PIXI.Assets.load("/public/sprites/playerPlaceholder.png") //TEMP
-
-let dataToSend: ClientData = {inputs: getCurrentInputs()}
+const playerPlaceholder: PIXI.Texture = await PIXI.Assets.load("/public/sprites/playerPlaceholder.png") //TEMP (only the image)
 const coordinator: Coordinator = new Coordinator(playerPlaceholder, app)
 
-setInterval(() => emitInputs(dataToSend), (1000 / 20)) //(1000/20)=20 times a second, (1000/30)=30 times a second etc
-
-const testSingleData: ServerPlayerData[] = [{playerId: 0, pos: {x: 10.0, y: 10.0}, velocity: {x: 0.0, y: 0.0}}, {playerId: 1, pos: {x: 20.0, y: 20.0}, velocity: {x: 0.0, y: 0.0}}] //TEMP
-const testData: ServerData = {playerData: testSingleData} //TEMP
+let previousSent: ClientData = {inputs: {left: false, jump: false, right: false}}
+let dataToSend: ClientData = {inputs: getCurrentInputs()}
+setInterval(() => {
+    dataToSend = {inputs: getCurrentInputs()}
+    if (previousSent.inputs.right !== dataToSend.inputs.right || previousSent.inputs.jump !== dataToSend.inputs.jump || previousSent.inputs.left !== dataToSend.inputs.left) {
+        emitInputs(dataToSend)
+        previousSent = dataToSend
+    }
+}, (1000 / 30)) //(1000/20)=20 times a second, (1000/30)=0 times a second etc
 
 app.ticker.add((time) => {
-
-    coordinator.update_players(testData)
+    const serverPlayerData = getPlayerData()
+    if (serverPlayerData) {
+        coordinator.update_players(serverPlayerData)
+    }
     coordinator.update_positions()
-
-    testData.playerData[0].pos.x += 1.0 //TEMP
-    testData.playerData[1].pos.y += 1.0 //TEMP
-
-    /*
-    tempPlayer.updatePos()
-    if (getCurrentInputs()["right"]) { //TEMP
-        tempPlayer.targetPos.x += 2
-    }
-    if (getCurrentInputs()["left"]) { //TEMP
-        tempPlayer.targetPos.x -= 2
-    }
-    if (getCurrentInputs()["jump"]) { //TEMP
-        tempPlayer.targetPos.y -= 10
-    }
-    if (tempPlayer.pos.y < app.stage.height) { //TEMP
-        tempPlayer.targetPos.y += 10
-        console.log(app.stage.height)
-    }
-     */
 })

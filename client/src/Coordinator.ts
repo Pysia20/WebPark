@@ -1,17 +1,16 @@
 import { Player } from "./Player";
 import { ServerData } from "../../shared/commonModels"
-import { Texture } from "pixi.js";
+import {Application, Texture} from "pixi.js";
 
 export class Coordinator {
-//    controlledPlayer: Player probably not needed
     players: Map<number, Player> = new Map
     serverData: ServerData | undefined
     playerTexture: Texture
+    world: Application
 
-    constructor(serverData: ServerData, playerTexture: Texture) {
-//        this.controlledPlayer = controlledPlayer
+    constructor(playerTexture: Texture, world: Application) {
         this.playerTexture = playerTexture
-        this.update_players(serverData)
+        this.world = world
     }
 
     update_players(serverData: ServerData) {
@@ -24,7 +23,7 @@ export class Coordinator {
             } else {
                 const newPlayer: Player = new Player(this.players.size, "#000000", this.playerTexture)
                 this.players.set(playerData.playerId, newPlayer)
-                newPlayers.push(newPlayer)
+                this.world.stage.addChild(newPlayer.sprite)
             }
         }
         return newPlayers

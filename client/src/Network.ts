@@ -1,5 +1,5 @@
 import { io } from "socket.io-client"
-import { ServerData, ClientData } from  "../../shared/commonModels"
+import {ServerData, ClientData, PlayerInputs} from "../../shared/commonModels"
 
 const socket = io("/player", {
     path: '/api/socket.io'
@@ -30,11 +30,12 @@ socket.on("disconnect", (reason) => {
 })
 
 socket.on("tick", (data: ServerData) => {
+    console.log(data)
     playerData = data
 })
 
 
-export function emitInputs(data: ClientData) {
+export function emitInputs(data: PlayerInputs) {
     socket.emit("playerInputs", data)
 }
 

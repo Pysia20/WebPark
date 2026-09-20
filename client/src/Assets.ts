@@ -12,11 +12,11 @@ export interface Assets {
 
 export async function loadAssets() {
     //TEMP IMGS
-    const loadedTextures = await PIXI.Assets.load(["/public/sprites/playerPlaceholder.png", "/public/sprites/playerPlaceholderWalk.png", "/public/sprites/playerPlaceholderJump.png"])
+    const loadedTextures = await PIXI.Assets.load(["sprites/playerPlaceholder.png", "sprites/playerPlaceholderWalk.png", "sprites/playerPlaceholderJump.png"])
 
-    const playerIdle: PIXI.Texture = loadedTextures["/public/sprites/playerPlaceholder.png"]
-    const playerWalk: PIXI.Texture = loadedTextures["/public/sprites/playerPlaceholderWalk.png"]
-    const playerJump: PIXI.Texture = loadedTextures["/public/sprites/playerPlaceholderJump.png"]
+    const playerIdle: PIXI.Texture = loadedTextures["sprites/playerPlaceholder.png"]
+    const playerWalk: PIXI.Texture = loadedTextures["sprites/playerPlaceholderWalk.png"]
+    const playerJump: PIXI.Texture = loadedTextures["sprites/playerPlaceholderJump.png"]
     const playerTextures: PlayerTextures = {idle: playerIdle, walk: playerWalk, jump: playerJump}
 
     const assets: Assets = {playerTextures: playerTextures}

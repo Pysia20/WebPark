@@ -3,7 +3,7 @@ import * as PIXI from 'pixi.js'
 import { getCurrentInputs } from "./Inputs"
 import {emitInputs, emitReady, getPlayerData} from "./Network";
 import { Coordinator } from "./Coordinator";
-import { ClientData } from "../../shared/commonModels"
+import {ClientData, PlayerInputs} from "shared/commonModels"
 import { loadAssets } from "./Assets";
 
 const app = new PIXI.Application()
@@ -20,11 +20,11 @@ const assets = await loadAssets()
 
 const coordinator: Coordinator = new Coordinator(assets.playerTextures, app)
 
-let previousSent: ClientData = {inputs: {left: false, jump: false, right: false}}
-let dataToSend: ClientData = {inputs: getCurrentInputs()}
+let previousSent: PlayerInputs = {left: false, jump: false, right: false}
+let dataToSend: PlayerInputs = getCurrentInputs()
 setInterval(() => {
-    dataToSend = {inputs: getCurrentInputs()}
-    if (previousSent.inputs.right !== dataToSend.inputs.right || previousSent.inputs.jump !== dataToSend.inputs.jump || previousSent.inputs.left !== dataToSend.inputs.left) {
+    dataToSend = getCurrentInputs()
+    if (previousSent.right !== dataToSend.right || previousSent.jump !== dataToSend.jump || previousSent.left !== dataToSend.left) {
         emitInputs(dataToSend)
         previousSent = dataToSend
     }

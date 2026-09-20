@@ -41,6 +41,7 @@ app.ticker.add((time) => {
 //TEMP
 let isReady = false
 document.getElementById("readyButton")?.addEventListener("click", () => {
+
     isReady = !isReady
     console.log(isReady)
     emitReady(isReady)

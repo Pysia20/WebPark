@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 const info = document.getElementById("infoList");
-const roomID = window.location.pathname.split("/")[2];
+const roomID = window.location.pathname.split("/")[3];
 
 let isReady = false;
 const inputs = {
@@ -22,8 +22,9 @@ const ctx = (() => {
 document.getElementById("roomIDH1").textContent = roomID;
 
 /** @type {import("socket.io-client").Socket} */
-const socket = io("http://localhost:3000/player");
-
+const socket = io("/player", {
+	path: '/api/socket.io'
+})
 socket.on("connect", () => {
 	console.log("Web socket created");
 
@@ -105,7 +106,7 @@ addEventListener("keydown", (e) => {
 		somethingChanged = true;
 	}
 
-	if (somethingChanged) socket.emit("input", inputs);
+	if (somethingChanged) socket.emit("playerInputs", inputs);
 });
 
 addEventListener("keyup", (e) => {
@@ -124,7 +125,7 @@ addEventListener("keyup", (e) => {
 		somethingChanged = true;
 	}
 
-	if (somethingChanged) socket.emit("input", inputs);
+	if (somethingChanged) socket.emit("playerInputs", inputs);
 });
 
 // GAME

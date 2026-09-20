@@ -5,7 +5,7 @@ document.getElementById("create").addEventListener("click", async () => {
 	sessionStorage.setItem("userNick", nick);
 
 	let response = await (
-		await fetch("/createRoom", {
+		await fetch("/api/createRoom", {
 			method: "post",
 			headers: {
 				"Content-Type": "application/json",
@@ -15,7 +15,7 @@ document.getElementById("create").addEventListener("click", async () => {
 
 	sessionStorage.setItem("userUUID", response["userUUID"]);
 
-	window.location.href = "/game/" + response["roomID"];
+	window.location.href = "/api/game/" + response["roomID"];
 });
 
 document.getElementById("join").addEventListener("click", async () => {
@@ -25,12 +25,12 @@ document.getElementById("join").addEventListener("click", async () => {
 	const roomID = document.getElementById("roomID").value;
 
 	let response = await (
-		await fetch(`/joinRoom/${roomID}`, {
+		await fetch(`/api/joinRoom/${roomID}`, {
 			method: "get",
 		})
 	).json();
 
 	sessionStorage.setItem("userUUID", response["userUUID"]);
 
-	window.location.href = "/game/" + response["roomID"];
+	window.location.href = "/api/game/" + response["roomID"];
 });

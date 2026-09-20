@@ -30,6 +30,7 @@ export class Coordinator {
                 newPlayer.pos = playerData.pos
                 this.players.set(playerId, newPlayer)
                 this.world.stage.addChild(newPlayer.sprite)
+                console.log("Temp doesnt exist")
             }
         }
         return newPlayers

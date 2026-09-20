@@ -1,7 +1,9 @@
 import { io } from "socket.io-client"
 import { ServerData, ClientData } from  "../../shared/commonModels"
 
-const socket = io("http://localhost:3000/player") //will need to change the address later (probably anyway)
+const socket = io("/player", {
+    path: '/api/socket.io'
+}) //will need to change the address later (probably anyway)
 let playerData: ServerData | undefined
 
 socket.on("connect_error", (error) => {

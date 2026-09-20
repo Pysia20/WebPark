@@ -12,9 +12,11 @@ export function register(io: Server) {
 	const endpoint = io.of("/player");
 
 	endpoint.on("connect", (socket) => {
-		// console.log(`User of id ${socket.id} connected.`);
+		console.log(`User of id ${socket.id} connected.`);
 
 		socket.on("registerUser", (data: RegisterUserData, callback) => {
+			console.log(data)
+
 			try {
 				RegisterUserDataZod.parse(data);
 			} catch (e) {
@@ -59,6 +61,7 @@ export function register(io: Server) {
 					.emit("log", `<li>User ${socket.data.userNick} is ready.</li>`);
 
 				if (room.isEveryoneReady()) {
+					console.log("starting")
 					room.startGameLoop(endpoint);
 				}
 			}

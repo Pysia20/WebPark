@@ -9,8 +9,9 @@ const readyButton = document.getElementById("readyButton")
 let isReady = false
 
 createButton.addEventListener("click",  async () => {
-    let response = await (await fetch("/createRoom", {method: "post"})).json()
+    let response = await (await fetch("/api/createRoom", {method: "post"})).json()
     sessionStorage.setItem("userUUID", response["userUUID"])
+    sessionStorage.setItem("roomId", response["roomID"])
     sessionStorage.setItem("roomId", response["roomID"])
     sessionStorage.setItem("userName",playerName.value)
 
@@ -20,6 +21,7 @@ createButton.addEventListener("click",  async () => {
 joinButton.addEventListener("click",  async () => {
     let response = await (await fetch("/joinRoom/" + roomId.value, {method: "get"})).json()
     sessionStorage.setItem("userUUID", response["userUUID"])
+    sessionStorage.setItem("roomId", response["roomID"])
     sessionStorage.setItem("roomId", response["roomID"])
     sessionStorage.setItem("userName",playerName.value)
 

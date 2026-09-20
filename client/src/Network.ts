@@ -13,6 +13,7 @@ socket.on("connect", () => {
     const roomId = sessionStorage.getItem("roomId")
     const uuid = sessionStorage.getItem("userUUID")
     const userName = sessionStorage.getItem("userName")
+    console.log(roomId)
     socket.emit("registerUser", {
         roomID: roomId,
         userUUID: uuid,
@@ -26,8 +27,9 @@ socket.on("disconnect", (reason) => {
     console.log("Disconnected! reason:", reason)
 })
 
-socket.on("updatePlayerData", (data: ServerData) => {
+socket.on("tick", (data: ServerData) => {
     playerData = data
+    console.log(data)
 })
 
 

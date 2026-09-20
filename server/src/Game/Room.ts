@@ -1,7 +1,7 @@
 import { Namespace } from "socket.io";
 import { Player } from "./Player";
-import { PlayerInputs, Vector2 } from "../../../shared/commonModels";
-import { PLAYER_CONFIG } from "../../../shared/commonVariables";
+import { PlayerInputs, Vector2 } from "shared/commonModels";
+import { PLAYER_CONFIG } from "shared/commonVariables";
 import { clamp } from "../Global";
 
 export class Room {
@@ -109,12 +109,12 @@ export class Room {
 				this.physicsUpdate();
 
 				const roomData = {
-					players: {} as Record<string, any>,
+					playerData: {} as Record<string, any>,
 				};
 
 				this.players.forEach((player: Player, uuid: string) => {
 					const pos = player.getPos();
-					roomData.players[uuid] = {
+					roomData.playerData[uuid] = {
 						nick: player.getNick(),
 						pos: pos,
 						velocity: player.getVelocity(),

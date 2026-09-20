@@ -4,7 +4,7 @@ import { Application } from "pixi.js";
 import { PlayerTextures } from "./Assets";
 
 export class Coordinator {
-    players: Map<number, Player> = new Map
+    players: Map<string, Player> = new Map
     serverData: ServerData | undefined
     playerTextures: PlayerTextures
     world: Application
@@ -17,15 +17,15 @@ export class Coordinator {
     update_players(serverData: ServerData) {
         this.serverData = serverData
         const newPlayers: Player[] = []
-        for (const playerData of this.serverData.playerData) {
-            const tempPlayer = this.players.get(playerData.playerId)
+        for (const playerDataId in this.serverData.playerData) {
+            const tempPlayer = this.players.get(playerDataId)
             if (tempPlayer) {
-                tempPlayer.targetPos = playerData.pos
-                tempPlayer.updateDirection(playerData.velocity)
+                tempPlayer.targetPos = this.serverData.playerData[playerDataId].pos
+                tempPlayer.updateDirection(this.serverData.playerData[playerDataId].velocity)
             } else {
                 const newPlayer: Player = new Player(this.players.size, "#000000", this.playerTextures)
-                newPlayer.pos = playerData.pos
-                this.players.set(playerData.playerId, newPlayer)
+                newPlayer.pos = this.serverData.playerData[playerDataId].pos
+                this.players.set(playerDataId, newPlayer)
                 this.world.stage.addChild(newPlayer.sprite)
             }
         }

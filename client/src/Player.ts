@@ -3,6 +3,7 @@ import * as PIXI from "pixi.js";
 import { Sprite } from "pixi.js";
 import { Vector2 } from "../../shared/commonModels"
 import { PlayerTextures } from "./Assets";
+import { playJump } from "./Audio";
 
 interface PlayerSprites {
     idle: PIXI.Sprite
@@ -13,6 +14,7 @@ interface PlayerSprites {
 export class Player {
     id: number
     pos: Vector2 = {x: 0.0, y: 0.0}
+    prevVelocity: Vector2 = {x: 0.0, y: 0.0}
     targetPos: Vector2 = {x: 0.0, y: 0.0}
     color: string
     sprite: Sprite
@@ -51,6 +53,14 @@ export class Player {
             this.sprite = this.sprites.jump
         } else if (this.sprite == this.sprites.jump) {
             this.sprite = this.sprites.idle
+        }
+
+        this.checkIfJumped(velocity)
+    }
+
+    checkIfJumped(currentVelocity: Vector2) {
+        if (currentVelocity.y < 0 && this.prevVelocity.y == 0) {
+            playJump()
         }
     }
 }

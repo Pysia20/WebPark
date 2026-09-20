@@ -19,7 +19,7 @@ createButton.addEventListener("click",  async () => {
 })
 
 joinButton.addEventListener("click",  async () => {
-    let response = await (await fetch("/joinRoom/" + roomId.value, {method: "get"})).json()
+    let response = await (await fetch("/api/joinRoom/" + roomId.value, {method: "get"})).json()
     sessionStorage.setItem("userUUID", response["userUUID"])
     sessionStorage.setItem("roomId", response["roomID"])
     sessionStorage.setItem("roomId", response["roomID"])

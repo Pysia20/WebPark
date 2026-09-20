@@ -74,7 +74,7 @@ export function register(io: Server) {
 			}
 		});
 
-		socket.on("input", (inputs: PlayerInputs) => {
+		socket.on("playerInputs", (inputs: PlayerInputs) => {
 			try {
 				InputsZod.parse(inputs);
 			} catch {

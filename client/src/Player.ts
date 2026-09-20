@@ -30,7 +30,7 @@ export class Player {
 
         for (const texture in textures) {
             const sprite = new Sprite(textures[texture as keyof PlayerTextures])
-            sprite.anchor.set(0.5)
+            sprite.anchor.set(0.5, 1.0)
             sprite.tint = this.color
             this.sprites[texture as keyof PlayerTextures] = sprite
         }

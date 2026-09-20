@@ -60,6 +60,8 @@ document.getElementById("readyUp").addEventListener("click", () => {
 	}
 });
 
+let test = false;
+
 socket.on("tick", (data) => {
 	ctx.clearRect(0, 0, 300, 300);
 
@@ -72,8 +74,18 @@ socket.on("tick", (data) => {
 			ctx.fillStyle = "yellow";
 		}
 		ctx.fillRect(values.pos.x, values.pos.y, 10, 10);
+
+		if (values.pos.y !== 290) {
+			// console.log(`Y: ${values.pos.x}`);
+			// console.log(`VelY: ${values.velocity.x}`);
+			console.log(values);
+
+			test = true;
+		} else if (test) {
+			console.log(values.pos);
+			test = false;
+		}
 	}
-	console.log(data);
 });
 
 addEventListener("keydown", (e) => {

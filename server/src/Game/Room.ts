@@ -54,16 +54,17 @@ export class Room {
 			const newPos: Vector2 = { ...pos };
 			const newVel: Vector2 = { ...velocity };
 
-			//TODO: When player spams a key then it accelerates
-
 			if (input.right) {
 				newVel.x += PLAYER_CONFIG.ACCELERATION;
 			}
 			if (input.left) {
 				newVel.x -= PLAYER_CONFIG.ACCELERATION;
 			}
+			if (input.jump && player.getGrounded()) {
+				newVel.y -= PLAYER_CONFIG.JUMP_FORCE;
+				player.setGrounded(false);
+			}
 
-			//TODO: Drag doesnt work
 			if (newVel.x > PLAYER_CONFIG.DRAG) {
 				newVel.x -= PLAYER_CONFIG.DRAG;
 			} else if (newVel.x < -PLAYER_CONFIG.DRAG) {
@@ -71,6 +72,14 @@ export class Room {
 			} else {
 				newVel.x = 0;
 			}
+
+			newVel.y += PLAYER_CONFIG.GRAVITY;
+
+			newVel.y = clamp(
+				newVel.y,
+				-PLAYER_CONFIG.MAX_VERTICAL_SPEED,
+				PLAYER_CONFIG.MAX_VERTICAL_SPEED,
+			);
 
 			newVel.x = clamp(
 				newVel.x,
@@ -82,7 +91,12 @@ export class Room {
 			newPos.y += newVel.y * (1 / this.TICKRATE);
 
 			newPos.x = clamp(newPos.x, 0, 300);
-			newPos.y = clamp(newPos.y, 0, 300);
+			newPos.y = clamp(newPos.y, 0, 290);
+
+			if (newPos.y >= 290) {
+				player.setGrounded(true);
+				newVel.y = 0;
+			}
 
 			player.setPos(newPos);
 			player.setVelocity(newVel);

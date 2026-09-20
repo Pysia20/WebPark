@@ -8,6 +8,7 @@ export class Player {
 	private color: string = "";
 	private roomID: string | undefined;
 	private isReady: boolean = false;
+	private isGrounded: boolean = false;
 	private lastInputs: PlayerInputs = {
 		right: false,
 		left: false,
@@ -57,5 +58,13 @@ export class Player {
 
 	public setInputs(v: PlayerInputs) {
 		this.lastInputs = v;
+	}
+
+	public getGrounded(): boolean {
+		return this.isGrounded;
+	}
+
+	public setGrounded(v: boolean) {
+		this.isGrounded = v;
 	}
 }

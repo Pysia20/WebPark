@@ -30,7 +30,6 @@ socket.on("disconnect", (reason) => {
 })
 
 socket.on("tick", (data: ServerData) => {
-    console.log(data)
     playerData = data
 })
 

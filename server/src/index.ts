@@ -16,7 +16,13 @@ import { z } from "zod";
 
 const app: ExpressInterface = Express();
 const server: Server = createServer(app);
-const io: SocketIOServer = new SocketIOServer(server);
+const io: SocketIOServer = new SocketIOServer(server, {
+	cors: {
+		origin: "http://localhost:5173",
+		methods: ["GET", "POST"],
+		credentials: true,
+	},
+});
 
 movement.register(io);
 

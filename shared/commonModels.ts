@@ -8,11 +8,11 @@ export interface PlayerInputs {
 
 // What the backend sends to the client
 export interface ServerData {
-	playerData: ServerPlayerData[];
+	playerData: Record<string, ServerPlayerData>;
 }
 
 export interface ServerPlayerData {
-	playerId: number;
+	nick: string;
 	pos: Vector2;
 	velocity: Vector2;
 }

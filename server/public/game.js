@@ -72,8 +72,8 @@ socket.on("tick", (data) => {
 			ctx.fillStyle = "yellow";
 		}
 		ctx.fillRect(values.pos.x, values.pos.y, 10, 10);
-		console.log(playerUUID, values);
 	}
+	console.log(data);
 });
 
 addEventListener("keydown", (e) => {

@@ -103,6 +103,7 @@ export class Room {
 					roomData.players[uuid] = {
 						nick: player.getNick(),
 						pos: pos,
+						velocity: player.getVelocity(),
 					};
 				});
 

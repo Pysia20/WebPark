@@ -3,7 +3,7 @@ import * as PIXI from 'pixi.js'
 import { getCurrentInputs } from "./Inputs"
 import {emitInputs, emitReady, getPlayerData} from "./Network";
 import { Coordinator } from "./Coordinator";
-import { ClientData } from "../../shared/commonModels"
+import { ClientData } from "shared/commonModels"
 import { loadAssets } from "./Assets";
 
 const app = new PIXI.Application()
@@ -42,5 +42,6 @@ app.ticker.add((time) => {
 let isReady = false
 document.getElementById("readyButton")?.addEventListener("click", () => {
     isReady = !isReady
+    console.log(isReady)
     emitReady(isReady)
 })

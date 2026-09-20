@@ -17,6 +17,8 @@ socket.on("connect", () => {
         roomID: roomId,
         userUUID: uuid,
         userNick: userName
+    }, (e: string) => {
+        console.log(e);
     })
 })
 

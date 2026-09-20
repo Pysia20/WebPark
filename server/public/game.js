@@ -68,7 +68,7 @@ socket.on("tick", (data) => {
 
 	const clientUUID = sessionStorage.getItem("userUUID");
 
-	for (const [playerUUID, values] of Object.entries(data["players"])) {
+	for (const [playerUUID, values] of Object.entries(data["playerData"])) {
 		if (playerUUID === clientUUID) {
 			ctx.fillStyle = "blue";
 		} else {

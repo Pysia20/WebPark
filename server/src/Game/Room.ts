@@ -1,7 +1,7 @@
 import { Namespace } from "socket.io";
 import { Player } from "./Player";
-import { PlayerInputs, Vector2 } from "shared/commonModels";
-import { PLAYER_CONFIG } from "shared/commonVariables";
+import { PlayerInputs, Vector2 } from "../../../shared/commonModels";
+import { PLAYER_CONFIG } from "../../../shared/commonVariables";
 import { clamp } from "../Global";
 
 export class Room {

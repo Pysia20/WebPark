@@ -1,4 +1,4 @@
-import { Vector2 } from "../../../shared/commonModels";
+import { PlayerInputs, Vector2 } from "../../../shared/commonModels";
 
 export class Player {
 	private id: string;
@@ -8,6 +8,11 @@ export class Player {
 	private color: string = "";
 	private roomID: string | undefined;
 	private isReady: boolean = false;
+	private lastInputs: PlayerInputs = {
+		right: false,
+		left: false,
+		jump: false,
+	};
 
 	constructor(id: string, nick: string) {
 		this.id = id;
@@ -44,5 +49,13 @@ export class Player {
 
 	public setVelocity(v: Vector2) {
 		this.velocity = v;
+	}
+
+	public getInputs(): PlayerInputs {
+		return this.lastInputs;
+	}
+
+	public setInputs(v: PlayerInputs) {
+		this.lastInputs = v;
 	}
 }

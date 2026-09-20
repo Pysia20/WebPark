@@ -33,7 +33,6 @@ export class Room {
 		let isReady = true;
 
 		this.players.forEach((player) => {
-			console.log(player.getIsReady());
 			if (!player.getIsReady()) {
 				isReady = false;
 			}
@@ -47,19 +46,15 @@ export class Room {
 	}
 
 	private physicsUpdate() {
-		for (let i = 0; i < this.inputs.length; i++) {
-			const input = this.inputs[i];
-			const player: Player | undefined = this.players.get(input.userUUID);
-
-			if (player === undefined) {
-				continue;
-			}
-
+		for (let [uuid, player] of this.players) {
 			const pos: Vector2 = player.getPos();
 			const velocity: Vector2 = player.getVelocity();
+			const input = player.getInputs();
 
 			const newPos: Vector2 = { ...pos };
 			const newVel: Vector2 = { ...velocity };
+
+			//TODO: When player spams a key then it accelerates
 
 			if (input.right) {
 				newVel.x += PLAYER_CONFIG.ACCELERATION;
@@ -68,6 +63,7 @@ export class Room {
 				newVel.x -= PLAYER_CONFIG.ACCELERATION;
 			}
 
+			//TODO: Drag doesnt work
 			if (newVel.x > PLAYER_CONFIG.DRAG) {
 				newVel.x -= PLAYER_CONFIG.DRAG;
 			} else if (newVel.x < -PLAYER_CONFIG.DRAG) {
@@ -120,11 +116,12 @@ export class Room {
 		this.gameLoop?.close();
 	}
 
-	public addInputsToStack(userUUID: string, inputs: PlayerInputs) {
-		if (inputs.userUUID !== userUUID) {
+	public setInputsToPlayer(userUUID: string, inputs: PlayerInputs) {
+		const player = this.players.get(userUUID);
+		if (player === undefined) {
 			return;
 		}
 
-		this.inputs.push(inputs);
+		player.setInputs(inputs);
 	}
 }

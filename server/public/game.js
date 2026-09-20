@@ -67,9 +67,9 @@ socket.on("tick", (data) => {
 
 	for (const [playerUUID, values] of Object.entries(data["players"])) {
 		if (playerUUID === clientUUID) {
-			ctx.strokeStyle = "blue";
+			ctx.fillStyle = "blue";
 		} else {
-			ctx.strokeStyle = "yellow";
+			ctx.fillStyle = "yellow";
 		}
 		ctx.fillRect(values.pos.x, values.pos.y, 10, 10);
 		console.log(playerUUID, values);
@@ -93,8 +93,7 @@ addEventListener("keydown", (e) => {
 		somethingChanged = true;
 	}
 
-	if (somethingChanged)
-		socket.emit("input", { userUUID: sessionStorage.getItem("userUUID"), ...inputs });
+	if (somethingChanged) socket.emit("input", inputs);
 });
 
 addEventListener("keyup", (e) => {
@@ -113,8 +112,7 @@ addEventListener("keyup", (e) => {
 		somethingChanged = true;
 	}
 
-	if (somethingChanged)
-		socket.emit("input", { userUUID: sessionStorage.getItem("userUUID"), ...inputs });
+	if (somethingChanged) socket.emit("input", inputs);
 });
 
 // GAME

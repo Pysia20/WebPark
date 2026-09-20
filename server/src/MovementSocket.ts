@@ -78,11 +78,10 @@ export function register(io: Server) {
 			try {
 				InputsZod.parse(inputs);
 			} catch {
-				console.log("Error");
 				return;
 			}
 
-			games.get(socket.data.roomID)?.addInputsToStack(socket.data.userUUID, inputs);
+			games.get(socket.data.roomID)?.setInputsToPlayer(socket.data.userUUID, inputs);
 		});
 
 		socket.on("disconnect", (e) => {

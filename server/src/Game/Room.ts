@@ -90,10 +90,10 @@ export class Room {
 			newPos.x += newVel.x * (1 / this.TICKRATE);
 			newPos.y += newVel.y * (1 / this.TICKRATE);
 
-			newPos.x = clamp(newPos.x, 0, 300);
-			newPos.y = clamp(newPos.y, 0, 290);
+			newPos.x = clamp(newPos.x, 0, 1280);
+			newPos.y = clamp(newPos.y, 0, 720);
 
-			if (newPos.y >= 290) {
+			if (newPos.y >= 710) {
 				player.setGrounded(true);
 				newVel.y = 0;
 			}

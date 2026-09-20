@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js'
 
 import { getCurrentInputs } from "./Inputs"
-import { emitInputs, getPlayerData } from "./Network";
+import {emitInputs, emitReady, getPlayerData} from "./Network";
 import { Coordinator } from "./Coordinator";
 import { ClientData } from "../../shared/commonModels"
 import { loadAssets } from "./Assets";
@@ -36,4 +36,11 @@ app.ticker.add((time) => {
         coordinator.update_players(serverPlayerData)
     }
     coordinator.update_positions()
+})
+
+//TEMP
+let isReady = false
+document.getElementById("readyButton")?.addEventListener("click", () => {
+    isReady = !isReady
+    emitReady(isReady)
 })

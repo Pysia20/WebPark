@@ -10,7 +10,7 @@ socket.on("connect_error", (error) => {
 
 socket.on("connect", () => {
      console.log("Connected! id:", socket.id)
-    const roomId = window.location.pathname.split("/").filter(Boolean).pop()
+    const roomId = sessionStorage.getItem("roomId")
     const uuid = sessionStorage.getItem("userUUID")
     const userName = sessionStorage.getItem("userName")
     socket.emit("registerUser", {

@@ -21,3 +21,10 @@ export interface ServerPlayerData {
 export interface ClientData {
 	inputs: PlayerInputs;
 }
+
+// Server -> Client when player joins a room (Server sends an array of that)
+export interface PlayerJoinedData {
+	playerUUID: string;
+	nick: string;
+	color: string;
+}

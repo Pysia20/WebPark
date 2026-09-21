@@ -139,4 +139,8 @@ export class Room {
 
 		player.setInputs(inputs);
 	}
+
+	public getPlayers() {
+		return this.players;
+	}
 }

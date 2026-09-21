@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 
-import { ClientData, PlayerInputs } from "../../shared/commonModels";
+import { ClientData, PlayerInputs, PlayerJoinedData } from "../../shared/commonModels";
 import map from "../../shared/testMap.json";
 import { v4 as uuid } from "uuid";
 import { games } from "./Global";
@@ -14,8 +14,8 @@ export function register(io: Server) {
 	endpoint.on("connect", (socket) => {
 		console.log(`User of id ${socket.id} connected.`);
 
-		socket.on("registerUser", (data: RegisterUserData, callback) => {
-			console.log(data)
+		socket.on("registerUser", async (data: RegisterUserData, callback) => {
+			console.log(data);
 
 			try {
 				RegisterUserDataZod.parse(data);
@@ -37,9 +37,32 @@ export function register(io: Server) {
 				return;
 			}
 
-			socket.join(data.roomID);
-			room.addPlayer(new Player(data.userUUID, data.userNick));
+			await socket.join(data.roomID);
+
+			const player: Player = new Player(data.userUUID, data.userNick);
+			player.setColor(data.color);
+
+			room.addPlayer(player);
+
 			socket.to(data.roomID).emit("log", `<li>${data.userNick} joined the room </li>`);
+			//TODO Color emit playerJoined
+
+			const playerJoinedData: PlayerJoinedData[] = [];
+
+			games
+				.get(data.roomID)
+				?.getPlayers()
+				.forEach((player, uuid) => {
+					const data: PlayerJoinedData = {
+						playerUUID: player.getID(),
+						nick: player.getNick(),
+						color: player.getColor(),
+					};
+
+					playerJoinedData.push(data);
+				});
+
+			socket.to(data.roomID).emit("playerJoined", playerJoinedData);
 
 			socket.data.roomID = data.roomID;
 			socket.data.userNick = data.userNick;
@@ -61,7 +84,7 @@ export function register(io: Server) {
 					.emit("log", `<li>User ${socket.data.userNick} is ready.</li>`);
 
 				if (room.isEveryoneReady()) {
-					console.log("starting")
+					console.log("starting");
 					room.startGameLoop(endpoint);
 				}
 			}

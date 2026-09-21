@@ -5,7 +5,7 @@ import { Server as SocketIOServer } from "socket.io";
 import path from "path";
 import { fileURLToPath } from "url";
 import { v4 as uuid } from "uuid";
-import cors from "cors"
+import cors from "cors";
 
 import { games, generateRoomCode } from "./Global";
 import config from "../config.json";
@@ -18,7 +18,7 @@ import { z } from "zod";
 const app: ExpressInterface = Express();
 const server: Server = createServer(app);
 const io: SocketIOServer = new SocketIOServer(server, {
-	path: '/api/socket.io',
+	path: "/api/socket.io",
 	cors: {
 		origin: ["http://localhost:5173", "https://webpark.mywire.org"],
 		methods: ["GET", "POST"],
@@ -34,7 +34,7 @@ const __dirname = path.dirname(__filename);
 const PUBLIC_PATH = path.join(__dirname, "..", "public");
 const SHARED_PATH = path.join(PUBLIC_PATH, "..", "..", "shared");
 
-app.use(cors())
+app.use(cors());
 app.use(Express.json());
 app.use("/api/", Express.static(PUBLIC_PATH));
 app.use("/shared", Express.static(SHARED_PATH));
@@ -42,8 +42,8 @@ app.use("/shared", Express.static(SHARED_PATH));
 //TODO Request validation
 
 app.get("/api/ping", (req: Request, res: Response) => {
-	res.status(200).json({"pong": true})
-})
+	res.status(200).json({ pong: true });
+});
 
 app.post("/api/createRoom", (req: Request, res: Response) => {
 	const roomID = generateRoomCode();

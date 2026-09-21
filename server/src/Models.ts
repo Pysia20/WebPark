@@ -5,6 +5,7 @@ export const RegisterUserDataZod = z
 		roomID: z.string().length(6),
 		userUUID: z.uuid(),
 		userNick: z.string(),
+		color: z.string().length(7),
 	})
 	.strict();
 

@@ -67,4 +67,12 @@ export class Player {
 	public setGrounded(v: boolean) {
 		this.isGrounded = v;
 	}
+
+	public setColor(v: string) {
+		this.color = v;
+	}
+
+	public getColor() {
+		return this.color;
+	}
 }

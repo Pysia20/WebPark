@@ -23,19 +23,22 @@ document.getElementById("roomIDH1").textContent = roomID;
 
 /** @type {import("socket.io-client").Socket} */
 const socket = io("/player", {
-	path: '/api/socket.io'
-})
+	path: "/api/socket.io",
+});
 socket.on("connect", () => {
 	console.log("Web socket created");
 
 	const uuid = sessionStorage.getItem("userUUID");
 	const nick = sessionStorage.getItem("userNick");
+	const color = sessionStorage.getItem("userColor");
+
 	socket.emit(
 		"registerUser",
 		{
 			roomID: roomID,
 			userUUID: uuid,
 			userNick: nick,
+			color: color,
 		},
 		(e) => {
 			console.log(e);
@@ -45,6 +48,10 @@ socket.on("connect", () => {
 
 socket.on("log", (data) => {
 	info.innerHTML += data;
+});
+
+socket.on("playerJoined", (data) => {
+	console.log(data);
 });
 
 document.getElementById("readyUp").addEventListener("click", () => {

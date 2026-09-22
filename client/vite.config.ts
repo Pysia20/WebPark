@@ -11,21 +11,21 @@ export default defineConfig({
             'webpark.mywire.org'
         ],
 
-        // Route Hot Module Replacement (HMR) WebSofckets through Nginx
+        // Route Hot Module Replacement (HMR) Websockets through Nginx
 
-        //hmr: {
-        //    host: 'webpark.mywire.org',
-        //    clientPort: 443, // Use 443 if you use HTTPS, or 80 if HTTP
-        //    protocol: 'wss', // Use 'wss' for HTTPS, or 'ws' for HTTP
-        //},
+        hmr: {
+            host: 'webpark.mywire.org',
+            clientPort: 443, // Use 443 if you use HTTPS, or 80 if HTTP
+            protocol: 'wss', // Use 'wss' for HTTPS, or 'ws' for HTTP
+        },
 
         // 💡 CRITICAL: Forwards your room fetches to your teammate's backend server!
-        proxy: {
-            '/api': {
-                target: 'http://localhost:3005',
-                changeOrigin: true
-            }
-        }
+        // proxy: {
+        //     '/api': {
+        //         target: 'http://localhost:3005',
+        //         changeOrigin: true
+        //     }
+        // }
     },
 
     // Pixi.js Specific Optimizations

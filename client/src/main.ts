@@ -1,9 +1,9 @@
 import * as PIXI from 'pixi.js'
 
 import { getCurrentInputs } from "./Inputs"
-import {emitInputs, emitReady, getPlayerData} from "./Network";
+import { emitInputs, emitReady, getPlayerData } from "./Network";
 import { Coordinator } from "./Coordinator";
-import {ClientData, PlayerInputs} from "../../shared/commonModels"
+import { ClientData, PlayerInputs } from "../../shared/commonModels"
 import { loadAssets } from "./Assets";
 
 const app = new PIXI.Application()

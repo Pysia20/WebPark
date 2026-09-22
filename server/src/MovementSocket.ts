@@ -63,7 +63,7 @@ export function register(io: Server) {
 			games
 				.get(data.roomID)
 				?.getPlayers()
-				.forEach((player, uuid) => {
+				.forEach((player, id) => {
 					const data: PlayerJoinedData = {
 						playerID: player.getID(),
 						nick: player.getNick(),
@@ -82,13 +82,13 @@ export function register(io: Server) {
 			console.log(`User: ${data.userNick} (${data.userID}) joined the room ${data.roomID}`);
 		});
 
-		socket.on("playerReady", (uuid) => {
+		socket.on("playerReady", (id) => {
 			if (socket.data.roomID) {
 				const room: Room | undefined = games.get(socket.data.roomID);
 
 				if (room === undefined) return;
 
-				room.setPlayerReady(uuid, true);
+				room.setPlayerReady(id, true);
 
 				socket
 					.to(socket.data.roomID)
@@ -101,9 +101,9 @@ export function register(io: Server) {
 			}
 		});
 
-		socket.on("playerUnReady", (uuid) => {
+		socket.on("playerUnReady", (id) => {
 			if (socket.data.roomID) {
-				games.get(socket.data.roomID)?.setPlayerReady(uuid, false);
+				games.get(socket.data.roomID)?.setPlayerReady(id, false);
 
 				socket
 					.to(socket.data.roomID)

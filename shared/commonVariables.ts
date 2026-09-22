@@ -5,4 +5,6 @@ export const PLAYER_CONFIG = {
 	DRAG: 5,
 	GRAVITY: 5,
 	JUMP_FORCE: 100,
+	HEIGHT: 270,
+	WIDTH: 233
 };

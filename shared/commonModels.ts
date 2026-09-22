@@ -10,7 +10,7 @@ export interface PlayerInputs {
 
 // What the backend sends to the client
 export interface ServerData {
-	playerData: Record<string, ServerPlayerData>;
+	playerData: Record<number, ServerPlayerData>;
 }
 
 export interface ServerPlayerData {

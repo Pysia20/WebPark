@@ -1,5 +1,5 @@
 import { io } from "socket.io-client"
-import { ServerData, ClientData, PlayerInputs, RegisterUserData } from "../../shared/commonModels"
+import { ServerData, PlayerInputs, RegisterUserData } from "../../shared/commonModels"
 
 const socket = io("/player", {
     path: '/api/socket.io'
@@ -13,7 +13,7 @@ socket.on("connect_error", (error) => {
 socket.on("connect", () => {
      console.log("Connected! id:", socket.id)
     const roomId = sessionStorage.getItem("roomId") as string
-    const id = Number(sessionStorage.getItem("userId")) as number
+    const id = Number(sessionStorage.getItem("userID")) as number
     const userName = sessionStorage.getItem("userName") as string
     const color = sessionStorage.getItem("playerColor") as string
 
@@ -37,7 +37,6 @@ socket.on("tick", (data: ServerData) => {
     playerData = data
 })
 
-
 export function emitInputs(data: PlayerInputs) {
     socket.emit("playerInputs", data)
 }
@@ -48,8 +47,8 @@ export function getPlayerData() {
 
 export function emitReady(isReady: boolean) {
     if (isReady) {
-        socket.emit("playerReady", sessionStorage.getItem("userUUID"))
+        socket.emit("playerReady", Number(sessionStorage.getItem("userID")))
     } else {
-        socket.emit("playerUnReady", sessionStorage.getItem("userUUID"))
+        socket.emit("playerUnReady", Number(sessionStorage.getItem("userID")))
     }
 }

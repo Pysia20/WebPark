@@ -1,7 +1,7 @@
 import { Player } from "./Player";
 import { ServerData } from "../../shared/commonModels"
 import { Application } from "pixi.js";
-import { loadAssets, PlayerTextures } from "./Assets";
+import { PlayerTextures } from "./Assets";
 
 export class Coordinator {
     players: Map<string, Player> = new Map
@@ -23,9 +23,9 @@ export class Coordinator {
                 tempPlayer.targetPos = playerData.pos
                 tempPlayer.updateDirection(playerData.velocity)
             } else {
-                const myUUID = localStorage.getItem("userUUID")
+                const myID = localStorage.getItem("userID")
                 let newPlayer: Player = {} as Player
-                if (myUUID == playerId) {
+                if (myID == playerId) {
                     newPlayer = new Player(this.players.size, "#ffda7e", this.playerTextures)
                 } else {
                     newPlayer = new Player(this.players.size, "#7effff", this.playerTextures)

@@ -33,6 +33,10 @@ socket.on("disconnect", (reason) => {
     console.log("Disconnected! reason:", reason)
 })
 
+socket.on("somethingBroke", (whatBroke: unknown) => {
+    console.log(whatBroke)
+})
+
 socket.on("tick", (data: ServerData) => {
     playerData = data
 })

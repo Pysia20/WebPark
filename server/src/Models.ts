@@ -1,15 +1,4 @@
-import { z } from "zod";
-
-export const RegisterUserDataZod = z
-	.object({
-		roomID: z.string().length(6),
-		userUUID: z.uuid(),
-		userNick: z.string(),
-		color: z.string().length(7),
-	})
-	.strict();
-
-export type RegisterUserData = z.infer<typeof RegisterUserDataZod>;
+import { string, z } from "zod";
 
 export const JoinRoomRequestZod = z
 	.object({
@@ -26,3 +15,13 @@ export const InputsZod = z
 		jump: z.boolean(),
 	})
 	.strict();
+
+export const SocketDataZod = z
+	.object({
+		roomID: z.string().length(6).optional(),
+		userNick: z.string().optional(),
+		userID: z.number().optional(),
+	})
+	.strict();
+
+export type SocketData = z.infer<typeof SocketDataZod>;

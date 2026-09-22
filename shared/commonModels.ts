@@ -1,3 +1,5 @@
+import z from "zod";
+
 export type Vector2 = { x: number; y: number };
 
 export interface PlayerInputs {
@@ -24,7 +26,21 @@ export interface ClientData {
 
 // Server -> Client when player joins a room (Server sends an array of that)
 export interface PlayerJoinedData {
-	playerUUID: string;
+	playerUUID: number;
 	nick: string;
 	color: string;
 }
+
+//###############################################################
+// DEJMI TEGO NIE MUSISZ IMPORTOWAC NIGDZIE IMPORTUJ TO NIZEJ
+//###############################################################
+export const RegisterUserDataZod = z
+	.object({
+		roomID: z.string().length(6),
+		userID: z.number(),
+		userNick: z.string(),
+		color: z.string().length(7),
+	})
+	.strict();
+
+export type RegisterUserData = z.infer<typeof RegisterUserDataZod>;

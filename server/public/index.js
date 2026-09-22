@@ -16,7 +16,7 @@ document.getElementById("create").addEventListener("click", async () => {
 		})
 	).json();
 
-	sessionStorage.setItem("userUUID", response["userUUID"]);
+	sessionStorage.setItem("userID", response["userID"]);
 
 	window.location.href = "/api/game/" + response["roomID"];
 });
@@ -36,7 +36,7 @@ document.getElementById("join").addEventListener("click", async () => {
 		})
 	).json();
 
-	sessionStorage.setItem("userUUID", response["userUUID"]);
+	sessionStorage.setItem("userID", response["userID"]);
 
 	window.location.href = "/api/game/" + response["roomID"];
 });

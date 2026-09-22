@@ -1,7 +1,7 @@
 import { PlayerInputs, Vector2 } from "../../../shared/commonModels";
 
 export class Player {
-	private id: string;
+	private id: number;
 	private nick: string;
 	private pos: Vector2 = { x: 0, y: 0 };
 	private velocity: Vector2 = { x: 0, y: 0 };
@@ -15,12 +15,12 @@ export class Player {
 		jump: false,
 	};
 
-	constructor(id: string, nick: string) {
+	constructor(id: number, nick: string) {
 		this.id = id;
 		this.nick = nick;
 	}
 
-	public getID(): string {
+	public getID(): number {
 		return this.id;
 	}
 

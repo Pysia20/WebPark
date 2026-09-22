@@ -1,10 +1,9 @@
 import Express from "express";
 import { Express as ExpressInterface, Request, Response } from "express";
 import { Server, createServer } from "http";
-import { Server as SocketIOServer } from "socket.io";
+import { DefaultEventsMap, Server as SocketIOServer } from "socket.io";
 import path from "path";
 import { fileURLToPath } from "url";
-import { v4 as uuid } from "uuid";
 import cors from "cors";
 
 import { games, generateRoomCode } from "./Global";
@@ -12,12 +11,17 @@ import config from "../config.json";
 import movement from "./MovementSocket";
 import { Room } from "./Game/Room";
 import { Player } from "./Game/Player";
-import { JoinRoomRequest, JoinRoomRequestZod } from "./Models";
+import { JoinRoomRequest, JoinRoomRequestZod, SocketData } from "./Models";
 import { z } from "zod";
 
 const app: ExpressInterface = Express();
 const server: Server = createServer(app);
-const io: SocketIOServer = new SocketIOServer(server, {
+const io: SocketIOServer = new SocketIOServer<
+	DefaultEventsMap,
+	DefaultEventsMap,
+	DefaultEventsMap,
+	SocketData
+>(server, {
 	path: "/api/socket.io",
 	cors: {
 		origin: ["http://localhost:5173", "https://webpark.mywire.org"],
@@ -47,13 +51,15 @@ app.get("/api/ping", (req: Request, res: Response) => {
 
 app.post("/api/createRoom", (req: Request, res: Response) => {
 	const roomID = generateRoomCode();
-	const userUUID = uuid();
 
-	games.set(roomID, new Room(roomID));
+	const room = new Room(roomID);
+	games.set(roomID, room);
+
+	const userID = room.getNextUserID();
 
 	res.status(200).json({
 		roomID: roomID,
-		userUUID: userUUID,
+		userID: userID,
 	});
 });
 
@@ -67,11 +73,13 @@ app.get("/api/joinRoom/:id", (req: Request, res: Response) => {
 		return;
 	}
 
-	const userUUID = uuid();
+	const room = games.get(String(id));
+
+	const userID = room?.getNextUserID();
 
 	res.status(200).json({
 		roomID: id,
-		userUUID: userUUID,
+		userID: userID,
 	});
 });
 

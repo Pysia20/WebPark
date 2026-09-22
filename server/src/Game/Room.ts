@@ -6,9 +6,10 @@ import { clamp } from "../Global";
 
 export class Room {
 	private TICKRATE: number = 30; // Per second
+	private nextUserID: number = 0;
 
 	private id: string;
-	private players: Map<string, Player> = new Map<string, Player>();
+	private players: Map<number, Player> = new Map<number, Player>();
 	private inputs: PlayerInputs[] = [];
 	private map: undefined;
 	private gameLoop: NodeJS.Timeout | undefined;
@@ -25,8 +26,14 @@ export class Room {
 		this.players.set(p.getID(), p);
 	}
 
-	public removePlayer(uuid: string) {
-		this.players.delete(uuid);
+	/**It adds 1 to the nextUserID after it returns it!!! */
+	public getNextUserID() {
+		this.nextUserID++;
+		return this.nextUserID - 1;
+	}
+
+	public removePlayer(id: number) {
+		this.players.delete(id);
 	}
 
 	public isEveryoneReady(): boolean {
@@ -41,18 +48,20 @@ export class Room {
 		return isReady;
 	}
 
-	public setPlayerReady(uuid: string, v: boolean) {
-		this.players.get(uuid)?.setIsReady(v);
+	public setPlayerReady(id: number, v: boolean) {
+		this.players.get(id)?.setIsReady(v);
 	}
 
 	private physicsUpdate() {
-		for (let [uuid, player] of this.players) {
+		for (let [id, player] of this.players) {
 			const pos: Vector2 = player.getPos();
 			const velocity: Vector2 = player.getVelocity();
 			const input = player.getInputs();
 
 			const newPos: Vector2 = { ...pos };
 			const newVel: Vector2 = { ...velocity };
+
+			let isJumping = false;
 
 			if (input.right) {
 				newVel.x += PLAYER_CONFIG.ACCELERATION;
@@ -63,6 +72,7 @@ export class Room {
 			if (input.jump && player.getGrounded()) {
 				newVel.y -= PLAYER_CONFIG.JUMP_FORCE;
 				player.setGrounded(false);
+				isJumping = true;
 			}
 
 			if (newVel.x > PLAYER_CONFIG.DRAG) {
@@ -87,16 +97,16 @@ export class Room {
 				PLAYER_CONFIG.MAX_HORIZONTAL_SPEED,
 			);
 
+			if (newPos.y >= 710 && !isJumping) {
+				player.setGrounded(true);
+				newVel.y = 0;
+			}
+
 			newPos.x += newVel.x * (1 / this.TICKRATE);
 			newPos.y += newVel.y * (1 / this.TICKRATE);
 
 			newPos.x = clamp(newPos.x, 0, 1280);
-			newPos.y = clamp(newPos.y, 0, 720);
-
-			if (newPos.y >= 710) {
-				player.setGrounded(true);
-				newVel.y = 0;
-			}
+			newPos.y = clamp(newPos.y, 0, 710);
 
 			player.setPos(newPos);
 			player.setVelocity(newVel);
@@ -112,9 +122,9 @@ export class Room {
 					playerData: {} as Record<string, any>,
 				};
 
-				this.players.forEach((player: Player, uuid: string) => {
+				this.players.forEach((player: Player, id: number) => {
 					const pos = player.getPos();
-					roomData.playerData[uuid] = {
+					roomData.playerData[id] = {
 						nick: player.getNick(),
 						pos: pos,
 						velocity: player.getVelocity(),
@@ -131,8 +141,8 @@ export class Room {
 		this.gameLoop?.close();
 	}
 
-	public setInputsToPlayer(userUUID: string, inputs: PlayerInputs) {
-		const player = this.players.get(userUUID);
+	public setInputsToPlayer(userID: number, inputs: PlayerInputs) {
+		const player = this.players.get(userID);
 		if (player === undefined) {
 			return;
 		}

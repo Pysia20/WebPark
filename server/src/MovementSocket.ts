@@ -1,18 +1,29 @@
-import { Server } from "socket.io";
+import { DefaultEventsMap, Server, Socket } from "socket.io";
 
-import { ClientData, PlayerInputs, PlayerJoinedData } from "../../shared/commonModels";
+import {
+	ClientData,
+	PlayerInputs,
+	PlayerJoinedData,
+	RegisterUserData,
+	RegisterUserDataZod,
+} from "../../shared/commonModels";
 import map from "../../shared/testMap.json";
-import { v4 as uuid } from "uuid";
 import { games } from "./Global";
-import { InputsZod, RegisterUserData, RegisterUserDataZod } from "./Models";
+import { InputsZod, SocketData, SocketDataZod } from "./Models";
 import { Room } from "./Game/Room";
 import { Player } from "./Game/Player";
+
+type PlayerSocket = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, SocketData>;
 
 export function register(io: Server) {
 	const endpoint = io.of("/player");
 
-	endpoint.on("connect", (socket) => {
+	endpoint.on("connect", (socket: PlayerSocket) => {
 		console.log(`User of id ${socket.id} connected.`);
+
+		socket.data.roomID = undefined;
+		socket.data.userID = undefined;
+		socket.data.userNick = undefined;
 
 		socket.on("registerUser", async (data: RegisterUserData, callback) => {
 			console.log(data);
@@ -39,7 +50,7 @@ export function register(io: Server) {
 
 			await socket.join(data.roomID);
 
-			const player: Player = new Player(data.userUUID, data.userNick);
+			const player: Player = new Player(data.userID, data.userNick);
 			player.setColor(data.color);
 
 			room.addPlayer(player);
@@ -66,9 +77,9 @@ export function register(io: Server) {
 
 			socket.data.roomID = data.roomID;
 			socket.data.userNick = data.userNick;
-			socket.data.userUUID = data.userUUID;
+			socket.data.userID = data.userID;
 
-			console.log(`User: ${data.userNick} (${data.userUUID}) joined the room ${data.roomID}`);
+			console.log(`User: ${data.userNick} (${data.userID}) joined the room ${data.roomID}`);
 		});
 
 		socket.on("playerReady", (uuid) => {
@@ -104,23 +115,31 @@ export function register(io: Server) {
 			try {
 				InputsZod.parse(inputs);
 			} catch {
-				return;
+				console.log("Invalid inputs request.", inputs);
+				throw Error("Invalid inputs request.");
 			}
 
-			games.get(socket.data.roomID)?.setInputsToPlayer(socket.data.userUUID, inputs);
+			try {
+				SocketDataZod.parse(socket.data);
+			} catch {
+				console.log("Invalid socket data, try reconecting.", socket.data);
+				throw Error("Invalid socket data, try reconecting.");
+			}
+
+			games.get(socket.data.roomID!)?.setInputsToPlayer(socket.data.userID!, inputs);
 		});
 
 		socket.on("disconnect", (e) => {
 			console.log(`User of id ${socket.id} disconnected.`);
 			console.log(`userNick: ${socket.data.userNick}`);
-			console.log(`userUUID: ${socket.data.userUUID}`);
+			console.log(`userID: ${socket.data.userID}`);
 			console.log(`roomID: ${socket.data.roomID}`);
 
 			socket
-				.to(socket.data.roomID)
+				.to(socket.data.roomID!)
 				.emit("log", `User: ${socket.data.userNick} left the room. Bye!`);
 
-			games.get(socket.data.roomID)?.removePlayer(socket.data.userUUID);
+			games.get(socket.data.roomID!)?.removePlayer(socket.data.userID!);
 		});
 	});
 }

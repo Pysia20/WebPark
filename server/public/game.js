@@ -28,7 +28,7 @@ const socket = io("/player", {
 socket.on("connect", () => {
 	console.log("Web socket created");
 
-	const uuid = sessionStorage.getItem("userUUID");
+	const id = parseInt(sessionStorage.getItem("userID"));
 	const nick = sessionStorage.getItem("userNick");
 	const color = sessionStorage.getItem("userColor");
 
@@ -36,7 +36,7 @@ socket.on("connect", () => {
 		"registerUser",
 		{
 			roomID: roomID,
-			userUUID: uuid,
+			userID: id,
 			userNick: nick,
 			color: color,
 		},
@@ -59,40 +59,32 @@ document.getElementById("readyUp").addEventListener("click", () => {
 
 	if (!isReady) {
 		readyText.innerHTML = "Ready: Yes";
-		socket.emit("playerReady", sessionStorage.getItem("userUUID"));
+		socket.emit("playerReady", parseInt(sessionStorage.getItem("userID")));
 		isReady = true;
 	} else {
 		readyText.innerHTML = "Ready: No";
-		socket.emit("playerUnReady", sessionStorage.getItem("userUUID"));
+		socket.emit("playerUnReady", parseInt(sessionStorage.getItem("userID")));
 		isReady = false;
 	}
+	console.log(isReady);
 });
 
-let test = false;
-
 socket.on("tick", (data) => {
-	ctx.clearRect(0, 0, 300, 300);
+	ctx.clearRect(0, 0, 1280, 720);
 
-	const clientUUID = sessionStorage.getItem("userUUID");
+	const clientID = parseInt(sessionStorage.getItem("userID"));
 
-	for (const [playerUUID, values] of Object.entries(data["playerData"])) {
-		if (playerUUID === clientUUID) {
+	console.log(data);
+
+	for (const [playerIDString, values] of Object.entries(data["playerData"])) {
+		const playerID = parseInt(playerIDString);
+
+		if (playerID === clientID) {
 			ctx.fillStyle = "blue";
 		} else {
 			ctx.fillStyle = "yellow";
 		}
 		ctx.fillRect(values.pos.x, values.pos.y, 10, 10);
-
-		if (values.pos.y !== 290) {
-			// console.log(`Y: ${values.pos.x}`);
-			// console.log(`VelY: ${values.velocity.x}`);
-			console.log(values);
-
-			test = true;
-		} else if (test) {
-			console.log(values.pos);
-			test = false;
-		}
 	}
 });
 

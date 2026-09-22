@@ -65,7 +65,7 @@ export function register(io: Server) {
 				?.getPlayers()
 				.forEach((player, uuid) => {
 					const data: PlayerJoinedData = {
-						playerUUID: player.getID(),
+						playerID: player.getID(),
 						nick: player.getNick(),
 						color: player.getColor(),
 					};

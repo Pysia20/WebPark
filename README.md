@@ -98,4 +98,4 @@ And now everything _~~should~~_ work!
 <br>
 
 ## AI Disclosure
-Since most of the tools here are entirely new to us, AI was used to help with learning and exploring them
+Since most of the tools here are entirely new to us, AI was used to help with learning and exploring them (ex. how to show a sprite using Pixi, how to play a sound effect with howler etc.) and general coding help (ex. how to use grid in CSS, how to tint an image in CSS)

@@ -14,6 +14,7 @@ await app.init({
     autoDensity: true,
     backgroundColor: 0x222222
 })
+app.canvas.classList.add("hidden")
 document.body.appendChild(app.canvas)
 
 const assets = await loadAssets()
@@ -38,11 +39,16 @@ app.ticker.add((time) => {
     coordinator.update_positions()
 })
 
-//TEMP
+//HTML STUFF
+const readyButton = document.getElementById("readyButton") as HTMLButtonElement
+const container = document.querySelector(".container") as HTMLDivElement
 let isReady = false
-document.getElementById("readyButton")?.addEventListener("click", () => {
-
+readyButton.addEventListener("click", () => {
     isReady = !isReady
-    console.log(isReady)
+    readyButton.innerText = isReady ? "READY" : "NOT READY"
     emitReady(isReady)
+    if (getPlayerData()) {
+        app.canvas.classList.remove("hidden")
+        container.classList.add("hidden")
+    }
 })

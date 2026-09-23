@@ -119,3 +119,7 @@ main > div {
     -webkit-mask-position: center;
     mask-position: center;
 }
+
+.hidden {
+    display: none;
+}

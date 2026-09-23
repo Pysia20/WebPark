@@ -69,7 +69,14 @@ app.get("/api/joinRoom/:id", (req: Request, res: Response) => {
 	try {
 		z.string().length(6).parse(id);
 	} catch (e) {
-		res.sendStatus(400);
+		if (e instanceof Error) {
+			res.status(400).json({
+				status: "error",
+				message: e.message,
+			});
+		} else {
+			console.log(e);
+		}
 		return;
 	}
 

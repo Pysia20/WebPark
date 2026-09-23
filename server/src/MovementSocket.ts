@@ -6,12 +6,14 @@ import {
 	PlayerJoinedData,
 	RegisterUserData,
 	RegisterUserDataZod,
+	SomethingBrokeData,
 } from "../../shared/commonModels";
 import map from "../../shared/testMap.json";
 import { games } from "./Global";
 import { InputsZod, SocketData, SocketDataZod } from "./Models";
 import { Room } from "./Game/Room";
 import { Player } from "./Game/Player";
+import e from "cors";
 
 type PlayerSocket = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, SocketData>;
 
@@ -31,20 +33,27 @@ export function register(io: Server) {
 			try {
 				RegisterUserDataZod.parse(data);
 			} catch (e) {
-				callback({
-					status: "error",
-					message: "Provided data is incorrectly formatted",
-				});
+				if (e instanceof Error) {
+					socket.emit("somethingBroke", {
+						name: e.name,
+						message: e.message,
+						eventName: "registerUser",
+					} as SomethingBrokeData);
+				} else {
+					console.error(e);
+				}
+
 				return;
 			}
 
 			const room: Room | undefined = games.get(data.roomID);
 
 			if (room === undefined) {
-				callback({
-					status: "error",
-					message: "Room doesn't exist",
-				});
+				socket.emit("somethingBroke", {
+					name: "Error",
+					message: "Room (roomID) doesn't exist.",
+					eventName: "registerUser",
+				} as SomethingBrokeData);
 				return;
 			}
 
@@ -82,11 +91,21 @@ export function register(io: Server) {
 			console.log(`User: ${data.userNick} (${data.userID}) joined the room ${data.roomID}`);
 		});
 
-		socket.on("playerReady", (id) => {
+		socket.on("playerReady", (id: number) => {
 			if (socket.data.roomID) {
 				const room: Room | undefined = games.get(socket.data.roomID);
 
-				if (room === undefined) return;
+				if (room === undefined) {
+					socket.emit("somethingBroke", {
+						name: "Error",
+						message: "Room (roomID) doesn't exist.",
+						eventName: "registerUser",
+					} as SomethingBrokeData);
+
+					return;
+				} else {
+					console.error(e);
+				}
 
 				room.setPlayerReady(id, true);
 
@@ -114,16 +133,34 @@ export function register(io: Server) {
 		socket.on("playerInputs", (inputs: PlayerInputs) => {
 			try {
 				InputsZod.parse(inputs);
-			} catch {
-				console.log("Invalid inputs request.", inputs);
-				throw Error("Invalid inputs request.");
+			} catch (e) {
+				if (e instanceof Error) {
+					socket.emit("somethingBroke", {
+						name: e.name,
+						message: e.message,
+						eventName: "playerInputs",
+					} as SomethingBrokeData);
+				} else {
+					console.error(e);
+				}
+
+				return;
 			}
 
 			try {
 				SocketDataZod.parse(socket.data);
-			} catch {
-				console.log("Invalid socket data, try reconecting.", socket.data);
-				throw Error("Invalid socket data, try reconecting.");
+			} catch (e) {
+				if (e instanceof Error) {
+					socket.emit("somethingBroke", {
+						name: e.name,
+						message: e.message,
+						eventName: "playerInputs",
+					} as SomethingBrokeData);
+				} else {
+					console.error(e);
+				}
+
+				return;
 			}
 
 			games.get(socket.data.roomID!)?.setInputsToPlayer(socket.data.userID!, inputs);

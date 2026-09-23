@@ -3,6 +3,7 @@ import { Player } from "./Player";
 import { PlayerInputs, Vector2 } from "../../../shared/commonModels";
 import { PLAYER_CONFIG } from "../../../shared/commonVariables";
 import { clamp } from "../Global";
+import { CollisionType } from "../Models";
 
 export class Room {
 	private TICKRATE: number = 30; // Per second
@@ -85,6 +86,8 @@ export class Room {
 
 			newVel.y += PLAYER_CONFIG.GRAVITY;
 
+			this.handleCollisions(player);
+
 			newVel.y = clamp(
 				newVel.y,
 				-PLAYER_CONFIG.MAX_VERTICAL_SPEED,
@@ -111,6 +114,59 @@ export class Room {
 			player.setPos(newPos);
 			player.setVelocity(newVel);
 		}
+	}
+
+	private handleCollisions(player: Player) {
+		this.players.forEach((p: Player) => {
+			// Main player collider box
+			const A1: Vector2 = player.getPos(); // Top left
+			const A2: Vector2 = { x: A1.x + PLAYER_CONFIG.WIDTH, y: A1.y }; // Top right
+			const A3: Vector2 = { x: A1.x, y: A1.y + PLAYER_CONFIG.HEIGHT }; // Bottom left
+			const A4: Vector2 = { x: A1.x + PLAYER_CONFIG.WIDTH, y: A1.y + PLAYER_CONFIG.HEIGHT }; // Bottom right
+			const A: Vector2[] = [A1, A2, A3, A4];
+
+			// Other player collider box
+			const B1: Vector2 = p.getPos(); // Top left
+			const B2: Vector2 = { x: B1.x + PLAYER_CONFIG.WIDTH, y: B1.y }; // Top right
+			const B3: Vector2 = { x: B1.x, y: B1.y + PLAYER_CONFIG.HEIGHT }; // Bottom left
+			const B4: Vector2 = { x: B1.x + PLAYER_CONFIG.WIDTH, y: B1.y + PLAYER_CONFIG.HEIGHT }; // Bottom right
+			const B: Vector2[] = [B1, B2, B3, B4];
+
+			if (!(A2.x > B1.x && A1.x < B2.x && A3.y > B1.y && A1.y < B3.y)) return; // Players don't collide -> Exit
+
+			// Geting the closes corners
+			let shortestDistanceSquared: number = Infinity;
+			let shortestA: Vector2;
+			let shortestB: Vector2;
+
+			A.forEach((vA) => {
+				B.forEach((vB) => {
+					const distance = (vA.x - vB.x) ** 2 + (vA.y - vB.y) ** 2; // It is squared (cuz if a^2 > b^2 -> a > b, so anyway it will find the shortest)
+
+					if (distance < shortestDistanceSquared) {
+						shortestDistanceSquared = distance;
+						shortestA = vA;
+						shortestB = vB;
+					}
+				});
+			});
+
+			let collisionType: CollisionType;
+			let modAX = Math.abs(shortestA!.x);
+			let modAY = Math.abs(shortestA!.y);
+
+			if (modAX < modAY) {
+				// Vertical-type collision (Top / Bottom)
+			} else if (modAX > modAY) {
+				// Horizontal-type collision (Right / Left)
+			} else {
+				// Corners are perfectly aligned.
+				// Kinda like that DVD logo bouncing around the screen,
+				// when it touches the corner
+
+				collisionType = "Perfect";
+			}
+		});
 	}
 
 	public startGameLoop(io: Namespace) {

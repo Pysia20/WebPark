@@ -23,7 +23,7 @@ export class Coordinator {
                 tempPlayer.targetPos = playerData.pos
                 tempPlayer.updateDirection(playerData.velocity)
             } else {
-                const myID = localStorage.getItem("userID")
+                const myID = sessionStorage.getItem("userID")
                 let newPlayer: Player = {} as Player
                 if (myID == playerId) {
                     newPlayer = new Player(this.players.size, "#ffda7e", this.playerTextures)

@@ -58,5 +58,3 @@ export class Player {
         }
     }
 }
-
-//TODO: make the player width and height a shared value and then move the anchor to top left

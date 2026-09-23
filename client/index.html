@@ -7,19 +7,28 @@
     <link rel="shortcut icon" href="public/sprites/playerPlaceholder.png" type="image/x-icon">
 </head>
 <body>
+
     <div class="container">
-        <div class="temp">
-            <label for="roomId"> ROOM ID </label>
-            <input type="text" id="roomId">
-            <label for="playerName"> PLAYER NAME </label>
-            <input type="text" id="playerName">
-            <label for="playerColor"> COLOR </label>
-            <input type="color" id="playerColor" value="#ffffff">
-            <button id="createRoom"> CREATE </button>
-            <button id="joinRoom"> JOIN </button>
-        </div>
+        <main class="main">
+            <div class="inputs">
+                <div class="data">
+                    <label for="roomId"> ROOM ID </label>
+                    <input type="text" id="roomId">
+                    <label for="playerName"> PLAYER NAME </label>
+                    <input type="text" id="playerName">
+                </div>
+                <div class="buttons">
+                    <button id="createRoom"> CREATE </button>
+                    <button id="joinRoom"> JOIN </button>
+                </div>
+            </div>
+            <div class="preview">
+                <input type="color" id="playerColor" value="#ffffff">
+                <label for="playerColor" id="colorPreview"> <img src="public/sprites/farmerThatDoesHarvestingWoahLookTHatsTheThemeFRFR.png" alt="color preview"> </label>
+            </div>
+        </main>
     </div>
 
-    <script src="index.js" type="module"></script>
+    <script src="index.ts" type="module"></script>
 </body>
 </html>

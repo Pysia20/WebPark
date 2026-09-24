@@ -167,11 +167,16 @@ export class Room {
 			 * **Perfect** is a situation in which **A** lands perfectly on **B**'s corner
 			 */
 
-			let modAX = shortestA!.x;
-			let modAY = shortestA!.y;
+			let relativeAX = Math.abs(shortestA!.x - shortestB!.x);
+			let relativeAY = Math.abs(shortestB!.y - shortestA!.y);
 
-			if (modAX < modAY) {
-				// Vertical-type collision (Top / Bottom)
+			if (player.getNick() == "John") {
+				console.log(`rAX: ${relativeAX} rAY: ${relativeAY}`);
+			}
+
+			if (relativeAX < relativeAY) {
+				console.log("Vertical wooooo");
+				// // Vertical-type collision (Top / Bottom)
 				// if (shortestA!.y > shortestB!.y) {
 				// 	// Top collision
 				// 	const correction = shortestA!.y - shortestB!.y;
@@ -185,33 +190,41 @@ export class Room {
 				// 	newPos.y += correction;
 				// 	console.log(`Collision for ${player.getNick()} | Bottom`);
 				// }
-			} else if (modAX > modAY) {
+			} else if (relativeAX > relativeAY) {
 				// Horizontal-type collision (Right / Left)
 
-				if (shortestA!.x < shortestB!.x) {
+				// console.log(
+				// 	`A: ${shortestA!.x}, B: ${shortestB!.x}, DIFF: ${shortestA!.x - shortestB!.x}`,
+				// );
+
+				if (shortestA!.x > shortestB!.x) {
 					// Right collision
+					// A velocity is negative because it moves to the left.
+					// // or B velocity is positive and it moves to the right.
+					// if (p.getVelocity().x < -player.getVelocity().x) return; // The other player is more responsible for collison so he is blocked.
+					if (Math.abs(p.getVelocity().x) > Math.abs(player.getVelocity().x)) return; // The other player is more responsible for collison so he is blocked.
 
 					const correction = shortestB!.x - shortestA!.x;
 					newVel.x = 0;
-					newPos.x += correction;
+					newPos.x -= correction;
 					console.log(`Collision for ${player.getNick()} | Right`);
 				} else {
 					// Left collision
+					// A velocity is positive
+					// or Bs is negative
+					// I B > A
+					if (Math.abs(p.getVelocity().x) > Math.abs(player.getVelocity().x)) return; // The other player is more responsible for collison so he is blocked.
 
 					const correction = shortestA!.x - shortestB!.x;
 					newVel.x = 0;
 					newPos.x -= correction;
-					console.log(`
-						Collision for ${player.getNick()} | Left
-						P1: ${A1.x} ${A1.y}
-						P2: ${B1.x} ${B1.y}
-						`);
+					console.log(`Collision for ${player.getNick()} | Left`);
 				}
 			} else {
 				// Corners are perfectly aligned.
 				// Kinda like that DVD logo bouncing around the screen,
 				// when it touches the corner
-				console.log(`Collision for ${player.getNick()} | Perfect`);
+				// console.log(`Collision for ${player.getNick()} | Perfect`);
 			}
 		});
 	}

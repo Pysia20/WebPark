@@ -12,7 +12,7 @@ socket.on("connect_error", (error) => {
 
 socket.on("connect", () => {
      console.log("Connected! id:", socket.id)
-    const roomId = sessionStorage.getItem("roomId") as string
+    const roomId = sessionStorage.getItem("roomID") as string
     const id = Number(sessionStorage.getItem("userID")) as number
     const userName = sessionStorage.getItem("userName") as string
     const color = sessionStorage.getItem("playerColor") as string

@@ -1,46 +1,47 @@
 import { Player } from "./Player";
-import { ServerData } from "../../shared/commonModels"
+import { PlayerJoinedData, ServerData } from "../../shared/commonModels"
 import { Application } from "pixi.js";
 import { PlayerTextures } from "./Assets";
 
-export class Coordinator {
-    players: Map<string, Player> = new Map
+class Coordinator {
+    players: Map<number, Player> = new Map
     serverData: ServerData | undefined
-    playerTextures: PlayerTextures
-    world: Application
+    playerTextures: PlayerTextures = {} as PlayerTextures
+    world: Application = {} as Application
 
-    constructor(playerTextures: PlayerTextures, world: Application) {
+    init(playerTextures: PlayerTextures, world: Application) {
         this.playerTextures = playerTextures
         this.world = world
     }
 
-    update_players(serverData: ServerData) {
-        this.serverData = serverData
-        const newPlayers: Player[] = []
-        for (const [playerId, playerData] of Object.entries(this.serverData["playerData"])) {
-            const tempPlayer = this.players.get(playerId)
-            if (tempPlayer) {
-                tempPlayer.targetPos = playerData.pos
-                tempPlayer.updateDirection(playerData.velocity)
-            } else {
-                const myID = sessionStorage.getItem("userID")
-                let newPlayer: Player = {} as Player
-                if (myID == playerId) {
-                    newPlayer = new Player(this.players.size, "#ffda7e", this.playerTextures)
-                } else {
-                    newPlayer = new Player(this.players.size, "#7effff", this.playerTextures)
-                }
-                newPlayer.pos = playerData.pos
-                this.players.set(playerId, newPlayer)
+    create_players(playerData: PlayerJoinedData[]) {
+        for (const data of playerData) {
+            if (!this.players.has(data.playerID)) {
+                const newPlayer = new Player(data.playerID, data.color, this.playerTextures)
+                this.players.set(data.playerID, newPlayer)
                 this.world.stage.addChild(newPlayer.sprite)
             }
         }
-        return newPlayers
+    }
+
+    update_players(serverData: ServerData) {
+        this.serverData = serverData
+        for (const [playerId, playerData] of Object.entries(this.serverData["playerData"])) {
+            const tempPlayer = this.players.get(Number(playerId))
+                if (tempPlayer) {
+                    tempPlayer.targetPos = playerData.pos
+                    tempPlayer.updateDirection(playerData.velocity)
+                } else {
+                    console.log("unknown player")
+                }
+        }
     }
 
     update_positions() {
-        for (const [id, player] of this.players) {
+        for (const player of this.players.values()) {
             player.updatePos()
         }
     }
 }
+
+export const coordinator = new Coordinator()

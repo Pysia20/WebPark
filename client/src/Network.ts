@@ -1,5 +1,6 @@
 import { io } from "socket.io-client"
-import { ServerData, PlayerInputs, RegisterUserData } from "../../shared/commonModels"
+import {ServerData, PlayerInputs, RegisterUserData, PlayerJoinedData} from "../../shared/commonModels"
+import {coordinator} from "./Coordinator";
 
 const socket = io("/player", {
     path: '/api/socket.io'
@@ -39,6 +40,10 @@ socket.on("somethingBroke", (whatBroke: unknown) => {
 
 socket.on("tick", (data: ServerData) => {
     playerData = data
+})
+
+socket.on("playerJoined", (data: PlayerJoinedData[]) => {
+    coordinator.create_players(data)
 })
 
 export function emitInputs(data: PlayerInputs) {

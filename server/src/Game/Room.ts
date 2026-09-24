@@ -142,14 +142,15 @@ export class Room {
 			let shortestA: Vector2;
 			let shortestB: Vector2;
 
-			A.forEach((vA) => {
-				B.forEach((vB) => {
+			A.forEach((vA, i) => {
+				B.forEach((vB, j) => {
 					const distance = (vA.x - vB.x) ** 2 + (vA.y - vB.y) ** 2; // It is squared (cuz if a^2 > b^2 -> a > b, so anyway it will find the shortest)
 
 					if (distance < shortestDistanceSquared) {
 						shortestDistanceSquared = distance;
 						shortestA = vA;
 						shortestB = vB;
+						// console.log(i, j);
 					}
 				});
 			});
@@ -167,60 +168,33 @@ export class Room {
 			 * **Perfect** is a situation in which **A** lands perfectly on **B**'s corner
 			 */
 
-			let relativeAX = Math.abs(shortestA!.x - shortestB!.x);
-			let relativeAY = Math.abs(shortestB!.y - shortestA!.y);
+			// Relative possition are diffrent
+			// A on the left
+			// B on the right
+			// A going right -> AX = 0.1666666, BX = 0.33333
+			// B going left -> AX = BX = 0.1666666
 
-			if (player.getNick() == "John") {
-				console.log(`rAX: ${relativeAX} rAY: ${relativeAY}`);
-			}
+			const relativeAX = shortestA!.x - shortestB!.x;
+			const relativeAY = shortestB!.y - shortestA!.y;
 
-			if (relativeAX < relativeAY) {
+			const modX = Math.abs(relativeAX);
+			const modY = Math.abs(relativeAY);
+
+			if (modX < modY) {
 				console.log("Vertical wooooo");
 				// // Vertical-type collision (Top / Bottom)
-				// if (shortestA!.y > shortestB!.y) {
-				// 	// Top collision
-				// 	const correction = shortestA!.y - shortestB!.y;
-				// 	newVel.y = 0;
-				// 	newPos.y -= correction;
-				// 	console.log(`Collision for ${player.getNick()} | Top`);
-				// } else {
-				// 	// Bottom collision
-				// 	const correction = shortestB!.y - shortestA!.y;
-				// 	newVel.y = 0;
-				// 	newPos.y += correction;
-				// 	console.log(`Collision for ${player.getNick()} | Bottom`);
-				// }
-			} else if (relativeAX > relativeAY) {
+			}
+			if (modX > modY) {
 				// Horizontal-type collision (Right / Left)
 
-				// console.log(
-				// 	`A: ${shortestA!.x}, B: ${shortestB!.x}, DIFF: ${shortestA!.x - shortestB!.x}`,
-				// );
-
-				if (shortestA!.x > shortestB!.x) {
-					// Right collision
-					// A velocity is negative because it moves to the left.
-					// // or B velocity is positive and it moves to the right.
-					// if (p.getVelocity().x < -player.getVelocity().x) return; // The other player is more responsible for collison so he is blocked.
-					if (Math.abs(p.getVelocity().x) > Math.abs(player.getVelocity().x)) return; // The other player is more responsible for collison so he is blocked.
-
-					const correction = shortestB!.x - shortestA!.x;
+				if (
+					p.getVelocity().x > -player.getVelocity().x ||
+					-p.getVelocity().x > player.getVelocity().x
+				)
 					newVel.x = 0;
-					newPos.x -= correction;
-					console.log(`Collision for ${player.getNick()} | Right`);
-				} else {
-					// Left collision
-					// A velocity is positive
-					// or Bs is negative
-					// I B > A
-					if (Math.abs(p.getVelocity().x) > Math.abs(player.getVelocity().x)) return; // The other player is more responsible for collison so he is blocked.
-
-					const correction = shortestA!.x - shortestB!.x;
-					newVel.x = 0;
-					newPos.x -= correction;
-					console.log(`Collision for ${player.getNick()} | Left`);
-				}
-			} else {
+				newPos.x -= relativeAX;
+			}
+			if (modX == modY) {
 				// Corners are perfectly aligned.
 				// Kinda like that DVD logo bouncing around the screen,
 				// when it touches the corner

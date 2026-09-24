@@ -56,3 +56,9 @@ export function emitReady(isReady: boolean) {
         socket.emit("playerUnReady", Number(sessionStorage.getItem("userID")))
     }
 }
+
+export function onGameStart(func: () => void) {
+    socket.once("tick", () => {
+        func()
+    })
+}

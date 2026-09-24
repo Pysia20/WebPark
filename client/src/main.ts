@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js'
 
 import { getCurrentInputs } from "./Inputs"
-import { emitInputs, emitReady, getPlayerData } from "./Network";
+import {emitInputs, emitReady, getPlayerData, onGameStart} from "./Network";
 import { Coordinator } from "./Coordinator";
 import { ClientData, PlayerInputs } from "../../shared/commonModels"
 import { loadAssets } from "./Assets";
@@ -43,12 +43,12 @@ app.ticker.add((time) => {
 const readyButton = document.getElementById("readyButton") as HTMLButtonElement
 const container = document.querySelector(".container") as HTMLDivElement
 let isReady = false
+onGameStart(() => {
+    app.canvas.classList.remove("hidden")
+    container.classList.add("hidden")
+})
 readyButton.addEventListener("click", () => {
     isReady = !isReady
     readyButton.innerText = isReady ? "READY" : "NOT READY"
     emitReady(isReady)
-    if (getPlayerData()) {
-        app.canvas.classList.remove("hidden")
-        container.classList.add("hidden")
-    }
 })

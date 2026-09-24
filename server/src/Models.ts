@@ -25,17 +25,3 @@ export const SocketDataZod = z
 	.strict();
 
 export type SocketData = z.infer<typeof SocketDataZod>;
-
-/**
- * **A** is the colliding object.
- *
- * **B** is a static object.
- *
- * Collision type is which side of **B** is **A** touching.
- * When collision type is "Right" it means that:
- *- **A** needs to be moved to the right
- *- **LEFT** side of **A** is touching the **RIGHT** side of **B**
- *
- * **Perfect** is a situation in which **A** lands perfectly on **B**'s corner
- */
-export type CollisionType = "Right" | "Left" | "Top" | "Bottom" | "Perfect" | undefined;

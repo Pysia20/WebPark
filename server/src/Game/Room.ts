@@ -3,7 +3,7 @@ import { Player } from "./Player";
 import { PlayerInputs, Vector2 } from "../../../shared/commonModels";
 import { PLAYER_CONFIG } from "../../../shared/commonVariables";
 import { clamp } from "../Global";
-import { CollisionType } from "../Models";
+import { emitInputs } from "../../../client/src/Network";
 
 export class Room {
 	private TICKRATE: number = 30; // Per second
@@ -24,6 +24,7 @@ export class Room {
 	}
 
 	public addPlayer(p: Player) {
+		p.setPos({ x: p.getID() * 400, y: 0 });
 		this.players.set(p.getID(), p);
 	}
 
@@ -86,7 +87,7 @@ export class Room {
 
 			newVel.y += PLAYER_CONFIG.GRAVITY;
 
-			this.handleCollisions(player);
+			this.handleCollisions(player, newPos, newVel);
 
 			newVel.y = clamp(
 				newVel.y,
@@ -100,7 +101,7 @@ export class Room {
 				PLAYER_CONFIG.MAX_HORIZONTAL_SPEED,
 			);
 
-			if (newPos.y >= 710 && !isJumping) {
+			if (newPos.y >= 720 - PLAYER_CONFIG.HEIGHT && !isJumping) {
 				player.setGrounded(true);
 				newVel.y = 0;
 			}
@@ -108,16 +109,18 @@ export class Room {
 			newPos.x += newVel.x * (1 / this.TICKRATE);
 			newPos.y += newVel.y * (1 / this.TICKRATE);
 
-			newPos.x = clamp(newPos.x, 0, 1280);
-			newPos.y = clamp(newPos.y, 0, 710);
+			newPos.x = clamp(newPos.x, 0, 1280 - PLAYER_CONFIG.WIDTH);
+			newPos.y = clamp(newPos.y, 0, 720 - PLAYER_CONFIG.HEIGHT);
 
 			player.setPos(newPos);
 			player.setVelocity(newVel);
 		}
 	}
 
-	private handleCollisions(player: Player) {
+	private handleCollisions(player: Player, newPos: Vector2, newVel: Vector2) {
 		this.players.forEach((p: Player) => {
+			if (p.getID() == player.getID()) return;
+
 			// Main player collider box
 			const A1: Vector2 = player.getPos(); // Top left
 			const A2: Vector2 = { x: A1.x + PLAYER_CONFIG.WIDTH, y: A1.y }; // Top right
@@ -151,20 +154,64 @@ export class Room {
 				});
 			});
 
-			let collisionType: CollisionType;
-			let modAX = Math.abs(shortestA!.x);
-			let modAY = Math.abs(shortestA!.y);
+			/**
+			 * **A** is the colliding object.
+			 *
+			 * **B** is a static object.
+			 *
+			 * Collision type is which side of **B** is **A** touching.
+			 * When collision type is "Right" it means that:
+			 *- **A** needs to be moved to the right
+			 *- **LEFT** side of **A** is touching the **RIGHT** side of **B**
+			 *
+			 * **Perfect** is a situation in which **A** lands perfectly on **B**'s corner
+			 */
+
+			let modAX = shortestA!.x;
+			let modAY = shortestA!.y;
 
 			if (modAX < modAY) {
 				// Vertical-type collision (Top / Bottom)
+				// if (shortestA!.y > shortestB!.y) {
+				// 	// Top collision
+				// 	const correction = shortestA!.y - shortestB!.y;
+				// 	newVel.y = 0;
+				// 	newPos.y -= correction;
+				// 	console.log(`Collision for ${player.getNick()} | Top`);
+				// } else {
+				// 	// Bottom collision
+				// 	const correction = shortestB!.y - shortestA!.y;
+				// 	newVel.y = 0;
+				// 	newPos.y += correction;
+				// 	console.log(`Collision for ${player.getNick()} | Bottom`);
+				// }
 			} else if (modAX > modAY) {
 				// Horizontal-type collision (Right / Left)
+
+				if (shortestA!.x < shortestB!.x) {
+					// Right collision
+
+					const correction = shortestB!.x - shortestA!.x;
+					newVel.x = 0;
+					newPos.x += correction;
+					console.log(`Collision for ${player.getNick()} | Right`);
+				} else {
+					// Left collision
+
+					const correction = shortestA!.x - shortestB!.x;
+					newVel.x = 0;
+					newPos.x -= correction;
+					console.log(`
+						Collision for ${player.getNick()} | Left
+						P1: ${A1.x} ${A1.y}
+						P2: ${B1.x} ${B1.y}
+						`);
+				}
 			} else {
 				// Corners are perfectly aligned.
 				// Kinda like that DVD logo bouncing around the screen,
 				// when it touches the corner
-
-				collisionType = "Perfect";
+				console.log(`Collision for ${player.getNick()} | Perfect`);
 			}
 		});
 	}

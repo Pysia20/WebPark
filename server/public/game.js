@@ -84,7 +84,7 @@ socket.on("tick", (data) => {
 		} else {
 			ctx.fillStyle = "yellow";
 		}
-		ctx.fillRect(values.pos.x, values.pos.y, 10, 10);
+		ctx.fillRect(values.pos.x, values.pos.y, 233, 270);
 	}
 });
 

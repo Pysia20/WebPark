@@ -24,7 +24,7 @@ const io: SocketIOServer = new SocketIOServer<
 >(server, {
 	path: "/api/socket.io",
 	cors: {
-		origin: ["http://localhost:5173", "https://webpark.mywire.org"],
+		origin: ["http://localhost:5173", "https://webpark.mywire.org", "webpark.dino.icu"],
 		methods: ["GET", "POST"],
 		credentials: true,
 	},

@@ -87,7 +87,9 @@ export class Room {
 
 			newVel.y += PLAYER_CONFIG.GRAVITY;
 
-			this.handleCollisions(player, newPos, newVel);
+			if (this.handleCollisions(player, newPos, newVel)) {
+				player.setGrounded(true);
+			}
 
 			newVel.y = clamp(
 				newVel.y,
@@ -117,90 +119,84 @@ export class Room {
 		}
 	}
 
-	private handleCollisions(player: Player, newPos: Vector2, newVel: Vector2) {
+	private handleCollisions(player: Player, newPos: Vector2, newVel: Vector2): boolean {
+		const playerWidth = PLAYER_CONFIG.WIDTH;
+		const playerHeight = PLAYER_CONFIG.HEIGHT;
+
+		let changeGrounded = false;
+
 		this.players.forEach((p: Player) => {
 			if (p.getID() == player.getID()) return;
 
-			// Main player collider box
-			const A1: Vector2 = player.getPos(); // Top left
-			const A2: Vector2 = { x: A1.x + PLAYER_CONFIG.WIDTH, y: A1.y }; // Top right
-			const A3: Vector2 = { x: A1.x, y: A1.y + PLAYER_CONFIG.HEIGHT }; // Bottom left
-			const A4: Vector2 = { x: A1.x + PLAYER_CONFIG.WIDTH, y: A1.y + PLAYER_CONFIG.HEIGHT }; // Bottom right
-			const A: Vector2[] = [A1, A2, A3, A4];
+			const otherPos = p.getPos();
+			const otherVel = p.getVelocity();
 
-			// Other player collider box
-			const B1: Vector2 = p.getPos(); // Top left
-			const B2: Vector2 = { x: B1.x + PLAYER_CONFIG.WIDTH, y: B1.y }; // Top right
-			const B3: Vector2 = { x: B1.x, y: B1.y + PLAYER_CONFIG.HEIGHT }; // Bottom left
-			const B4: Vector2 = { x: B1.x + PLAYER_CONFIG.WIDTH, y: B1.y + PLAYER_CONFIG.HEIGHT }; // Bottom right
-			const B: Vector2[] = [B1, B2, B3, B4];
+			const isCollidingX =
+				otherPos.x < newPos.x + playerWidth && newPos.x < otherPos.x + playerWidth;
 
-			if (!(A2.x > B1.x && A1.x < B2.x && A3.y > B1.y && A1.y < B3.y)) return; // Players don't collide -> Exit
+			const isCollidingY =
+				newPos.y + playerHeight > otherPos.y && newPos.y < otherPos.y + playerHeight;
 
-			// Geting the closes corners
-			let shortestDistanceSquared: number = Infinity;
-			let shortestA: Vector2;
-			let shortestB: Vector2;
+			if (!isCollidingX || !isCollidingY) return; // Players arent colliding
 
-			A.forEach((vA, i) => {
-				B.forEach((vB, j) => {
-					const distance = (vA.x - vB.x) ** 2 + (vA.y - vB.y) ** 2; // It is squared (cuz if a^2 > b^2 -> a > b, so anyway it will find the shortest)
+			const centerA: Vector2 = {
+				x: newPos.x + playerWidth / 2,
+				y: newPos.y + playerHeight / 2,
+			};
 
-					if (distance < shortestDistanceSquared) {
-						shortestDistanceSquared = distance;
-						shortestA = vA;
-						shortestB = vB;
-						// console.log(i, j);
+			const centerB: Vector2 = {
+				x: otherPos.x + playerWidth / 2,
+				y: otherPos.y + playerHeight / 2,
+			};
+
+			const diffX = centerA.x - centerB.x;
+			const diffY = centerA.y - centerB.y;
+
+			const overlapX = playerWidth - Math.abs(diffX);
+			const overlapY = playerHeight - Math.abs(diffY);
+
+			if (overlapX < overlapY) {
+				// Horizontal collison
+
+				if (diffX > 0) {
+					// A is going left towards B
+					// Pushing out to the right
+
+					if (newVel.x < 0) {
+						newPos.x += overlapX;
+						newVel.x = 0;
 					}
-				});
-			});
+				} else {
+					// A is going right towards B
+					// Pushing out to the left
+					if (newVel.x > 0) {
+						newPos.x -= overlapX;
+						newVel.x = 0;
+					}
+				}
+			} else {
+				// Vertical collision
+				if (diffY > 0) {
+					// A is going up towards B
+					// Pushing out downwards
+					if (newVel.y < 0) {
+						newPos.y += overlapY;
+						newVel.y = 0;
+					}
+				} else {
+					// A is goung down towards B
+					// Pushign out upwards
 
-			/**
-			 * **A** is the colliding object.
-			 *
-			 * **B** is a static object.
-			 *
-			 * Collision type is which side of **B** is **A** touching.
-			 * When collision type is "Right" it means that:
-			 *- **A** needs to be moved to the right
-			 *- **LEFT** side of **A** is touching the **RIGHT** side of **B**
-			 *
-			 * **Perfect** is a situation in which **A** lands perfectly on **B**'s corner
-			 */
-
-			// Relative possition are diffrent
-			// A on the left
-			// B on the right
-			// A going right -> AX = 0.1666666, BX = 0.33333
-			// B going left -> AX = BX = 0.1666666
-
-			const relativeAX = shortestA!.x - shortestB!.x;
-			const relativeAY = shortestB!.y - shortestA!.y;
-
-			const modX = Math.abs(relativeAX);
-			const modY = Math.abs(relativeAY);
-
-			if (modX < modY) {
-				console.log("Vertical wooooo");
-				// // Vertical-type collision (Top / Bottom)
-			}
-			if (modX > modY) {
-				// Horizontal-type collision (Right / Left)
-
-				if (
-					p.getVelocity().x > -player.getVelocity().x ||
-					-p.getVelocity().x > player.getVelocity().x
-				)
-					newVel.x = 0;
-				newPos.x -= relativeAX;
-			}
-			if (modX == modY) {
-				// Corners are perfectly aligned.
-				// Kinda like that DVD logo bouncing around the screen,
-				// when it touches the corner
-				// console.log(`Collision for ${player.getNick()} | Perfect`);
+					if (newVel.y > 0) {
+						newPos.y -= overlapY;
+						newVel.y = 0;
+						changeGrounded = true;
+					}
+				}
 			}
 		});
+
+		return changeGrounded;
 	}
 
 	public startGameLoop(io: Namespace) {

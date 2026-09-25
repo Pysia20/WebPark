@@ -82,7 +82,7 @@ export function register(io: Server) {
 					playerJoinedData.push(data);
 				});
 
-			socket.to(data.roomID).emit("playerJoined", playerJoinedData);
+			endpoint.to(data.roomID).emit("playerJoined", playerJoinedData);
 
 			socket.data.roomID = data.roomID;
 			socket.data.userNick = data.userNick;

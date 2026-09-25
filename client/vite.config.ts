@@ -8,13 +8,13 @@ export default defineConfig({
 
         // Fixes the "Blocked request. Host is not allowed" error
         allowedHosts: [
-            'webpark.mywire.org'
+            'webpark.dino.icu'
         ],
 
         // Route Hot Module Replacement (HMR) Websockets through Nginx
 
         hmr: {
-            host: 'webpark.mywire.org',
+            host: 'webpark.dino.icu',
             clientPort: 443, // Use 443 if you use HTTPS, or 80 if HTTP
             protocol: 'wss', // Use 'wss' for HTTPS, or 'ws' for HTTP
         },

@@ -2,7 +2,7 @@ import { Sprite } from "pixi.js";
 import { Vector2 } from "../../shared/commonModels"
 import { PlayerTextures } from "./Assets";
 import { playJump } from "./Audio";
-import { PLAYER_CONFIG } from "shared/commonVariables";
+import { PLAYER_CONFIG } from "../../shared/commonVariables";
 
 export class Player {
     id: number

@@ -7,7 +7,7 @@ class Coordinator {
     players: Map<number, Player> = new Map
     serverData: ServerData | undefined
     playerTextures: PlayerTextures = {} as PlayerTextures
-    world: Application = {} as Application
+    world: Application | undefined
 
     init(playerTextures: PlayerTextures, world: Application) {
         this.playerTextures = playerTextures
@@ -17,9 +17,9 @@ class Coordinator {
     create_players(playerData: PlayerJoinedData[]) {
         for (const data of playerData) {
             if (!this.players.has(data.playerID)) {
-                const newPlayer = new Player(data.playerID, data.color, this.playerTextures)
-                this.players.set(data.playerID, newPlayer)
-                this.world.stage.addChild(newPlayer.sprite)
+                const newPlayer = new Player(data.playerID, data.color, this.playerTextures);
+                this.players.set(data.playerID, newPlayer);
+                (this.world as Application).stage.addChild(newPlayer.sprite);
             }
         }
     }

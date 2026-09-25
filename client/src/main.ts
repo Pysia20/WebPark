@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js'
 
 import { getCurrentInputs } from "./Inputs"
-import {emitInputs, emitReady, getPlayerData, onGameStart} from "./Network";
+import { emitInputs, emitReady, getPlayerData, onGameStart } from "./Network";
 import { coordinator } from "./Coordinator";
 import { PlayerInputs } from "../../shared/commonModels"
 import { loadAssets } from "./Assets";

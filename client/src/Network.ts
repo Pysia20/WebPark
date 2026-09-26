@@ -47,7 +47,12 @@ socket.on("playerJoined", (data: PlayerJoinedData[]) => {
         coordinator.create_players(data)
     } else {
         onGameStart(() => {
-            coordinator.create_players(data)
+            if (coordinator.world) {
+                coordinator.create_players(data)
+            }
+            else onGameStart(() => {
+                coordinator.create_players(data)
+            })
         })
     }
 })

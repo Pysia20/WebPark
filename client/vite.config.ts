@@ -13,11 +13,11 @@ export default defineConfig({
 
         // Route Hot Module Replacement (HMR) Websockets through Nginx
 
-        hmr: {
-            host: 'webpark.dino.icu',
-            clientPort: 443, // Use 443 if you use HTTPS, or 80 if HTTP
-            protocol: 'wss', // Use 'wss' for HTTPS, or 'ws' for HTTP
-        },
+    //    hmr: {
+    //        host: 'webpark.dino.icu',
+    //        clientPort: 443, // Use 443 if you use HTTPS, or 80 if HTTP
+    //        protocol: 'wss', // Use 'wss' for HTTPS, or 'ws' for HTTP
+    //    },
 
         // 💡 CRITICAL: Forwards your room fetches to your teammate's backend server!
         // proxy: {

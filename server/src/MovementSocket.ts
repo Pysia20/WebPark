@@ -8,7 +8,6 @@ import {
 	RegisterUserDataZod,
 	SomethingBrokeData,
 } from "../../shared/commonModels";
-import map from "../../shared/testMap.json";
 import { games } from "./Global";
 import { InputsZod, SocketData, SocketDataZod } from "./Models";
 import { Room } from "./Game/Room";
@@ -23,9 +22,11 @@ export function register(io: Server) {
 	endpoint.on("connect", (socket: PlayerSocket) => {
 		console.log(`User of id ${socket.id} connected.`);
 
-		socket.data.roomID = undefined;
-		socket.data.userID = undefined;
-		socket.data.userNick = undefined;
+		// socket.data.roomID = undefined;
+		// socket.data.userID = undefined;
+		// socket.data.userNick = undefined;
+
+		// console.log("socket Data:", socket.data);
 
 		socket.on("registerUser", async (data: RegisterUserData, callback) => {
 			console.log(data);

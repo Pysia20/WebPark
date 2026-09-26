@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js'
 
 import { getCurrentInputs } from "./Inputs"
-import { emitInputs, emitReady, getPlayerData, onGameStart } from "./Network";
+import {emitInputs, emitReady, getPlayerData, onGameStart, startNetworking} from "./Network";
 import { coordinator } from "./Coordinator";
 import { PlayerInputs } from "../../shared/commonModels"
 import { loadAssets } from "./Assets";
@@ -20,6 +20,8 @@ document.body.appendChild(app.canvas)
 const assets = await loadAssets()
 
 coordinator.init(assets.playerTextures, app)
+
+startNetworking()
 
 let previousSent: PlayerInputs = {left: false, jump: false, right: false}
 let dataToSend: PlayerInputs = getCurrentInputs()

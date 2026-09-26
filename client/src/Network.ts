@@ -1,9 +1,10 @@
 import { io } from "socket.io-client"
-import {ServerData, PlayerInputs, RegisterUserData, PlayerJoinedData} from "../../shared/commonModels"
-import {coordinator} from "./Coordinator";
+import { ServerData, PlayerInputs, RegisterUserData, PlayerJoinedData } from "../../shared/commonModels"
+import { coordinator } from "./Coordinator";
 
 const socket = io("/player", {
-    path: '/api/socket.io'
+    path: '/api/socket.io',
+    autoConnect: false
 })
 let playerData: ServerData | undefined
 
@@ -43,19 +44,12 @@ socket.on("tick", (data: ServerData) => {
 })
 
 socket.on("playerJoined", (data: PlayerJoinedData[]) => {
-    if (coordinator.world) {
-        coordinator.create_players(data)
-    } else {
-        onGameStart(() => {
-            if (coordinator.world) {
-                coordinator.create_players(data)
-            }
-            else onGameStart(() => {
-                coordinator.create_players(data)
-            })
-        })
-    }
+    coordinator.create_players(data)
 })
+
+export function startNetworking() {
+    socket.connect()
+}
 
 export function emitInputs(data: PlayerInputs) {
     socket.emit("playerInputs", data)

@@ -1,10 +1,11 @@
 import * as PIXI from 'pixi.js'
 
 import { getCurrentInputs } from "./Inputs"
-import {emitInputs, emitReady, getPlayerData, onGameStart, startNetworking} from "./Network";
+import { emitInputs, emitReady, getPlayerData, onGameStart, startNetworking } from "./Network";
 import { coordinator } from "./Coordinator";
 import { PlayerInputs } from "../../shared/commonModels"
 import { loadAssets } from "./Assets";
+import {cameraControler} from "./Camera";
 
 const app = new PIXI.Application()
 await app.init({
@@ -18,6 +19,7 @@ app.canvas.classList.add("hidden")
 document.body.appendChild(app.canvas)
 
 const assets = await loadAssets()
+const camera = new cameraControler(app)
 
 coordinator.init(assets.playerTextures, app)
 
@@ -37,6 +39,7 @@ app.ticker.add((time) => {
     const serverPlayerData = getPlayerData()
     if (serverPlayerData) {
         coordinator.update_players(serverPlayerData)
+        camera.update_cam(serverPlayerData)
     }
     coordinator.update_positions()
 })

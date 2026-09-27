@@ -4,6 +4,9 @@ import { PlayerInputs, Vector2 } from "../../../shared/commonModels";
 import { PLAYER_CONFIG } from "../../../shared/commonVariables";
 import { clamp } from "../Global";
 import { emitInputs } from "../../../client/src/Network";
+import { Map as GameMap } from "./Map";
+import { MAP_LOADER } from "./MapLoader";
+import { MapCollider } from "../../../shared/commonMapModels";
 
 export class Room {
 	private TICKRATE: number = 30; // Per second
@@ -12,11 +15,12 @@ export class Room {
 	private id: string;
 	private players: Map<number, Player> = new Map<number, Player>();
 	private inputs: PlayerInputs[] = [];
-	private map: undefined;
+	private map: GameMap;
 	private gameLoop: NodeJS.Timeout | undefined;
 
 	constructor(id: string) {
 		this.id = id;
+		this.map = MAP_LOADER.LoadMap("Level_0");
 	}
 
 	public getID(): string | undefined {
@@ -85,10 +89,12 @@ export class Room {
 				newVel.x = 0;
 			}
 
-			newVel.y += PLAYER_CONFIG.GRAVITY;
-
 			if (this.handleCollisions(player, newPos, newVel)) {
 				player.setGrounded(true);
+			}
+
+			if (!player.getGrounded()) {
+				newVel.y += PLAYER_CONFIG.GRAVITY;
 			}
 
 			newVel.y = clamp(
@@ -103,16 +109,16 @@ export class Room {
 				PLAYER_CONFIG.MAX_HORIZONTAL_SPEED,
 			);
 
-			if (newPos.y >= 720 - PLAYER_CONFIG.HEIGHT && !isJumping) {
-				player.setGrounded(true);
-				newVel.y = 0;
-			}
+			// if (newPos.y >= 720 - PLAYER_CONFIG.HEIGHT && !isJumping) {
+			// 	player.setGrounded(true);
+			// 	newVel.y = 0;
+			// }
 
 			newPos.x += newVel.x * (1 / this.TICKRATE);
 			newPos.y += newVel.y * (1 / this.TICKRATE);
 
 			newPos.x = clamp(newPos.x, 0, 1280 - PLAYER_CONFIG.WIDTH);
-			newPos.y = clamp(newPos.y, 0, 720 - PLAYER_CONFIG.HEIGHT);
+			// newPos.y = clamp(newPos.y, 0, 700 - PLAYER_CONFIG.HEIGHT);
 
 			player.setPos(newPos);
 			player.setVelocity(newVel);
@@ -129,7 +135,6 @@ export class Room {
 			if (p.getID() == player.getID()) return;
 
 			const otherPos = p.getPos();
-			const otherVel = p.getVelocity();
 
 			const isCollidingX =
 				otherPos.x < newPos.x + playerWidth && newPos.x < otherPos.x + playerWidth;
@@ -154,6 +159,72 @@ export class Room {
 
 			const overlapX = playerWidth - Math.abs(diffX);
 			const overlapY = playerHeight - Math.abs(diffY);
+
+			if (overlapX < overlapY) {
+				// Horizontal collison
+
+				if (diffX > 0) {
+					// A is going left towards B
+					// Pushing out to the right
+
+					if (newVel.x < 0) {
+						newPos.x += overlapX;
+						newVel.x = 0;
+					}
+				} else {
+					// A is going right towards B
+					// Pushing out to the left
+					if (newVel.x > 0) {
+						newPos.x -= overlapX;
+						newVel.x = 0;
+					}
+				}
+			} else {
+				// Vertical collision
+				if (diffY > 0) {
+					// A is going up towards B
+					// Pushing out downwards
+					if (newVel.y < 0) {
+						newPos.y += overlapY;
+						newVel.y = 0;
+					}
+				} else {
+					// A is goung down towards B
+					// Pushign out upwards
+
+					if (newVel.y > 0) {
+						newPos.y -= overlapY;
+						newVel.y = 0;
+						changeGrounded = true;
+					}
+				}
+			}
+		});
+
+		this.map.colliders.forEach((c: MapCollider) => {
+			const isCollidingX = c.x < newPos.x + playerWidth && newPos.x < c.x + c.width;
+
+			console.log(c);
+
+			const isCollidingY = newPos.y + playerHeight > c.y && newPos.y < c.y + c.height;
+
+			if (!isCollidingX || !isCollidingY) return; // Players arent colliding
+
+			const centerA: Vector2 = {
+				x: newPos.x + playerWidth / 2,
+				y: newPos.y + playerHeight / 2,
+			};
+
+			const centerB: Vector2 = {
+				x: c.x + c.width / 2,
+				y: c.y + c.height / 2,
+			};
+
+			const diffX = centerA.x - centerB.x;
+			const diffY = centerA.y - centerB.y;
+
+			const overlapX = playerWidth / 2 + c.width / 2 - Math.abs(diffX);
+			const overlapY = playerHeight / 2 + c.height / 2 - Math.abs(diffY);
 
 			if (overlapX < overlapY) {
 				// Horizontal collison

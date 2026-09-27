@@ -6,5 +6,9 @@ export const PLAYER_CONFIG = {
 	GRAVITY: 5,
 	JUMP_FORCE: 100,
 	HEIGHT: 270,
-	WIDTH: 233
+	WIDTH: 233,
+};
+
+export const WORLD_CONFIG = {
+	CELL_SIZE: 64,
 };

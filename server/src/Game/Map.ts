@@ -27,8 +27,8 @@ export class Map {
 			throw Error(`IntGrid layer not found in level: ${data.identifier}`);
 		}
 
-		this.width = layer!.__cWid;
-		this.height = layer!.__cHei;
+		this.width = layer.__cWid;
+		this.height = layer.__cHei;
 
 		const intGrid: number[][] = Array.from({ length: this.width }, () =>
 			new Array(this.height).fill(0),
@@ -40,7 +40,7 @@ export class Map {
 			}
 		}
 
-		return [];
+		return intGrid;
 	}
 
 	/**

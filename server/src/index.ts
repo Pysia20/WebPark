@@ -81,6 +81,13 @@ app.get("/api/joinRoom/:id", (req: Request, res: Response) => {
 	}
 
 	const room = games.get(String(id));
+	if (room?.getPlayers().size! >= 8) {
+		res.status(400).json({
+			status: "error",
+			message: "Too many players in this lobby.",
+		});
+		return;
+	}
 
 	const userID = room?.getNextUserID();
 

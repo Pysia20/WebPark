@@ -12,3 +12,7 @@ export const PLAYER_CONFIG = {
 export const WORLD_CONFIG = {
 	CELL_SIZE: 64,
 };
+
+export const ROOM_CONFIG = {
+	MAX_PLAYERS: 8,
+};

@@ -1,51 +1,48 @@
-import el from "zod/v4/locales/el.cjs";
-import he from "zod/v4/locales/he.cjs";
-
-export interface MapData {
-	identifier: string;
-	uniqueIdentifer: string;
-	x: number;
-	y: number;
-	width: number;
-	height: number;
-	bgColor: string;
-	neighbourLevels: unknown[];
-	layers: string[];
-	entities: Record<string, MapEntity[]>;
-}
-
-export interface MapEntity {
-	id: string;
-	iid: string;
-	layer: string;
-	x: number;
-	y: number;
-	width: number;
-	height: number;
-	color: number;
-}
-
-export interface MapCollider {
-	x: number;
-	y: number;
-	width: number;
-	height: number;
-}
+import { WORLD_CONFIG } from "../../../shared/commonVariables";
+import { MapData, MapCollider, LayerInstance } from "../../../shared/commonMapModels";
 
 export class Map {
 	public readonly id: string; // its name
-	public readonly width: number;
-	public readonly height: number;
+	private width: number = -1;
+	private height: number = -1;
 	private readonly intGrid: number[][];
 	public readonly colliders: MapCollider[];
 
-	constructor(data: MapData, intGrid: number[][]) {
+	constructor(data: MapData) {
 		this.id = data.identifier;
-		this.width = data.width;
-		this.height = data.height;
-		this.intGrid = intGrid;
+		this.intGrid = this.parseIntGrid(data);
 		this.colliders = this.generateColliders();
 	}
+
+	private parseIntGrid(data: MapData): number[][] {
+		let layer: LayerInstance | undefined;
+
+		for (let i = 0; i < data.layerInstances.length; i++) {
+			if (data.layerInstances[i].__type == "IntGrid") {
+				layer = data.layerInstances[i];
+			}
+		}
+
+		if (layer === undefined) {
+			throw Error(`IntGrid layer not found in level: ${data.identifier}`);
+		}
+
+		this.width = layer!.__cWid;
+		this.height = layer!.__cHei;
+
+		const intGrid: number[][] = Array.from({ length: this.width }, () =>
+			new Array(this.height).fill(0),
+		);
+
+		for (let y = 0; y < this.height; y++) {
+			for (let x = 0; x < this.width; x++) {
+				intGrid[x][y] = layer.intGridCsv[y * this.width + x];
+			}
+		}
+
+		return [];
+	}
+
 	/**
 	 * Greedy meshing
 	 */
@@ -107,10 +104,11 @@ export class Map {
 		}
 
 		return {
-			x: startingX,
-			y: startingY,
-			width: width,
-			height: height,
+			// Scaling the intgrid to the real size
+			x: startingX * WORLD_CONFIG.CELL_SIZE,
+			y: startingY * WORLD_CONFIG.CELL_SIZE,
+			width: width * WORLD_CONFIG.CELL_SIZE,
+			height: height * WORLD_CONFIG.CELL_SIZE,
 		};
 	}
 }

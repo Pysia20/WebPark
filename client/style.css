@@ -99,7 +99,7 @@ main > div {
 .preview img {
     display: block;
 
-    max-width: 100%;
+    width: 100%;
     height: auto;
 
     mix-blend-mode: multiply;
@@ -110,8 +110,8 @@ main > div {
     cursor: pointer;
     background-color: var(--player-color, #ffffff);
 
-    -webkit-mask-image: url("public/sprites/farmerThatDoesHarvestingWoahLookTHatsTheThemeFRFR.png");
-    mask-image: url("public/sprites/farmerThatDoesHarvestingWoahLookTHatsTheThemeFRFR.png");
+    -webkit-mask-image: url("public/sprites/playerPlaceholder.png");
+    mask-image: url("public/sprites/playerPlaceholder.png");
     -webkit-mask-size: contain;
     mask-size: contain;
     -webkit-mask-repeat: no-repeat;

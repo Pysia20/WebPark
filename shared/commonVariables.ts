@@ -5,8 +5,8 @@ export const PLAYER_CONFIG = {
 	DRAG: 5,
 	GRAVITY: 5,
 	JUMP_FORCE: 100,
-	HEIGHT: 270,
-	WIDTH: 233,
+	HEIGHT: 74,
+	WIDTH: 64,
 };
 
 export const WORLD_CONFIG = {

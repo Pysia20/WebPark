@@ -1,19 +1,25 @@
 import { LevelData } from "../../shared/commonModels";
 import level0Data from "../../shared/maps/Level_0.json";
-import {Assets, Container, loadJson, loadTextures, Rectangle, Sprite, Texture} from "pixi.js";
+import { Container, Rectangle, Sprite, Texture } from "pixi.js";
 
 export class levelManager {
+    levels: LevelData[]
     mapData: LevelData
-    world: Container<any>
+    world: Container
     spriteSheet: Texture  //TEMP?
 
-    constructor(world: Container, sprites: Texture) {
-        this.mapData = level0Data as LevelData
+    constructor(world: Container, sprites: Texture, levels: LevelData[]) {
+        this.levels = levels
+        this.mapData = levels[0]
         this.world = world
         this.spriteSheet = sprites
     }
 
-    loadLevel() {
+    loadLevel(level: number) {
+        this.mapData = this.levels[level]
+    }
+
+    renderLevel() {
         for (const layer of this.mapData.layerInstances.reverse()) {
             if (!layer.visible) continue
 

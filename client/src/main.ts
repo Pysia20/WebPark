@@ -25,9 +25,7 @@ app.stage.addChild(uiContainer)
 
 const assets = await loadAssets()
 const camera = new cameraControler(worldContainer, app.screen)
-
-const placeholderSprites = await PIXI.Assets.load("spritesheets/placeholderSpritesheet.png")
-const leveler = new levelManager(worldContainer, placeholderSprites)
+const leveler = new levelManager(worldContainer, assets.mapAssets.Spritesheet, assets.mapAssets.Levels)
 
 coordinator.init(assets.playerTextures, worldContainer)
 
@@ -43,7 +41,7 @@ setInterval(() => {
     }
 }, (1000 / 30)) //(1000/20)=20 times a second, (1000/30)=0 times a second etc
 
-leveler.loadLevel()
+leveler.renderLevel()
 app.ticker.add((time) => {
     const serverPlayerData = getPlayerData()
     if (serverPlayerData) {

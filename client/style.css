@@ -99,7 +99,7 @@ main > div {
 .preview img {
     display: block;
 
-    max-width: 100%;
+    width: 100%;
     height: auto;
 
     mix-blend-mode: multiply;

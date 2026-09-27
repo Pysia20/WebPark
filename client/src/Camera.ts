@@ -28,11 +28,13 @@ export class cameraControler {
 
         const space: Vector2 = {x: (max.x - min.x) + 100, y: (max.y - min.y) + 100}
         const rawZoom: number = Math.min(this.world.screen.width / space.x, this.world.screen.height / space.y)
-        const targetZoom: number = Math.min(Math.max(rawZoom, 0.6), 1.0)
+        const targetZoom: number = Math.min(Math.max(rawZoom, 0.6), 1.5)
+        console.log(rawZoom)
 
+        const spacer = 32
         const rawPos: Vector2 = {x: (max.x + min.x)/2, y: (max.y + min.y)/2}
         const scaledScreen: Vector2 = {x: (this.world.screen.width/2) / targetZoom,y: (this.world.screen.height/2) / targetZoom}
-        const targetPos: Vector2 = {x: Math.min(Math.max(rawPos.x, scaledScreen.x), this.map_size.x - scaledScreen.x), y: Math.min(Math.max(rawPos.y, scaledScreen.y), this.map_size.y - scaledScreen.y)}
+        const targetPos: Vector2 = {x: Math.min(Math.max(rawPos.x, scaledScreen.x - spacer), (this.map_size.x - scaledScreen.x) + spacer), y: Math.min(Math.max(rawPos.y, scaledScreen.y + spacer), (this.map_size.y - scaledScreen.y) + spacer)}
 
 
         this.world.stage.pivot.x += (targetPos.x - this.world.stage.pivot.x) * this.LERP_SPEED

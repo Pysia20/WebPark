@@ -39,8 +39,12 @@ export class Player {
     updateDirection(velocity: Vector2) {
         if (velocity.x < 0) {
             this.sprite.scale.x = -(PLAYER_CONFIG.WIDTH / this.textures.idle.width)
+            this.sprite.texture = this.textures.walk
         } else if (velocity.x > 0) {
             this.sprite.scale.x = (PLAYER_CONFIG.WIDTH / this.textures.idle.width)
+            this.sprite.texture = this.textures.walk
+        } else {
+            this.sprite.texture = this.textures.idle
         }
          if (velocity.y != 0) {
              this.sprite.texture = this.textures.jump

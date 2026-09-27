@@ -17,11 +17,15 @@ await app.init({
 })
 app.canvas.classList.add("hidden")
 document.body.appendChild(app.canvas)
+const worldContainer = new PIXI.Container()
+const uiContainer = new PIXI.Container()
+app.stage.addChild(worldContainer)
+app.stage.addChild(uiContainer)
 
 const assets = await loadAssets()
-const camera = new cameraControler(app)
+const camera = new cameraControler(worldContainer, app.screen)
 
-coordinator.init(assets.playerTextures, app)
+coordinator.init(assets.playerTextures, worldContainer)
 
 startNetworking()
 

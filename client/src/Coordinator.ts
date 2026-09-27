@@ -1,15 +1,15 @@
 import { Player } from "./Player";
 import { PlayerJoinedData, ServerData } from "../../shared/commonModels"
-import { Application } from "pixi.js";
+import { Container } from "pixi.js";
 import { PlayerTextures } from "./Assets";
 
 class Coordinator {
     players: Map<number, Player> = new Map
     serverData: ServerData | undefined
     playerTextures: PlayerTextures = {} as PlayerTextures
-    world: Application | undefined
+    world: Container | undefined
 
-    init(playerTextures: PlayerTextures, world: Application) {
+    init(playerTextures: PlayerTextures, world: Container) {
         this.playerTextures = playerTextures
         this.world = world
     }
@@ -19,7 +19,7 @@ class Coordinator {
             if (!this.players.has(data.playerID)) {
                 const newPlayer = new Player(data.playerID, data.color, this.playerTextures);
                 this.players.set(data.playerID, newPlayer);
-                (this.world as Application).stage.addChild(newPlayer.sprite);
+                (this.world as Container).addChild(newPlayer.sprite);
             }
         }
     }

@@ -6,6 +6,7 @@ import { coordinator } from "./Coordinator";
 import { PlayerInputs } from "../../shared/commonModels"
 import { loadAssets } from "./Assets";
 import {cameraControler} from "./Camera";
+import {levelManager} from "./Leveler";
 
 const app = new PIXI.Application()
 await app.init({
@@ -25,6 +26,9 @@ app.stage.addChild(uiContainer)
 const assets = await loadAssets()
 const camera = new cameraControler(worldContainer, app.screen)
 
+const placeholderSprites = await PIXI.Assets.load("spritesheets/placeholderSpritesheet.png")
+const leveler = new levelManager(worldContainer, placeholderSprites)
+
 coordinator.init(assets.playerTextures, worldContainer)
 
 startNetworking()
@@ -39,6 +43,7 @@ setInterval(() => {
     }
 }, (1000 / 30)) //(1000/20)=20 times a second, (1000/30)=0 times a second etc
 
+leveler.loadLevel()
 app.ticker.add((time) => {
     const serverPlayerData = getPlayerData()
     if (serverPlayerData) {

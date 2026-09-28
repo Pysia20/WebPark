@@ -52,7 +52,7 @@ export interface LayerInstance {
 	visible: boolean;
 	optionalRules: unknown[];
 	intGridCsv: number[];
-	autoLayerTiles: unknown[];
+	autoLayerTiles: GridTile[];
 	seed: number;
 	overrideTilesetUid: null;
 	gridTiles: GridTile[];

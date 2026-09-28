@@ -16,7 +16,7 @@ class MapLoader {
 		});
 
 		result.forEach((e) => {
-			if (e.isFile() && e.name.split(".").at(-1)?.toLowerCase() == "ldtkl")
+			if (e.isFile() && e.name.split(".").at(-1)?.toLowerCase() == "json")
 				this.foundMaps.push(e.name.split(".")[0]);
 		});
 
@@ -39,7 +39,7 @@ class MapLoader {
 		if (!this.foundMaps.includes(id)) throw Error("Map with this ID (name) doesn't exist.");
 
 		const mapData = JSON.parse(
-			fs.readFileSync(path.join(this.MAP_DIRECTORY, `${id}.ldtkl`), {
+			fs.readFileSync(path.join(this.MAP_DIRECTORY, `${id}.json`), {
 				encoding: "utf8",
 			}),
 		) as MapData;

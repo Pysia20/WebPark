@@ -1,6 +1,6 @@
 import { Texture, Assets } from "pixi.js";
-import { LevelData } from "../../shared/commonModels"
-import level0 from "../../shared/maps/Level_0.json"
+import { MapData } from "../../shared/commonMapModels"
+import level0 from "shared/maps/Level_0/Level_0.json"
 
 export interface PlayerTextures {
     idle: Texture
@@ -10,7 +10,7 @@ export interface PlayerTextures {
 
 export interface MapAssets {
     Spritesheet: Texture
-    Levels: LevelData[]
+    Levels: MapData[]
 }
 
 export interface GameAssets {
@@ -34,7 +34,7 @@ export async function loadAssets() {
 
     //map assets
     const mapSpritesheet: Texture = loadedAssets["spritesheets/placeholderSpritesheet.png"]
-    const mapLevels: LevelData[] = [level0 as LevelData]
+    const mapLevels: MapData[] = [level0 as MapData]
     const mapAssets: MapAssets = {Spritesheet: mapSpritesheet, Levels: mapLevels}
 
     const assets: GameAssets = {playerTextures: playerTextures, mapAssets: mapAssets}

@@ -172,17 +172,17 @@ importers:
         specifier: ^2.2.4
         version: 2.2.4
       pixi.js:
-        specifier: ^8.21.0
+        specifier: ^8.20.1
         version: 8.21.0
       socket.io-client:
-        specifier: ^4.8.4
+        specifier: ^4.8.3
         version: 4.8.4
     devDependencies:
       '@types/howler':
         specifier: ^2.2.13
         version: 2.2.13
       vite:
-        specifier: ^8.3.1
+        specifier: ^8.3.0
         version: 8.3.1(@types/node@26.6.3)(esbuild@0.28.2)(tsx@4.23.15)
 
   server:

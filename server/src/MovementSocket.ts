@@ -12,7 +12,7 @@ import { games } from "./Global";
 import { InputsZod, SocketData, SocketDataZod } from "./Models";
 import { Room } from "./Game/Room";
 import { Player } from "./Game/Player";
-import e from "cors";
+import { LOG } from "./Logger";
 
 type PlayerSocket = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, SocketData>;
 
@@ -20,20 +20,13 @@ export function register(io: Server) {
 	const endpoint = io.of("/player");
 
 	endpoint.on("connect", (socket: PlayerSocket) => {
-		console.log(`User of id ${socket.id} connected.`);
-
-		// socket.data.roomID = undefined;
-		// socket.data.userID = undefined;
-		// socket.data.userNick = undefined;
-
-		// console.log("socket Data:", socket.data);
+		LOG.info(`SOCKET | User (${socket.id}) connected.`);
 
 		socket.on("registerUser", async (data: RegisterUserData, callback) => {
-			console.log(data);
-
 			try {
 				RegisterUserDataZod.parse(data);
 			} catch (e) {
+				LOG.warn(`SOCKET: registerUser | Invalid request body.`);
 				if (e instanceof Error) {
 					socket.emit("somethingBroke", {
 						name: e.name,
@@ -50,6 +43,7 @@ export function register(io: Server) {
 			const room: Room | undefined = games.get(data.roomID);
 
 			if (room === undefined) {
+				LOG.warn(`SOCKET: registerUser | Room (${data.roomID}) doesn't exist.`);
 				socket.emit("somethingBroke", {
 					name: "Error",
 					message: "Room (roomID) doesn't exist.",
@@ -89,7 +83,7 @@ export function register(io: Server) {
 			socket.data.userNick = data.userNick;
 			socket.data.userID = data.userID;
 
-			console.log(`User: ${data.userNick} (${data.userID}) joined the room ${data.roomID}`);
+			LOG.info(`User: ${data.userNick} (${data.userID}) joined the room (${data.roomID})`);
 		});
 
 		socket.on("playerReady", (id: number) => {
@@ -97,15 +91,14 @@ export function register(io: Server) {
 				const room: Room | undefined = games.get(socket.data.roomID);
 
 				if (room === undefined) {
+					LOG.warn(`SOCKET: playerReady | Room (${socket.data.roomID}) doesn't exist.`);
 					socket.emit("somethingBroke", {
 						name: "Error",
 						message: "Room (roomID) doesn't exist.",
-						eventName: "registerUser",
+						eventName: "playerReady",
 					} as SomethingBrokeData);
 
 					return;
-				} else {
-					console.error(e);
 				}
 
 				room.setPlayerReady(id, true);
@@ -115,7 +108,7 @@ export function register(io: Server) {
 					.emit("log", `<li>User ${socket.data.userNick} is ready.</li>`);
 
 				if (room.isEveryoneReady()) {
-					console.log("starting");
+					LOG.info(`SOCKET: playerReady | Room (${socket.data.roomID}) started.`);
 					room.startGameLoop(endpoint);
 				}
 			}
@@ -123,7 +116,20 @@ export function register(io: Server) {
 
 		socket.on("playerUnReady", (id) => {
 			if (socket.data.roomID) {
-				games.get(socket.data.roomID)?.setPlayerReady(id, false);
+				const room: Room | undefined = games.get(socket.data.roomID);
+
+				if (room === undefined) {
+					LOG.warn(`SOCKET: playerUnReady | Room (${socket.data.roomID}) doesn't exist.`);
+					socket.emit("somethingBroke", {
+						name: "Error",
+						message: "Room (roomID) doesn't exist.",
+						eventName: "playerUnReady",
+					} as SomethingBrokeData);
+
+					return;
+				}
+
+				room.setPlayerReady(id, false);
 
 				socket
 					.to(socket.data.roomID)
@@ -136,6 +142,9 @@ export function register(io: Server) {
 				InputsZod.parse(inputs);
 			} catch (e) {
 				if (e instanceof Error) {
+					LOG.warn(
+						`SOCKET: playerInputs | Player (${socket.data.userID}) sent invalid inputs.`,
+					);
 					socket.emit("somethingBroke", {
 						name: e.name,
 						message: e.message,
@@ -151,6 +160,7 @@ export function register(io: Server) {
 			try {
 				SocketDataZod.parse(socket.data);
 			} catch (e) {
+				LOG.warn(`SOCKET: playerInputs | Player's socket data doesn't exist.`);
 				if (e instanceof Error) {
 					socket.emit("somethingBroke", {
 						name: e.name,
@@ -168,10 +178,12 @@ export function register(io: Server) {
 		});
 
 		socket.on("disconnect", (e) => {
-			console.log(`User of id ${socket.id} disconnected.`);
-			console.log(`userNick: ${socket.data.userNick}`);
-			console.log(`userID: ${socket.data.userID}`);
-			console.log(`roomID: ${socket.data.roomID}`);
+			// console.log(`User of id ${socket.id} disconnected.`);
+			// console.log(`userNick: ${socket.data.userNick}`);
+			// console.log(`userID: ${socket.data.userID}`);
+			// console.log(`roomID: ${socket.data.roomID}`);
+
+			LOG.info(`SOCKET | User (${socket.id}) disconnected.`);
 
 			socket
 				.to(socket.data.roomID!)

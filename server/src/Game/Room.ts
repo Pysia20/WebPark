@@ -7,6 +7,7 @@ import { emitInputs } from "../../../client/src/Network";
 import { Map as GameMap } from "./Map";
 import { MAP_LOADER } from "./MapLoader";
 import { MapCollider } from "../../../shared/commonMapModels";
+import { LOG } from "../Logger";
 
 export class Room {
 	private TICKRATE: number = 30; // Per second
@@ -203,8 +204,6 @@ export class Room {
 
 		this.map.colliders.forEach((c: MapCollider) => {
 			const isCollidingX = c.x < newPos.x + playerWidth && newPos.x < c.x + c.width;
-
-			console.log(c);
 
 			const isCollidingY = newPos.y + playerHeight > c.y && newPos.y < c.y + c.height;
 

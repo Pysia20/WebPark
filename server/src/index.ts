@@ -5,6 +5,7 @@ import { DefaultEventsMap, Server as SocketIOServer } from "socket.io";
 import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
+import { z } from "zod";
 
 import { games, generateRoomCode } from "./Global";
 import config from "../config.json";
@@ -12,7 +13,8 @@ import movement from "./MovementSocket";
 import { Room } from "./Game/Room";
 import { Player } from "./Game/Player";
 import { JoinRoomRequest, JoinRoomRequestZod, SocketData } from "./Models";
-import { z } from "zod";
+import { LOG } from "./Logger";
+import { ROOM_CONFIG } from "../../shared/commonVariables";
 
 const app: ExpressInterface = Express();
 const server: Server = createServer(app);
@@ -57,6 +59,8 @@ app.post("/api/createRoom", (req: Request, res: Response) => {
 
 	const userID = room.getNextUserID();
 
+	LOG.info(`ENDPOINT: createRoom | User created a room (${roomID}).`);
+
 	res.status(200).json({
 		roomID: roomID,
 		userID: userID,
@@ -70,6 +74,7 @@ app.get("/api/joinRoom/:id", (req: Request, res: Response) => {
 		z.string().length(6).parse(id);
 	} catch (e) {
 		if (e instanceof Error) {
+			LOG.warn(`ENDPOINT: joinRoom | Invalid room id (${id}).`);
 			res.status(400).json({
 				status: "error",
 				message: e.message,
@@ -81,7 +86,8 @@ app.get("/api/joinRoom/:id", (req: Request, res: Response) => {
 	}
 
 	const room = games.get(String(id));
-	if (room?.getPlayers().size! >= 8) {
+	if (room?.getPlayers().size! >= ROOM_CONFIG.MAX_PLAYERS) {
+		LOG.warn(`Additional player tried to join room ${id}.`);
 		res.status(400).json({
 			status: "error",
 			message: "Too many players in this lobby.",
@@ -90,6 +96,8 @@ app.get("/api/joinRoom/:id", (req: Request, res: Response) => {
 	}
 
 	const userID = room?.getNextUserID();
+
+	LOG.info(`ENDPOINT: joinRoom | Player (${userID}) joined a room (${id})`);
 
 	res.status(200).json({
 		roomID: id,
@@ -102,5 +110,5 @@ app.get("/api/game/:id", (req: Request, res: Response) => {
 });
 
 server.listen(config.PORT, () => {
-	console.log(`App running on http://localhost:${config.PORT}`);
+	LOG.info(`Server running on http://localhost:${config.PORT}`);
 });

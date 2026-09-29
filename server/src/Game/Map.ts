@@ -1,5 +1,5 @@
-import { WORLD_CONFIG } from "../../../shared/commonVariables";
-import { MapData, MapCollider, LayerInstance } from "../../../shared/commonMapModels";
+import { WORLD_CONFIG } from "@shared/commonVariables";
+import { MapData, MapCollider, LayerInstance } from "@shared/commonMapModels";
 
 export class Map {
 	public readonly id: string; // its name

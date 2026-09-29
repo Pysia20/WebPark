@@ -1,12 +1,11 @@
 import { Namespace } from "socket.io";
 import { Player } from "./Player";
-import { PlayerInputs, Vector2 } from "../../../shared/commonModels";
-import { PLAYER_CONFIG } from "../../../shared/commonVariables";
+import { PlayerInputs, Vector2 } from "@shared/commonModels";
+import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { clamp } from "../Global";
-import { emitInputs } from "../../../client/src/Network";
 import { Map as GameMap } from "./Map";
 import { MAP_LOADER } from "./MapLoader";
-import { MapCollider } from "../../../shared/commonMapModels";
+import { MapCollider } from "@shared/commonMapModels";
 import { LOG } from "../Logger";
 
 export class Room {

@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { Map } from "./Map";
-import { MapData } from "../../../shared/commonMapModels";
+import { MapData } from "@shared/commonMapModels";
 
 class MapLoader {
 	private loadedMaps: Map[] = [];

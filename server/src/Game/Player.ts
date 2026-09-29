@@ -1,4 +1,4 @@
-import { PlayerInputs, Vector2 } from "../../../shared/commonModels";
+import { PlayerInputs, Vector2 } from "@shared/commonModels";
 
 export class Player {
 	public id: number;

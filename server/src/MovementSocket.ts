@@ -7,7 +7,7 @@ import {
 	RegisterUserData,
 	RegisterUserDataZod,
 	SomethingBrokeData,
-} from "../../shared/commonModels";
+} from "@shared/commonModels";
 import { games } from "./Global";
 import { InputsZod, SocketData, SocketDataZod } from "./Models";
 import { Room } from "./Game/Room";

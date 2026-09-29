@@ -3,6 +3,9 @@
 		"strict": true,
 		"target": "ES2022",
 		"module": "ESNext",
-		"moduleResolution": "bundler"
+		"moduleResolution": "bundler",
+		"paths": {
+			"@shared/*": ["./shared/*"]
+		}
 	}
 }

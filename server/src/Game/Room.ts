@@ -29,8 +29,8 @@ export class Room {
 	}
 
 	public addPlayer(p: Player) {
-		p.setPos({ x: p.getID() * 400, y: 0 });
-		this.players.set(p.getID(), p);
+		p.pos = { x: p.id * 400, y: 0 };
+		this.players.set(p.id, p);
 	}
 
 	/**It adds 1 to the nextUserID after it returns it!!! */
@@ -47,7 +47,7 @@ export class Room {
 		let isReady = true;
 
 		this.players.forEach((player) => {
-			if (!player.getIsReady()) {
+			if (!player.isReady) {
 				isReady = false;
 			}
 		});
@@ -56,31 +56,21 @@ export class Room {
 	}
 
 	public setPlayerReady(id: number, v: boolean) {
-		this.players.get(id)?.setIsReady(v);
+		this.players.get(id)!.isReady = v;
 	}
 
 	private physicsUpdate() {
 		for (let [id, player] of this.players) {
-			const pos: Vector2 = player.getPos();
-			const velocity: Vector2 = player.getVelocity();
-			const input = player.getInputs();
+			const pos: Vector2 = player.pos;
+			const velocity: Vector2 = player.velocity;
+			const input = player.lastInputs;
 
 			const newPos: Vector2 = { ...pos };
 			const newVel: Vector2 = { ...velocity };
 
 			let isJumping = false;
 
-			if (input.right) {
-				newVel.x += PLAYER_CONFIG.ACCELERATION;
-			}
-			if (input.left) {
-				newVel.x -= PLAYER_CONFIG.ACCELERATION;
-			}
-			if (input.jump && player.getGrounded()) {
-				newVel.y -= PLAYER_CONFIG.JUMP_FORCE;
-				player.setGrounded(false);
-				isJumping = true;
-			}
+			player.isGrounded = false;
 
 			if (newVel.x > PLAYER_CONFIG.DRAG) {
 				newVel.x -= PLAYER_CONFIG.DRAG;
@@ -91,10 +81,22 @@ export class Room {
 			}
 
 			if (this.handleCollisions(player, newPos, newVel)) {
-				player.setGrounded(true);
+				player.isGrounded = true;
 			}
 
-			if (!player.getGrounded()) {
+			if (input.right) {
+				newVel.x += PLAYER_CONFIG.ACCELERATION;
+			}
+			if (input.left) {
+				newVel.x -= PLAYER_CONFIG.ACCELERATION;
+			}
+			if (input.jump && player.isGrounded) {
+				newVel.y -= PLAYER_CONFIG.JUMP_FORCE;
+				player.isGrounded = false;
+				isJumping = true;
+			}
+
+			if (!player.isGrounded) {
 				newVel.y += PLAYER_CONFIG.GRAVITY;
 			}
 
@@ -121,8 +123,8 @@ export class Room {
 			newPos.x = clamp(newPos.x, 0, 1280 - PLAYER_CONFIG.WIDTH);
 			// newPos.y = clamp(newPos.y, 0, 700 - PLAYER_CONFIG.HEIGHT);
 
-			player.setPos(newPos);
-			player.setVelocity(newVel);
+			player.pos = newPos;
+			player.velocity = newVel;
 		}
 	}
 
@@ -133,9 +135,9 @@ export class Room {
 		let changeGrounded = false;
 
 		this.players.forEach((p: Player) => {
-			if (p.getID() == player.getID()) return;
+			if (p.id == player.id) return;
 
-			const otherPos = p.getPos();
+			const otherPos = p.pos;
 
 			const isCollidingX =
 				otherPos.x < newPos.x + playerWidth && newPos.x < otherPos.x + playerWidth;
@@ -279,11 +281,11 @@ export class Room {
 				};
 
 				this.players.forEach((player: Player, id: number) => {
-					const pos = player.getPos();
+					const pos = player.pos;
 					roomData.playerData[id] = {
-						nick: player.getNick(),
+						nick: player.nick,
 						pos: pos,
-						velocity: player.getVelocity(),
+						velocity: player.velocity,
 					};
 				});
 
@@ -303,7 +305,7 @@ export class Room {
 			return;
 		}
 
-		player.setInputs(inputs);
+		player.lastInputs = inputs;
 	}
 
 	public getPlayers() {

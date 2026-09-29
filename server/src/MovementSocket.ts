@@ -55,7 +55,7 @@ export function register(io: Server) {
 			await socket.join(data.roomID);
 
 			const player: Player = new Player(data.userID, data.userNick);
-			player.setColor(data.color);
+			player.color = data.color;
 
 			room.addPlayer(player);
 
@@ -69,9 +69,9 @@ export function register(io: Server) {
 				?.getPlayers()
 				.forEach((player, id) => {
 					const data: PlayerJoinedData = {
-						playerID: player.getID(),
-						nick: player.getNick(),
-						color: player.getColor(),
+						playerID: player.id,
+						nick: player.nick,
+						color: player.color,
 					};
 
 					playerJoinedData.push(data);

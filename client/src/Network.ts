@@ -1,5 +1,5 @@
 import { io } from "socket.io-client"
-import { ServerData, PlayerInputs, RegisterUserData, PlayerJoinedData } from "../../shared/commonModels"
+import { ServerData, PlayerInputs, RegisterUserData, PlayerJoinedData } from "@shared/commonModels"
 import { coordinator } from "./Coordinator";
 
 const socket = io("/player", {

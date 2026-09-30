@@ -1,4 +1,4 @@
-import { PlayerInputs } from "../../shared/commonModels"
+import { PlayerInputs } from "@shared/commonModels"
 
 let Inputs = new Set<string>;
 

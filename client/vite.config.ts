@@ -1,6 +1,12 @@
 import { defineConfig } from 'vite';
+import path from "node:path";
 
 export default defineConfig({
+    resolve: {
+        alias: {
+            "@shared": path.resolve(__dirname, "../shared")
+        },
+    },
     server: {
         // Bind to all network interfaces so Nginx can connect to it
         host: '0.0.0.0',

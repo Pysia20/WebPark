@@ -1,6 +1,7 @@
 import { Vector2 } from "@shared/commonModels";
 import { Player } from "../Player";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
+import { isColliding } from "../../Global";
 
 export class Entity {
 	public pos: Vector2 = { x: 0, y: 0 };
@@ -14,35 +15,9 @@ export class Entity {
 	 * @param playerNewVel
 	 */
 	public handleCollisions(p: Player, playerNewPos: Vector2, playerNewVel: Vector2): boolean {
-		// Add calculate overlaps function;
-
-		const playerWidth = PLAYER_CONFIG.WIDTH;
-		const playerHeight = PLAYER_CONFIG.HEIGHT;
+		const { overlapX, overlapY, diffX, diffY } = isColliding(p, this);
 
 		let changeGrounded: boolean = false;
-
-		const isCollidingX =
-			this.pos.x < playerNewPos.x + playerWidth && playerNewPos.x < this.pos.x + this.size.x;
-		const isCollidingY =
-			playerNewPos.y + playerHeight > this.pos.y && playerNewPos.y < this.pos.y + this.size.y;
-
-		if (!isCollidingX || !isCollidingY) return false; // Players arent colliding
-
-		const centerA: Vector2 = {
-			x: playerNewPos.x + playerWidth / 2,
-			y: playerNewPos.y + playerHeight / 2,
-		};
-
-		const centerB: Vector2 = {
-			x: this.pos.x + this.size.x / 2,
-			y: this.pos.y + this.size.y / 2,
-		};
-
-		const diffX = centerA.x - centerB.x;
-		const diffY = centerA.y - centerB.y;
-
-		const overlapX = playerWidth / 2 + this.size.x / 2 - Math.abs(diffX);
-		const overlapY = playerHeight / 2 + this.size.y / 2 - Math.abs(diffY);
 
 		if (overlapX < overlapY) {
 			// Horizontal collison

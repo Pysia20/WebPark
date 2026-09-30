@@ -148,12 +148,12 @@ export class Map {
 			}
 		}
 
-		return {
-			// Scaling the intgrid to the real size
-			x: startingX * WORLD_CONFIG.CELL_SIZE,
-			y: startingY * WORLD_CONFIG.CELL_SIZE,
-			width: width * WORLD_CONFIG.CELL_SIZE,
-			height: height * WORLD_CONFIG.CELL_SIZE,
-		};
+		// Scaling the intgrid to the real size
+		return new MapCollider(
+			startingX * WORLD_CONFIG.CELL_SIZE,
+			startingY * WORLD_CONFIG.CELL_SIZE,
+			width * WORLD_CONFIG.CELL_SIZE,
+			height * WORLD_CONFIG.CELL_SIZE,
+		);
 	}
 }

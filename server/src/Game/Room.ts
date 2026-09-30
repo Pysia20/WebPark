@@ -2,7 +2,7 @@ import { Namespace } from "socket.io";
 import { Player } from "./Player";
 import { PlayerInputs, Vector2 } from "@shared/commonModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
-import { clamp } from "../Global";
+import { clamp, isColliding } from "../Global";
 import { Map as GameMap } from "./Map";
 import { MAP_LOADER } from "./MapLoader";
 import { MapCollider } from "@shared/commonMapModels";
@@ -138,31 +138,7 @@ export class Room {
 		this.players.forEach((p: Player) => {
 			if (p.id == player.id) return;
 
-			const otherPos = p.pos;
-
-			const isCollidingX =
-				otherPos.x < newPos.x + playerWidth && newPos.x < otherPos.x + playerWidth;
-
-			const isCollidingY =
-				newPos.y + playerHeight > otherPos.y && newPos.y < otherPos.y + playerHeight;
-
-			if (!isCollidingX || !isCollidingY) return; // Players arent colliding
-
-			const centerA: Vector2 = {
-				x: newPos.x + playerWidth / 2,
-				y: newPos.y + playerHeight / 2,
-			};
-
-			const centerB: Vector2 = {
-				x: otherPos.x + playerWidth / 2,
-				y: otherPos.y + playerHeight / 2,
-			};
-
-			const diffX = centerA.x - centerB.x;
-			const diffY = centerA.y - centerB.y;
-
-			const overlapX = playerWidth - Math.abs(diffX);
-			const overlapY = playerHeight - Math.abs(diffY);
+			const { overlapX, overlapY, diffX, diffY } = isColliding(player, p);
 
 			if (overlapX < overlapY) {
 				// Horizontal collison
@@ -206,26 +182,7 @@ export class Room {
 		});
 
 		this.map.colliders.forEach((c: MapCollider) => {
-			const isCollidingX = c.x < newPos.x + playerWidth && newPos.x < c.x + c.width;
-			const isCollidingY = newPos.y + playerHeight > c.y && newPos.y < c.y + c.height;
-
-			if (!isCollidingX || !isCollidingY) return; // Players arent colliding
-
-			const centerA: Vector2 = {
-				x: newPos.x + playerWidth / 2,
-				y: newPos.y + playerHeight / 2,
-			};
-
-			const centerB: Vector2 = {
-				x: c.x + c.width / 2,
-				y: c.y + c.height / 2,
-			};
-
-			const diffX = centerA.x - centerB.x;
-			const diffY = centerA.y - centerB.y;
-
-			const overlapX = playerWidth / 2 + c.width / 2 - Math.abs(diffX);
-			const overlapY = playerHeight / 2 + c.height / 2 - Math.abs(diffY);
+			const { overlapX, overlapY, diffX, diffY } = isColliding(player, c);
 
 			if (overlapX < overlapY) {
 				// Horizontal collison

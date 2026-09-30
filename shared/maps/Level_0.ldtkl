@@ -83,6 +83,22 @@
 					"fieldInstances": [],
 					"__worldX": 384,
 					"__worldY": 128
+				},
+				{
+					"__identifier": "Button",
+					"__grid": [9,13],
+					"__pivot": [0,0],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#D77643",
+					"iid": "3ff7c720-96d0-11f1-8b88-b9b05c8d0b04",
+					"width": 64,
+					"height": 64,
+					"defUid": 8,
+					"px": [576,832],
+					"fieldInstances": [],
+					"__worldX": 576,
+					"__worldY": 128
 				}
 			]
 		},

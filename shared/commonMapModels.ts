@@ -35,7 +35,7 @@ export interface Header {
 
 export interface LayerInstance {
 	__identifier: string;
-	__type: string;
+	__type: LayerType;
 	__cWid: number;
 	__cHei: number;
 	__gridSize: number;
@@ -85,9 +85,21 @@ export interface GridTile {
 	a: number;
 }
 
-export interface MapCollider {
-	x: number;
-	y: number;
-	width: number;
-	height: number;
+export class MapCollider {
+	private _forceInstance!: void;
+	public x: number = -1;
+	public y: number = -1;
+	public width: number = -1;
+	public height: number = -1;
+
+	constructor(x: number, y: number, width: number, height: number) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+	}
 }
+
+export type LayerType = "Entities" | "Tiles" | "IntGrid" | "AutoLayer";
+
+export type EntityType = "JohnEntity" | "Button" | "Key" | "Door";

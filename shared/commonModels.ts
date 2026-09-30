@@ -1,6 +1,15 @@
 import z from "zod";
 
 export type Vector2 = { x: number; y: number };
+export type Vector3 = { x: number; y: number; z: number };
+export type Vector4 = { x: number; y: number; z: number; w: number };
+
+export type CollisionCheckResult = {
+	overlapX: number;
+	overlapY: number;
+	diffX: number;
+	diffY: number;
+};
 
 export interface PlayerInputs {
 	left: boolean;

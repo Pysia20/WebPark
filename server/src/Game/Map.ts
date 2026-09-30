@@ -1,5 +1,6 @@
 import { WORLD_CONFIG } from "@shared/commonVariables";
 import { MapData, MapCollider, LayerInstance } from "@shared/commonMapModels";
+import { Entity } from "./Entities/Entity";
 
 export class Map {
 	public readonly id: string; // its name
@@ -7,6 +8,7 @@ export class Map {
 	private height: number = -1;
 	private readonly intGrid: number[][];
 	public readonly colliders: MapCollider[];
+	public entities: Entity[] = [];
 
 	constructor(data: MapData) {
 		this.id = data.identifier;

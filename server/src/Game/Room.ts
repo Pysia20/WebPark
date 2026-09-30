@@ -21,6 +21,7 @@ export class Room {
 	constructor(id: string) {
 		this.id = id;
 		this.map = MAP_LOADER.LoadMap("Level_0");
+		console.log(this.map.colliders.length);
 	}
 
 	public getID(): string | undefined {

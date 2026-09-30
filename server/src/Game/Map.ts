@@ -1,6 +1,14 @@
 import { WORLD_CONFIG } from "@shared/commonVariables";
-import { MapData, MapCollider, LayerInstance } from "@shared/commonMapModels";
+import {
+	MapData,
+	MapCollider,
+	LayerInstance,
+	EntityInstance,
+	EntityType,
+} from "@shared/commonMapModels";
 import { Entity } from "./Entities/Entity";
+import { Button } from "./Entities/Button";
+import { LOG } from "../Logger";
 
 export class Map {
 	public readonly id: string; // its name
@@ -8,12 +16,47 @@ export class Map {
 	private height: number = -1;
 	private readonly intGrid: number[][];
 	public readonly colliders: MapCollider[];
-	public entities: Entity[] = [];
+	public readonly entities: Entity[] = [];
 
 	constructor(data: MapData) {
 		this.id = data.identifier;
 		this.intGrid = this.parseIntGrid(data);
 		this.colliders = this.generateColliders();
+		this.entities = this.parseEntities(data);
+	}
+
+	private parseEntities(data: MapData): Entity[] {
+		const entities: Entity[] = [];
+
+		data.layerInstances.forEach((layer: LayerInstance) => {
+			if (layer.__type != "Entities") {
+				return;
+			}
+
+			layer.entityInstances.forEach((entityData: EntityInstance) => {
+				const entity: Entity = this.generateEntityType(entityData.__identifier);
+
+				entity.pos = { x: entityData.__worldX, y: entityData.__worldY };
+				entity.size = { x: entityData.width, y: entityData.height };
+
+				entities.push(entity);
+			});
+		});
+
+		return entities;
+	}
+
+	private generateEntityType(id: string) {
+		//* Possibility of dividing cases into seperate methods if more setup needed.
+		switch (id as EntityType) {
+			case "JohnEntity":
+				return new Entity();
+			case "Button":
+				return new Button();
+			default:
+				LOG.error(`Entity type not recognized / implemented (${id})`);
+				throw Error(`Entity type not recognized / implemented (${id})`);
+		}
 	}
 
 	private parseIntGrid(data: MapData): number[][] {

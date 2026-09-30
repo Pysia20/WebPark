@@ -7,6 +7,7 @@ import { Map as GameMap } from "./Map";
 import { MAP_LOADER } from "./MapLoader";
 import { MapCollider } from "@shared/commonMapModels";
 import { LOG } from "../Logger";
+import { Entity } from "./Entities/Entity";
 
 export class Room {
 	private TICKRATE: number = 30; // Per second
@@ -206,7 +207,6 @@ export class Room {
 
 		this.map.colliders.forEach((c: MapCollider) => {
 			const isCollidingX = c.x < newPos.x + playerWidth && newPos.x < c.x + c.width;
-
 			const isCollidingY = newPos.y + playerHeight > c.y && newPos.y < c.y + c.height;
 
 			if (!isCollidingX || !isCollidingY) return; // Players arent colliding
@@ -266,6 +266,10 @@ export class Room {
 					}
 				}
 			}
+		});
+
+		this.map.entities.forEach((e: Entity) => {
+			changeGrounded = e.handleCollisions(player, newPos, newVel);
 		});
 
 		return changeGrounded;

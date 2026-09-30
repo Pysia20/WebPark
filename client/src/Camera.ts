@@ -5,16 +5,16 @@ import { ServerData, ServerPlayerData, Vector2 } from "@shared/commonModels";
 export class cameraControler {
     world: Container
     screen: Rectangle
-    map_size: Vector2 //WILL BE FILLED WITH DATA FROM SERVER LATER
+    map_size: Vector2
 
     LERP_SPEED: number = 0.3
 
-    constructor(world: Container,screen: Rectangle) {
+    constructor(world: Container,screen: Rectangle, map_size: Vector2) {
         this.world = world
         this.screen = screen
 
         this.world.position.set(this.screen.width / 2, this.screen.height / 2)
-        this.map_size = {x: this.screen.width * 2, y: this.screen.height} //WILL BE FILLED WITH DATA FROM SERVER LATER
+        this.map_size = {x: map_size.x, y: map_size.y}
     }
 
     update_cam(serverData: ServerData) {

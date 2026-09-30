@@ -1,5 +1,5 @@
 import { Sprite } from "pixi.js";
-import { Vector2 } from "../../shared/commonModels"
+import { Vector2 } from "@shared/commonModels"
 import { PlayerTextures } from "./Assets";
 import { playJump } from "./Audio";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
@@ -36,6 +36,7 @@ export class Player {
         )
     }
 
+    //TRIED TO FIX THIS BUT THE ISSUE SEEMS 99% SERVERSIDE
     updateDirection(velocity: Vector2) {
         if (velocity.x < 0) {
             this.sprite.scale.x = -(PLAYER_CONFIG.WIDTH / this.textures.idle.width)

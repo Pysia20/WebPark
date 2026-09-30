@@ -1,5 +1,5 @@
 import { Player } from "./Player";
-import { PlayerJoinedData, ServerData } from "../../shared/commonModels"
+import { PlayerJoinedData, ServerData } from "@shared/commonModels"
 import { Container } from "pixi.js";
 import { PlayerTextures } from "./Assets";
 

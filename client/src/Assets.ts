@@ -1,6 +1,6 @@
 import { Texture, Assets } from "pixi.js";
-import { MapData } from "../../shared/commonMapModels"
-import level0 from "shared/maps/Level_0/Level_0.json"
+import { MapData } from "@shared/commonMapModels"
+import level0 from "@shared/maps/Level_0.json"
 
 export interface PlayerTextures {
     idle: Texture

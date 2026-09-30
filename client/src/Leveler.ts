@@ -1,4 +1,4 @@
-import { MapData } from "../../shared/commonMapModels";
+import { MapData } from "@shared/commonMapModels";
 import { Container, Rectangle, Sprite, Texture } from "pixi.js";
 
 export class levelManager {

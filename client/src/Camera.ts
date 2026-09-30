@@ -1,5 +1,5 @@
 import { Container, Rectangle } from "pixi.js";
-import { ServerData, ServerPlayerData, Vector2 } from "../../shared/commonModels";
+import { ServerData, ServerPlayerData, Vector2 } from "@shared/commonModels";
 
 
 export class cameraControler {

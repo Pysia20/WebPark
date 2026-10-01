@@ -2,6 +2,7 @@ import { Vector2 } from "@shared/commonModels";
 import { Player } from "../Player";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { isColliding } from "../../Global";
+import { LOG } from "../../Logger";
 
 export class Entity {
 	public pos: Vector2 = { x: 0, y: 0 };
@@ -18,6 +19,8 @@ export class Entity {
 		const { overlapX, overlapY, diffX, diffY } = isColliding(p, this);
 
 		let changeGrounded: boolean = false;
+
+		if (overlapX == -1 || overlapY == -1) return changeGrounded;
 
 		if (overlapX < overlapY) {
 			// Horizontal collison

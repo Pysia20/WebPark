@@ -108,6 +108,8 @@ export class Map {
 			}
 		}
 
+		console.log(colliders);
+
 		return colliders;
 	}
 

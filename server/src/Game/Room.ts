@@ -16,7 +16,7 @@ export class Room {
 	private id: string;
 	private players: Map<number, Player> = new Map<number, Player>();
 	private inputs: PlayerInputs[] = [];
-	private map: GameMap;
+	public map: GameMap;
 	private gameLoop: NodeJS.Timeout | undefined;
 
 	constructor(id: string) {
@@ -140,6 +140,8 @@ export class Room {
 
 			const { overlapX, overlapY, diffX, diffY } = isColliding(player, p);
 
+			if (overlapX == -1 || overlapY == -1) return;
+
 			if (overlapX < overlapY) {
 				// Horizontal collison
 
@@ -184,6 +186,8 @@ export class Room {
 		this.map.colliders.forEach((c: MapCollider) => {
 			const { overlapX, overlapY, diffX, diffY } = isColliding(player, c);
 
+			if (overlapX == -1 || overlapY == -1) return;
+
 			if (overlapX < overlapY) {
 				// Horizontal collison
 
@@ -226,7 +230,7 @@ export class Room {
 		});
 
 		this.map.entities.forEach((e: Entity) => {
-			changeGrounded = e.handleCollisions(player, newPos, newVel);
+			if (e.handleCollisions(player, newPos, newVel)) changeGrounded = true;
 		});
 
 		return changeGrounded;

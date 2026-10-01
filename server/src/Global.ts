@@ -73,6 +73,11 @@ function extractTransform(object: Player | MapCollider | Entity): [number, numbe
 	return [x, y, width, height];
 }
 
+//! Something bad happens, between the arrow and block there is a gap in colliders.
+// Maybe fronted badly scales the map
+
+// Wierd lag spike each second.
+
 /**
  *
  * @param objectA
@@ -90,7 +95,7 @@ export function isColliding(
 	const isCollidingX = xB < xA + widthA && xA < xB + widthB;
 	const isCollidingY = yB < yA + heightA && yA < yB + heightB;
 
-	if (!isCollidingX || !isCollidingY) return { overlapX: -1, overlapY: -1, diffX: -1, diffY: -1 }; // Players arent colliding
+	if (!isCollidingX || !isCollidingY) return { overlapX: -1, overlapY: -1, diffX: -1, diffY: -1 }; // Objects arent colliding
 
 	const centerA: Vector2 = {
 		x: xA + widthA / 2,

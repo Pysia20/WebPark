@@ -6,7 +6,7 @@ export class levelManager {
     mapData: MapData
     world: Container
     spriteSheet: Texture
-    textures: Map<String, Texture> = new Map()
+    textures: Map<Number, Texture> = new Map()
 
     constructor(world: Container, sprites: Texture, levels: MapData[]) {
         this.levels = levels
@@ -16,13 +16,12 @@ export class levelManager {
     }
 
     checkTexture(tile: GridTile, layer: LayerInstance) {
-        const src = tile.src[0].toString() + tile.src[1].toString()
-        if (!this.textures.has(src)) {
+        if (!this.textures.has(tile.t)) {
             const tileFrame = new Rectangle(tile.src[0], tile.src[1], layer.__gridSize, layer.__gridSize)
             const tileTexture = new Texture({source: this.spriteSheet.source, frame: tileFrame})
-            this.textures.set(src, tileTexture)
+            this.textures.set(tile.t, tileTexture)
         }
-        return this.textures.get(src)
+        return this.textures.get(tile.t)
     }
 
     loadLevel(level: number) {

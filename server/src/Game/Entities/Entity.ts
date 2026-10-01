@@ -5,8 +5,8 @@ import { isColliding } from "../../Global";
 import { LOG } from "../../Logger";
 
 export class Entity {
-	public pos: Vector2 = { x: 0, y: 0 };
-	public size: Vector2 = { x: 0, y: 0 };
+	public readonly pos: Vector2;
+	public readonly size: Vector2;
 
 	constructor(pos: Vector2, size: Vector2) {
 		this.pos = pos;

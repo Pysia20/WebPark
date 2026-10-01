@@ -36,7 +36,10 @@ export class Level {
 
 			layer.entityInstances.forEach((entityData: EntityInstance) => {
 				const entity: Entity = new EntityBuilder(entityData.__identifier as EntityType)
-					.setPosition({ x: entityData.__worldX, y: entityData.__worldY })
+					.setPosition({
+						x: entityData.px[0],
+						y: entityData.px[1] - entityData.height,
+					})
 					.setSize({ x: entityData.width, y: entityData.height })
 					.build();
 
@@ -145,5 +148,13 @@ export class Level {
 			width * WORLD_CONFIG.CELL_SIZE,
 			height * WORLD_CONFIG.CELL_SIZE,
 		);
+	}
+
+	public handleEntites() {
+		this.entities.forEach((e) => {
+			if (e instanceof Button) {
+				console.log(e.isPressed);
+			}
+		});
 	}
 }

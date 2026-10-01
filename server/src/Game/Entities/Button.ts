@@ -4,8 +4,6 @@ import { Entity } from "./Entity";
 import { isColliding } from "../../Global";
 
 export class Button extends Entity {
-	public pos: Vector2 = { x: -1, y: -1 };
-	public size: Vector2 = { x: -1, y: -1 };
 	public visualSize: Vector2 = { x: -1, y: -1 };
 	public isPressed: boolean = false;
 

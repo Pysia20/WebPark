@@ -216,7 +216,7 @@
 			"maxCount": 0,
 			"limitScope": "PerLevel",
 			"limitBehavior": "MoveLastOne",
-			"pivotX": 0.5,
+			"pivotX": 0,
 			"pivotY": 1,
 			"fieldDefs": []
 		}

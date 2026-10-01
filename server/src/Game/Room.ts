@@ -127,12 +127,11 @@ export class Room {
 			player.pos = newPos;
 			player.velocity = newVel;
 		}
+
+		this.map.handleEntites();
 	}
 
 	private handleCollisions(player: Player, newPos: Vector2, newVel: Vector2): boolean {
-		const playerWidth = PLAYER_CONFIG.WIDTH;
-		const playerHeight = PLAYER_CONFIG.HEIGHT;
-
 		let changeGrounded = false;
 
 		this.players.forEach((p: Player) => {

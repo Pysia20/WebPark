@@ -62,7 +62,7 @@ function extractTransform(object: Player | MapCollider | Entity): [number, numbe
 		height = object.height;
 	} else if (object instanceof Entity) {
 		x = object.pos.x;
-		y = object.pos.x;
+		y = object.pos.y;
 		width = object.size.x;
 		height = object.size.y;
 	} else {
@@ -73,10 +73,7 @@ function extractTransform(object: Player | MapCollider | Entity): [number, numbe
 	return [x, y, width, height];
 }
 
-//! Something bad happens, between the arrow and block there is a gap in colliders.
-// Maybe fronted badly scales the map
-
-// Wierd lag spike each second.
+//TODO Add better ground detection
 
 /**
  *

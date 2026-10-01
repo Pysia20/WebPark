@@ -46,8 +46,8 @@ export class Player {
     }
 
     //TRIED TO FIX THIS BUT THE ISSUE SEEMS 99% SERVERSIDE
-    updateSprite(velocity: Vector2) {
-        this.walkingAnim.animTimer += this.walkingAnim.ANIM_SPEED
+    updateSprite(velocity: Vector2, deltaTime: number) {
+        this.walkingAnim.animTimer += this.walkingAnim.ANIM_SPEED * deltaTime
         if (velocity.x < 0) {
             this.sprite.scale.x = -(PLAYER_CONFIG.WIDTH / this.textures.idle.width)
             this.sprite.texture = this.walkingAnim.animFrames[Math.floor(this.walkingAnim.animTimer) % this.walkingAnim.animFrames.length]

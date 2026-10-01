@@ -1,5 +1,3 @@
-Make the walking animation animated
-
 Decide on game theme/art style
 
 

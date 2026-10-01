@@ -47,7 +47,7 @@ leveler.renderLevel()
 app.ticker.add((time) => {
     const serverPlayerData = getPlayerData()
     if (serverPlayerData) {
-        coordinator.update_players(serverPlayerData)
+        coordinator.update_players(serverPlayerData, time.deltaTime)
         camera.update_cam(serverPlayerData)
     }
     coordinator.update_positions()

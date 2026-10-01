@@ -24,13 +24,13 @@ class Coordinator {
         }
     }
 
-    update_players(serverData: ServerData) {
+    update_players(serverData: ServerData, deltaTime: number) {
         this.serverData = serverData
         for (const [playerId, playerData] of Object.entries(this.serverData["playerData"])) {
             const tempPlayer = this.players.get(Number(playerId))
                 if (tempPlayer) {
                     tempPlayer.targetPos = playerData.pos
-                    tempPlayer.updateSprite(playerData.velocity)
+                    tempPlayer.updateSprite(playerData.velocity, deltaTime)
                 } else {
                     console.log("unknown player")
                 }

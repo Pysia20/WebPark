@@ -1,4 +1,4 @@
-export interface MapData {
+export interface LevelData {
 	__header__: Header;
 	identifier: string;
 	iid: string;

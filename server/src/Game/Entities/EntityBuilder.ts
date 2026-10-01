@@ -1,4 +1,4 @@
-import { EntityType } from "@shared/commonMapModels";
+import { EntityType } from "@shared/commonLevelModels";
 import { LOG } from "../../Logger";
 import { Entity } from "./Entity";
 import { Button } from "./Button";

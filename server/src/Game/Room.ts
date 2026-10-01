@@ -3,9 +3,9 @@ import { Player } from "./Player";
 import { PlayerInputs, Vector2 } from "@shared/commonModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { clamp, isColliding } from "../Global";
-import { Level as GameMap } from "./LevelMap";
-import { MAP_LOADER } from "./MapLoader";
-import { MapCollider } from "@shared/commonMapModels";
+import { Level as GameMap } from "./Level";
+import { MAP_LOADER } from "./LevelLoader";
+import { MapCollider } from "@shared/commonLevelModels";
 import { LOG } from "../Logger";
 import { Entity } from "./Entities/Entity";
 
@@ -21,7 +21,7 @@ export class Room {
 
 	constructor(id: string) {
 		this.id = id;
-		this.map = MAP_LOADER.LoadMap("Level_0");
+		this.map = MAP_LOADER.LoadLevel("Level_0");
 		console.log(this.map.colliders.length);
 	}
 

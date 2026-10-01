@@ -1,4 +1,4 @@
-import { MapCollider } from "@shared/commonMapModels";
+import { MapCollider } from "@shared/commonLevelModels";
 import { Room } from "./Game/Room";
 import { Entity } from "./Game/Entities/Entity";
 import { Player } from "./Game/Player";

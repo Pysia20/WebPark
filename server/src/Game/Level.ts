@@ -1,11 +1,11 @@
 import { WORLD_CONFIG } from "@shared/commonVariables";
 import {
-	MapData,
+	LevelData,
 	MapCollider,
 	LayerInstance,
 	EntityInstance,
 	EntityType,
-} from "@shared/commonMapModels";
+} from "@shared/commonLevelModels";
 import { Entity } from "./Entities/Entity";
 import { Button } from "./Entities/Button";
 import { LOG } from "../Logger";
@@ -19,14 +19,14 @@ export class Level {
 	public readonly colliders: MapCollider[];
 	public readonly entities: Entity[] = [];
 
-	constructor(data: MapData) {
+	constructor(data: LevelData) {
 		this.id = data.identifier;
 		this.intGrid = this.parseIntGrid(data);
 		this.colliders = this.generateColliders();
 		this.entities = this.parseEntities(data);
 	}
 
-	private parseEntities(data: MapData): Entity[] {
+	private parseEntities(data: LevelData): Entity[] {
 		const entities: Entity[] = [];
 
 		data.layerInstances.forEach((layer: LayerInstance) => {
@@ -47,7 +47,7 @@ export class Level {
 		return entities;
 	}
 
-	private parseIntGrid(data: MapData): number[][] {
+	private parseIntGrid(data: LevelData): number[][] {
 		let layer: LayerInstance | undefined;
 
 		for (let i = 0; i < data.layerInstances.length; i++) {

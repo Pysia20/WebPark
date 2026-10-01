@@ -51,7 +51,56 @@
 			"seed": 7563894,
 			"overrideTilesetUid": null,
 			"gridTiles": [],
-			"entityInstances": []
+			"entityInstances": [
+				{
+					"__identifier": "JohnEntity",
+					"__grid": [2,13],
+					"__pivot": [0,0],
+					"__tags": [],
+					"__tile": { "tilesetUid": 2, "x": 0, "y": 64, "w": 64, "h": 64 },
+					"__smartColor": "#BE4A2F",
+					"iid": "a3847db0-96d0-11f1-af6f-853f86a5acb1",
+					"width": 64,
+					"height": 64,
+					"defUid": 5,
+					"px": [128,832],
+					"fieldInstances": [],
+					"__worldX": 128,
+					"__worldY": 128
+				},
+				{
+					"__identifier": "JohnEntity",
+					"__grid": [5,13],
+					"__pivot": [0,0],
+					"__tags": [],
+					"__tile": { "tilesetUid": 2, "x": 0, "y": 64, "w": 64, "h": 64 },
+					"__smartColor": "#BE4A2F",
+					"iid": "a4106a00-96d0-11f1-af6f-9be27fa47415",
+					"width": 64,
+					"height": 64,
+					"defUid": 5,
+					"px": [320,832],
+					"fieldInstances": [],
+					"__worldX": 320,
+					"__worldY": 128
+				},
+				{
+					"__identifier": "Button",
+					"__grid": [8,13],
+					"__pivot": [0.5,1],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#D77643",
+					"iid": "ea232870-96d0-11f1-af6f-2d2dfd1866a8",
+					"width": 64,
+					"height": 32,
+					"defUid": 8,
+					"px": [544,896],
+					"fieldInstances": [],
+					"__worldX": 544,
+					"__worldY": 192
+				}
+			]
 		},
 		{
 			"__identifier": "Tiles",

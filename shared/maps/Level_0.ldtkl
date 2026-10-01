@@ -51,56 +51,7 @@
 			"seed": 7563894,
 			"overrideTilesetUid": null,
 			"gridTiles": [],
-			"entityInstances": [
-				{
-					"__identifier": "JohnEntity",
-					"__grid": [4,13],
-					"__pivot": [0,0],
-					"__tags": [],
-					"__tile": { "tilesetUid": 2, "x": 0, "y": 64, "w": 64, "h": 64 },
-					"__smartColor": "#BE4A2F",
-					"iid": "e4796ab0-96d0-11f1-bc36-3513a5d32bb5",
-					"width": 64,
-					"height": 64,
-					"defUid": 5,
-					"px": [256,832],
-					"fieldInstances": [],
-					"__worldX": 256,
-					"__worldY": 128
-				},
-				{
-					"__identifier": "JohnEntity",
-					"__grid": [6,13],
-					"__pivot": [0,0],
-					"__tags": [],
-					"__tile": { "tilesetUid": 2, "x": 0, "y": 64, "w": 64, "h": 64 },
-					"__smartColor": "#BE4A2F",
-					"iid": "13f18430-96d0-11f1-a120-2bf2cd778e12",
-					"width": 64,
-					"height": 64,
-					"defUid": 5,
-					"px": [384,832],
-					"fieldInstances": [],
-					"__worldX": 384,
-					"__worldY": 128
-				},
-				{
-					"__identifier": "Button",
-					"__grid": [9,13],
-					"__pivot": [0,0],
-					"__tags": [],
-					"__tile": null,
-					"__smartColor": "#D77643",
-					"iid": "3ff7c720-96d0-11f1-8b88-b9b05c8d0b04",
-					"width": 64,
-					"height": 64,
-					"defUid": 8,
-					"px": [576,832],
-					"fieldInstances": [],
-					"__worldX": 576,
-					"__worldY": 128
-				}
-			]
+			"entityInstances": []
 		},
 		{
 			"__identifier": "Tiles",

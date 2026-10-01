@@ -103,7 +103,7 @@ export function isColliding(
 	};
 
 	const centerB: Vector2 = {
-		x: xB + heightA / 2,
+		x: xB + widthB / 2,
 		y: yB + heightB / 2,
 	};
 

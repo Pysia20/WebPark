@@ -3,7 +3,7 @@ import { Player } from "./Player";
 import { PlayerInputs, Vector2 } from "@shared/commonModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { clamp, isColliding } from "../Global";
-import { LevelMap as GameMap } from "./LevelMap";
+import { Level as GameMap } from "./LevelMap";
 import { MAP_LOADER } from "./MapLoader";
 import { MapCollider } from "@shared/commonMapModels";
 import { LOG } from "../Logger";

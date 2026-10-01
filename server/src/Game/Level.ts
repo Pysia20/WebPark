@@ -9,8 +9,9 @@ import {
 import { Entity } from "./Entities/Entity";
 import { Button } from "./Entities/Button";
 import { LOG } from "../Logger";
+import { EntityBuilder } from "./Entities/EntityBuilder";
 
-export class LevelMap {
+export class Level {
 	public readonly id: string; // its name
 	private width: number = -1;
 	private height: number = -1;
@@ -34,29 +35,16 @@ export class LevelMap {
 			}
 
 			layer.entityInstances.forEach((entityData: EntityInstance) => {
-				const entity: Entity = this.generateEntityType(entityData.__identifier);
-
-				entity.pos = { x: entityData.__worldX, y: entityData.__worldY };
-				entity.size = { x: entityData.width, y: entityData.height };
+				const entity: Entity = new EntityBuilder(entityData.__identifier as EntityType)
+					.setPosition({ x: entityData.__worldX, y: entityData.__worldY })
+					.setSize({ x: entityData.width, y: entityData.height })
+					.build();
 
 				entities.push(entity);
 			});
 		});
 
 		return entities;
-	}
-
-	private generateEntityType(id: string) {
-		//* Possibility of dividing cases into seperate methods if more setup needed.
-		switch (id as EntityType) {
-			case "JohnEntity":
-				return new Entity();
-			case "Button":
-				return new Button();
-			default:
-				LOG.error(`Entity type not recognized / implemented (${id})`);
-				throw Error(`Entity type not recognized / implemented (${id})`);
-		}
 	}
 
 	private parseIntGrid(data: MapData): number[][] {

@@ -1,10 +1,10 @@
 import fs from "fs";
 import path from "path";
-import { LevelMap } from "./LevelMap";
+import { Level } from "./LevelMap";
 import { MapData } from "@shared/commonMapModels";
 
 class MapLoader {
-	private loadedMaps: LevelMap[] = [];
+	private loadedMaps: Level[] = [];
 	private foundMaps: string[] = []; // Ids of maps in maps directory
 
 	public readonly MAP_DIRECTORY: string = path.join(import.meta.dirname, "../../../shared/maps/");
@@ -44,7 +44,7 @@ class MapLoader {
 			}),
 		) as MapData;
 
-		const map = new LevelMap(mapData);
+		const map = new Level(mapData);
 		this.loadedMaps.push(map);
 
 		return map;

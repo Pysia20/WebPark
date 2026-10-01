@@ -103,20 +103,6 @@ export function register(io: Server) {
 
 				room.setPlayerReady(id, true);
 
-				const payload: any[] = [];
-				room.map.entities.forEach((e) => {
-					const ent = {
-						x: e.pos.x,
-						y: e.pos.y,
-						width: e.size.x,
-						height: e.size.y,
-					};
-
-					payload.push(ent);
-				});
-
-				socket.emit("collidersDebug", payload);
-
 				socket
 					.to(socket.data.roomID)
 					.emit("log", `<li>User ${socket.data.userNick} is ready.</li>`);

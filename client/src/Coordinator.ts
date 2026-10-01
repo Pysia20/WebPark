@@ -42,6 +42,14 @@ class Coordinator {
             player.updatePos()
         }
     }
+
+    remove_player(playerID: number) {
+        const player = this.players.get(playerID)
+        if(player) {
+            (this.world as Container).removeChild(player.sprite);
+            this.players.delete(playerID)
+        }
+    }
 }
 
 export const coordinator = new Coordinator()

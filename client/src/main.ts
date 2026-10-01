@@ -6,8 +6,7 @@ import { coordinator } from "./Coordinator";
 import {PlayerInputs, Vector2} from "@shared/commonModels"
 import { loadAssets } from "./Assets";
 import {cameraControler} from "./Camera";
-import {levelManager} from "./Leveler";
-import {mapSize} from "pixi.js";
+import { levelManager } from "./Leveler";
 
 const app = new PIXI.Application()
 await app.init({

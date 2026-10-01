@@ -47,6 +47,10 @@ socket.on("playerJoined", (data: PlayerJoinedData[]) => {
     coordinator.create_players(data)
 })
 
+socket.on("playerLeft", (playerID: number) => {
+    coordinator.remove_player(playerID)
+})
+
 export function startNetworking() {
     socket.connect()
 }

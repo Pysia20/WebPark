@@ -30,7 +30,7 @@ class Coordinator {
             const tempPlayer = this.players.get(Number(playerId))
                 if (tempPlayer) {
                     tempPlayer.targetPos = playerData.pos
-                    tempPlayer.updateDirection(playerData.velocity)
+                    tempPlayer.updateSprite(playerData.velocity)
                 } else {
                     console.log("unknown player")
                 }

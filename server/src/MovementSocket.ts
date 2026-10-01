@@ -190,6 +190,8 @@ export function register(io: Server) {
 				.emit("log", `User: ${socket.data.userNick} left the room. Bye!`);
 
 			games.get(socket.data.roomID!)?.removePlayer(socket.data.userID!);
+
+			socket.to(socket.data.roomID!).emit("playerLeft", socket.data.userID);
 		});
 	});
 }

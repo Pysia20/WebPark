@@ -10,7 +10,7 @@ import { Entity } from "./Entities/Entity";
 import { Button } from "./Entities/Button";
 import { LOG } from "../Logger";
 
-export class Map {
+export class LevelMap {
 	public readonly id: string; // its name
 	private width: number = -1;
 	private height: number = -1;

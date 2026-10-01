@@ -1,10 +1,10 @@
 import fs from "fs";
 import path from "path";
-import { Map } from "./Map";
+import { LevelMap } from "./LevelMap";
 import { MapData } from "@shared/commonMapModels";
 
 class MapLoader {
-	private loadedMaps: Map[] = [];
+	private loadedMaps: LevelMap[] = [];
 	private foundMaps: string[] = []; // Ids of maps in maps directory
 
 	public readonly MAP_DIRECTORY: string = path.join(import.meta.dirname, "../../../shared/maps/");
@@ -36,7 +36,7 @@ class MapLoader {
 			return this.loadedMaps[mapIndex];
 		}
 
-		if (!this.foundMaps.includes(id)) throw Error("Map with this ID (name) doesn't exist.");
+		if (!this.foundMaps.includes(id)) throw Error("LevelMap with this ID (name) doesn't exist.");
 
 		const mapData = JSON.parse(
 			fs.readFileSync(path.join(this.MAP_DIRECTORY, `${id}.json`), {
@@ -44,7 +44,7 @@ class MapLoader {
 			}),
 		) as MapData;
 
-		const map = new Map(mapData);
+		const map = new LevelMap(mapData);
 		this.loadedMaps.push(map);
 
 		return map;

@@ -1,8 +1,14 @@
-import { Sprite } from "pixi.js";
+import { Sprite, Texture } from "pixi.js";
 import { Vector2 } from "@shared/commonModels"
 import { PlayerTextures } from "./Assets";
 import { playJump } from "./Audio";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
+
+interface animController {
+    ANIM_SPEED: number
+    animTimer: number
+    animFrames: Texture[]
+}
 
 export class Player {
     id: number
@@ -13,8 +19,10 @@ export class Player {
     sprite: Sprite
     textures: PlayerTextures = {} as PlayerTextures
     isHost: boolean
+    walkingAnim: animController
 
     LERP_SPEED: number = 0.3
+
 
     constructor(id: number, color: string, textures: PlayerTextures) {
         this.id = id
@@ -25,6 +33,7 @@ export class Player {
         this.sprite.anchor.set(0.5, 0.0)
         this.sprite.tint = color
         this.sprite.setSize(PLAYER_CONFIG.WIDTH, PLAYER_CONFIG.HEIGHT)
+        this.walkingAnim = {ANIM_SPEED: 0.1, animFrames: [this.textures.idle, this.textures.walk], animTimer: 0}
     }
 
     updatePos() {
@@ -37,13 +46,14 @@ export class Player {
     }
 
     //TRIED TO FIX THIS BUT THE ISSUE SEEMS 99% SERVERSIDE
-    updateDirection(velocity: Vector2) {
+    updateSprite(velocity: Vector2, deltaTime: number) {
+        this.walkingAnim.animTimer += this.walkingAnim.ANIM_SPEED * deltaTime
         if (velocity.x < 0) {
             this.sprite.scale.x = -(PLAYER_CONFIG.WIDTH / this.textures.idle.width)
-            this.sprite.texture = this.textures.walk
+            this.sprite.texture = this.walkingAnim.animFrames[Math.floor(this.walkingAnim.animTimer) % this.walkingAnim.animFrames.length]
         } else if (velocity.x > 0) {
             this.sprite.scale.x = (PLAYER_CONFIG.WIDTH / this.textures.idle.width)
-            this.sprite.texture = this.textures.walk
+            this.sprite.texture = this.walkingAnim.animFrames[Math.floor(this.walkingAnim.animTimer) % this.walkingAnim.animFrames.length]
         } else {
             this.sprite.texture = this.textures.idle
         }
@@ -52,6 +62,7 @@ export class Player {
          } else if (this.sprite.texture == this.textures.jump) {
              this.sprite.texture = this.textures.idle
          }
+         console.log(velocity)
 
         this.checkIfJumped(velocity)
         this.prevVelocity = velocity

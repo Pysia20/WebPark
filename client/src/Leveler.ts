@@ -6,7 +6,7 @@ export class levelManager {
 	mapData: LevelData;
 	world: Container;
 	spriteSheet: Texture;
-	textures: Map<Number, Texture> = new Map();
+	textures: Map<number, Texture> = new Map();
 
 	constructor(world: Container, sprites: Texture, levels: LevelData[]) {
 		this.levels = levels;

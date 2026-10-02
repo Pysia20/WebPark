@@ -15,7 +15,7 @@ socket.on("connect_error", (error) => {
 socket.on("connect", () => {
      console.log("Connected! id:", socket.id)
     const roomId = sessionStorage.getItem("roomID") as string
-    const id = Number(sessionStorage.getItem("userID")) as number
+    const id = Number(sessionStorage.getItem("userID"))
     const userName = sessionStorage.getItem("userName") as string
     const color = sessionStorage.getItem("playerColor") as string
 
@@ -45,6 +45,10 @@ socket.on("tick", (data: ServerData) => {
 
 socket.on("playerJoined", (data: PlayerJoinedData[]) => {
     coordinator.create_players(data)
+})
+
+socket.on("playerLeft", (playerID: number) => {
+    coordinator.remove_player(playerID)
 })
 
 export function startNetworking() {

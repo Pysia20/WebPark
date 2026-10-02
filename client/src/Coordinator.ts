@@ -24,13 +24,13 @@ class Coordinator {
         }
     }
 
-    update_players(serverData: ServerData) {
+    update_players(serverData: ServerData, deltaTime: number) {
         this.serverData = serverData
         for (const [playerId, playerData] of Object.entries(this.serverData["playerData"])) {
             const tempPlayer = this.players.get(Number(playerId))
                 if (tempPlayer) {
                     tempPlayer.targetPos = playerData.pos
-                    tempPlayer.updateDirection(playerData.velocity)
+                    tempPlayer.updateSprite(playerData.velocity, deltaTime)
                 } else {
                     console.log("unknown player")
                 }
@@ -40,6 +40,14 @@ class Coordinator {
     update_positions() {
         for (const player of this.players.values()) {
             player.updatePos()
+        }
+    }
+
+    remove_player(playerID: number) {
+        const player = this.players.get(playerID)
+        if(player) {
+            (this.world as Container).removeChild(player.sprite);
+            this.players.delete(playerID)
         }
     }
 }

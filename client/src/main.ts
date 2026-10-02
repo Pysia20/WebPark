@@ -7,6 +7,7 @@ import {PlayerInputs, Vector2} from "@shared/commonModels"
 import { loadAssets } from "./Assets";
 import {cameraControler} from "./Camera";
 import { levelManager } from "./Leveler";
+import {pageSetup} from "./Weber";
 
 const app = new PIXI.Application()
 await app.init({
@@ -22,6 +23,8 @@ const worldContainer = new PIXI.Container()
 const uiContainer = new PIXI.Container()
 app.stage.addChild(worldContainer)
 app.stage.addChild(uiContainer)
+
+pageSetup(app)
 
 const assets = await loadAssets()
 const leveler = new levelManager(worldContainer, assets.mapAssets.Spritesheet, assets.mapAssets.Levels)
@@ -51,20 +54,4 @@ app.ticker.add((time) => {
         camera.update_cam(serverPlayerData)
     }
     coordinator.update_positions()
-})
-
-//HTML STUFF
-const readyButton = document.getElementById("readyButton") as HTMLButtonElement
-const container = document.querySelector(".container") as HTMLDivElement
-const roomIdDisplay = document.getElementById("roomID") as HTMLHeadingElement
-let isReady = false
-roomIdDisplay.innerText = sessionStorage.getItem("roomID") ?? "NOT IN A ROOM"
-onGameStart(() => {
-    app.canvas.classList.remove("hidden")
-    container.classList.add("hidden")
-})
-readyButton.addEventListener("click", () => {
-    isReady = !isReady
-    readyButton.innerText = isReady ? "READY" : "NOT READY"
-    emitReady(isReady)
 })

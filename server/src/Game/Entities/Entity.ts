@@ -3,14 +3,18 @@ import { Player } from "../Player";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { isColliding } from "../../Global";
 import { LOG } from "../../Logger";
+import { EntityType, MapCollider } from "@shared/commonLevelModels";
 
 export class Entity {
+	public readonly type: EntityType = "JohnEntity";
 	public readonly pos: Vector2;
 	public readonly size: Vector2;
+	public visualSize: Vector2;
 
 	constructor(pos: Vector2, size: Vector2) {
 		this.pos = pos;
 		this.size = size;
+		this.visualSize = this.size;
 	}
 
 	/**
@@ -20,54 +24,68 @@ export class Entity {
 	 * @param playerNewPos
 	 * @param playerNewVel
 	 */
-	public handleCollisions(p: Player, playerNewPos: Vector2, playerNewVel: Vector2): boolean {
+	public handleCollisions(
+		p: Player,
+		playerNewPos: Vector2,
+		playerNewVel: Vector2,
+		isGrounded: boolean,
+	): boolean {
 		const { overlapX, overlapY, diffX, diffY } = isColliding(p, this);
 
-		let changeGrounded: boolean = false;
+		if (overlapX != -1 && overlapY != -1) {
+			if (overlapX < overlapY) {
+				// Horizontal collison
 
-		if (overlapX == -1 || overlapY == -1) return changeGrounded;
+				if (diffX > 0) {
+					// A is going left towards B
+					// Pushing out to the right
 
-		if (overlapX < overlapY) {
-			// Horizontal collison
-
-			if (diffX > 0) {
-				// A is going left towards B
-				// Pushing out to the right
-
-				if (playerNewVel.x < 0) {
-					playerNewPos.x += overlapX;
-					playerNewVel.x = 0;
+					if (playerNewVel.x < 0) {
+						playerNewPos.x += overlapX;
+						playerNewVel.x = 0;
+					}
+				} else {
+					// A is going right towards B
+					// Pushing out to the left
+					if (playerNewVel.x > 0) {
+						playerNewPos.x -= overlapX;
+						playerNewVel.x = 0;
+					}
 				}
 			} else {
-				// A is going right towards B
-				// Pushing out to the left
-				if (playerNewVel.x > 0) {
-					playerNewPos.x -= overlapX;
-					playerNewVel.x = 0;
-				}
-			}
-		} else {
-			// Vertical collision
-			if (diffY > 0) {
-				// A is going up towards B
-				// Pushing out downwards
-				if (playerNewVel.y < 0) {
-					playerNewPos.y += overlapY;
-					playerNewVel.y = 0;
-				}
-			} else {
-				// A is goung down towards B
-				// Pushign out upwards
+				// Vertical collision
+				if (diffY > 0) {
+					// A is going up towards B
+					// Pushing out downwards
+					if (playerNewVel.y < 0) {
+						playerNewPos.y += overlapY;
+						playerNewVel.y = 0;
+					}
+				} else {
+					// A is goung down towards B
+					// Pushign out upwards
 
-				if (playerNewVel.y > 0) {
-					playerNewPos.y -= overlapY;
-					playerNewVel.y = 0;
-					changeGrounded = true;
+					if (playerNewVel.y > 0) {
+						playerNewPos.y -= overlapY;
+						playerNewVel.y = 0;
+						isGrounded = true;
+					}
 				}
 			}
+		} else if (!isGrounded) {
+			const collider: MapCollider = new MapCollider(
+				p.pos.x,
+				p.pos.y + PLAYER_CONFIG.GROUND_DETECTON_OFFSET,
+				PLAYER_CONFIG.WIDTH,
+				PLAYER_CONFIG.HEIGHT,
+			);
+
+			const { overlapX, overlapY, diffX, diffY } = isColliding(collider, this);
+
+			if (overlapY != -1) isGrounded = true;
 		}
 
-		return changeGrounded;
+		return isGrounded;
 	}
 
 	public getTypeName(): string {

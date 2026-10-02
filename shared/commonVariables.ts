@@ -7,6 +7,7 @@ export const PLAYER_CONFIG = {
 	JUMP_FORCE: 250,
 	HEIGHT: 74,
 	WIDTH: 64,
+	GROUND_DETECTON_OFFSET: 1,
 };
 
 export const WORLD_CONFIG = {

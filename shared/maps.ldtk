@@ -182,7 +182,7 @@
 			"limitScope": "PerLevel",
 			"limitBehavior": "MoveLastOne",
 			"pivotX": 0,
-			"pivotY": 0,
+			"pivotY": 1,
 			"fieldDefs": []
 		},
 		{
@@ -190,7 +190,7 @@
 			"uid": 8,
 			"tags": [],
 			"exportToToc": false,
-			"allowOutOfBounds": true,
+			"allowOutOfBounds": false,
 			"doc": null,
 			"width": 64,
 			"height": 32,

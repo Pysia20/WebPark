@@ -80,7 +80,7 @@ app.get("/api/joinRoom/:id", (req: Request, res: Response) => {
 				message: e.message,
 			});
 		} else {
-			console.log(e);
+			console.error(e);
 		}
 		return;
 	}

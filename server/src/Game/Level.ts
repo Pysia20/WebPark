@@ -99,8 +99,6 @@ export class Level {
 			}
 		}
 
-		console.log(colliders);
-
 		return colliders;
 	}
 
@@ -153,7 +151,7 @@ export class Level {
 	public handleEntites() {
 		this.entities.forEach((e) => {
 			if (e instanceof Button) {
-				console.log(e.isPressed);
+				// console.log(e.isPressed);
 			}
 		});
 	}

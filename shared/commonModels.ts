@@ -20,6 +20,12 @@ export interface PlayerInputs {
 // What the backend sends to the client
 export interface ServerData {
 	playerData: Record<number, ServerPlayerData>;
+	entityData: ServerEntityData[];
+}
+
+export interface ServerEntityData {
+	pos: Vector2;
+	visualSize: Vector2;
 }
 
 export interface ServerPlayerData {

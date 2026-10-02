@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { Level } from "./Level";
 import { LevelData } from "@shared/commonLevelModels";
+import { LOG } from "../Logger";
 
 class LevelLoader {
 	private loadedLevels: Level[] = [];
@@ -23,7 +24,7 @@ class LevelLoader {
 				this.foundLevels.push(e.name.split(".")[0]);
 		});
 
-		console.log(this.foundLevels);
+		LOG.info(this.foundLevels);
 	}
 
 	public LoadLevel(id: string) {

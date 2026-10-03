@@ -2,6 +2,7 @@ import { EntityType } from "@shared/commonLevelModels";
 import { LOG } from "../../Logger";
 import { Entity } from "./Entity";
 import { Button } from "./Button";
+import { Door } from "./Door";
 import { Vector2 } from "@shared/commonModels";
 
 export class EntityBuilder {
@@ -39,6 +40,8 @@ export class EntityBuilder {
 				return new Entity(this.position, this.size);
 			case "Button":
 				return new Button(this.position, this.size);
+			case "Door":
+				return new Door(this.position, this.size);
 			default:
 				LOG.error(`Entity type not recognized / implemented (${this.type})`);
 				throw Error(`Entity type not recognized / implemented (${this.type})`);

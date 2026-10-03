@@ -1,6 +1,6 @@
 import { PlayerInputs } from "@shared/commonModels"
 
-let Inputs = new Set<string>;
+let Inputs = new Set<string>
 
 addEventListener("keydown", (e) => {
     if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)) e.preventDefault()

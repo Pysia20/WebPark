@@ -25,7 +25,6 @@ socket.on("connect", () => {
         userNick: userName,
         color: color
     }
-    console.log(payload)
     socket.emit("registerUser", payload, (e: unknown) => {
         console.log(e);
     })

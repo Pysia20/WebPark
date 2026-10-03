@@ -56,7 +56,6 @@ export class levelManager {
 					sprite.position.set(ent.px[0], ent.px[1])
 					sprite.setSize(ent.width, ent.height)
 					sprite.anchor.set(ent.__pivot[0],ent.__pivot[1])
-					console.log("Spawned entity:", ent.__identifier, "at", ent.px, "with texture:", this.checkEntTexture(ent));
 					this.world.addChild(sprite)
 				}
 			} else {

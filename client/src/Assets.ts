@@ -25,7 +25,10 @@ export async function loadAssets() {
 		"sprites/playerPlaceholderWalk.png",
 		"sprites/playerPlaceholderJump.png",
 		"spritesheets/placeholderSpritesheet.png",
-		"sprites/keyPlaceholder.png"
+		"sprites/keyPlaceholder.png",
+		"sprites/JohnEntity.png",
+		"sprites/Door.png",
+		"sprites/Button.png"
 	]);
 
 	//player asstes
@@ -38,7 +41,10 @@ export async function loadAssets() {
 	const mapSpritesheet: Texture = loadedAssets["spritesheets/placeholderSpritesheet.png"]
 	const mapLevels: LevelData[] = [level0 as LevelData]
 	const entTextures: Map<string, Texture> = new Map()
-	entTextures.set("key", loadedAssets["sprites/keyPlaceholder.png"])
+	entTextures.set("Key", loadedAssets["sprites/keyPlaceholder.png"])
+	entTextures.set("Door", loadedAssets["sprites/Door.png"])
+	entTextures.set("Button", loadedAssets["sprites/Button.png"])
+	entTextures.set("JohnEntity", loadedAssets["sprites/JohnEntity.png"])
 	const mapAssets: MapAssets = { spritesheet: mapSpritesheet, levels: mapLevels, entTextures: entTextures }
 
 	const assets: GameAssets = { playerTextures: playerTextures, mapAssets: mapAssets }

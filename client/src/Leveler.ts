@@ -33,10 +33,11 @@ export class levelManager {
 
 	checkEntTexture(ent: EntityInstance) {
 		if (!this.entTextures.has(ent.__identifier)) {
-			console.log("ENT TEXTURE NOT FOUND!")
-			return this.entTextures.get("key")
+			const placeHolder = new Sprite(Texture.WHITE)
+			placeHolder.tint = "#676767"
+			return placeHolder
 		}
-		return this.entTextures.get(ent.__identifier)
+		return new Sprite(this.entTextures.get(ent.__identifier))
 	}
 
 	loadLevel(level: number) {
@@ -51,8 +52,11 @@ export class levelManager {
 				const ents = layer.entityInstances
 
 				for (const ent of ents) {
-					const sprite = new Sprite(this.checkEntTexture(ent))
+					const sprite = this.checkEntTexture(ent)
 					sprite.position.set(ent.px[0], ent.px[1])
+					sprite.setSize(ent.width, ent.height)
+					sprite.anchor.set(ent.__pivot[0],ent.__pivot[1])
+					console.log("Spawned entity:", ent.__identifier, "at", ent.px, "with texture:", this.checkEntTexture(ent));
 					this.world.addChild(sprite)
 				}
 			} else {

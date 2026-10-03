@@ -78,6 +78,7 @@ export class Button extends Entity {
 			if (overlapY != -1) {
 				isGrounded = true;
 				this.isPressed = true;
+				playerNewVel.y = 0;
 			}
 		}
 

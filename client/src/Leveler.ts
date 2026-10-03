@@ -1,49 +1,70 @@
-import { GridTile, LayerInstance, LevelData } from "@shared/commonLevelModels";
-import { Container, Rectangle, Sprite, Texture } from "pixi.js";
+import {EntityInstance, GridTile, LayerInstance, LevelData} from "@shared/commonLevelModels"
+import { Container, Rectangle, Sprite, Texture } from "pixi.js"
 
 export class levelManager {
-	levels: LevelData[];
-	mapData: LevelData;
-	world: Container;
-	spriteSheet: Texture;
-	textures: Map<number, Texture> = new Map();
+	levels: LevelData[]
+	mapData: LevelData
+	world: Container
+	spriteSheet: Texture
+	tileTextures: Map<number, Texture> = new Map()
+	entTextures: Map<string, Texture>
 
-	constructor(world: Container, sprites: Texture, levels: LevelData[]) {
-		this.levels = levels;
-		this.mapData = levels[0];
-		this.world = world;
-		this.spriteSheet = sprites;
+	constructor(world: Container, spriteSheet: Texture, levels: LevelData[], entTextures: Map<string, Texture>) {
+		this.levels = levels
+		this.mapData = levels[0]
+		this.world = world
+		this.spriteSheet = spriteSheet
+		this.entTextures = entTextures
 	}
 
-	checkTexture(tile: GridTile, layer: LayerInstance) {
-		if (!this.textures.has(tile.t)) {
+	checkTileTexture(tile: GridTile, layer: LayerInstance) {
+		if (!this.tileTextures.has(tile.t)) {
 			const tileFrame = new Rectangle(
 				tile.src[0],
 				tile.src[1],
 				layer.__gridSize,
 				layer.__gridSize,
 			);
-			const tileTexture = new Texture({ source: this.spriteSheet.source, frame: tileFrame });
-			this.textures.set(tile.t, tileTexture);
+			const tileTexture = new Texture({ source: this.spriteSheet.source, frame: tileFrame })
+			this.tileTextures.set(tile.t, tileTexture)
 		}
-		return this.textures.get(tile.t);
+		return this.tileTextures.get(tile.t)
+	}
+
+	checkEntTexture(ent: EntityInstance) {
+		if (!this.entTextures.has(ent.__identifier)) {
+			console.log("ENT TEXTURE NOT FOUND!")
+			return this.entTextures.get("key")
+		}
+		return this.entTextures.get(ent.__identifier)
 	}
 
 	loadLevel(level: number) {
-		this.mapData = this.levels[level];
+		this.mapData = this.levels[level]
 	}
 
 	renderLevel() {
-		for (const layer of this.mapData.layerInstances.reverse()) {
-			if (!layer.visible) continue;
+		for (const layer of this.mapData.layerInstances.slice().reverse()) {
+			if (!layer.visible) continue
 
-			const tiles = layer.gridTiles.length > 0 ? layer.gridTiles : layer.autoLayerTiles;
+			if (layer.entityInstances.length > 0) {
+				const ents = layer.entityInstances
 
-			for (const tile of tiles) {
-				const sprite = new Sprite(this.checkTexture(tile, layer));
-				sprite.position.set(tile.px[0], tile.px[1]);
-				this.world.addChild(sprite);
+				for (const ent of ents) {
+					const sprite = new Sprite(this.checkEntTexture(ent))
+					sprite.position.set(ent.px[0], ent.px[1])
+					this.world.addChild(sprite)
+				}
+			} else {
+				const tiles = layer.gridTiles.length > 0 ? layer.gridTiles : layer.autoLayerTiles
+
+				for (const tile of tiles) {
+					const sprite = new Sprite(this.checkTileTexture(tile, layer))
+					sprite.position.set(tile.px[0], tile.px[1])
+					this.world.addChild(sprite)
+				}
 			}
+
 		}
 	}
 }

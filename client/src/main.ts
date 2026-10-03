@@ -27,9 +27,8 @@ app.stage.addChild(uiContainer)
 pageSetup(app)
 
 const assets = await loadAssets()
-const leveler = new levelManager(worldContainer, assets.mapAssets.Spritesheet, assets.mapAssets.Levels)
+const leveler = new levelManager(worldContainer, assets.mapAssets.spritesheet, assets.mapAssets.levels, assets.mapAssets.entTextures)
 const map_size: Vector2 = {x: leveler.mapData.pxWid, y: leveler.mapData.pxHei}
-console.log(map_size)
 const camera = new cameraControler(worldContainer, app.screen, map_size)
 
 coordinator.init(assets.playerTextures, worldContainer)

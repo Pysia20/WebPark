@@ -19,7 +19,7 @@ class Coordinator {
             if (!this.players.has(data.playerID)) {
                 const newPlayer = new Player(data.playerID, data.color, this.playerTextures);
                 this.players.set(data.playerID, newPlayer);
-                (this.world as Container).addChild(newPlayer.sprite);
+                (this.world as Container).addChild(newPlayer.sprite)
             }
         }
     }
@@ -46,7 +46,7 @@ class Coordinator {
     remove_player(playerID: number) {
         const player = this.players.get(playerID)
         if(player) {
-            (this.world as Container).removeChild(player.sprite);
+            (this.world as Container).removeChild(player.sprite)
             this.players.delete(playerID)
         }
     }

@@ -62,7 +62,6 @@ export class Player {
          } else if (this.sprite.texture == this.textures.jump) {
              this.sprite.texture = this.textures.idle
          }
-         console.log(velocity)
 
         this.checkIfJumped(velocity)
         this.prevVelocity = velocity

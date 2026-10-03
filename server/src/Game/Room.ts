@@ -77,21 +77,6 @@ export class Room {
 				newVel.x = 0;
 			}
 
-			if (this.handleCollisions(player, newPos, newVel)) {
-				player.isGrounded = true;
-			}
-
-			if (input.right) {
-				newVel.x += PLAYER_CONFIG.ACCELERATION;
-			}
-			if (input.left) {
-				newVel.x -= PLAYER_CONFIG.ACCELERATION;
-			}
-			if (input.jump && player.isGrounded) {
-				newVel.y -= PLAYER_CONFIG.JUMP_FORCE;
-				player.isGrounded = false;
-			}
-
 			if (!player.isGrounded) {
 				newVel.y += PLAYER_CONFIG.GRAVITY;
 			}
@@ -112,6 +97,22 @@ export class Room {
 			// 	player.setGrounded(true);
 			// 	newVel.y = 0;
 			// }
+
+			if (this.handleCollisions(player, newPos, newVel)) {
+				player.isGrounded = true;
+			}
+
+			if (input.right) {
+				newVel.x += PLAYER_CONFIG.ACCELERATION;
+			}
+			if (input.left) {
+				newVel.x -= PLAYER_CONFIG.ACCELERATION;
+			}
+
+			if (input.jump && player.isGrounded) {
+				newVel.y -= PLAYER_CONFIG.JUMP_FORCE;
+				player.isGrounded = false;
+			}
 
 			newPos.x += newVel.x * (1 / this.TICKRATE);
 			newPos.y += newVel.y * (1 / this.TICKRATE);
@@ -184,7 +185,10 @@ export class Room {
 
 				const { overlapX, overlapY, diffX, diffY } = isColliding(collider, p);
 
-				if (overlapY != -1) isGrounded = true;
+				if (overlapY != -1) {
+					isGrounded = true;
+					newVel.y = 0;
+				}
 			}
 		});
 
@@ -241,7 +245,10 @@ export class Room {
 
 				const { overlapX, overlapY, diffX, diffY } = isColliding(collider, c);
 
-				if (overlapY != -1) isGrounded = true;
+				if (overlapY != -1) {
+					isGrounded = true;
+					newVel.y = 0;
+				}
 			}
 		});
 

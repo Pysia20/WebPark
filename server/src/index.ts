@@ -111,4 +111,5 @@ app.get("/api/game/:id", (req: Request, res: Response) => {
 
 server.listen(config.PORT, () => {
 	LOG.info(`Server running on http://localhost:${config.PORT}`);
+	LOG.info(`Nginx on: https://localhost`);
 });

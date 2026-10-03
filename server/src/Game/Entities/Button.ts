@@ -22,6 +22,8 @@ export class Button extends Entity {
 	): boolean {
 		const { overlapX, overlapY, diffX, diffY } = isColliding(p, this);
 
+		this.isPressed = false;
+
 		if (overlapX != -1 && overlapY != -1) {
 			if (overlapX < overlapY) {
 				// Horizontal collison

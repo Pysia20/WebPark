@@ -82,7 +82,10 @@ export class Entity {
 
 			const { overlapX, overlapY, diffX, diffY } = isColliding(collider, this);
 
-			if (overlapY != -1) isGrounded = true;
+			if (overlapY != -1) {
+				isGrounded = true;
+				playerNewVel.y = 0;
+			}
 		}
 
 		return isGrounded;

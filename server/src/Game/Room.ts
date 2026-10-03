@@ -3,7 +3,7 @@ import { Player } from "./Player";
 import { PlayerInputs, ServerData, ServerEntityData, Vector2 } from "@shared/commonModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { clamp, isColliding } from "../Global";
-import { Level as GameMap } from "./Level";
+import { Level } from "./Level";
 import { MAP_LOADER } from "./LevelLoader";
 import { MapCollider } from "@shared/commonLevelModels";
 import { LOG } from "../Logger";
@@ -15,12 +15,12 @@ export class Room {
 
 	private id: string;
 	private players: Map<number, Player> = new Map<number, Player>();
-	public map: GameMap;
+	public map: Level;
 	private gameLoop: NodeJS.Timeout | undefined;
 
 	constructor(id: string) {
 		this.id = id;
-		this.map = MAP_LOADER.LoadLevel("Level_0");
+		this.map = MAP_LOADER.GetLevel("Level_0");
 	}
 
 	public getID(): string | undefined {
@@ -124,7 +124,7 @@ export class Room {
 			player.velocity = newVel;
 		}
 
-		this.map.handleEntites();
+		this.map.handleEntites(this);
 	}
 
 	private handleCollisions(player: Player, newPos: Vector2, newVel: Vector2): boolean {

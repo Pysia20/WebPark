@@ -26,7 +26,13 @@
 	"__smartColor": "#ADADB5",
 	"__bgPos": null,
 	"externalRelPath": null,
-	"fieldInstances": [],
+	"fieldInstances": [
+		{ "__identifier": "LevelGroup", "__type": "String", "__value": "Default", "__tile": null, "defUid": 13, "realEditorValues": [{
+			"id": "V_String",
+			"params": ["Default"]
+		}] },
+		{ "__identifier": "IndexInGroup", "__type": "Int", "__value": 0, "__tile": null, "defUid": 14, "realEditorValues": [] }
+	],
 	"layerInstances": [
 		{
 			"__identifier": "Entities",
@@ -189,5 +195,5 @@
 			"entityInstances": []
 		}
 	],
-	"__neighbours": []
+	"__neighbours": [{ "levelIid": "e7714ff0-bde0-11f1-ac0f-4501a3e35def", "dir": "e" }]
 }

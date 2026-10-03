@@ -18,7 +18,7 @@ export interface LevelData {
 	__smartColor: string;
 	__bgPos: null;
 	externalRelPath: null;
-	fieldInstances: unknown[];
+	fieldInstances: LevelFieldInstance[];
 	layerInstances: LayerInstance[];
 	__neighbours: unknown[];
 }
@@ -57,6 +57,7 @@ export interface LayerInstance {
 	overrideTilesetUid: null;
 	gridTiles: GridTile[];
 	entityInstances: EntityInstance[];
+	fieldInstances: unknown[];
 }
 
 export interface EntityInstance {
@@ -85,6 +86,15 @@ export interface GridTile {
 	a: number;
 }
 
+export interface LevelFieldInstance {
+	__identifier: LevelCustomField;
+	__type: string;
+	__value: any;
+	__tile: null;
+	defUid: number;
+	realEditorValues: unknown[];
+}
+
 export class MapCollider {
 	private _forceInstance!: void;
 	public x: number = -1;
@@ -98,6 +108,13 @@ export class MapCollider {
 		this.width = width;
 		this.height = height;
 	}
+}
+
+export type LevelCustomField = "LevelGroup" | "IndexInGroup";
+
+export interface LevelCustomFieldsData {
+	groupName: string;
+	groupIndex: number;
 }
 
 export type LayerType = "Entities" | "Tiles" | "IntGrid" | "AutoLayer";

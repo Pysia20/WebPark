@@ -1,6 +1,7 @@
 import { EntityType } from "@shared/commonLevelModels";
 import { Entity } from "./Entity";
 import { Vector2 } from "@shared/commonModels";
+import { LOG } from "../../Logger";
 
 export class Door extends Entity {
 	public override type: EntityType = "Door";
@@ -13,7 +14,8 @@ export class Door extends Entity {
 		return false;
 	}
 
-	public enterDoor() {
+	public enterDoor(nextLevelID: string) {
 		// TODO: Switch level
+		// LOG.info(nextLevelID);
 	}
 }

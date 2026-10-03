@@ -5,11 +5,16 @@ import {
 	LayerInstance,
 	EntityInstance,
 	EntityType,
+	LevelFieldInstance,
+	LevelCustomFieldsData,
 } from "@shared/commonLevelModels";
 import { Entity } from "./Entities/Entity";
 import { Button } from "./Entities/Button";
 import { LOG } from "../Logger";
 import { EntityBuilder } from "./Entities/EntityBuilder";
+import { Door } from "./Entities/Door";
+import { MAP_LOADER } from "./LevelLoader";
+import { Room } from "./Room";
 
 export class Level {
 	public readonly id: string; // its name
@@ -18,12 +23,28 @@ export class Level {
 	private readonly intGrid: number[][];
 	public readonly colliders: MapCollider[];
 	public readonly entities: Entity[] = [];
+	public readonly group: string;
+	public readonly groupIndex: number;
 
 	constructor(data: LevelData) {
 		this.id = data.identifier;
 		this.intGrid = this.parseIntGrid(data);
 		this.colliders = this.generateColliders();
 		this.entities = this.parseEntities(data);
+
+		({ groupName: this.group, groupIndex: this.groupIndex } = this.parseFields(data));
+	}
+
+	private parseFields(data: LevelData): LevelCustomFieldsData {
+		let groupName: string = "";
+		let groupIndex: number = -1;
+
+		data.fieldInstances.forEach((i: LevelFieldInstance) => {
+			if (i.__identifier == "LevelGroup") groupName = i.__value;
+			if (i.__identifier == "IndexInGroup") groupIndex = i.__value;
+		});
+
+		return { groupName: groupName, groupIndex: groupIndex };
 	}
 
 	private parseEntities(data: LevelData): Entity[] {
@@ -148,10 +169,20 @@ export class Level {
 		);
 	}
 
-	public handleEntites() {
+	public handleEntites(room: Room) {
 		this.entities.forEach((e) => {
 			if (e instanceof Button) {
 				// console.log(e.isPressed);
+			}
+			if (e instanceof Door) {
+				const nextLevelID = MAP_LOADER.GetNextLevel(this.group, this.groupIndex)?.id;
+
+				if (nextLevelID === undefined) {
+					// End of group
+					return;
+				}
+
+				e.enterDoor(nextLevelID);
 			}
 		});
 	}

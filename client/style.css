@@ -13,6 +13,8 @@ html, body {
     height: 100%;
 
     background-color: #ffffff;
+
+    font-family: sans-serif;
 }
 
 canvas {
@@ -78,6 +80,13 @@ main > div {
     justify-content: space-around;
 }
 
+.buttons p {
+    color: #ff3838;
+    width: 17ch;
+    text-align: center;
+    font-weight: bold;
+}
+
 .preview {
     grid-area: preview;
 
@@ -118,6 +127,10 @@ main > div {
     mask-repeat: no-repeat;
     -webkit-mask-position: center;
     mask-position: center;
+}
+
+.wrongInput {
+    border-color: #ff3838;
 }
 
 .hidden {

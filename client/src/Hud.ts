@@ -15,7 +15,7 @@ class Hud {
 
     init(hudContainer: Container, screenHeight: number) {
         const code = sessionStorage.getItem("roomID") as string
-        const nick = sessionStorage.getItem("userName") as string                  //    const nick: PixiText = new PixiText({text: data.nick, style: {fill: nickColor.toHex() ?? "#ffffff", fontSize: 12}, resolution: 2})
+        const nick = sessionStorage.getItem("userName") as string
 
         this.code = new PixiText({text: code, style: {fill: "#4f4f4f", fontSize: 24}, resolution: 2})
         this.nick = new PixiText({text: nick, style: {fill: "#4f4f4f", fontSize: 24}, resolution: 2})

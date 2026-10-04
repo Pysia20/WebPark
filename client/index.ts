@@ -33,7 +33,7 @@ createButton.addEventListener("click",  async () => {
 
 joinButton.addEventListener("click",  async () => {
     if (playerName.value != "" && roomId.value.length == 6) {
-        let response = await (await fetch("/api/joinRoom/" + roomId.value, {method: "get"})).json()
+        let response = await (await fetch("/api/joinRoom/" + roomId.value.toUpperCase(), {method: "get"})).json()
         sessionStorage.setItem("userID", response["userID"])
         sessionStorage.setItem("roomID", response["roomID"])
         sessionStorage.setItem("userName", playerName.value)

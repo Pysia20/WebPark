@@ -79,3 +79,21 @@ export function onGameStart(func: () => void) {
         func()
     })
 }
+
+export function onPlayerJoin(func: () => void) {
+    socket.on("playerJoined", () => {
+        func()
+    })
+}
+
+export function onPlayerLeave(func: () => void) {
+    socket.on("playerLeft", () => {
+        func()
+    })
+}
+
+export function onReadyUpdate(func: (readys: number) => void) {
+    socket.on("readyUpdate", (readys: number) => {
+        func(readys)
+    })
+}

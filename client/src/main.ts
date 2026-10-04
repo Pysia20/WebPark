@@ -32,8 +32,8 @@ const assets = await loadAssets()
 const leveler = new levelManager(worldContainer, assets.mapAssets.spritesheet, assets.mapAssets.levels, assets.mapAssets.entTextures)
 const map_size: Vector2 = {x: leveler.mapData.pxWid, y: leveler.mapData.pxHei}
 const camera = new CameraController(worldContainer, app.screen, map_size)
-hud.init(hudContainer, app.screen.height)
 
+hud.init(hudContainer, app.screen.height)
 coordinator.init(assets.playerTextures, worldContainer)
 
 startNetworking()

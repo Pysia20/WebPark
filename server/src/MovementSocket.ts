@@ -103,6 +103,14 @@ export function register(io: Server) {
 
 				room.setPlayerReady(id, true);
 
+				let readyCount = 0;
+
+				room.getPlayers().forEach((p) => {
+					if (p.isReady) readyCount++;
+				});
+
+				socket.to(socket.data.roomID).emit("readyUpdate", readyCount);
+
 				socket
 					.to(socket.data.roomID)
 					.emit("log", `<li>User ${socket.data.userNick} is ready.</li>`);
@@ -130,6 +138,14 @@ export function register(io: Server) {
 				}
 
 				room.setPlayerReady(id, false);
+
+				let readyCount = 0;
+
+				room.getPlayers().forEach((p) => {
+					if (p.isReady) readyCount++;
+				});
+
+				socket.to(socket.data.roomID).emit("readyUpdate", readyCount);
 
 				socket
 					.to(socket.data.roomID)

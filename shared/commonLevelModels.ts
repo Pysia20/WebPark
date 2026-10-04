@@ -57,7 +57,7 @@ export interface LayerInstance {
 	overrideTilesetUid: null;
 	gridTiles: GridTile[];
 	entityInstances: EntityInstance[];
-	fieldInstances: unknown[];
+	fieldInstances?: unknown[];
 }
 
 export interface EntityInstance {

@@ -2,7 +2,7 @@
 
 # Web Park
 
-<img src="client/public/sprites/farmerThatDoesHarvestingWoahLookTHatsTheThemeFRFR.png" alt="the guy" width="200">
+<img src="GitHub/EpicCapture.PNG" alt="the guy" width="750">
 
 ### An online multiplayer co-op game inspired by pico park
 ### Currently, in early development
@@ -15,21 +15,26 @@ $\color{gray} \text{We will not be using pico park character, they are just plac
 <br>
 
 ## Current features
-- Lobby system with joining using a code
-- Custom player colors
+- Lobby system with joining using a code, data check, waiting for everyone to ready up, and lobby info display
+- Custom player colors, names
 - Basic sound effects
-- Player position synchronization
+- Game synchronization
 - Movement
-- Gravity
+- Physics
 - Different sprites for different actions
-- Basic main menu
-- Ready up system
+- _Less_ basic main menu
+- Basic entities
+- Level loading from LDtk
+- Camera system that keeps all player on screen at once
+- Basic Hud/Ui
 
 ## Planned features
-- Levels made using LDtk (there are currently none at all, just the _void_)
-- Physics between players and entities/objects
 - Actual ~~not stolen~~ non placeholder sprites 
-- Camera system that keeps all player on screen at once and can move
+- More entities (for ex. moving platform)
+- Level changing
+- Better feeling movement
+- Entity updating clientside
+- FINALLY DECIDE ON ART DIRECTION
 
 <br>
 

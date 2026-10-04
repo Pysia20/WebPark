@@ -36,6 +36,7 @@ socket.on("disconnect", (reason) => {
 })
 
 socket.on("somethingBroke", (whatBroke: SomethingBrokeData) => {
+    alert("SOMETHING BROKE SERVERSIDE! CHECK CONSOLE!")
     console.log("KABOOM! " + whatBroke.eventName + ": " + whatBroke.name + ", " + whatBroke.message)
 })
 

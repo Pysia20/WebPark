@@ -15,9 +15,9 @@ class Hud {
         const code = sessionStorage.getItem("roomID") as string
         const nick = sessionStorage.getItem("userName") as string                  //    const nick: PixiText = new PixiText({text: data.nick, style: {fill: nickColor.toHex() ?? "#ffffff", fontSize: 12}, resolution: 2})
 
-        this.code = new PixiText({text: code, style: {fill: "#d2d2d2", fontSize: 20}, resolution: 2})
-        this.nick = new PixiText({text: nick, style: {fill: "#d2d2d2", fontSize: 20}, resolution: 2})
-        this.players = new PixiText({text: coordinator.players.size.toString(), style: {fill: "#d2d2d2", fontSize: 20}, resolution: 2})
+        this.code = new PixiText({text: code, style: {fill: "#d2d2d2", fontSize: 24}, resolution: 2})
+        this.nick = new PixiText({text: nick, style: {fill: "#d2d2d2", fontSize: 24}, resolution: 2})
+        this.players = new PixiText({text: "Players: " + coordinator.players.size.toString(), style: {fill: "#d2d2d2", fontSize: 24}, resolution: 2})
         this.hudContainer = hudContainer
 
         const padding = 5
@@ -32,7 +32,7 @@ class Hud {
     }
 
     updateHud() {
-        this.players.text = coordinator.players.size
+        this.players.text = "Players: " + coordinator.players.size
     }
 }
 

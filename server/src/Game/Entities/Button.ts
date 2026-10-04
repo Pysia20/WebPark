@@ -9,6 +9,7 @@ export class Button extends Entity {
 	public override type: EntityType = "Button";
 	public isPressed: boolean = false;
 	public hasChanged: boolean = false;
+	public hasChangedThisTick: boolean = false;
 
 	constructor(pos: Vector2, size: Vector2, activationGroup: string) {
 		super(pos, size);
@@ -83,11 +84,11 @@ export class Button extends Entity {
 			}
 		}
 
-		if (newState != this.isPressed) {
-			this.hasChanged = true;
-			this.isPressed = newState;
-		} else {
-			this.hasChanged = false;
+		if (!this.hasChangedThisTick) {
+			if (newState != this.isPressed && this.hasChanged != true) {
+				this.hasChanged = true;
+				this.isPressed = newState;
+			}
 		}
 
 		return isGrounded;
@@ -95,5 +96,10 @@ export class Button extends Entity {
 
 	public override clone(): Button {
 		return new Button(this.pos, this.size, this.activationGroup);
+	}
+
+	public endTick() {
+		this.hasChanged = false;
+		this.hasChangedThisTick = false;
 	}
 }

@@ -101,4 +101,6 @@ export class Entity {
 	public getTypeName(): string {
 		return this.constructor.name;
 	}
+
+	public endTick() {}
 }

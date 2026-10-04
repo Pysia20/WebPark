@@ -125,6 +125,10 @@ export class Room {
 		}
 
 		this.map.handleEntites(this);
+
+		this.map.entities.forEach((e) => {
+			e.endTick();
+		});
 	}
 
 	private handleCollisions(player: Player, newPos: Vector2, newVel: Vector2): boolean {

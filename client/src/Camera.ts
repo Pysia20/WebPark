@@ -1,5 +1,6 @@
 import { Container, Rectangle } from "pixi.js";
 import { ServerData, ServerPlayerData, Vector2 } from "@shared/commonModels";
+import {PLAYER_CONFIG} from "@shared/commonVariables";
 
 
 export class cameraController {
@@ -18,7 +19,6 @@ export class cameraController {
     }
 
     update_cam(serverData: ServerData) {
-        //really not sure if y position is even needed
         let max: Vector2 = {x: -Infinity, y: -Infinity}
         let min: Vector2 = {x: Infinity, y: Infinity}
         for (const player of Object.values(serverData["playerData"]) as ServerPlayerData[]) {
@@ -28,7 +28,7 @@ export class cameraController {
             if (player.pos.y < min.y) min.y = player.pos.y
         }
 
-        const space: Vector2 = {x: (max.x - min.x) + 100, y: (max.y - min.y) + 100}
+        const space: Vector2 = {x: (max.x - min.x) + (PLAYER_CONFIG.WIDTH * 2), y: (max.y - min.y) + (PLAYER_CONFIG.HEIGHT * 2)}
         const rawZoom: number = Math.min(this.screen.width / space.x, this.screen.height / space.y)
         const targetZoom: number = Math.min(Math.max(rawZoom, 0.6), 1.5)
 

@@ -50,6 +50,8 @@ socket.on("playerLeft", (playerID: number) => {
     coordinator.remove_player(playerID)
 })
 
+
+
 export function startNetworking() {
     socket.connect()
 }

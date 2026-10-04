@@ -12,15 +12,15 @@ interface animController {
 
 export class Player {
     id: number
-    pos: Vector2 = {x: 0.0, y: 0.0}
-    prevVelocity: Vector2 = {x: 0.0, y: 0.0}
-    targetPos: Vector2 = {x: 0.0, y: 0.0}
+    isHost: boolean
+    nick: PixiText
     color: string
     sprite: Sprite
     textures: PlayerTextures = {} as PlayerTextures
-    isHost: boolean
     walkingAnim: animController
-    nick: PixiText
+    pos: Vector2 = {x: 0.0, y: 0.0}
+    prevVelocity: Vector2 = {x: 0.0, y: 0.0}
+    targetPos: Vector2 = {x: 0.0, y: 0.0}
 
     LERP_SPEED: number = 0.3
 

@@ -19,6 +19,7 @@ await app.init({
 })
 app.canvas.classList.add("hidden")
 document.body.appendChild(app.canvas)
+
 const worldContainer = new PIXI.Container()
 const uiContainer = new PIXI.Container()
 app.stage.addChild(worldContainer)

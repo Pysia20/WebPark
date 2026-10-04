@@ -1,6 +1,6 @@
 import { Player } from "./Player";
 import { PlayerJoinedData, ServerData } from "@shared/commonModels"
-import { Container, Text as PixiText } from "pixi.js";
+import { Container, Color, Text as PixiText } from "pixi.js";
 import { PlayerTextures } from "./Assets";
 
 class Coordinator {
@@ -17,7 +17,9 @@ class Coordinator {
     create_players(playerData: PlayerJoinedData[]) {
         for (const data of playerData) {
             if (!this.players.has(data.playerID)) {
-                const nick: PixiText = new PixiText({text: data.nick, style: {fill: data.color, fontSize: 12}, resolution: 2})
+                const nickColor: Color = new Color(data.color)
+                nickColor.setValue([nickColor.red + ( 1 - nickColor.red) * 0.25, nickColor.green + (1 - nickColor.green) * 0.25, nickColor.blue + (1 - nickColor.blue) * 0.25])
+                const nick: PixiText = new PixiText({text: data.nick, style: {fill: nickColor.toHex() ?? "#ffffff", fontSize: 12}, resolution: 2})
                 nick.anchor.set(0.5,1)
                 const newPlayer = new Player(data.playerID, data.color, this.playerTextures, nick);
                 this.players.set(data.playerID, newPlayer);

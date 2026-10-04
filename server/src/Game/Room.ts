@@ -3,11 +3,11 @@ import { Player } from "./Player";
 import { PlayerInputs, ServerData, ServerEntityData, Vector2 } from "@shared/commonModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { clamp, isColliding } from "../Global";
-import { Level } from "./Level";
 import { MAP_LOADER } from "./LevelLoader";
 import { MapCollider } from "@shared/commonLevelModels";
 import { LOG } from "../Logger";
 import { Entity } from "./Entities/Entity";
+import { Level } from "./Level";
 
 export class Room {
 	private TICKRATE: number = 30; // Per second
@@ -192,7 +192,7 @@ export class Room {
 			}
 		});
 
-		this.map.colliders.forEach((c: MapCollider) => {
+		this.map.getColliders().forEach((c: MapCollider) => {
 			const { overlapX, overlapY, diffX, diffY } = isColliding(player, c);
 
 			if (overlapX != -1 && overlapY != -1) {
@@ -282,6 +282,7 @@ export class Room {
 
 				this.map.entities.forEach((entity: Entity) => {
 					const data: ServerEntityData = {
+						type: entity.type,
 						pos: entity.pos,
 						visualSize: entity.visualSize,
 					};

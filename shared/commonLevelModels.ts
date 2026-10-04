@@ -72,7 +72,7 @@ export interface EntityInstance {
 	height: number;
 	defUid: number;
 	px: number[];
-	fieldInstances: unknown[];
+	fieldInstances: EntityFieldInstance[];
 	__worldX: number;
 	__worldY: number;
 }
@@ -86,6 +86,16 @@ export interface GridTile {
 	a: number;
 }
 
+//=========================
+//  LEVEL CUSTOM FIELDS
+//=========================
+
+export type LevelCustomField = "LevelGroup" | "IndexInGroup";
+
+export interface LevelCustomFieldsData {
+	groupName: string;
+	groupIndex: number;
+}
 export interface LevelFieldInstance {
 	__identifier: LevelCustomField;
 	__type: string;
@@ -94,6 +104,33 @@ export interface LevelFieldInstance {
 	defUid: number;
 	realEditorValues: unknown[];
 }
+
+//=========================
+//  ENTITY CUSTOM FIELDS
+//=========================
+
+export type EntityCustomField = "ActivationGroup" | "ActivationCount";
+
+export interface EntityCustomFieldsData {
+	activationGroup: string | undefined;
+	activationCount: number | undefined;
+}
+export interface EntityFieldInstance {
+	__identifier: EntityCustomField;
+	__type: string;
+	__value: any;
+	__tile: null;
+	defUid: number;
+	realEditorValues: unknown[];
+}
+
+//=========================
+//         OTHER
+//=========================
+
+export type LayerType = "Entities" | "Tiles" | "IntGrid" | "AutoLayer";
+
+export type EntityType = "JohnEntity" | "Button" | "Key" | "Door" | "ButtonDoor";
 
 export class MapCollider {
 	private _forceInstance!: void;
@@ -109,14 +146,3 @@ export class MapCollider {
 		this.height = height;
 	}
 }
-
-export type LevelCustomField = "LevelGroup" | "IndexInGroup";
-
-export interface LevelCustomFieldsData {
-	groupName: string;
-	groupIndex: number;
-}
-
-export type LayerType = "Entities" | "Tiles" | "IntGrid" | "AutoLayer";
-
-export type EntityType = "JohnEntity" | "Button" | "Key" | "Door";

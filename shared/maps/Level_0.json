@@ -70,7 +70,10 @@
 					"height": 32,
 					"defUid": 8,
 					"px": [512,896],
-					"fieldInstances": [],
+					"fieldInstances": [{ "__identifier": "ActivationGroup", "__type": "String", "__value": "Door", "__tile": null, "defUid": 18, "realEditorValues": [{
+						"id": "V_String",
+						"params": ["Door"]
+					}] }],
 					"__worldX": 512,
 					"__worldY": 192
 				},
@@ -105,6 +108,47 @@
 					"fieldInstances": [],
 					"__worldX": 960,
 					"__worldY": 64
+				},
+				{
+					"__identifier": "ButtonDoor",
+					"__grid": [11,13],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": { "tilesetUid": 2, "x": 64, "y": 0, "w": 64, "h": 64 },
+					"__smartColor": "#EAD4AA",
+					"iid": "88fbd080-bde0-11f1-9e10-b965b5569246",
+					"width": 64,
+					"height": 128,
+					"defUid": 20,
+					"px": [704,896],
+					"fieldInstances": [
+						{ "__identifier": "ActivationGroup", "__type": "String", "__value": "Door", "__tile": null, "defUid": 21, "realEditorValues": [{
+							"id": "V_String",
+							"params": ["Door"]
+						}] },
+						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 22, "realEditorValues": [] }
+					],
+					"__worldX": 704,
+					"__worldY": 192
+				},
+				{
+					"__identifier": "Button",
+					"__grid": [6,13],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": { "tilesetUid": 2, "x": 64, "y": 64, "w": 64, "h": 64 },
+					"__smartColor": "#FF0000",
+					"iid": "94f78620-bde0-11f1-9e10-6d603a2ef27a",
+					"width": 64,
+					"height": 32,
+					"defUid": 8,
+					"px": [384,896],
+					"fieldInstances": [{ "__identifier": "ActivationGroup", "__type": "String", "__value": "Door", "__tile": null, "defUid": 18, "realEditorValues": [{
+						"id": "V_String",
+						"params": ["Door"]
+					}] }],
+					"__worldX": 384,
+					"__worldY": 192
 				}
 			]
 		},

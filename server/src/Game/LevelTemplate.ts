@@ -1,0 +1,192 @@
+import { WORLD_CONFIG } from "@shared/commonVariables";
+import {
+	LevelData,
+	MapCollider,
+	LayerInstance,
+	EntityInstance,
+	EntityType,
+	LevelFieldInstance,
+	LevelCustomFieldsData,
+	EntityCustomFieldsData,
+} from "@shared/commonLevelModels";
+import { Entity } from "./Entities/Entity";
+import { Button } from "./Entities/Button";
+import { LOG } from "../Logger";
+import { EntityBuilder } from "./Entities/EntityBuilder";
+import { Door } from "./Entities/Door";
+import { MAP_LOADER } from "./LevelLoader";
+import { Room } from "./Room";
+
+export class LevelTemplate {
+	public readonly id: string; // its name
+	private width: number = -1;
+	private height: number = -1;
+	private readonly intGrid: number[][];
+	public readonly colliders: MapCollider[];
+	public readonly entities: Entity[] = [];
+	public readonly group: string;
+	public readonly groupIndex: number;
+
+	constructor(data: LevelData) {
+		this.id = data.identifier;
+		this.intGrid = this.parseIntGrid(data);
+		this.colliders = this.generateColliders();
+		this.entities = this.parseEntities(data);
+
+		({ groupName: this.group, groupIndex: this.groupIndex } = this.parseFields(data));
+	}
+
+	private parseFields(data: LevelData): LevelCustomFieldsData {
+		let groupName: string = "";
+		let groupIndex: number = -1;
+
+		data.fieldInstances.forEach((i: LevelFieldInstance) => {
+			if (i.__identifier == "LevelGroup") groupName = i.__value;
+			else if (i.__identifier == "IndexInGroup") groupIndex = i.__value;
+		});
+
+		return { groupName: groupName, groupIndex: groupIndex };
+	}
+
+	private parseEntities(data: LevelData): Entity[] {
+		const entities: Entity[] = [];
+
+		data.layerInstances.forEach((layer: LayerInstance) => {
+			if (layer.__type != "Entities") {
+				return;
+			}
+
+			layer.entityInstances.forEach((entityData: EntityInstance) => {
+				const builder: EntityBuilder = new EntityBuilder(entityData.__identifier as EntityType)
+					.setPosition({
+						x: entityData.px[0],
+						y: entityData.px[1] - entityData.height,
+					})
+					.setSize({ x: entityData.width, y: entityData.height });
+
+				const customFields = this.parseEntityFields(entityData);
+
+				if (customFields.activationGroup !== undefined) {
+					builder.setActivationGroup(customFields.activationGroup);
+				}
+				if (customFields.activationCount !== undefined) {
+					builder.setActivationsCount(customFields.activationCount);
+				}
+
+				entities.push(builder.build());
+			});
+		});
+
+		return entities;
+	}
+
+	private parseEntityFields(e: EntityInstance): EntityCustomFieldsData {
+		let activationGroup: string | undefined;
+		let activationCount: number | undefined;
+
+		e.fieldInstances.forEach((instance) => {
+			if (instance.__identifier == "ActivationGroup") activationGroup = instance.__value;
+			else if (instance.__identifier == "ActivationCount") activationCount = instance.__value;
+		});
+
+		return { activationGroup: activationGroup, activationCount: activationCount };
+	}
+
+	private parseIntGrid(data: LevelData): number[][] {
+		let layer: LayerInstance | undefined;
+
+		for (let i = 0; i < data.layerInstances.length; i++) {
+			if (data.layerInstances[i].__type == "IntGrid") {
+				layer = data.layerInstances[i];
+			}
+		}
+
+		if (layer === undefined) {
+			throw Error(`IntGrid layer not found in level: ${data.identifier}`);
+		}
+
+		this.width = layer.__cWid;
+		this.height = layer.__cHei;
+
+		const intGrid: number[][] = Array.from({ length: this.width }, () =>
+			new Array(this.height).fill(0),
+		);
+
+		for (let y = 0; y < this.height; y++) {
+			for (let x = 0; x < this.width; x++) {
+				intGrid[x][y] = layer.intGridCsv[y * this.width + x];
+			}
+		}
+
+		return intGrid;
+	}
+
+	/**
+	 * Greedy meshing
+	 */
+	public generateColliders() {
+		const colliders: MapCollider[] = [];
+
+		const visited: boolean[][] = Array.from({ length: this.width }, () =>
+			new Array(this.height).fill(false),
+		);
+
+		for (let y = 0; y < this.height; y++) {
+			for (let x = 0; x < this.width; x++) {
+				if (visited[x][y] || this.intGrid[x][y] === 0) {
+					continue;
+				}
+
+				colliders.push(this.generateCollider(x, y, visited));
+			}
+		}
+
+		return colliders;
+	}
+
+	private generateCollider(
+		startingX: number,
+		startingY: number,
+		visited: boolean[][],
+	): MapCollider {
+		let width = 0;
+
+		while (
+			startingX + width < this.width &&
+			this.intGrid[startingX + width][startingY] !== 0 &&
+			!visited[startingX + width][startingY]
+		) {
+			width++;
+		}
+
+		let height = 0;
+		for (let y = startingY; y < this.height; y++) {
+			let rowWidth = 0;
+			for (let x = startingX; x < width + startingX; x++) {
+				if (this.intGrid[x][y] !== 0 && !visited[x][y]) {
+					rowWidth++;
+				}
+			}
+
+			if (rowWidth == width) {
+				height++;
+			} else {
+				break;
+			}
+		}
+
+		for (let y = startingY; y < startingY + height; y++) {
+			for (let x = startingX; x < startingX + width; x++) {
+				visited[x][y] = true;
+			}
+		}
+
+		// Scaling the intgrid to the real size
+		return new MapCollider(
+			startingX * WORLD_CONFIG.CELL_SIZE,
+			startingY * WORLD_CONFIG.CELL_SIZE,
+			width * WORLD_CONFIG.CELL_SIZE,
+			height * WORLD_CONFIG.CELL_SIZE,
+		);
+	}
+}

@@ -1,29 +1,30 @@
-import { Vector2 } from "@shared/commonModels";
-import { Player } from "../Player";
-import { Entity } from "./Entity";
-import { isColliding } from "../../Global";
 import { EntityType, MapCollider } from "@shared/commonLevelModels";
+import { Entity } from "./Entity";
+import { Vector2 } from "@shared/commonModels";
+import { LOG } from "../../Logger";
+import { Player } from "../Player";
+import { isColliding } from "../../Global";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 
-export class Button extends Entity {
-	public override type: EntityType = "Button";
-	public isPressed: boolean = false;
-	public hasChanged: boolean = false;
+export class ButtonDoor extends Entity {
+	public override type: EntityType = "Door";
+	public isPassable: boolean = false;
 
-	constructor(pos: Vector2, size: Vector2, activationGroup: string) {
+	constructor(pos: Vector2, size: Vector2, activationGroup: string, activationCount: number) {
 		super(pos, size);
-		this.visualSize = { x: this.size.x * 2, y: this.size.y * 2 };
 		this.activationGroup = activationGroup;
+		this.activationCount = activationCount;
 	}
 
-	public handleCollisions(
+	public override handleCollisions(
 		p: Player,
 		playerNewPos: Vector2,
 		playerNewVel: Vector2,
 		isGrounded: boolean,
 	): boolean {
+		if (this.isPassable) return false;
+
 		const { overlapX, overlapY, diffX, diffY } = isColliding(p, this);
-		let newState: boolean = false;
 
 		if (overlapX != -1 && overlapY != -1) {
 			if (overlapX < overlapY) {
@@ -62,7 +63,6 @@ export class Button extends Entity {
 						playerNewPos.y -= overlapY;
 						playerNewVel.y = 0;
 						isGrounded = true;
-						newState = true;
 					}
 				}
 			}
@@ -78,22 +78,14 @@ export class Button extends Entity {
 
 			if (overlapY != -1) {
 				isGrounded = true;
-				newState = true;
 				playerNewVel.y = 0;
 			}
-		}
-
-		if (newState != this.isPressed) {
-			this.hasChanged = true;
-			this.isPressed = newState;
-		} else {
-			this.hasChanged = false;
 		}
 
 		return isGrounded;
 	}
 
-	public override clone(): Button {
-		return new Button(this.pos, this.size, this.activationGroup);
+	public override clone() {
+		return new ButtonDoor(this.pos, this.size, this.activationGroup, this.activationCount);
 	}
 }

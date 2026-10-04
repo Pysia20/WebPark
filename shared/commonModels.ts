@@ -1,4 +1,5 @@
 import z from "zod";
+import { EntityType } from "./commonLevelModels";
 
 export type Vector2 = { x: number; y: number };
 export type Vector3 = { x: number; y: number; z: number };
@@ -24,6 +25,7 @@ export interface ServerData {
 }
 
 export interface ServerEntityData {
+	type: EntityType;
 	pos: Vector2;
 	visualSize: Vector2;
 }
@@ -47,7 +49,7 @@ export interface PlayerJoinedData {
 }
 
 //###############################################################
-// DEJMI TEGO NIE MUSISZ IMPORTOWAC NIGDZIE IMPORTUJ TO NIZEJ
+// DEJMI TEGO NIE MUSISZ IMPORTOWAC NIGDZIE | IMPORTUJ TO NIZEJ
 //###############################################################
 export const RegisterUserDataZod = z
 	.object({

@@ -4,11 +4,14 @@ import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { isColliding } from "../../Global";
 import { LOG } from "../../Logger";
 import { EntityType, MapCollider } from "@shared/commonLevelModels";
+import { EntityBuilder } from "./EntityBuilder";
 
 export class Entity {
 	public readonly type: EntityType = "JohnEntity";
 	public readonly pos: Vector2;
 	public readonly size: Vector2;
+	public activationGroup: string = "";
+	public activationCount: number = -1;
 	public visualSize: Vector2;
 
 	constructor(pos: Vector2, size: Vector2) {
@@ -89,6 +92,10 @@ export class Entity {
 		}
 
 		return isGrounded;
+	}
+
+	public clone(): Entity {
+		return new Entity(this.pos, this.size);
 	}
 
 	public getTypeName(): string {

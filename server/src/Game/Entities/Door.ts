@@ -18,4 +18,8 @@ export class Door extends Entity {
 		// TODO: Switch level
 		// LOG.info(nextLevelID);
 	}
+
+	public override clone(): Door {
+		return new Door(this.pos, this.size);
+	}
 }

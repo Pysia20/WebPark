@@ -1,11 +1,12 @@
 import fs from "fs";
 import path from "path";
-import { Level } from "./Level";
+import { LevelTemplate } from "./LevelTemplate";
 import { LevelData } from "@shared/commonLevelModels";
 import { LOG } from "../Logger";
+import { Level } from "./Level";
 
 class LevelLoader {
-	private loadedLevels: Map<string, Level[]> = new Map();
+	private loadedLevels: Map<string, LevelTemplate[]> = new Map();
 
 	public readonly LEVEL_DIRECTORY: string = path.join(
 		import.meta.dirname,
@@ -28,8 +29,8 @@ class LevelLoader {
 					}),
 				) as LevelData;
 
-				const level = new Level(levelData);
-				let group: Level[] | undefined = this.loadedLevels.get(level.group);
+				const level = new LevelTemplate(levelData);
+				let group: LevelTemplate[] | undefined = this.loadedLevels.get(level.group);
 
 				if (group == undefined) {
 					group = [level];
@@ -45,7 +46,7 @@ class LevelLoader {
 	public GetLevel(id: string): Level {
 		for (const [group, levels] of this.loadedLevels) {
 			for (const level of levels) {
-				if (level.id == id) return level;
+				if (level.id == id) return new Level(level);
 			}
 		}
 
@@ -62,7 +63,11 @@ class LevelLoader {
 
 		const nextLevel = groupLevels.at(currentIndex + 1);
 
-		return nextLevel;
+		if (nextLevel === undefined) {
+			return undefined;
+		}
+
+		return new Level(nextLevel);
 	}
 }
 

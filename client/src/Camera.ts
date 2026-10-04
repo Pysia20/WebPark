@@ -3,7 +3,7 @@ import { ServerData, ServerPlayerData, Vector2 } from "@shared/commonModels";
 import {PLAYER_CONFIG} from "@shared/commonVariables";
 
 
-export class cameraController {
+export class CameraController {
     world: Container
     screen: Rectangle
     map_size: Vector2

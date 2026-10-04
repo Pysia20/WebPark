@@ -1,6 +1,7 @@
 import { io } from "socket.io-client"
 import { ServerData, PlayerInputs, RegisterUserData, PlayerJoinedData } from "@shared/commonModels"
 import { coordinator } from "./Coordinator";
+import {hud} from "./Hud";
 
 const socket = io("/player", {
     path: '/api/socket.io',
@@ -44,6 +45,7 @@ socket.on("tick", (data: ServerData) => {
 
 socket.on("playerJoined", (data: PlayerJoinedData[]) => {
     coordinator.create_players(data)
+    hud.updateHud()
 })
 
 socket.on("playerLeft", (playerID: number) => {

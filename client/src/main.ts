@@ -5,9 +5,10 @@ import { emitInputs, getPlayerData, startNetworking } from "./Network";
 import { coordinator } from "./Coordinator";
 import { PlayerInputs, Vector2 } from "@shared/commonModels"
 import { loadAssets } from "./Assets";
-import { cameraController } from "./Camera";
+import { CameraController } from "./Camera";
 import { levelManager } from "./Leveler";
 import { pageSetup } from "./Weber";
+import { hud } from "./Hud";
 
 const app = new PIXI.Application()
 await app.init({
@@ -21,16 +22,17 @@ app.canvas.classList.add("hidden")
 document.body.appendChild(app.canvas)
 
 const worldContainer = new PIXI.Container()
-const uiContainer = new PIXI.Container()
+const hudContainer = new PIXI.Container()
 app.stage.addChild(worldContainer)
-app.stage.addChild(uiContainer)
+app.stage.addChild(hudContainer)
 
 pageSetup(app)
 
 const assets = await loadAssets()
 const leveler = new levelManager(worldContainer, assets.mapAssets.spritesheet, assets.mapAssets.levels, assets.mapAssets.entTextures)
 const map_size: Vector2 = {x: leveler.mapData.pxWid, y: leveler.mapData.pxHei}
-const camera = new cameraController(worldContainer, app.screen, map_size)
+const camera = new CameraController(worldContainer, app.screen, map_size)
+hud.init(hudContainer, app.screen.height)
 
 coordinator.init(assets.playerTextures, worldContainer)
 

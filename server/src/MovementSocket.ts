@@ -109,7 +109,7 @@ export function register(io: Server) {
 					if (p.isReady) readyCount++;
 				});
 
-				socket.to(socket.data.roomID).emit("readyUpdate", readyCount);
+				endpoint.to(socket.data.roomID).emit("readyUpdate", readyCount);
 
 				socket
 					.to(socket.data.roomID)
@@ -145,7 +145,7 @@ export function register(io: Server) {
 					if (p.isReady) readyCount++;
 				});
 
-				socket.to(socket.data.roomID).emit("readyUpdate", readyCount);
+				endpoint.to(socket.data.roomID).emit("readyUpdate", readyCount);
 
 				socket
 					.to(socket.data.roomID)

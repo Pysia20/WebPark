@@ -1,7 +1,7 @@
 import { io } from "socket.io-client"
-import { ServerData, PlayerInputs, RegisterUserData, PlayerJoinedData } from "@shared/commonModels"
+import { ServerData, PlayerInputs, RegisterUserData, PlayerJoinedData, ServerEntityData, SomethingBrokeData } from "@shared/commonModels"
 import { coordinator } from "./Coordinator";
-import {hud} from "./Hud";
+import { hud } from "./Hud";
 
 const socket = io("/player", {
     path: '/api/socket.io',
@@ -35,12 +35,13 @@ socket.on("disconnect", (reason) => {
     console.log("Disconnected! reason:", reason)
 })
 
-socket.on("somethingBroke", (whatBroke: unknown) => {
-    console.log(whatBroke)
+socket.on("somethingBroke", (whatBroke: SomethingBrokeData) => {
+    console.log("KABOOM! " + whatBroke.eventName + ": " + whatBroke.name + ", " + whatBroke.message)
 })
 
-socket.on("tick", (data: ServerData) => {
-    playerData = data
+socket.on("tick", (servPlayerData: ServerData, entData: ServerEntityData[]) => {
+    playerData = servPlayerData
+    console.log(entData) //nothing rn, ig?
 })
 
 socket.on("playerJoined", (data: PlayerJoinedData[]) => {

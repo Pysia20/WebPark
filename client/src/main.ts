@@ -1,13 +1,13 @@
 import * as PIXI from 'pixi.js'
 
 import { getCurrentInputs } from "./Inputs"
-import { emitInputs, emitReady, getPlayerData, onGameStart, startNetworking } from "./Network";
+import { emitInputs, getPlayerData, startNetworking } from "./Network";
 import { coordinator } from "./Coordinator";
-import {PlayerInputs, Vector2} from "@shared/commonModels"
+import { PlayerInputs, Vector2 } from "@shared/commonModels"
 import { loadAssets } from "./Assets";
-import {cameraControler} from "./Camera";
+import { cameraController } from "./Camera";
 import { levelManager } from "./Leveler";
-import {pageSetup} from "./Weber";
+import { pageSetup } from "./Weber";
 
 const app = new PIXI.Application()
 await app.init({
@@ -29,7 +29,7 @@ pageSetup(app)
 const assets = await loadAssets()
 const leveler = new levelManager(worldContainer, assets.mapAssets.spritesheet, assets.mapAssets.levels, assets.mapAssets.entTextures)
 const map_size: Vector2 = {x: leveler.mapData.pxWid, y: leveler.mapData.pxHei}
-const camera = new cameraControler(worldContainer, app.screen, map_size)
+const camera = new cameraController(worldContainer, app.screen, map_size)
 
 coordinator.init(assets.playerTextures, worldContainer)
 

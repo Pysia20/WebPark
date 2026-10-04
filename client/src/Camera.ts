@@ -2,7 +2,7 @@ import { Container, Rectangle } from "pixi.js";
 import { ServerData, ServerPlayerData, Vector2 } from "@shared/commonModels";
 
 
-export class cameraControler {
+export class cameraController {
     world: Container
     screen: Rectangle
     map_size: Vector2

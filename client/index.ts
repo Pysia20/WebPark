@@ -11,21 +11,25 @@ playerColor.addEventListener("input", () => {
 })
 
 createButton.addEventListener("click",  async () => {
-    let response = await (await fetch("/api/createRoom", {method: "post"})).json()
-    sessionStorage.setItem("userID", response["userID"])
-    sessionStorage.setItem("roomID", response["roomID"])
-    sessionStorage.setItem("userName", playerName.value)
-    sessionStorage.setItem("playerColor", playerColor.value)
+    if (playerName.value != "") {
+        let response = await (await fetch("/api/createRoom", {method: "post"})).json()
+        sessionStorage.setItem("userID", response["userID"])
+        sessionStorage.setItem("roomID", response["roomID"])
+        sessionStorage.setItem("userName", playerName.value)
+        sessionStorage.setItem("playerColor", playerColor.value)
 
-    window.location.href = "/game.html"
+        window.location.href = "/game.html"
+    }
 })
 
 joinButton.addEventListener("click",  async () => {
-    let response = await (await fetch("/api/joinRoom/" + roomId.value, {method: "get"})).json()
-    sessionStorage.setItem("userID", response["userID"])
-    sessionStorage.setItem("roomID", response["roomID"])
-    sessionStorage.setItem("userName", playerName.value)
-    sessionStorage.setItem("playerColor", playerColor.value)
+    if (playerName.value != "") {
+        let response = await (await fetch("/api/joinRoom/" + roomId.value, {method: "get"})).json()
+        sessionStorage.setItem("userID", response["userID"])
+        sessionStorage.setItem("roomID", response["roomID"])
+        sessionStorage.setItem("userName", playerName.value)
+        sessionStorage.setItem("playerColor", playerColor.value)
 
-    window.location.href = "/game.html"
+        window.location.href = "/game.html"
+    }
 })

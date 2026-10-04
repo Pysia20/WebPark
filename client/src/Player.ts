@@ -1,4 +1,4 @@
-import { Sprite, Texture } from "pixi.js";
+import { Sprite, Texture, Text as PixiText } from "pixi.js";
 import { Vector2 } from "@shared/commonModels"
 import { PlayerTextures } from "./Assets";
 import { playJump } from "./Audio";
@@ -20,11 +20,12 @@ export class Player {
     textures: PlayerTextures = {} as PlayerTextures
     isHost: boolean
     walkingAnim: animController
+    nick: PixiText
 
     LERP_SPEED: number = 0.3
 
 
-    constructor(id: number, color: string, textures: PlayerTextures) {
+    constructor(id: number, color: string, textures: PlayerTextures, nick: PixiText) {
         this.id = id
         this.color = color
         this.isHost = (id == 0)
@@ -34,6 +35,7 @@ export class Player {
         this.sprite.tint = color
         this.sprite.setSize(PLAYER_CONFIG.WIDTH, PLAYER_CONFIG.HEIGHT)
         this.walkingAnim = {ANIM_SPEED: 0.1, animFrames: [this.textures.idle, this.textures.walk], animTimer: 0}
+        this.nick = nick
     }
 
     updatePos() {
@@ -43,9 +45,12 @@ export class Player {
             this.pos.x + PLAYER_CONFIG.WIDTH / 2,
             this.pos.y
         )
+        this.nick.position.set(
+            this.pos.x + PLAYER_CONFIG.WIDTH / 2,
+            this.pos.y
+        )
     }
 
-    //TRIED TO FIX THIS BUT THE ISSUE SEEMS 99% SERVERSIDE
     updateSprite(velocity: Vector2, deltaTime: number) {
         this.walkingAnim.animTimer += this.walkingAnim.ANIM_SPEED * deltaTime
         if (velocity.x < 0) {

@@ -1,8 +1,5 @@
 import { coordinator } from "./Coordinator";
-import {Container, Graphics, Sprite, Text as PixiText, Texture} from "pixi.js";
-import {Player} from "./Player";
-import {ServerData} from "@shared/commonModels";
-import {PlayerTextures} from "./Assets";
+import {Application, Container, Graphics, Sprite, Text as PixiText, Texture, Ticker} from "pixi.js";
 
 
 class Hud {
@@ -12,8 +9,11 @@ class Hud {
     nick!: PixiText
     infoBackgroundTop: Sprite = new Sprite(Texture.WHITE)
     infoBackgroundBottom: Sprite = new Sprite(Texture.WHITE)
+    fader: Graphics = new Graphics()
 
-    init(hudContainer: Container, screenHeight: number) {
+    init(hudContainer: Container, screenWidth: number, screenHeight: number) {
+        this.fader.rect(0, 0, screenWidth, screenHeight).fill({color: "#000000", alpha: 1})
+
         const code = sessionStorage.getItem("roomID") as string
         const nick = sessionStorage.getItem("userName") as string
 
@@ -41,10 +41,25 @@ class Hud {
         this.hudContainer.addChild(this.code)
         this.hudContainer.addChild(this.players)
         this.hudContainer.addChild(this.nick)
+        this.hudContainer.addChild(this.fader)
     }
 
     updateHud() {
         this.players.text = "Players: " + coordinator.players.size
+    }
+
+    fadeIn(app: Application) {
+        const tempFade = (time: Ticker) => {
+            this.fader.alpha -= 0.015 * time.deltaTime
+
+            if (this.fader.alpha <= 0) {
+                this.hudContainer.removeChild(this.fader)
+                app.ticker.remove(tempFade)
+                console.log("removed!")
+            }
+        }
+
+        app.ticker.add(tempFade)
     }
 }
 

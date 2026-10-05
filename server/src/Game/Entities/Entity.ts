@@ -5,6 +5,7 @@ import { isColliding } from "../../Global";
 import { LOG } from "../../Logger";
 import { EntityType, MapCollider } from "@shared/commonLevelModels";
 import { EntityBuilder } from "./EntityBuilder";
+import { Level } from "../Level";
 
 export class Entity {
 	public readonly type: EntityType = "JohnEntity";
@@ -101,6 +102,8 @@ export class Entity {
 	public getTypeName(): string {
 		return this.constructor.name;
 	}
+
+	public handleBehaviour(l: Level) {}
 
 	public endTick() {}
 }

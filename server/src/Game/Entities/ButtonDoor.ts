@@ -5,6 +5,7 @@ import { LOG } from "../../Logger";
 import { Player } from "../Player";
 import { isColliding } from "../../Global";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
+import { Level } from "../Level";
 
 export class ButtonDoor extends Entity {
 	public override type: EntityType = "Door";
@@ -87,5 +88,18 @@ export class ButtonDoor extends Entity {
 
 	public override clone() {
 		return new ButtonDoor(this.pos, this.size, this.activationGroup, this.activationCount);
+	}
+
+	public override handleBehaviour(l: Level) {
+		const activationGroup: string = this.activationGroup;
+		const activationCount: number = this.activationCount;
+
+		if (activationGroup == "") return;
+
+		if (activationCount != -1 && activationCount <= l.activationStates.get(activationGroup)!) {
+			this.isPassable = true;
+		} else {
+			this.isPassable = false;
+		}
 	}
 }

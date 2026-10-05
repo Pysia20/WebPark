@@ -40,43 +40,15 @@ export class Level {
 		return this.levelTemplate.id;
 	}
 
+	public endTick() {
+		this.entities.forEach((e) => {
+			e.endTick();
+		});
+	}
+
 	public handleEntites(room: Room) {
 		this.entities.forEach((e) => {
-			if (e instanceof Button) {
-				if (e.hasChanged) {
-					const prevCount = this.activationStates.get(e.activationGroup)!;
-					if (e.isPressed) {
-						this.activationStates.set(e.activationGroup, prevCount + 1);
-					} else {
-						this.activationStates.set(e.activationGroup, prevCount - 1);
-					}
-				}
-				console.log(e.hasChanged);
-			} else if (e instanceof Door) {
-				const nextLevelID = MAP_LOADER.GetNextLevel(this.group, this.groupIndex)?.getID();
-
-				if (nextLevelID === undefined) {
-					// End of group
-					return;
-				}
-
-				e.enterDoor(nextLevelID);
-			} else if (e instanceof ButtonDoor) {
-				const activationGroup: string = e.activationGroup;
-				const activationCount: number = e.activationCount;
-
-				if (activationGroup == "") return;
-
-				if (
-					activationCount != -1 &&
-					activationCount <= this.activationStates.get(activationGroup)!
-				) {
-					e.isPassable = true;
-				} else {
-					e.isPassable = false;
-				}
-				console.log("Bdoor: activation state: " + this.activationStates.get(activationGroup));
-			}
+			e.handleBehaviour(this);
 		});
 	}
 }

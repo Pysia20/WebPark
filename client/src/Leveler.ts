@@ -1,4 +1,4 @@
-import {EntityInstance, GridTile, LayerInstance, LevelData} from "@shared/commonLevelModels"
+import { EntityInstance, GridTile, LayerInstance, LevelData } from "@shared/commonLevelModels"
 import { Container, Rectangle, Sprite, Texture } from "pixi.js"
 
 export class levelManager {

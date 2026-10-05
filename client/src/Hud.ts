@@ -55,7 +55,6 @@ class Hud {
             if (this.fader.alpha <= 0) {
                 this.hudContainer.removeChild(this.fader)
                 app.ticker.remove(tempFade)
-                console.log("removed!")
             }
         }
 

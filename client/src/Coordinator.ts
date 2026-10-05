@@ -1,6 +1,6 @@
 import { Player } from "./Player";
 import { PlayerJoinedData, ServerData } from "@shared/commonModels"
-import { Container, Color, Text as PixiText } from "pixi.js";
+import { Container, Text as PixiText } from "pixi.js";
 import { PlayerTextures } from "./Assets";
 
 class Coordinator {

@@ -1,6 +1,6 @@
-import {emitReady, onGameStart, onPlayerJoin, onPlayerLeave, onReadyUpdate} from "./Network";
+import { emitReady, onGameStart, onPlayerJoin, onPlayerLeave, onReadyUpdate } from "./Network";
 import { Application } from "pixi.js";
-import {coordinator} from "./Coordinator";
+import { coordinator } from "./Coordinator";
 
 export function pageSetup(app: Application) {
     const readyButton = document.getElementById("readyButton") as HTMLButtonElement

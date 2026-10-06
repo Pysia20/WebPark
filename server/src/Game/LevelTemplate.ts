@@ -65,13 +65,7 @@ export class LevelTemplate {
 					.setSize({ x: entityData.width, y: entityData.height });
 
 				const customFields = this.parseEntityFields(entityData);
-
-				if (customFields.activationGroup !== undefined) {
-					builder.setActivationGroup(customFields.activationGroup);
-				}
-				if (customFields.activationCount !== undefined) {
-					builder.setActivationsCount(customFields.activationCount);
-				}
+				builder.setCustomFields(customFields);
 
 				entities.push(builder.build());
 			});
@@ -81,15 +75,13 @@ export class LevelTemplate {
 	}
 
 	private parseEntityFields(e: EntityInstance): EntityCustomFieldsData {
-		let activationGroup: string | undefined;
-		let activationCount: number | undefined;
+		// const fields: EntityCustomFieldsData = {};
 
-		e.fieldInstances.forEach((instance) => {
-			if (instance.__identifier == "ActivationGroup") activationGroup = instance.__value;
-			else if (instance.__identifier == "ActivationCount") activationCount = instance.__value;
-		});
+		const fields = Object.fromEntries(
+			e.fieldInstances.map((instance) => [instance.__identifier, instance.__value]),
+		);
 
-		return { activationGroup: activationGroup, activationCount: activationCount };
+		return fields as EntityCustomFieldsData;
 	}
 
 	private parseIntGrid(data: LevelData): number[][] {

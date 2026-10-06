@@ -126,7 +126,11 @@
 							"id": "V_String",
 							"params": ["Door"]
 						}] },
-						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 2, "__tile": null, "defUid": 22, "realEditorValues": [{ "id": "V_Int", "params": [2] }] }
+						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 2, "__tile": null, "defUid": 22, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
+						{ "__identifier": "StaysOpen", "__type": "Bool", "__value": true, "__tile": null, "defUid": 23, "realEditorValues": [{
+							"id": "V_Bool",
+							"params": [ true ]
+						}] }
 					],
 					"__worldX": 704,
 					"__worldY": 192

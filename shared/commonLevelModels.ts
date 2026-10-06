@@ -112,8 +112,9 @@ export interface LevelFieldInstance {
 export type EntityCustomField = "ActivationGroup" | "ActivationCount";
 
 export interface EntityCustomFieldsData {
-	activationGroup: string | undefined;
-	activationCount: number | undefined;
+	ActivationGroup?: string;
+	ActivationCount?: number;
+	StaysOpen?: boolean;
 }
 export interface EntityFieldInstance {
 	__identifier: EntityCustomField;

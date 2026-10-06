@@ -2,12 +2,6 @@ import { MapCollider } from "@shared/commonLevelModels";
 import { LevelTemplate } from "./LevelTemplate";
 import { Entity } from "./Entities/Entity";
 import { Room } from "./Room";
-import { Button } from "./Entities/Button";
-import { Door } from "./Entities/Door";
-import { MAP_LOADER } from "./LevelLoader";
-import { keyof } from "zod";
-import { ButtonDoor } from "./Entities/ButtonDoor";
-import { LOG } from "../Logger";
 
 export class Level {
 	public readonly levelTemplate: LevelTemplate;
@@ -26,8 +20,8 @@ export class Level {
 
 		template.entities.forEach((e) => {
 			this.entities.push(e.clone());
-			if (e.activationGroup != "") {
-				this.activationStates.set(e.activationGroup, 0);
+			if (e.customFields.ActivationGroup) {
+				this.activationStates.set(e.customFields.ActivationGroup, 0);
 			}
 		});
 	}

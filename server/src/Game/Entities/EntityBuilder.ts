@@ -1,4 +1,4 @@
-import { EntityType } from "@shared/commonLevelModels";
+import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
 import { LOG } from "../../Logger";
 import { Entity } from "./Entity";
 import { Button } from "./Button";
@@ -12,6 +12,7 @@ export class EntityBuilder {
 	private size: Vector2 = { x: -1, y: -1 };
 	private activationGroup: string = "";
 	private activationCount: number = -1;
+	private customFields: EntityCustomFieldsData = {};
 
 	constructor(type: EntityType) {
 		this.type = type;
@@ -27,13 +28,20 @@ export class EntityBuilder {
 		return this;
 	}
 
+	/**@deprecated */
 	public setActivationGroup(group: string) {
 		this.activationGroup = group;
 		return this;
 	}
 
+	/**@deprecated */
 	public setActivationsCount(min: number) {
 		this.activationCount = min;
+		return this;
+	}
+
+	public setCustomFields(fields: EntityCustomFieldsData) {
+		this.customFields = fields;
 		return this;
 	}
 
@@ -50,18 +58,13 @@ export class EntityBuilder {
 		//* Possibility of dividing cases into seperate methods if more setup needed.
 		switch (this.type) {
 			case "JohnEntity":
-				return new Entity(this.position, this.size);
+				return new Entity(this.position, this.size, this.customFields);
 			case "Button":
-				return new Button(this.position, this.size, this.activationGroup);
+				return new Button(this.position, this.size, this.customFields);
 			case "Door":
-				return new Door(this.position, this.size);
+				return new Door(this.position, this.size, this.customFields);
 			case "ButtonDoor":
-				return new ButtonDoor(
-					this.position,
-					this.size,
-					this.activationGroup,
-					this.activationCount,
-				);
+				return new ButtonDoor(this.position, this.size, this.customFields);
 			default:
 				LOG.error(`Entity type not recognized / implemented (${this.type})`);
 				throw Error(`Entity type not recognized / implemented (${this.type})`);

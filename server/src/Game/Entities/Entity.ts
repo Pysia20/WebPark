@@ -3,7 +3,7 @@ import { Player } from "../Player";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { isColliding } from "../../Global";
 import { LOG } from "../../Logger";
-import { EntityType, MapCollider } from "@shared/commonLevelModels";
+import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
 import { EntityBuilder } from "./EntityBuilder";
 import { Level } from "../Level";
 
@@ -11,14 +11,14 @@ export class Entity {
 	public readonly type: EntityType = "JohnEntity";
 	public readonly pos: Vector2;
 	public readonly size: Vector2;
-	public activationGroup: string = "";
-	public activationCount: number = -1;
 	public visualSize: Vector2;
+	public customFields: EntityCustomFieldsData;
 
-	constructor(pos: Vector2, size: Vector2) {
+	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		this.pos = pos;
 		this.size = size;
 		this.visualSize = this.size;
+		this.customFields = customFields;
 	}
 
 	/**
@@ -96,7 +96,7 @@ export class Entity {
 	}
 
 	public clone(): Entity {
-		return new Entity(this.pos, this.size);
+		return new Entity(this.pos, this.size, this.customFields);
 	}
 
 	public getTypeName(): string {

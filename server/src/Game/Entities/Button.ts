@@ -2,10 +2,11 @@ import { Vector2 } from "@shared/commonModels";
 import { Player } from "../Player";
 import { Entity } from "./Entity";
 import { isColliding } from "../../Global";
-import { EntityType, MapCollider } from "@shared/commonLevelModels";
+import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { Level } from "../Level";
 import { runInThisContext } from "node:vm";
+import { LOG } from "../../Logger";
 
 export class Button extends Entity {
 	public override type: EntityType = "Button";
@@ -13,10 +14,13 @@ export class Button extends Entity {
 	public newList: Player[] = [];
 	public hasChanged: boolean = false;
 
-	constructor(pos: Vector2, size: Vector2, activationGroup: string) {
-		super(pos, size);
+	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
+		super(pos, size, customFields);
 		this.visualSize = { x: this.size.x * 2, y: this.size.y * 2 };
-		this.activationGroup = activationGroup;
+
+		if (customFields.ActivationGroup == "" || customFields.ActivationGroup === undefined) {
+			LOG.warn(`Button doesn't have an activationGroup. (X: ${this.size.x}, Y: ${this.size.y})`);
+		}
 	}
 
 	public handleCollisions(
@@ -93,18 +97,20 @@ export class Button extends Entity {
 	}
 
 	public override clone(): Button {
-		return new Button(this.pos, this.size, this.activationGroup);
+		return new Button(this.pos, this.size, this.customFields);
 	}
 
 	public override endTick() {}
 
 	public override handleBehaviour(l: Level) {
-		const prevCount = l.activationStates.get(this.activationGroup)!;
+		if (this.customFields.ActivationGroup === undefined) return;
+
+		const prevCount = l.activationStates.get(this.customFields.ActivationGroup)!;
 
 		if (this.newList.length > 0 && this.playersStanding.length == 0) {
-			l.activationStates.set(this.activationGroup, prevCount + 1);
+			l.activationStates.set(this.customFields.ActivationGroup, prevCount + 1);
 		} else if (this.newList.length == 0 && this.playersStanding.length > 0) {
-			l.activationStates.set(this.activationGroup, prevCount - 1);
+			l.activationStates.set(this.customFields.ActivationGroup, prevCount - 1);
 		}
 
 		this.playersStanding = this.newList;

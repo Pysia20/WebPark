@@ -15,12 +15,12 @@ export class Room {
 
 	private id: string;
 	private players: Map<number, Player> = new Map<number, Player>();
-	public map: Level;
+	public level: Level;
 	private gameLoop: NodeJS.Timeout | undefined;
 
 	constructor(id: string) {
 		this.id = id;
-		this.map = MAP_LOADER.GetLevel("Level_0");
+		this.level = MAP_LOADER.GetLevel("Level_0", this);
 	}
 
 	public getID(): string | undefined {
@@ -56,6 +56,13 @@ export class Room {
 
 	public setPlayerReady(id: number, v: boolean) {
 		this.players.get(id)!.isReady = v;
+	}
+
+	public respawnPlayers() {
+		this.players.forEach((p) => {
+			p.pos = { x: p.id * 400, y: 0 };
+			p.isGrounded = false;
+		});
 	}
 
 	private physicsUpdate() {
@@ -124,9 +131,9 @@ export class Room {
 			player.velocity = newVel;
 		}
 
-		this.map.handleEntites(this);
+		this.level.handleEntites(this);
 
-		this.map.endTick();
+		this.level.endTick();
 	}
 
 	private handleCollisions(player: Player, newPos: Vector2, newVel: Vector2): boolean {
@@ -194,7 +201,7 @@ export class Room {
 			}
 		});
 
-		this.map.getColliders().forEach((c: MapCollider) => {
+		this.level.getColliders().forEach((c: MapCollider) => {
 			const { overlapX, overlapY, diffX, diffY } = isColliding(player, c);
 
 			if (overlapX != -1 && overlapY != -1) {
@@ -254,7 +261,7 @@ export class Room {
 			}
 		});
 
-		this.map.entities.forEach((e: Entity) => {
+		this.level.entities.forEach((e: Entity) => {
 			if (e.handleCollisions(player, newPos, newVel, isGrounded)) {
 				isGrounded = true;
 			}
@@ -282,7 +289,7 @@ export class Room {
 					};
 				});
 
-				this.map.entities.forEach((entity: Entity) => {
+				this.level.entities.forEach((entity: Entity) => {
 					const data: ServerEntityData = {
 						type: entity.type,
 						pos: entity.pos,

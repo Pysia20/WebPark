@@ -9,21 +9,33 @@ export class Level {
 
 	private width: number = -1;
 	private height: number = -1;
-	public readonly entities: Entity[] = [];
-	public readonly group: string;
-	public readonly groupIndex: number;
+	public entities: Entity[] = [];
+	public group!: string;
+	public groupIndex!: number;
 
-	constructor(template: LevelTemplate) {
+	public room: Room;
+	public shouldRestart: boolean = false;
+
+	constructor(template: LevelTemplate, room: Room) {
 		this.levelTemplate = template;
-		this.group = template.group;
-		this.groupIndex = template.groupIndex;
+		this.room = room;
 
-		template.entities.forEach((e) => {
+		this.reloadLevel();
+	}
+
+	public reloadLevel() {
+		this.group = this.levelTemplate.group;
+		this.groupIndex = this.levelTemplate.groupIndex;
+
+		this.entities = [];
+		this.levelTemplate.entities.forEach((e) => {
 			this.entities.push(e.clone());
 			if (e.customFields.ActivationGroup) {
 				this.activationStates.set(e.customFields.ActivationGroup, 0);
 			}
 		});
+
+		this.room.respawnPlayers();
 	}
 
 	public getColliders(): MapCollider[] {
@@ -41,8 +53,13 @@ export class Level {
 	}
 
 	public handleEntites(room: Room) {
-		this.entities.forEach((e) => {
+		for (let e of this.entities) {
 			e.handleBehaviour(this);
-		});
+			if (this.shouldRestart) {
+				this.shouldRestart = false;
+				this.reloadLevel();
+				break;
+			}
+		}
 	}
 }

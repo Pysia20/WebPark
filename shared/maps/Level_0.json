@@ -169,6 +169,25 @@
 					"fieldInstances": [],
 					"__worldX": 256,
 					"__worldY": 192
+				},
+				{
+					"__identifier": "Spike",
+					"__grid": [13,13],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#FF1600",
+					"iid": "3425f8b0-bde0-11f1-80a3-45362f021d4b",
+					"width": 64,
+					"height": 64,
+					"defUid": 25,
+					"px": [832,896],
+					"fieldInstances": [{ "__identifier": "OnlyKillThePlayer", "__type": "Bool", "__value": false, "__tile": null, "defUid": 27, "realEditorValues": [{
+						"id": "V_Bool",
+						"params": [ false ]
+					}] }],
+					"__worldX": 832,
+					"__worldY": 192
 				}
 			]
 		},

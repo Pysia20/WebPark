@@ -115,9 +115,10 @@ export interface EntityCustomFieldsData {
 	ActivationGroup?: string;
 	ActivationCount?: number;
 	StaysOpen?: boolean;
+	OnlyKillThePlayer?: boolean;
 }
 export interface EntityFieldInstance {
-	__identifier: EntityCustomField;
+	__identifier: string;
 	__type: string;
 	__value: any;
 	__tile: null;
@@ -131,7 +132,14 @@ export interface EntityFieldInstance {
 
 export type LayerType = "Entities" | "Tiles" | "IntGrid" | "AutoLayer";
 
-export type EntityType = "JohnEntity" | "Button" | "Key" | "Door" | "ButtonDoor" | "Pushable";
+export type EntityType =
+	| "JohnEntity"
+	| "Button"
+	| "Key"
+	| "Door"
+	| "ButtonDoor"
+	| "Pushable"
+	| "Spike";
 
 export class MapCollider {
 	private _forceInstance!: void;

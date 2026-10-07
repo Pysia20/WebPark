@@ -25,13 +25,16 @@ export class Door extends Entity {
 		return new Door(this.pos, this.size, this.customFields);
 	}
 	public override handleBehaviour(l: Level) {
-		const nextLevelID = MAP_LOADER.GetNextLevel(l.group, l.groupIndex)?.getID();
+		// Only when all needing to switch the room
+		if (false) {
+			const nextLevelID = MAP_LOADER.GetNextLevel(l.room)?.getID();
 
-		if (nextLevelID === undefined) {
-			// End of group
-			return;
+			if (nextLevelID === undefined) {
+				// End of group
+				return;
+			}
+
+			this.enterDoor(nextLevelID!);
 		}
-
-		this.enterDoor(nextLevelID);
 	}
 }

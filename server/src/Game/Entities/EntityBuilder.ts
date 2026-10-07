@@ -7,6 +7,7 @@ import { Vector2 } from "@shared/commonModels";
 import { ButtonDoor } from "./ButtonDoor";
 import { Key } from "./Key";
 import { Pushable } from "./Pushable";
+import { Spike } from "./Spike";
 
 type EntityConstructor = new (pos: any, size: any, customFields: any) => Entity;
 
@@ -25,6 +26,7 @@ export class EntityBuilder {
 		Door: Door,
 		ButtonDoor: ButtonDoor,
 		Pushable: Pushable,
+		Spike: Spike,
 	};
 
 	constructor(type: EntityType) {

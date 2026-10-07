@@ -4,6 +4,7 @@ import { LevelTemplate } from "./LevelTemplate";
 import { LevelData } from "@shared/commonLevelModels";
 import { LOG } from "../Logger";
 import { Level } from "./Level";
+import { Room } from "./Room";
 
 class LevelLoader {
 	private loadedLevels: Map<string, LevelTemplate[]> = new Map();
@@ -39,35 +40,40 @@ class LevelLoader {
 				}
 
 				this.loadedLevels.set(level.group, group);
+
+				LOG.info(`Level ${id} found and loaded.`);
 			}
 		});
 	}
 
-	public GetLevel(id: string): Level {
+	public GetLevel(id: string, room: Room): Level {
+		LOG.info(`Creating level ${id}`);
+
 		for (const [group, levels] of this.loadedLevels) {
 			for (const level of levels) {
-				if (level.id == id) return new Level(level);
+				if (level.id == id) return new Level(level, room);
 			}
 		}
 
 		throw Error("This level doesn't exits.");
 	}
 
-	public GetNextLevel(group: string, currentIndex: number): Level | undefined {
-		const groupLevels = this.loadedLevels.get(group);
+	public GetNextLevel(room: Room): Level | undefined {
+		const groupLevels = this.loadedLevels.get(room.level.group);
 
 		if (groupLevels === undefined) {
-			LOG.error(`Group doesn't exist or didn't load (${group})`);
-			throw Error(`Group doesn't exist or didn't load (${group})`);
+			LOG.error(`Group doesn't exist or didn't load (${room.level.group})`);
+			throw Error(`Group doesn't exist or didn't load (${room.level.group})`);
 		}
 
-		const nextLevel = groupLevels.at(currentIndex + 1);
+		const nextLevel = groupLevels.at(room.level.groupIndex + 1);
 
 		if (nextLevel === undefined) {
 			return undefined;
 		}
 
-		return new Level(nextLevel);
+		LOG.info(`Creating level ${nextLevel.id}`);
+		return new Level(nextLevel, room);
 	}
 }
 

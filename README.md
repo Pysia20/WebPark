@@ -22,13 +22,12 @@ $\color{gray} \text{We will not be using pico park character, they are just plac
 - Custom player colors, names
 - Basic sound effects
 - Game synchronization
-- Movement
-- Physics
+- Movement and Physics
 - Different sprites for different actions
 - _Less_ basic main menu
 - Basic entities
 - Level loading from LDtk
-- Camera system that keeps all player on screen at once
+- Camera system that keeps all players on screen at once
 - Basic Hud/Ui
 
 ## Planned features
@@ -51,7 +50,7 @@ The game is being developed by 2 people
 - Pysia20 : all Frontend / client side stuff, so rendering, sending inputs, animations, menus, CSS etc. and in the future art
 - LLoydowski: all Backend / server side stuff, so physics, networking, server set up, entities/objects etc.
 
-We are desigin the game together
+We are desigining the game together
 
 <br>
 
@@ -61,6 +60,7 @@ Core :
 
 - TypeScript as the main language
 - pnpm workspaces for separating server, client and shared
+- LDtk for level creation _(great tool ngl)_
 
 Frontend :
 
@@ -94,7 +94,7 @@ Firstly download all the files and open them in your IDE, then run this command 
 pnpm install
 ```
 
-Then to lunch the server:
+Then to launch the server:
 
 ```bash
 pnpm --filter server dev

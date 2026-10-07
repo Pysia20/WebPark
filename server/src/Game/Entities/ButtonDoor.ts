@@ -1,19 +1,30 @@
-import { EntityType, MapCollider } from "@shared/commonLevelModels";
+import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
 import { Entity } from "./Entity";
 import { Vector2 } from "@shared/commonModels";
 import { LOG } from "../../Logger";
 import { Player } from "../Player";
 import { isColliding } from "../../Global";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
+import { Level } from "../Level";
 
 export class ButtonDoor extends Entity {
 	public override type: EntityType = "Door";
 	public isPassable: boolean = false;
 
-	constructor(pos: Vector2, size: Vector2, activationGroup: string, activationCount: number) {
-		super(pos, size);
-		this.activationGroup = activationGroup;
-		this.activationCount = activationCount;
+	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
+		super(pos, size, customFields);
+
+		if (customFields.ActivationGroup == "" || customFields.ActivationGroup === undefined) {
+			LOG.warn(
+				`ButtonDoor doesn't have an activationGroup. (X: ${this.size.x}, Y: ${this.size.y})`,
+			);
+		}
+
+		if (customFields.ActivationCount == 0 || customFields.ActivationCount === undefined) {
+			LOG.warn(
+				`ButtonDoor doesn't have an activationCount. (X: ${this.size.x}, Y: ${this.size.y})`,
+			);
+		}
 	}
 
 	public override handleCollisions(
@@ -86,6 +97,23 @@ export class ButtonDoor extends Entity {
 	}
 
 	public override clone() {
-		return new ButtonDoor(this.pos, this.size, this.activationGroup, this.activationCount);
+		return new ButtonDoor(this.pos, this.size, this.customFields);
+	}
+
+	public override handleBehaviour(l: Level) {
+		if (this.customFields.ActivationGroup === undefined) return;
+		if (this.customFields.ActivationCount === undefined) return;
+
+		if (
+			this.customFields.ActivationCount != -1 &&
+			this.customFields.ActivationCount <=
+				l.activationStates.get(this.customFields.ActivationGroup)!
+		) {
+			this.isPassable = true;
+		} else {
+			if (!this.customFields.StaysOpen) {
+				this.isPassable = false;
+			}
+		}
 	}
 }

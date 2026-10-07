@@ -79,7 +79,7 @@
 				},
 				{
 					"__identifier": "JohnEntity",
-					"__grid": [3,13],
+					"__grid": [0,13],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": { "tilesetUid": 2, "x": 0, "y": 64, "w": 64, "h": 64 },
@@ -88,9 +88,9 @@
 					"width": 64,
 					"height": 64,
 					"defUid": 5,
-					"px": [192,896],
+					"px": [0,896],
 					"fieldInstances": [],
-					"__worldX": 192,
+					"__worldX": 0,
 					"__worldY": 192
 				},
 				{
@@ -126,7 +126,11 @@
 							"id": "V_String",
 							"params": ["Door"]
 						}] },
-						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 22, "realEditorValues": [] }
+						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 2, "__tile": null, "defUid": 22, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
+						{ "__identifier": "StaysOpen", "__type": "Bool", "__value": true, "__tile": null, "defUid": 23, "realEditorValues": [{
+							"id": "V_Bool",
+							"params": [ true ]
+						}] }
 					],
 					"__worldX": 704,
 					"__worldY": 192
@@ -148,6 +152,22 @@
 						"params": ["Door"]
 					}] }],
 					"__worldX": 384,
+					"__worldY": 192
+				},
+				{
+					"__identifier": "Pushable",
+					"__grid": [4,13],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": { "tilesetUid": 2, "x": 0, "y": 64, "w": 64, "h": 64 },
+					"__smartColor": "#E4A672",
+					"iid": "dc129ea0-bde0-11f1-8e00-5fae474f4011",
+					"width": 64,
+					"height": 64,
+					"defUid": 24,
+					"px": [256,896],
+					"fieldInstances": [],
+					"__worldX": 256,
 					"__worldY": 192
 				}
 			]

@@ -194,11 +194,6 @@ export function register(io: Server) {
 		});
 
 		socket.on("disconnect", (e) => {
-			// console.log(`User of id ${socket.id} disconnected.`);
-			// console.log(`userNick: ${socket.data.userNick}`);
-			// console.log(`userID: ${socket.data.userID}`);
-			// console.log(`roomID: ${socket.data.roomID}`);
-
 			LOG.info(`SOCKET | User (${socket.id}) disconnected.`);
 
 			socket

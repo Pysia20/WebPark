@@ -112,8 +112,9 @@ export interface LevelFieldInstance {
 export type EntityCustomField = "ActivationGroup" | "ActivationCount";
 
 export interface EntityCustomFieldsData {
-	activationGroup: string | undefined;
-	activationCount: number | undefined;
+	ActivationGroup?: string;
+	ActivationCount?: number;
+	StaysOpen?: boolean;
 }
 export interface EntityFieldInstance {
 	__identifier: EntityCustomField;
@@ -130,7 +131,7 @@ export interface EntityFieldInstance {
 
 export type LayerType = "Entities" | "Tiles" | "IntGrid" | "AutoLayer";
 
-export type EntityType = "JohnEntity" | "Button" | "Key" | "Door" | "ButtonDoor";
+export type EntityType = "JohnEntity" | "Button" | "Key" | "Door" | "ButtonDoor" | "Pushable";
 
 export class MapCollider {
 	private _forceInstance!: void;

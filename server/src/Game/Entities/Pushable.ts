@@ -1,34 +1,19 @@
 import { Vector2 } from "@shared/commonModels";
-import { Player } from "../Player";
+import { Level } from "../Level";
+import { Entity } from "./Entity";
+import { EntityCustomFieldsData, MapCollider } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { isColliding } from "../../Global";
-import { LOG } from "../../Logger";
-import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
-import { EntityBuilder } from "./EntityBuilder";
-import { Level } from "../Level";
+import { Player } from "../Player";
 
-export class Entity {
-	public readonly type: EntityType = "JohnEntity";
-	public readonly pos: Vector2;
-	public readonly size: Vector2;
-	public visualSize: Vector2;
-	public customFields: EntityCustomFieldsData;
+//TODO Add colision with other entities
 
+export class Pushable extends Entity {
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
-		this.pos = pos;
-		this.size = size;
-		this.visualSize = this.size;
-		this.customFields = customFields;
+		super(pos, size, customFields);
 	}
 
-	/**
-	 * * Entity: Should be overriten on children
-	 *
-	 * @param p
-	 * @param playerNewPos
-	 * @param playerNewVel
-	 */
-	public handleCollisions(
+	public override handleCollisions(
 		p: Player,
 		playerNewPos: Vector2,
 		playerNewVel: Vector2,
@@ -45,15 +30,17 @@ export class Entity {
 					// Pushing out to the right
 
 					if (playerNewVel.x < 0) {
-						playerNewPos.x += overlapX;
-						playerNewVel.x = 0;
+						// playerNewPos.x += overlapX;
+						// playerNewVel.x = 0;
+						this.pos.x -= overlapX;
 					}
 				} else {
 					// A is going right towards B
 					// Pushing out to the left
 					if (playerNewVel.x > 0) {
-						playerNewPos.x -= overlapX;
-						playerNewVel.x = 0;
+						// playerNewPos.x -= overlapX;
+						// playerNewVel.x = 0;
+						this.pos.x += overlapX;
 					}
 				}
 			} else {
@@ -95,24 +82,10 @@ export class Entity {
 		return isGrounded;
 	}
 
-	/**
-	 * * Entity: Should be overriten on children
-	 */
-	public clone(): Entity {
-		return new Entity(this.pos, this.size, this.customFields);
+	public override handleBehaviour(l: Level) {}
+	public override endTick() {}
+
+	public override clone() {
+		return new Pushable(this.pos, this.size, this.customFields);
 	}
-
-	public getTypeName(): string {
-		return this.constructor.name;
-	}
-
-	/**
-	 * * Entity: Should be overriten on children
-	 */
-	public handleBehaviour(l: Level) {}
-
-	/**
-	 * * Entity: Should be overriten on children
-	 */
-	public endTick() {}
 }

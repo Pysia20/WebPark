@@ -8,6 +8,7 @@ import { ButtonDoor } from "./ButtonDoor";
 import { Key } from "./Key";
 import { Pushable } from "./Pushable";
 import { Spike } from "./Spike";
+import { PlayerSpawner } from "./PlayerSpawner";
 
 type EntityConstructor = new (pos: any, size: any, customFields: any) => Entity;
 
@@ -27,6 +28,7 @@ export class EntityBuilder {
 		ButtonDoor: ButtonDoor,
 		Pushable: Pushable,
 		Spike: Spike,
+		PlayerSpawner: PlayerSpawner,
 	};
 
 	constructor(type: EntityType) {

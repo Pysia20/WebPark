@@ -2,6 +2,7 @@ import { MapCollider } from "@shared/commonLevelModels";
 import { LevelTemplate } from "./LevelTemplate";
 import { Entity } from "./Entities/Entity";
 import { Room } from "./Room";
+import { PlayerSpawner } from "./Entities/PlayerSpawner";
 
 export class Level {
 	public readonly levelTemplate: LevelTemplate;
@@ -12,6 +13,7 @@ export class Level {
 	public entities: Entity[] = [];
 	public group!: string;
 	public groupIndex!: number;
+	public spawners: PlayerSpawner[] = [];
 
 	public room: Room;
 	public shouldRestart: boolean = false;
@@ -28,6 +30,7 @@ export class Level {
 		this.groupIndex = this.levelTemplate.groupIndex;
 
 		this.entities = [];
+		this.spawners = [];
 		this.levelTemplate.entities.forEach((e) => {
 			this.entities.push(e.clone());
 			if (e.customFields.ActivationGroup) {
@@ -35,7 +38,14 @@ export class Level {
 			}
 		});
 
-		this.room.respawnPlayers();
+		for (let i = this.entities.length - 1; i >= 0; i--) {
+			if (this.entities[i] instanceof PlayerSpawner) {
+				this.spawners.push(this.entities[i]);
+				this.entities.splice(i, 1);
+			}
+		}
+
+		this.room.respawnPlayers(this);
 	}
 
 	public getColliders(): MapCollider[] {

@@ -156,7 +156,7 @@
 				},
 				{
 					"__identifier": "Pushable",
-					"__grid": [4,13],
+					"__grid": [16,11],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": { "tilesetUid": 2, "x": 0, "y": 64, "w": 64, "h": 64 },
@@ -165,10 +165,10 @@
 					"width": 64,
 					"height": 64,
 					"defUid": 24,
-					"px": [256,896],
+					"px": [1024,768],
 					"fieldInstances": [],
-					"__worldX": 256,
-					"__worldY": 192
+					"__worldX": 1024,
+					"__worldY": 64
 				},
 				{
 					"__identifier": "Spike",
@@ -188,6 +188,54 @@
 					}] }],
 					"__worldX": 832,
 					"__worldY": 192
+				},
+				{
+					"__identifier": "PlayerSpawner",
+					"__grid": [1,2],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": { "tilesetUid": 2, "x": 64, "y": 64, "w": 64, "h": 64 },
+					"__smartColor": "#733E39",
+					"iid": "40352320-bde0-11f1-95bf-131376e3f36c",
+					"width": 64,
+					"height": 64,
+					"defUid": 28,
+					"px": [64,192],
+					"fieldInstances": [],
+					"__worldX": 64,
+					"__worldY": -512
+				},
+				{
+					"__identifier": "PlayerSpawner",
+					"__grid": [3,2],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": { "tilesetUid": 2, "x": 64, "y": 64, "w": 64, "h": 64 },
+					"__smartColor": "#733E39",
+					"iid": "40a04100-bde0-11f1-95bf-83cc65d0c794",
+					"width": 64,
+					"height": 64,
+					"defUid": 28,
+					"px": [192,192],
+					"fieldInstances": [],
+					"__worldX": 192,
+					"__worldY": -512
+				},
+				{
+					"__identifier": "PlayerSpawner",
+					"__grid": [5,2],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": { "tilesetUid": 2, "x": 64, "y": 64, "w": 64, "h": 64 },
+					"__smartColor": "#733E39",
+					"iid": "40e97f00-bde0-11f1-95bf-752ee2d1653a",
+					"width": 64,
+					"height": 64,
+					"defUid": 28,
+					"px": [320,192],
+					"fieldInstances": [],
+					"__worldX": 320,
+					"__worldY": -512
 				}
 			]
 		},

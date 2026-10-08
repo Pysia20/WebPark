@@ -139,7 +139,8 @@ export type EntityType =
 	| "Door"
 	| "ButtonDoor"
 	| "Pushable"
-	| "Spike";
+	| "Spike"
+	| "PlayerSpawner";
 
 export class MapCollider {
 	private _forceInstance!: void;

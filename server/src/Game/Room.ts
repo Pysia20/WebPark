@@ -15,12 +15,11 @@ export class Room {
 
 	private id: string;
 	private players: Map<number, Player> = new Map<number, Player>();
-	public level: Level;
+	public level!: Level;
 	private gameLoop: NodeJS.Timeout | undefined;
 
 	constructor(id: string) {
 		this.id = id;
-		this.level = MAP_LOADER.GetLevel("Level_0", this);
 	}
 
 	public getID(): string | undefined {
@@ -28,7 +27,6 @@ export class Room {
 	}
 
 	public addPlayer(p: Player) {
-		p.pos = { x: p.id * 400, y: 0 };
 		this.players.set(p.id, p);
 	}
 
@@ -58,10 +56,21 @@ export class Room {
 		this.players.get(id)!.isReady = v;
 	}
 
-	public respawnPlayers() {
+	public respawnPlayers(l: Level) {
+		let pIndex = 0;
+		console.log("RESPAN CALLED");
+
 		this.players.forEach((p) => {
-			p.pos = { x: p.id * 400, y: 0 };
+			const spawner = l.spawners[pIndex % l.spawners.length];
+			const newPos = { ...spawner.pos };
+
+			newPos.y -= 1.5 * PLAYER_CONFIG.HEIGHT * Math.ceil(pIndex / l.spawners.length);
+
+			p.pos = { ...newPos };
+			p.velocity = { x: 0, y: 0 };
 			p.isGrounded = false;
+
+			pIndex++;
 		});
 	}
 
@@ -271,6 +280,7 @@ export class Room {
 	}
 
 	public startGameLoop(io: Namespace) {
+		this.level = MAP_LOADER.GetLevel("Level_0", this);
 		this.gameLoop = setInterval(
 			async () => {
 				this.physicsUpdate();

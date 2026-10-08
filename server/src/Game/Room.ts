@@ -1,6 +1,6 @@
 import { Namespace } from "socket.io";
 import { Player } from "./Player";
-import { PlayerInputs, ServerData, ServerEntityData, Vector2 } from "@shared/commonModels";
+import { PlayerInputs, ServerData, Vector2, ServerEntityData } from "@shared/commonModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { clamp, isColliding } from "../Global";
 import { MAP_LOADER } from "./LevelLoader";
@@ -8,6 +8,7 @@ import { MapCollider } from "@shared/commonLevelModels";
 import { LOG } from "../Logger";
 import { Entity } from "./Entities/Entity";
 import { Level } from "./Level";
+import e from "cors";
 
 export class Room {
 	private TICKRATE: number = 30; // Per second
@@ -300,11 +301,7 @@ export class Room {
 				});
 
 				this.level.entities.forEach((entity: Entity) => {
-					const data: ServerEntityData = {
-						type: entity.type,
-						pos: entity.pos,
-						visualSize: entity.visualSize,
-					};
+					const data: ServerEntityData = entity.getData();
 
 					roomData.entityData.push(data);
 				});

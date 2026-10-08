@@ -1,9 +1,7 @@
 import { Vector2 } from "@shared/commonModels";
 import { Level } from "../Level";
 import { Entity } from "./Entity";
-import { EntityCustomFieldsData, MapCollider } from "@shared/commonLevelModels";
-import { PLAYER_CONFIG } from "@shared/commonVariables";
-import { isColliding } from "../../Global";
+import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
 import { Player } from "../Player";
 
 //! DO NOT IMPORT!!!
@@ -14,6 +12,7 @@ import { Player } from "../Player";
 //TODO Add to the TYPE_MAP in the EntityBuilder
 
 export class PlayerSpawner extends Entity {
+	public override type: EntityType = "PlayerSpawner";
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
 	}

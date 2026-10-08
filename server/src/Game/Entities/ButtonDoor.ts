@@ -6,9 +6,10 @@ import { Player } from "../Player";
 import { isColliding } from "../../Global";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { Level } from "../Level";
+import { ServerButtonDoorData } from "@shared/commonEntityData";
 
 export class ButtonDoor extends Entity {
-	public override type: EntityType = "Door";
+	public override type: EntityType = "ButtonDoor";
 	public isPassable: boolean = false;
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
@@ -115,5 +116,14 @@ export class ButtonDoor extends Entity {
 				this.isPassable = false;
 			}
 		}
+	}
+
+	public override getData(): ServerButtonDoorData {
+		return {
+			pos: this.pos,
+			visualSize: this.size,
+			type: this.type,
+			isOpen: this.isPassable,
+		};
 	}
 }

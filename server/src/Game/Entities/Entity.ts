@@ -1,4 +1,4 @@
-import { Vector2 } from "@shared/commonModels";
+import { ServerEntityData, Vector2 } from "@shared/commonModels";
 import { Player } from "../Player";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { isColliding } from "../../Global";
@@ -115,4 +115,15 @@ export class Entity {
 	 * * Entity: Should be overriten on children
 	 */
 	public endTick() {}
+
+	/**
+	 * * Entity: Should be overriten on children
+	 */
+	public getData(): ServerEntityData {
+		return {
+			type: this.type,
+			pos: this.pos,
+			visualSize: this.visualSize,
+		};
+	}
 }

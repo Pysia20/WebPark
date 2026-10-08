@@ -1,7 +1,7 @@
 import { Vector2 } from "@shared/commonModels";
 import { Level } from "../Level";
 import { Entity } from "./Entity";
-import { EntityCustomFieldsData, MapCollider } from "@shared/commonLevelModels";
+import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { isColliding } from "../../Global";
 import { Player } from "../Player";
@@ -13,6 +13,7 @@ import { Player } from "../Player";
 //TODO Implement in entity builder
 
 export class Key extends Entity {
+	public override type: EntityType = "Key";
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
 	}

@@ -7,6 +7,7 @@ import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { Level } from "../Level";
 import { runInThisContext } from "node:vm";
 import { LOG } from "../../Logger";
+import { ServerButtonData } from "@shared/commonEntityData";
 
 export class Button extends Entity {
 	public override type: EntityType = "Button";
@@ -115,5 +116,14 @@ export class Button extends Entity {
 
 		this.playersStanding = this.newList;
 		this.newList = [];
+	}
+
+	public override getData(): ServerButtonData {
+		return {
+			type: this.type,
+			pos: this.pos,
+			visualSize: this.visualSize,
+			isPressed: this.isPressed(),
+		};
 	}
 }

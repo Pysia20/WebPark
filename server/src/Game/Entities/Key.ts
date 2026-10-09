@@ -89,6 +89,6 @@ export class Key extends Entity {
 	public override endTick() {}
 
 	public override clone() {
-		return new Key(this.pos, this.size, this.customFields);
+		return new Key({ ...this.pos }, { ...this.size }, { ...this.customFields });
 	}
 }

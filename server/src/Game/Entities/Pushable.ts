@@ -178,6 +178,6 @@ export class Pushable extends Entity {
 	}
 
 	public override clone() {
-		return new Pushable(this.pos, this.size, this.customFields);
+		return new Pushable({ ...this.pos }, { ...this.size }, { ...this.customFields });
 	}
 }

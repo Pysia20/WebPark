@@ -95,7 +95,7 @@ export class Button extends Entity {
 	}
 
 	public override clone(): Button {
-		return new Button(this.pos, this.size, this.customFields);
+		return new Button({ ...this.pos }, { ...this.size }, { ...this.customFields });
 	}
 
 	public override endTick() {}

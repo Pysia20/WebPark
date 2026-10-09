@@ -101,7 +101,7 @@ export class Entity {
 	 * * Entity: Should be overriten on children
 	 */
 	public clone(): Entity {
-		return new Entity(this.pos, this.size, this.customFields);
+		return new Entity({ ...this.pos }, { ...this.size }, { ...this.customFields });
 	}
 
 	public getTypeName(): string {

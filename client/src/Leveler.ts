@@ -1,5 +1,11 @@
-import { EntityInstance, GridTile, LayerInstance, LevelData } from "@shared/commonLevelModels"
+import { GridTile, LayerInstance, LevelData } from "@shared/commonLevelModels"
 import { Container, Rectangle, Sprite, Texture } from "pixi.js"
+import {ServerEntityData} from "@shared/commonModels";
+
+interface entity {
+	data: ServerEntityData
+	sprite: Sprite
+}
 
 export class levelManager {
 	levels: LevelData[]
@@ -8,6 +14,7 @@ export class levelManager {
 	spriteSheet: Texture
 	tileTextures: Map<number, Texture> = new Map()
 	entTextures: Map<string, Texture>
+	ents: Record<number, entity> = {}
 
 	constructor(world: Container, spriteSheet: Texture, levels: LevelData[], entTextures: Map<string, Texture>) {
 		this.levels = levels
@@ -31,13 +38,14 @@ export class levelManager {
 		return this.tileTextures.get(tile.t)
 	}
 
-	checkEntTexture(ent: EntityInstance) {
-		if (!this.entTextures.has(ent.__identifier)) {
+	checkEntTexture(entName: string) {
+		if (!this.entTextures.has(entName)) {
 			const placeHolder = new Sprite(Texture.WHITE)
 			placeHolder.tint = "#676767"
+			console.log("MISSINGNO ENT: " + entName + "! using placeHolder")
 			return placeHolder
 		}
-		return new Sprite(this.entTextures.get(ent.__identifier))
+		return new Sprite(this.entTextures.get(entName))
 	}
 
 	loadLevel(level: number) {
@@ -48,6 +56,44 @@ export class levelManager {
 		for (const layer of this.mapData.layerInstances.slice().reverse()) {
 			if (!layer.visible) continue
 
+			const tiles = layer.gridTiles.length > 0 ? layer.gridTiles : layer.autoLayerTiles
+
+			for (const tile of tiles) {
+				const sprite = new Sprite(this.checkTileTexture(tile, layer))
+				sprite.position.set(tile.px[0], tile.px[1])
+				this.world.addChild(sprite)
+			}
+		}
+	}
+
+	updateEnts(ents: Record<number, ServerEntityData>) {
+		for (const [entId, entData] of Object.entries(ents)) {
+			if (entId in this.ents) {
+				this.ents[Number(entId)].data = entData
+				this.updateEntSprite(this.ents[Number(entId)])
+			} else {
+				this.renderEnt([Number(entId), entData])
+			}
+		}
+	}
+
+	updateEntSprite(ent: entity) {
+
+	}
+
+	renderEnt(ent: [number, ServerEntityData]) {
+		const sprite = this.checkEntTexture(ent[1].type)
+		sprite.position.set(ent.px[0], ent.px[1])
+		sprite.setSize(ent.width, ent.height)
+		sprite.anchor.set(ent.__pivot[0],ent.__pivot[1])
+		this.entSprites.push(sprite)
+		this.world.addChild(sprite)
+	}
+}
+
+
+
+/* SAVE
 			if (layer.entityInstances.length > 0) {
 				const ents = layer.entityInstances
 
@@ -59,15 +105,4 @@ export class levelManager {
 					this.world.addChild(sprite)
 				}
 			} else {
-				const tiles = layer.gridTiles.length > 0 ? layer.gridTiles : layer.autoLayerTiles
-
-				for (const tile of tiles) {
-					const sprite = new Sprite(this.checkTileTexture(tile, layer))
-					sprite.position.set(tile.px[0], tile.px[1])
-					this.world.addChild(sprite)
-				}
-			}
-
-		}
-	}
-}
+ */

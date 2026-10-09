@@ -22,7 +22,7 @@ export class Door extends Entity {
 	}
 
 	public override clone(): Door {
-		return new Door(this.pos, this.size, this.customFields);
+		return new Door({ ...this.pos }, { ...this.size }, { ...this.customFields });
 	}
 	public override handleBehaviour(l: Level) {
 		// Only when all needing to switch the room

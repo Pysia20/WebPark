@@ -30,6 +30,6 @@ export class PlayerSpawner extends Entity {
 	public override endTick() {}
 
 	public override clone() {
-		return new PlayerSpawner(this.pos, this.size, this.customFields);
+		return new PlayerSpawner({ ...this.pos }, { ...this.size }, { ...this.customFields });
 	}
 }

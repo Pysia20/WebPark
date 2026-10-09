@@ -82,7 +82,7 @@ export class Spike extends Entity {
 	public override endTick() {}
 
 	public override clone() {
-		return new Spike(this.pos, this.size, this.customFields);
+		return new Spike({ ...this.pos }, { ...this.size }, { ...this.customFields });
 	}
 
 	public override validateCustomFields() {

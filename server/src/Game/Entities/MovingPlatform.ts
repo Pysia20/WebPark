@@ -56,7 +56,7 @@ export class MovingPlatform extends Entity {
 	public override endTick() {}
 
 	public override clone() {
-		return new MovingPlatform(this.pos, this.size, this.customFields);
+		return new MovingPlatform({ ...this.pos }, { ...this.size }, { ...this.customFields });
 	}
 
 	public override validateCustomFields() {

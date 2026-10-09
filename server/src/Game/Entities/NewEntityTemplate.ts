@@ -90,6 +90,6 @@ export class ENTITY_NAME extends Entity {
 	public override endTick() {}
 
 	public override clone() {
-		return new ENTITY_NAME(this.pos, this.size, this.customFields);
+		return new ENTITY_NAME({ ...this.pos }, { ...this.size }, { ...this.customFields });
 	}
 }

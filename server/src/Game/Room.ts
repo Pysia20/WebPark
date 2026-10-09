@@ -59,7 +59,6 @@ export class Room {
 
 	public respawnPlayers(l: Level) {
 		let pIndex = 0;
-		console.log("RESPAN CALLED");
 
 		this.players.forEach((p) => {
 			const spawner = l.spawners[pIndex % l.spawners.length];

@@ -88,7 +88,7 @@ export class ButtonDoor extends Entity {
 	}
 
 	public override clone() {
-		return new ButtonDoor(this.pos, this.size, this.customFields);
+		return new ButtonDoor({ ...this.pos }, { ...this.size }, { ...this.customFields });
 	}
 
 	public override handleBehaviour(l: Level) {

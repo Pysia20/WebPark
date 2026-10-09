@@ -32,7 +32,9 @@ export class Level {
 		this.entities = [];
 		this.spawners = [];
 		this.levelTemplate.entities.forEach((e) => {
-			this.entities.push(e.clone());
+			const clone: Entity = e.clone();
+			clone.id = this.entities.length;
+			this.entities.push(clone);
 			if (e.customFields.ActivationGroup) {
 				this.activationStates.set(e.customFields.ActivationGroup, 0);
 			}

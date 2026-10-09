@@ -14,6 +14,8 @@ export class Entity {
 	public visualSize: Vector2;
 	public customFields: EntityCustomFieldsData;
 
+	public id: number = -1;
+
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		this.pos = pos;
 		this.size = size;

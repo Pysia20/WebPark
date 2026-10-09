@@ -303,7 +303,7 @@ export class Room {
 				this.level.entities.forEach((entity: Entity) => {
 					const data: ServerEntityData = entity.getData();
 
-					roomData.entityData.push(data);
+					roomData.entityData[entity.id] = data;
 				});
 
 				io.to(this.id).emit("tick", roomData);

@@ -112,6 +112,12 @@ export interface LevelFieldInstance {
 export type EntityCustomField = "ActivationGroup" | "ActivationCount";
 
 export type Direction = "Right" | "Left" | "Up" | "Down";
+export const DirectionOppositeMap: Record<Direction, Direction> = {
+	Right: "Left",
+	Left: "Right",
+	Up: "Down",
+	Down: "Up",
+} as const;
 
 export interface EntityCustomFieldsData {
 	ActivationGroup?: string;

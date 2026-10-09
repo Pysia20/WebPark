@@ -1,9 +1,15 @@
 import { Vector2 } from "@shared/commonModels";
 import { Level } from "../Level";
 import { Entity } from "./Entity";
-import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
+import {
+	Direction,
+	DirectionOppositeMap,
+	EntityCustomFieldsData,
+	EntityType,
+	MapCollider,
+} from "@shared/commonLevelModels";
 import { PLAYER_CONFIG, WORLD_CONFIG } from "@shared/commonVariables";
-import { isColliding } from "../../Global";
+import { clamp, isColliding } from "../../Global";
 import { Player } from "../Player";
 import { LOG } from "../../Logger";
 
@@ -13,12 +19,14 @@ export class MovingPlatform extends Entity {
 	public startPos: Vector2;
 	public endPos: Vector2;
 	public timer: number = 0;
-	public currentDestination: "Start" | "End" = "End";
+	public reversed: boolean = true;
+	public readonly speed: number;
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
 		this.validateCustomFields();
 
+		this.speed = this.customFields.Speed!;
 		this.startPos = { ...this.pos };
 		this.endPos = { ...this.pos };
 
@@ -33,23 +41,43 @@ export class MovingPlatform extends Entity {
 	}
 
 	public override handleBehaviour(l: Level) {
-		if (this.timer != this.customFields.Cooldown) {
+		if (this.timer < this.customFields.Cooldown!) {
 			this.timer++;
-			if (this.timer == this.customFields.Cooldown) {
-				const temp = { ...this.startPos };
-				this.startPos = this.endPos;
-				this.endPos = temp;
+			if (this.timer >= this.customFields.Cooldown!) {
+				this.reversed = !this.reversed;
 			}
 			return;
 		}
 
-		if (this.startPos.x < this.endPos.x) this.pos.x += this.customFields.Speed!;
-		else if (this.startPos.x > this.endPos.x) this.pos.x -= this.customFields.Speed!;
-		else if (this.startPos.y > this.endPos.y) this.pos.x -= this.customFields.Speed!;
-		else if (this.startPos.y < this.endPos.y) this.pos.x -= this.customFields.Speed!;
+		let currentDirection: Direction = this.reversed
+			? DirectionOppositeMap[this.customFields.Direction!]
+			: this.customFields.Direction!;
 
-		if (this.startPos.x == this.endPos.x && this.startPos.y == this.endPos.y) {
-			this.timer = 0;
+		if (currentDirection == "Left") this.pos.x -= this.speed;
+		else if (currentDirection == "Right") this.pos.x += this.speed;
+		else if (currentDirection == "Up") this.pos.y -= this.speed;
+		else if (currentDirection == "Down") this.pos.y -= this.speed;
+
+		if (this.startPos.x < this.endPos.x) {
+			this.pos.x = clamp(this.pos.x, this.startPos.x, this.endPos.x);
+		} else {
+			this.pos.x = clamp(this.pos.x, this.startPos.x, this.endPos.x);
+		}
+
+		if (this.startPos.y < this.endPos.y) {
+			this.pos.y = clamp(this.pos.y, this.startPos.y, this.endPos.y);
+		} else {
+			this.pos.y = clamp(this.pos.y, this.startPos.y, this.endPos.y);
+		}
+
+		if (!this.reversed) {
+			if (this.pos.x == this.endPos.x && this.pos.y == this.endPos.y) {
+				this.timer = 0;
+			}
+		} else {
+			if (this.pos.x == this.startPos.x && this.pos.y == this.startPos.y) {
+				this.timer = 0;
+			}
 		}
 	}
 

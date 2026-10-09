@@ -253,7 +253,7 @@
 						{ "__identifier": "Direction", "__type": "LocalEnum.Direction", "__value": "Right", "__tile": null, "defUid": 31, "realEditorValues": [] },
 						{ "__identifier": "Speed", "__type": "Int", "__value": 1, "__tile": null, "defUid": 32, "realEditorValues": [] },
 						{ "__identifier": "Distance", "__type": "Int", "__value": 3, "__tile": null, "defUid": 33, "realEditorValues": [{ "id": "V_Int", "params": [3] }] },
-						{ "__identifier": "Cooldown", "__type": "Int", "__value": 30, "__tile": null, "defUid": 34, "realEditorValues": [] },
+						{ "__identifier": "Cooldown", "__type": "Int", "__value": 150, "__tile": null, "defUid": 34, "realEditorValues": [{ "id": "V_Int", "params": [150] }] },
 						{ "__identifier": "ActivationGroup", "__type": "String", "__value": null, "__tile": null, "defUid": 39, "realEditorValues": [] },
 						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 40, "realEditorValues": [] },
 						{ "__identifier": "StaysOn", "__type": "Bool", "__value": false, "__tile": null, "defUid": 41, "realEditorValues": [] }

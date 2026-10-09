@@ -41,6 +41,8 @@ export class MovingPlatform extends Entity {
 	}
 
 	public override handleBehaviour(l: Level) {
+		// Activation states needs to be added
+
 		if (this.timer < this.customFields.Cooldown!) {
 			this.timer++;
 			if (this.timer >= this.customFields.Cooldown!) {

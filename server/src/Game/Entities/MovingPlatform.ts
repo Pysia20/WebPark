@@ -10,30 +10,48 @@ import { LOG } from "../../Logger";
 export class MovingPlatform extends Entity {
 	public override type: EntityType = "MovingPlatform";
 
-	public readonly startPos: Vector2;
-	public readonly endPos: Vector2;
-	public readonly timer: number = 0;
+	public startPos: Vector2;
+	public endPos: Vector2;
+	public timer: number = 0;
+	public currentDestination: "Start" | "End" = "End";
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
 		this.validateCustomFields();
 
 		this.startPos = { ...this.pos };
+		this.endPos = { ...this.pos };
 
-		if (customFields.Direction == "Up" || customFields.Direction == "Down") {
-			this.endPos = {
-				...this.pos,
-				y: this.pos.y + customFields.Distance! * WORLD_CONFIG.CELL_SIZE,
-			};
-		} else {
-			this.endPos = {
-				...this.pos,
-				x: this.pos.x + customFields.Distance! * WORLD_CONFIG.CELL_SIZE,
-			};
-		}
+		if (customFields.Direction == "Right")
+			this.endPos.x += this.customFields.Distance! * WORLD_CONFIG.CELL_SIZE;
+		else if (customFields.Direction == "Left")
+			this.endPos.x -= this.customFields.Distance! * WORLD_CONFIG.CELL_SIZE;
+		else if (customFields.Direction == "Up")
+			this.endPos.x -= this.customFields.Distance! * WORLD_CONFIG.CELL_SIZE;
+		else if (customFields.Direction == "Down")
+			this.endPos.y += this.customFields.Distance! * WORLD_CONFIG.CELL_SIZE;
 	}
 
-	public override handleBehaviour(l: Level) {}
+	public override handleBehaviour(l: Level) {
+		if (this.timer != this.customFields.Cooldown) {
+			this.timer++;
+			if (this.timer == this.customFields.Cooldown) {
+				const temp = { ...this.startPos };
+				this.startPos = this.endPos;
+				this.endPos = temp;
+			}
+			return;
+		}
+
+		if (this.startPos.x < this.endPos.x) this.pos.x += this.customFields.Speed!;
+		else if (this.startPos.x > this.endPos.x) this.pos.x -= this.customFields.Speed!;
+		else if (this.startPos.y > this.endPos.y) this.pos.x -= this.customFields.Speed!;
+		else if (this.startPos.y < this.endPos.y) this.pos.x -= this.customFields.Speed!;
+
+		if (this.startPos.x == this.endPos.x && this.startPos.y == this.endPos.y) {
+			this.timer = 0;
+		}
+	}
 
 	public override endTick() {}
 

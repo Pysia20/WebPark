@@ -21,7 +21,7 @@ export interface PlayerInputs {
 // What the backend sends to the client
 export interface ServerData {
 	playerData: Record<number, ServerPlayerData>;
-	entityData: ServerEntityData[];
+	entityData: Record<number, ServerEntityData>; //Changed bc it makes things 10000x easier for me
 }
 
 export interface ServerEntityData {

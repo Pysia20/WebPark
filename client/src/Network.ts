@@ -40,10 +40,27 @@ socket.on("somethingBroke", (whatBroke: SomethingBrokeData) => {
     console.log("KABOOM! " + whatBroke.eventName + ": " + whatBroke.name + ", " + whatBroke.message)
 })
 
-socket.on("tick", (servPlayerData: ServerData, entData: ServerEntityData[]) => {
-    playerData = servPlayerData
-    console.log(entData) //nothing rn, ig?
+let test: ServerEntityData[] = []
+socket.on("tick", (serverData: ServerData) => {
+    playerData = serverData
+    if (test != serverData.entityData) {
+        test = serverData.entityData
+        for (let i = 0; i < serverData.entityData.length; i++) {
+            if (serverData.entityData[i] != test[i]) console.log(serverData.entityData[i]) //still nothing new ig??????
+        }
+
+    }
 })
+
+let lastEntityJson = "";
+
+socket.on("tick", (serverData: ServerData) => {
+    const currentJson = JSON.stringify(serverData.entityData);
+    if (currentJson !== lastEntityJson) {
+        console.log("Entity data changed:", serverData.entityData);
+        lastEntityJson = currentJson;
+    }
+});
 
 socket.on("playerJoined", (data: PlayerJoinedData[]) => {
     coordinator.create_players(data)

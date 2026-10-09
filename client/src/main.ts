@@ -1,9 +1,9 @@
 import * as PIXI from 'pixi.js'
 
 import { getCurrentInputs } from "./Inputs"
-import { emitInputs, getPlayerData, startNetworking } from "./Network";
+import {emitInputs, getServerData, startNetworking} from "./Network";
 import { coordinator } from "./Coordinator";
-import { PlayerInputs, Vector2 } from "@shared/commonModels"
+import {PlayerInputs, ServerData, Vector2} from "@shared/commonModels"
 import { loadAssets } from "./Assets";
 import { CameraController } from "./Camera";
 import { levelManager } from "./Leveler";
@@ -51,10 +51,11 @@ setInterval(() => {
 leveler.renderLevel()
 hud.fadeIn(app)
 app.ticker.add((time) => {
-    const serverPlayerData = getPlayerData()
-    if (serverPlayerData) {
-        coordinator.update_players(serverPlayerData, time.deltaTime)
-        camera.update_cam(serverPlayerData)
+    const serverData = getServerData()
+    if (serverData) {
+        coordinator.update_players(serverData.playerData, time.deltaTime)
+        camera.update_cam(serverData)
+        leveler.updateEnts(serverData.entityData)
     }
     coordinator.update_positions()
 })

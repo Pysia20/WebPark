@@ -2,12 +2,13 @@ import { io } from "socket.io-client"
 import { ServerData, PlayerInputs, RegisterUserData, PlayerJoinedData, ServerEntityData, SomethingBrokeData } from "@shared/commonModels"
 import { coordinator } from "./Coordinator";
 import { hud } from "./Hud";
+import {levelManager} from "./Leveler";
 
 const socket = io("/player", {
     path: '/api/socket.io',
     autoConnect: false
 })
-let playerData: ServerData | undefined
+let serverData: ServerData | undefined
 
 socket.on("connect_error", (error) => {
     console.log("Failed connection! error:", error)
@@ -40,27 +41,10 @@ socket.on("somethingBroke", (whatBroke: SomethingBrokeData) => {
     console.log("KABOOM! " + whatBroke.eventName + ": " + whatBroke.name + ", " + whatBroke.message)
 })
 
-let test: ServerEntityData[] = []
-socket.on("tick", (serverData: ServerData) => {
-    playerData = serverData
-    if (test != serverData.entityData) {
-        test = serverData.entityData
-        for (let i = 0; i < serverData.entityData.length; i++) {
-            if (serverData.entityData[i] != test[i]) console.log(serverData.entityData[i]) //still nothing new ig??????
-        }
+socket.on("tick", (newServerData: ServerData) => {
+    serverData = newServerData
 
-    }
 })
-
-let lastEntityJson = "";
-
-socket.on("tick", (serverData: ServerData) => {
-    const currentJson = JSON.stringify(serverData.entityData);
-    if (currentJson !== lastEntityJson) {
-        console.log("Entity data changed:", serverData.entityData);
-        lastEntityJson = currentJson;
-    }
-});
 
 socket.on("playerJoined", (data: PlayerJoinedData[]) => {
     coordinator.create_players(data)
@@ -81,8 +65,8 @@ export function emitInputs(data: PlayerInputs) {
     socket.emit("playerInputs", data)
 }
 
-export function getPlayerData() {
-    return playerData
+export function getServerData() {
+    return serverData
 }
 
 export function emitReady(isReady: boolean) {

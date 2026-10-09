@@ -1,11 +1,11 @@
 import { Player } from "./Player";
-import { PlayerJoinedData, ServerData } from "@shared/commonModels"
+import {PlayerJoinedData, ServerData, ServerPlayerData} from "@shared/commonModels"
 import { Container, Text as PixiText } from "pixi.js";
 import { PlayerTextures } from "./Assets";
 
 class Coordinator {
     players: Map<number, Player> = new Map
-    serverData: ServerData | undefined
+    serverData: Record<number, ServerPlayerData> | undefined
     playerTextures: PlayerTextures = {} as PlayerTextures
     world: Container | undefined
 
@@ -30,9 +30,9 @@ class Coordinator {
         }
     }
 
-    update_players(serverData: ServerData, deltaTime: number) {
-        this.serverData = serverData
-        for (const [playerId, playerData] of Object.entries(this.serverData["playerData"])) {
+    update_players(playerData: Record<number, ServerPlayerData>, deltaTime: number) {
+        this.serverData = playerData
+        for (const [playerId, playerData] of Object.entries(this.serverData)) {
             const tempPlayer = this.players.get(Number(playerId))
                 if (tempPlayer) {
                     tempPlayer.targetPos = playerData.pos

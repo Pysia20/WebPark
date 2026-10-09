@@ -70,24 +70,24 @@ export class levelManager {
 		for (const [entId, entData] of Object.entries(ents)) {
 			if (entId in this.ents) {
 				this.ents[Number(entId)].data = entData
-				this.updateEntSprite(this.ents[Number(entId)])
+				this.renderEnt(Number(entId))
 			} else {
-				this.renderEnt([Number(entId), entData])
+				this.ents[Number(entId)] = {data: entData} as entity
+				this.renderEnt(Number(entId))
 			}
 		}
 	}
 
-	updateEntSprite(ent: entity) {
+	renderEnt(entId: number) {
+		const ent = this.ents[entId]
+		if (!ent.sprite) {
+			ent.sprite = this.checkEntTexture(ent.data.type)
+			this.world.addChild(ent.sprite)
+		}
 
-	}
-
-	renderEnt(ent: [number, ServerEntityData]) {
-		const sprite = this.checkEntTexture(ent[1].type)
-		sprite.position.set(ent.px[0], ent.px[1])
-		sprite.setSize(ent.width, ent.height)
-		sprite.anchor.set(ent.__pivot[0],ent.__pivot[1])
-		this.entSprites.push(sprite)
-		this.world.addChild(sprite)
+		ent.sprite.position.set(ent.data.pos.x, ent.data.pos.y)
+		ent.sprite.setSize(ent.data.visualSize.x, ent.data.visualSize.y)
+		//sprite.anchor.set(ent.__pivot[0],ent.__pivot[1]) not getting this from server rn and not sure if will need to
 	}
 }
 

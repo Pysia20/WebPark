@@ -17,7 +17,7 @@ export class Button extends Entity {
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
-		this.visualSize = { x: this.size.x * 2, y: this.size.y * 2 };
+		this.visualSize = { x: this.size.x, y: this.size.y / 2 };
 
 		this.validateCustomFields();
 	}

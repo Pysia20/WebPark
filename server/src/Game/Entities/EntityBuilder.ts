@@ -9,6 +9,7 @@ import { Key } from "./Key";
 import { Pushable } from "./Pushable";
 import { Spike } from "./Spike";
 import { PlayerSpawner } from "./PlayerSpawner";
+import { MovingPlatform } from "./MovingPlatform";
 
 type EntityConstructor = new (pos: any, size: any, customFields: any) => Entity;
 
@@ -29,6 +30,7 @@ export class EntityBuilder {
 		Pushable: Pushable,
 		Spike: Spike,
 		PlayerSpawner: PlayerSpawner,
+		MovingPlatform: MovingPlatform,
 	};
 
 	constructor(type: EntityType) {

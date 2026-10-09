@@ -111,11 +111,17 @@ export interface LevelFieldInstance {
 
 export type EntityCustomField = "ActivationGroup" | "ActivationCount";
 
+export type Direction = "Right" | "Left" | "Up" | "Down";
+
 export interface EntityCustomFieldsData {
 	ActivationGroup?: string;
 	ActivationCount?: number;
-	StaysOpen?: boolean;
+	StaysOn?: boolean;
 	OnlyKillThePlayer?: boolean;
+	Direction?: Direction;
+	Speed?: number;
+	Distance?: number;
+	Cooldown?: number;
 }
 export interface EntityFieldInstance {
 	__identifier: string;
@@ -140,7 +146,8 @@ export type EntityType =
 	| "ButtonDoor"
 	| "Pushable"
 	| "Spike"
-	| "PlayerSpawner";
+	| "PlayerSpawner"
+	| "MovingPlatform";
 
 export class MapCollider {
 	private _forceInstance!: void;

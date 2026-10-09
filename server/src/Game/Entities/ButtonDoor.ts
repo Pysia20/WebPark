@@ -7,6 +7,7 @@ import { isColliding } from "../../Global";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { Level } from "../Level";
 import { ServerButtonDoorData } from "@shared/commonEntityData";
+import { z } from "zod";
 
 export class ButtonDoor extends Entity {
 	public override type: EntityType = "ButtonDoor";
@@ -14,18 +15,7 @@ export class ButtonDoor extends Entity {
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
-
-		if (customFields.ActivationGroup == "" || customFields.ActivationGroup === undefined) {
-			LOG.warn(
-				`ButtonDoor doesn't have an activationGroup. (X: ${this.size.x}, Y: ${this.size.y})`,
-			);
-		}
-
-		if (customFields.ActivationCount == 0 || customFields.ActivationCount === undefined) {
-			LOG.warn(
-				`ButtonDoor doesn't have an activationCount. (X: ${this.size.x}, Y: ${this.size.y})`,
-			);
-		}
+		this.validateCustomFields();
 	}
 
 	public override handleCollisions(
@@ -112,7 +102,7 @@ export class ButtonDoor extends Entity {
 		) {
 			this.isPassable = true;
 		} else {
-			if (!this.customFields.StaysOpen) {
+			if (!this.customFields.StaysOn) {
 				this.isPassable = false;
 			}
 		}
@@ -125,5 +115,36 @@ export class ButtonDoor extends Entity {
 			type: this.type,
 			isOpen: this.isPassable,
 		};
+	}
+
+	public override validateCustomFields() {
+		const requiredFields = [
+			{
+				name: "ActivationGroup",
+				value: this.customFields.ActivationGroup,
+				isMissing: (v: any) => v === "" || v === undefined,
+			},
+			{
+				name: "ActivationCount",
+				value: this.customFields.ActivationCount,
+				isMissing: (v: any) => v === 0 || v === undefined,
+			},
+			{
+				name: "StaysOn",
+				value: this.customFields.StaysOn,
+				isMissing: (v: any) => v === undefined,
+			},
+		];
+
+		for (let field of requiredFields) {
+			if (field.isMissing(field.value)) {
+				LOG.info(
+					`ButtonDoor doesn't have an '${field.name}' custom field. (${this.pos.x}, ${this.pos.y})`,
+				);
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

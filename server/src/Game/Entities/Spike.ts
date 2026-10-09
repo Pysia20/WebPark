@@ -15,11 +15,7 @@ export class Spike extends Entity {
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
 
-		if (customFields.OnlyKillThePlayer === undefined) {
-			LOG.warn(
-				`Spike doesn't have an 'OnlyKillThePlayer' property. (X: ${this.size.x}, Y: ${this.size.y})`,
-			);
-		}
+		this.validateCustomFields();
 	}
 
 	public override handleCollisions(
@@ -87,5 +83,26 @@ export class Spike extends Entity {
 
 	public override clone() {
 		return new Spike(this.pos, this.size, this.customFields);
+	}
+
+	public override validateCustomFields() {
+		const requiredFields = [
+			{
+				name: "OnlyKillThePlayer",
+				value: this.customFields.OnlyKillThePlayer,
+				isMissing: (v: any) => v === undefined,
+			},
+		];
+
+		for (let field of requiredFields) {
+			if (field.isMissing(field.value)) {
+				LOG.info(
+					`Spike doesn't have an '${field.name}' custom field. (${this.pos.x}, ${this.pos.y})`,
+				);
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

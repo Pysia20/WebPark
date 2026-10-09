@@ -19,9 +19,7 @@ export class Button extends Entity {
 		super(pos, size, customFields);
 		this.visualSize = { x: this.size.x * 2, y: this.size.y * 2 };
 
-		if (customFields.ActivationGroup == "" || customFields.ActivationGroup === undefined) {
-			LOG.warn(`Button doesn't have an activationGroup. (X: ${this.size.x}, Y: ${this.size.y})`);
-		}
+		this.validateCustomFields();
 	}
 
 	public handleCollisions(
@@ -125,5 +123,26 @@ export class Button extends Entity {
 			visualSize: this.visualSize,
 			isPressed: this.isPressed(),
 		};
+	}
+
+	public override validateCustomFields() {
+		const requiredFields = [
+			{
+				name: "ActivationGroup",
+				value: this.customFields.ActivationGroup,
+				isMissing: (v: any) => v === "" || v === undefined,
+			},
+		];
+
+		for (let field of requiredFields) {
+			if (field.isMissing(field.value)) {
+				LOG.info(
+					`Button doesn't have an '${field.name}' custom field. (${this.pos.x}, ${this.pos.y})`,
+				);
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

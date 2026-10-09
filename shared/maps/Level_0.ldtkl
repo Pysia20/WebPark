@@ -127,7 +127,7 @@
 							"params": ["Door"]
 						}] },
 						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 2, "__tile": null, "defUid": 22, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
-						{ "__identifier": "StaysOpen", "__type": "Bool", "__value": true, "__tile": null, "defUid": 23, "realEditorValues": [{
+						{ "__identifier": "StaysOn", "__type": "Bool", "__value": true, "__tile": null, "defUid": 23, "realEditorValues": [{
 							"id": "V_Bool",
 							"params": [ true ]
 						}] }
@@ -159,7 +159,7 @@
 					"__grid": [16,11],
 					"__pivot": [0,1],
 					"__tags": [],
-					"__tile": { "tilesetUid": 2, "x": 0, "y": 64, "w": 64, "h": 64 },
+					"__tile": null,
 					"__smartColor": "#E4A672",
 					"iid": "dc129ea0-bde0-11f1-8e00-5fae474f4011",
 					"width": 64,
@@ -194,8 +194,8 @@
 					"__grid": [1,2],
 					"__pivot": [0,1],
 					"__tags": [],
-					"__tile": { "tilesetUid": 2, "x": 64, "y": 64, "w": 64, "h": 64 },
-					"__smartColor": "#733E39",
+					"__tile": null,
+					"__smartColor": "#D2D2D2",
 					"iid": "40352320-bde0-11f1-95bf-131376e3f36c",
 					"width": 64,
 					"height": 64,
@@ -210,8 +210,8 @@
 					"__grid": [3,2],
 					"__pivot": [0,1],
 					"__tags": [],
-					"__tile": { "tilesetUid": 2, "x": 64, "y": 64, "w": 64, "h": 64 },
-					"__smartColor": "#733E39",
+					"__tile": null,
+					"__smartColor": "#D2D2D2",
 					"iid": "40a04100-bde0-11f1-95bf-83cc65d0c794",
 					"width": 64,
 					"height": 64,
@@ -226,8 +226,8 @@
 					"__grid": [5,2],
 					"__pivot": [0,1],
 					"__tags": [],
-					"__tile": { "tilesetUid": 2, "x": 64, "y": 64, "w": 64, "h": 64 },
-					"__smartColor": "#733E39",
+					"__tile": null,
+					"__smartColor": "#D2D2D2",
 					"iid": "40e97f00-bde0-11f1-95bf-752ee2d1653a",
 					"width": 64,
 					"height": 64,
@@ -236,6 +236,30 @@
 					"fieldInstances": [],
 					"__worldX": 320,
 					"__worldY": -512
+				},
+				{
+					"__identifier": "MovingPlatform",
+					"__grid": [6,9],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#3E2731",
+					"iid": "6e9dc430-bde0-11f1-bfbd-bd2fe8e0be63",
+					"width": 192,
+					"height": 64,
+					"defUid": 29,
+					"px": [384,640],
+					"fieldInstances": [
+						{ "__identifier": "Direction", "__type": "LocalEnum.Direction", "__value": "Right", "__tile": null, "defUid": 31, "realEditorValues": [] },
+						{ "__identifier": "Speed", "__type": "Int", "__value": 1, "__tile": null, "defUid": 32, "realEditorValues": [] },
+						{ "__identifier": "Distance", "__type": "Int", "__value": 3, "__tile": null, "defUid": 33, "realEditorValues": [{ "id": "V_Int", "params": [3] }] },
+						{ "__identifier": "Cooldown", "__type": "Int", "__value": 30, "__tile": null, "defUid": 34, "realEditorValues": [] },
+						{ "__identifier": "ActivationGroup", "__type": "String", "__value": null, "__tile": null, "defUid": 39, "realEditorValues": [] },
+						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 40, "realEditorValues": [] },
+						{ "__identifier": "StaysOn", "__type": "Bool", "__value": false, "__tile": null, "defUid": 41, "realEditorValues": [] }
+					],
+					"__worldX": 384,
+					"__worldY": -64
 				}
 			]
 		},

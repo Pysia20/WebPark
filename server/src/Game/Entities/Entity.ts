@@ -126,4 +126,8 @@ export class Entity {
 			visualSize: this.visualSize,
 		};
 	}
+
+	public validateCustomFields(): boolean {
+		return true;
+	}
 }

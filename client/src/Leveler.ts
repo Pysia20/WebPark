@@ -1,9 +1,10 @@
 import { GridTile, LayerInstance, LevelData } from "@shared/commonLevelModels"
 import { Container, Rectangle, Sprite, Texture } from "pixi.js"
 import {ServerEntityData} from "@shared/commonModels";
+import {AnyEntityData, ServerButtonData, ServerButtonDoorData} from "@shared/commonEntityData";
 
 interface entity {
-	data: ServerEntityData
+	data: AnyEntityData
 	sprite: Sprite
 }
 
@@ -66,7 +67,7 @@ export class levelManager {
 		}
 	}
 
-	updateEnts(ents: Record<number, ServerEntityData>) {
+	updateEnts(ents: Record<number, AnyEntityData>) {
 		for (const [entId, entData] of Object.entries(ents)) {
 			if (entId in this.ents) {
 				this.ents[Number(entId)].data = entData
@@ -87,6 +88,19 @@ export class levelManager {
 
 		ent.sprite.position.set(ent.data.pos.x, ent.data.pos.y)
 		ent.sprite.setSize(ent.data.visualSize.x, ent.data.visualSize.y)
+
+		switch (ent.data.type) {
+			case "ButtonDoor":
+				const doorData = ent.data as ServerButtonDoorData
+				ent.sprite.alpha = doorData.isOpen ? 0.1 : 1
+				break
+			case "Button":
+				const buttonData = ent.data as ServerButtonData
+				ent.sprite.alpha = buttonData.isPressed ? 0.5 : 1
+				break
+			default:
+				break
+		}
 		//sprite.anchor.set(ent.__pivot[0],ent.__pivot[1]) not getting this from server rn and not sure if will need to
 	}
 }

@@ -1,5 +1,6 @@
 import z from "zod";
 import { EntityType } from "./commonLevelModels";
+import { AnyEntityData } from "@shared/commonEntityData";
 
 export type Vector2 = { x: number; y: number };
 export type Vector3 = { x: number; y: number; z: number };
@@ -21,7 +22,7 @@ export interface PlayerInputs {
 // What the backend sends to the client
 export interface ServerData {
 	playerData: Record<number, ServerPlayerData>;
-	entityData: Record<number, ServerEntityData>; //Changed bc it makes things 10000x easier for me
+	entityData: Record<number, AnyEntityData>;
 }
 
 export interface ServerEntityData {

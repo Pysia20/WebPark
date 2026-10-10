@@ -1,4 +1,4 @@
-import {Sprite, Texture, Text as PixiText, Container} from "pixi.js";
+import {Sprite, Texture, Text as PixiText, Container, Graphics} from "pixi.js";
 import { Vector2 } from "@shared/commonModels"
 import { PlayerTextures } from "./Assets";
 import { playJump } from "./Audio";
@@ -7,10 +7,23 @@ import { PLAYER_CONFIG } from "@shared/commonVariables";
 class Leg {
     orginPos: Vector2
     footPos: Vector2
+    leg: Graphics = new Graphics()
+
+    STEP_SPACER = 20
 
     constructor() {
         this.orginPos = {x: 0, y: 0}
         this.footPos = {x: 0, y: 0}
+        this.leg.position.set(0, 0)
+    }
+
+    updateLegs(orgin: Vector2) {
+        this.orginPos = orgin
+        if (Math.abs(this.orginPos.x - this.footPos.x) > this.STEP_SPACER) this.footPos.x = this.orginPos.x
+        // if (Math.abs(this.orginPos.y - this.footPos.y) > (PLAYER_CONFIG.HEIGHT / 10)) this.footPos.y = this.orginPos.y + (PLAYER_CONFIG.HEIGHT / 10)
+        this.footPos.y = this.orginPos.y + (PLAYER_CONFIG.HEIGHT / 10)
+
+        this.leg.clear().moveTo(this.orginPos.x, this.orginPos.y - 2).lineTo(this.footPos.x, this.footPos.y).stroke({color: "#000000", width: 3, cap: "round"})
     }
 }
 
@@ -21,7 +34,7 @@ class Torso {
     constructor(texture: Texture, color: string) {
         this.color = color
         this.sprite = new Sprite(texture)
-        this.sprite.setSize(PLAYER_CONFIG.WIDTH, PLAYER_CONFIG.HEIGHT)
+        this.sprite.setSize(PLAYER_CONFIG.WIDTH, PLAYER_CONFIG.HEIGHT - (PLAYER_CONFIG.HEIGHT / 10))
     }
 }
 
@@ -54,25 +67,47 @@ export class Player {
         this.nick = nick
         this.torso = new Torso(textures.torso, color)
         this.eyes = [new Eye(), new Eye()]
+
+        const legOffset = PLAYER_CONFIG.WIDTH / 4
         this.legs = [new Leg(), new Leg()]
     }
 
     addToWorld(world: Container) {
         world.addChild(this.torso.sprite)
         world.addChild(this.nick)
+        world.addChild(this.legs[0].leg)
+        world.addChild(this.legs[1].leg)
     }
 
     updatePos() {
         this.pos.x += (this.targetPos.x - this.pos.x) * this.LERP_SPEED
         this.pos.y += (this.targetPos.y - this.pos.y) * this.LERP_SPEED
-        this.torso.sprite.position.set(
-            this.pos.x,
-            this.pos.y
-        )
+        this.updateTorso()
+        this.updateNick()
+        this.updateLegs()
+
+    }
+
+    updateNick() {
         this.nick.position.set(
             this.pos.x + PLAYER_CONFIG.WIDTH / 2,
             this.pos.y
         )
+    }
+
+    updateTorso() {
+        this.torso.sprite.position.set(
+            this.pos.x,
+            this.pos.y
+        )
+    }
+
+    updateLegs() {
+        const legOffsetX = PLAYER_CONFIG.WIDTH / 4
+        const legOffsetY = (PLAYER_CONFIG.HEIGHT / 10) * 9
+
+        this.legs[0].updateLegs({x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY})
+        this.legs[1].updateLegs({x: this.pos.x + (legOffsetX * 3), y: this.pos.y + legOffsetY})
     }
 
     updateSprtie() {

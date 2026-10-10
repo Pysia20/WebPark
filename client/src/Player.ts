@@ -19,9 +19,17 @@ class Leg {
 
     updateLegs(orgin: Vector2) {
         this.orginPos = orgin
-        if (Math.abs(this.orginPos.x - this.footPos.x) > this.STEP_SPACER) this.footPos.x = this.orginPos.x
+        if (Math.abs(this.orginPos.x - this.footPos.x) > this.STEP_SPACER) this.footPos.x = (this.orginPos.x > this.footPos.x) ? this.orginPos.x + this.STEP_SPACER : this.orginPos.x - this.STEP_SPACER
         // if (Math.abs(this.orginPos.y - this.footPos.y) > (PLAYER_CONFIG.HEIGHT / 10)) this.footPos.y = this.orginPos.y + (PLAYER_CONFIG.HEIGHT / 10)
         this.footPos.y = this.orginPos.y + (PLAYER_CONFIG.HEIGHT / 10)
+
+        this.leg.clear().moveTo(this.orginPos.x, this.orginPos.y - 2).lineTo(this.footPos.x, this.footPos.y).stroke({color: "#000000", width: 3, cap: "round"})
+    }
+
+    curlUp(orgin: Vector2) {
+        this.orginPos = orgin
+        this.footPos.x = this.orginPos.x
+        this.footPos.y = this.orginPos.y + (PLAYER_CONFIG.HEIGHT / 30)
 
         this.leg.clear().moveTo(this.orginPos.x, this.orginPos.y - 2).lineTo(this.footPos.x, this.footPos.y).stroke({color: "#000000", width: 3, cap: "round"})
     }
@@ -53,6 +61,7 @@ export class Player {
     color: string
     pos: Vector2 = {x: 0.0, y: 0.0}
     targetPos: Vector2 = {x: 0.0, y: 0.0}
+    inAir: boolean = false
 
     legs: Leg[]
     torso: Torso
@@ -106,12 +115,28 @@ export class Player {
         const legOffsetX = PLAYER_CONFIG.WIDTH / 4
         const legOffsetY = (PLAYER_CONFIG.HEIGHT / 10) * 9
 
-        this.legs[0].updateLegs({x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY})
-        this.legs[1].updateLegs({x: this.pos.x + (legOffsetX * 3), y: this.pos.y + legOffsetY})
+        if (!this.inAir) {
+            this.legs[0].updateLegs({x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY})
+            this.legs[1].updateLegs({x: this.pos.x + (legOffsetX * 3), y: this.pos.y + legOffsetY})
+        } else {
+            this.legs[0].curlUp({x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY})
+            this.legs[1].curlUp({x: this.pos.x + (legOffsetX * 3), y: this.pos.y + legOffsetY})
+        }
     }
 
     updateSprtie() {
         console.log("nope")
+    }
+
+    checkInAir(velocity: Vector2) {
+        this.inAir = (velocity.y != 0)
+    }
+
+    beGone(world: Container) {
+        world.removeChild(this.nick)
+        world.removeChild(this.torso.sprite)
+        world.removeChild(this.legs[0].leg)
+        world.removeChild(this.legs[1].leg)
     }
 }
 

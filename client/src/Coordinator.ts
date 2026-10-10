@@ -35,7 +35,7 @@ class Coordinator {
             const tempPlayer = this.players.get(Number(playerId))
                 if (tempPlayer) {
                     tempPlayer.targetPos = playerData.pos
-                //    tempPlayer.updateSprite(playerData.velocity, deltaTime)           TEMPTEMPTEMPTMEPTMEPMTEPM
+                    tempPlayer.checkInAir(playerData.velocity)
                 } else {
                     console.log("unknown player")
                 }
@@ -51,8 +51,7 @@ class Coordinator {
     remove_player(playerID: number) {
         const player = this.players.get(playerID)
         if(player) {
-        //    (this.world as Container).removeChild(player.sprite);         TRETERTETE4TEMP
-            (this.world as Container).removeChild(player.nick);
+            player.beGone(this.world as Container)
             this.players.delete(playerID)
         }
     }

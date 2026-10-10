@@ -1,9 +1,59 @@
-import { Sprite, Texture, Text as PixiText } from "pixi.js";
+import {Sprite, Texture, Text as PixiText, Container} from "pixi.js";
 import { Vector2 } from "@shared/commonModels"
 import { PlayerTextures } from "./Assets";
 import { playJump } from "./Audio";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 
+class Leg {
+    orginPos: Vector2
+    footPos: Vector2
+}
+
+class Torso {
+    color: string
+    sprite: Sprite
+
+    constructor(color: string) {
+        this.color = color
+        this.sprite = new Sprite(Texture.WHITE)
+        this.sprite.setSize(PLAYER_CONFIG.WIDTH, PLAYER_CONFIG.HEIGHT)
+    }
+}
+
+class Eye {
+    pos: Vector2
+}
+
+export class Player {
+    id: number
+    isHost: boolean
+    nick: PixiText
+    color: string
+    pos: Vector2 = {x: 0.0, y: 0.0}
+    targetPos: Vector2 = {x: 0.0, y: 0.0}
+
+    legs: Leg[]
+    torso: Torso
+    eyes: Eye[]
+
+    LERP_SPEED: number = 0.3
+
+    constructor(id: number, color: string, nick: PixiText) {
+        this.id = id
+        this.color = color
+        this.isHost = (id == 0)
+        this.nick = nick
+        this.torso = new Torso(color)
+        this.eyes = [new Eye(), new Eye()]
+        this.legs = [new Leg(), new Leg()]
+    }
+
+    addToWorld(world: Container) {
+
+    }
+}
+
+/*
 interface animController {
     ANIM_SPEED: number
     animTimer: number
@@ -78,3 +128,4 @@ export class Player {
         }
     }
 }
+ */

@@ -22,10 +22,9 @@ class Coordinator {
                 const nick: PixiText = new PixiText({text: data.nick, style: {fill: nickColor, fontSize: 12}, resolution: 2})
                 nick.anchor.set(0.5,1)
 
-                const newPlayer = new Player(data.playerID, data.color, this.playerTextures, nick);
+                const newPlayer = new Player(data.playerID, data.color, nick, this.playerTextures);
                 this.players.set(data.playerID, newPlayer);
-                (this.world as Container).addChild(newPlayer.sprite);
-                (this.world as Container).addChild(newPlayer.nick)
+                newPlayer.addToWorld(this.world as Container)
             }
         }
     }
@@ -36,7 +35,7 @@ class Coordinator {
             const tempPlayer = this.players.get(Number(playerId))
                 if (tempPlayer) {
                     tempPlayer.targetPos = playerData.pos
-                    tempPlayer.updateSprite(playerData.velocity, deltaTime)
+                //    tempPlayer.updateSprite(playerData.velocity, deltaTime)           TEMPTEMPTEMPTMEPTMEPMTEPM
                 } else {
                     console.log("unknown player")
                 }
@@ -52,7 +51,7 @@ class Coordinator {
     remove_player(playerID: number) {
         const player = this.players.get(playerID)
         if(player) {
-            (this.world as Container).removeChild(player.sprite);
+        //    (this.world as Container).removeChild(player.sprite);         TRETERTETE4TEMP
             (this.world as Container).removeChild(player.nick);
             this.players.delete(playerID)
         }

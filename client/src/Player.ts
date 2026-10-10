@@ -7,21 +7,30 @@ import { PLAYER_CONFIG } from "@shared/commonVariables";
 class Leg {
     orginPos: Vector2
     footPos: Vector2
+
+    constructor() {
+        this.orginPos = {x: 0, y: 0}
+        this.footPos = {x: 0, y: 0}
+    }
 }
 
 class Torso {
     color: string
     sprite: Sprite
 
-    constructor(color: string) {
+    constructor(texture: Texture, color: string) {
         this.color = color
-        this.sprite = new Sprite(Texture.WHITE)
+        this.sprite = new Sprite(texture)
         this.sprite.setSize(PLAYER_CONFIG.WIDTH, PLAYER_CONFIG.HEIGHT)
     }
 }
 
 class Eye {
     pos: Vector2
+
+    constructor() {
+        this.pos = {x: 0, y: 0}
+    }
 }
 
 export class Player {
@@ -38,18 +47,36 @@ export class Player {
 
     LERP_SPEED: number = 0.3
 
-    constructor(id: number, color: string, nick: PixiText) {
+    constructor(id: number, color: string, nick: PixiText, textures: PlayerTextures) {
         this.id = id
         this.color = color
         this.isHost = (id == 0)
         this.nick = nick
-        this.torso = new Torso(color)
+        this.torso = new Torso(textures.torso, color)
         this.eyes = [new Eye(), new Eye()]
         this.legs = [new Leg(), new Leg()]
     }
 
     addToWorld(world: Container) {
+        world.addChild(this.torso.sprite)
+        world.addChild(this.nick)
+    }
 
+    updatePos() {
+        this.pos.x += (this.targetPos.x - this.pos.x) * this.LERP_SPEED
+        this.pos.y += (this.targetPos.y - this.pos.y) * this.LERP_SPEED
+        this.torso.sprite.position.set(
+            this.pos.x,
+            this.pos.y
+        )
+        this.nick.position.set(
+            this.pos.x + PLAYER_CONFIG.WIDTH / 2,
+            this.pos.y
+        )
+    }
+
+    updateSprtie() {
+        console.log("nope")
     }
 }
 

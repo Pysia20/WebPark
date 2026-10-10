@@ -12,6 +12,7 @@ class Leg {
     stepProgress: number = 1.0
     isStepping: boolean = false
     leg: Graphics = new Graphics()
+    prevGround: number = 0
 
     MAX_STRETCH = 24
 
@@ -23,6 +24,11 @@ class Leg {
         const distance = Math.abs(hip.x - this.footPos.x)
         this.hipPos = hip
 
+        if (this.prevGround != ground) {
+            this.footPos.y = ground
+            this.prevGround = ground
+        }
+
         if (!this.isStepping && !otherLeg.isStepping && distance > this.MAX_STRETCH) {
             this.isStepping = true
             this.stepProgress = 0
@@ -30,6 +36,7 @@ class Leg {
             const fowardOffset = (velocity.x > 0) ? 16 : -16
             this.stepTarget = {x: hip.x + fowardOffset, y: ground}
         }
+
 
         if (this.isStepping) {
             this.stepProgress += 0.15 * deltaTime
@@ -46,19 +53,14 @@ class Leg {
         }
 
         this.leg.clear().moveTo(this.hipPos.x, this.hipPos.y - 2).lineTo(this.footPos.x, this.footPos.y).stroke({ color: "#000000", width: 3, cap: "round" });
-
-        // this.orginPos = hipOrgin;
-        // this.legOffset = legOffset
-        // const footY = this.orginPos.y + (PLAYER_CONFIG.HEIGHT / 10) - this.legOffset.y;
-        // const footX = this.orginPos.x + this.legOffset.x;
-        //
-        // this.leg.clear().moveTo(this.orginPos.x, this.orginPos.y - 2).lineTo(footX, footY).stroke({ color: "#000000", width: 3, cap: "round" });
     }
 
     curlUp(orgin: Vector2) {
         this.hipPos = orgin
         this.footPos.x = this.hipPos.x
         this.footPos.y = this.hipPos.y + (PLAYER_CONFIG.HEIGHT / 30)
+        this.isStepping = false
+        this.stepProgress = 1.0
 
         this.leg.clear().moveTo(this.hipPos.x, this.hipPos.y - 2).lineTo(this.footPos.x, this.footPos.y).stroke({color: "#000000", width: 3, cap: "round"})
     }
@@ -147,7 +149,6 @@ export class Player {
         )
     }
 
-    //(hip: Vector2, otherLeg: Leg, velocity: Vector2, ground: number, deltaTime: number)
     updateLegs() {
         const legOffsetX = PLAYER_CONFIG.WIDTH / 4
         const legOffsetY = (PLAYER_CONFIG.HEIGHT / 10) * 9

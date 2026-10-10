@@ -1,7 +1,7 @@
 import { Vector2 } from "@shared/commonModels";
 import { Player } from "../Player";
 import { Entity } from "./Entity";
-import { ValidateEntityCustomFields, isColliding, RequiredFields } from "../../Global";
+import { isColliding, RequiredField } from "../../Global";
 import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { Level } from "../Level";
@@ -15,10 +15,17 @@ export class Button extends Entity {
 	public newList: Player[] = [];
 	public hasChanged: boolean = false;
 
+	public readonly usedFields: RequiredField[] = [
+		{
+			name: "ActivationGroup",
+			value: this.customFields.ActivationGroup,
+			isMissing: (v: any) => v === "" || v === undefined,
+			isRequired: true,
+		},
+	];
+
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
-
-		this.validateCustomFields();
 	}
 
 	public handleCollisions(
@@ -101,14 +108,14 @@ export class Button extends Entity {
 	public override endTick() {}
 
 	public override handleBehaviour(l: Level) {
-		if (this.customFields.ActivationGroup === undefined) return;
+		if (!this.customFields.ActivationGroup.doesExist) return;
 
-		const prevCount = l.activationStates.get(this.customFields.ActivationGroup)!;
+		const prevCount = l.activationStates.get(this.customFields.ActivationGroup.value!)!;
 
 		if (this.newList.length > 0 && this.playersStanding.length == 0) {
-			l.activationStates.set(this.customFields.ActivationGroup, prevCount + 1);
+			l.activationStates.set(this.customFields.ActivationGroup.value!, prevCount + 1);
 		} else if (this.newList.length == 0 && this.playersStanding.length > 0) {
-			l.activationStates.set(this.customFields.ActivationGroup, prevCount - 1);
+			l.activationStates.set(this.customFields.ActivationGroup.value!, prevCount - 1);
 		}
 
 		this.playersStanding = this.newList;
@@ -122,18 +129,5 @@ export class Button extends Entity {
 			visualSize: this.visualSize,
 			isPressed: this.isPressed(),
 		};
-	}
-
-	public override validateCustomFields() {
-		const requiredFields: RequiredFields[] = [
-			{
-				name: "ActivationGroup",
-				value: this.customFields.ActivationGroup,
-				isMissing: (v: any) => v === "" || v === undefined,
-				isRequired: true,
-			},
-		];
-
-		return ValidateEntityCustomFields(requiredFields, this);
 	}
 }

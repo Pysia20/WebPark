@@ -3,7 +3,7 @@ import { Entity } from "./Entity";
 import { Vector2 } from "@shared/commonModels";
 import { LOG } from "../../Logger";
 import { Player } from "../Player";
-import { isColliding, RequiredFields, ValidateEntityCustomFields } from "../../Global";
+import { isColliding, RequiredField } from "../../Global";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { Level } from "../Level";
 import { ServerButtonDoorData } from "@shared/commonEntityData";
@@ -13,9 +13,29 @@ export class ButtonDoor extends Entity {
 	public override type: EntityType = "ButtonDoor";
 	public isPassable: boolean = false;
 
+	public readonly usedFields: RequiredField[] = [
+		{
+			name: "ActivationGroup",
+			value: this.customFields.ActivationGroup,
+			isMissing: (v: any) => v === "" || v === undefined,
+			isRequired: true,
+		},
+		{
+			name: "ActivationCount",
+			value: this.customFields.ActivationCount,
+			isMissing: (v: any) => v === 0 || v === undefined,
+			isRequired: true,
+		},
+		{
+			name: "StaysOn",
+			value: this.customFields.StaysOn,
+			isMissing: (v: any) => v === undefined,
+			isRequired: true,
+		},
+	];
+
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
-		this.validateCustomFields();
 	}
 
 	public override handleCollisions(
@@ -92,17 +112,19 @@ export class ButtonDoor extends Entity {
 	}
 
 	public override handleBehaviour(l: Level) {
-		if (this.customFields.ActivationGroup === undefined) return;
-		if (this.customFields.ActivationCount === undefined) return;
+		if (
+			!this.customFields.ActivationCount.doesExist ||
+			!this.customFields.ActivationGroup.doesExist
+		)
+			return;
 
 		if (
-			this.customFields.ActivationCount != -1 &&
-			this.customFields.ActivationCount <=
-				l.activationStates.get(this.customFields.ActivationGroup)!
+			this.customFields.ActivationCount.value! <=
+			l.activationStates.get(this.customFields.ActivationGroup.value!)!
 		) {
 			this.isPassable = true;
 		} else {
-			if (!this.customFields.StaysOn) {
+			if (!this.customFields.StaysOn.doesExist) {
 				this.isPassable = false;
 			}
 		}
@@ -115,30 +137,5 @@ export class ButtonDoor extends Entity {
 			type: this.type,
 			isOpen: this.isPassable,
 		};
-	}
-
-	public override validateCustomFields() {
-		const requiredFields: RequiredFields[] = [
-			{
-				name: "ActivationGroup",
-				value: this.customFields.ActivationGroup,
-				isMissing: (v: any) => v === "" || v === undefined,
-				isRequired: true,
-			},
-			{
-				name: "ActivationCount",
-				value: this.customFields.ActivationCount,
-				isMissing: (v: any) => v === 0 || v === undefined,
-				isRequired: true,
-			},
-			{
-				name: "StaysOn",
-				value: this.customFields.StaysOn,
-				isMissing: (v: any) => v === undefined,
-				isRequired: true,
-			},
-		];
-
-		return ValidateEntityCustomFields(requiredFields, this);
 	}
 }

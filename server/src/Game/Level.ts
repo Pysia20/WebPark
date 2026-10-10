@@ -35,8 +35,8 @@ export class Level {
 			const clone: Entity = e.clone();
 			clone.id = this.entities.length;
 			this.entities.push(clone);
-			if (e.customFields.ActivationGroup) {
-				this.activationStates.set(e.customFields.ActivationGroup, 0);
+			if (e.customFields.ActivationGroup.doesExist) {
+				this.activationStates.set(e.customFields.ActivationGroup.value!, 0);
 			}
 		});
 

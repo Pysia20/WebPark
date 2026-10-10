@@ -3,7 +3,7 @@ import { Level } from "../Level";
 import { Entity } from "./Entity";
 import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
-import { isColliding } from "../../Global";
+import { isColliding, RequiredField } from "../../Global";
 import { Player } from "../Player";
 import { LOG } from "../../Logger";
 
@@ -14,8 +14,6 @@ export class Spike extends Entity {
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
-
-		this.validateCustomFields();
 	}
 
 	public override handleCollisions(
@@ -83,26 +81,5 @@ export class Spike extends Entity {
 
 	public override clone() {
 		return new Spike({ ...this.pos }, { ...this.size }, { ...this.customFields });
-	}
-
-	public override validateCustomFields() {
-		const requiredFields = [
-			{
-				name: "OnlyKillThePlayer",
-				value: this.customFields.OnlyKillThePlayer,
-				isMissing: (v: any) => v === undefined,
-			},
-		];
-
-		for (let field of requiredFields) {
-			if (field.isMissing(field.value)) {
-				LOG.info(
-					`Spike doesn't have an '${field.name}' custom field. (${this.pos.x}, ${this.pos.y})`,
-				);
-				return false;
-			}
-		}
-
-		return true;
 	}
 }

@@ -1,4 +1,8 @@
-import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
+import {
+	DummyEntityCustomFields,
+	EntityCustomFieldsData,
+	EntityType,
+} from "@shared/commonLevelModels";
 import { LOG } from "../../Logger";
 import { Entity } from "./Entity";
 import { Button } from "./Button";
@@ -19,7 +23,7 @@ export class EntityBuilder {
 	private size: Vector2 = { x: -1, y: -1 };
 	private activationGroup: string = "";
 	private activationCount: number = -1;
-	private customFields: EntityCustomFieldsData = {};
+	private customFields: EntityCustomFieldsData = { ...DummyEntityCustomFields };
 
 	private static readonly TYPE_MAP: Record<EntityType, EntityConstructor> = {
 		JohnEntity: Entity,

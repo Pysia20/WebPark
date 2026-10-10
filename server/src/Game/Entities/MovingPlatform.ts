@@ -9,7 +9,7 @@ import {
 	MapCollider,
 } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG, WORLD_CONFIG } from "@shared/commonVariables";
-import { clamp, ValidateEntityCustomFields, isColliding, RequiredFields } from "../../Global";
+import { clamp, isColliding, RequiredField } from "../../Global";
 import { Player } from "../Player";
 import { LOG } from "../../Logger";
 import e from "cors";
@@ -24,7 +24,7 @@ export class MovingPlatform extends Entity {
 	public readonly speed: number;
 	public shouldRun: boolean = false;
 
-	public readonly requiredFields: RequiredFields[] = [
+	public readonly usedFields: RequiredField[] = [
 		{
 			name: "ActivationGroup",
 			value: this.customFields.ActivationGroup,
@@ -71,36 +71,48 @@ export class MovingPlatform extends Entity {
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
-		ValidateEntityCustomFields(this.requiredFields, this);
 
-		this.speed = this.customFields.Speed!;
+		this.speed = this.customFields.Speed.value!;
 		this.startPos = { ...this.pos };
 		this.endPos = { ...this.pos };
 
-		if (customFields.Direction == "Right")
-			this.endPos.x += this.customFields.Distance! * WORLD_CONFIG.CELL_SIZE;
-		else if (customFields.Direction == "Left")
-			this.endPos.x -= this.customFields.Distance! * WORLD_CONFIG.CELL_SIZE;
-		else if (customFields.Direction == "Up")
-			this.endPos.x -= this.customFields.Distance! * WORLD_CONFIG.CELL_SIZE;
-		else if (customFields.Direction == "Down")
-			this.endPos.y += this.customFields.Distance! * WORLD_CONFIG.CELL_SIZE;
+		if (customFields.Direction.value == "Right")
+			this.endPos.x += this.customFields.Distance.value! * WORLD_CONFIG.CELL_SIZE;
+		else if (customFields.Direction.value == "Left")
+			this.endPos.x -= this.customFields.Distance.value! * WORLD_CONFIG.CELL_SIZE;
+		else if (customFields.Direction.value == "Up")
+			this.endPos.x -= this.customFields.Distance.value! * WORLD_CONFIG.CELL_SIZE;
+		else if (customFields.Direction.value == "Down")
+			this.endPos.y += this.customFields.Distance.value! * WORLD_CONFIG.CELL_SIZE;
 	}
 
 	public override handleBehaviour(l: Level) {
 		// Activation states needs to be added
 
-		if (this.timer < this.customFields.Cooldown!) {
+		if (
+			this.customFields.ActivationGroup.doesExist &&
+			this.customFields.ActivationCount.doesExist
+		) {
+			const group = this.customFields.ActivationGroup.value;
+			const count = this.customFields.ActivationCount.value;
+
+			if (l.activationStates.get(group!)! < count!) {
+				this.timer = 0;
+				return;
+			}
+		}
+
+		if (this.timer < this.customFields.Cooldown.value!) {
 			this.timer++;
-			if (this.timer >= this.customFields.Cooldown!) {
+			if (this.timer >= this.customFields.Cooldown.value!) {
 				this.reversed = !this.reversed;
 			}
 			return;
 		}
 
 		let currentDirection: Direction = this.reversed
-			? DirectionOppositeMap[this.customFields.Direction!]
-			: this.customFields.Direction!;
+			? DirectionOppositeMap[this.customFields.Direction.value!]
+			: this.customFields.Direction.value!;
 
 		if (currentDirection == "Left") this.pos.x -= this.speed;
 		else if (currentDirection == "Right") this.pos.x += this.speed;

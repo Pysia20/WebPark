@@ -109,7 +109,7 @@ export interface LevelFieldInstance {
 //  ENTITY CUSTOM FIELDS
 //=========================
 
-export type EntityCustomField = "ActivationGroup" | "ActivationCount";
+// export type EntityCustomField = "ActivationGroup" | "ActivationCount";
 
 export type Direction = "Right" | "Left" | "Up" | "Down";
 export const DirectionOppositeMap: Record<Direction, Direction> = {
@@ -120,15 +120,69 @@ export const DirectionOppositeMap: Record<Direction, Direction> = {
 } as const;
 
 export interface EntityCustomFieldsData {
-	ActivationGroup?: string;
-	ActivationCount?: number;
-	StaysOn?: boolean;
-	OnlyKillThePlayer?: boolean;
-	Direction?: Direction;
-	Speed?: number;
-	Distance?: number;
-	Cooldown?: number;
+	ActivationGroup: CustomField<string>;
+	ActivationCount: CustomField<number>;
+	StaysOn: CustomField<boolean>;
+	OnlyKillThePlayer: CustomField<boolean>;
+	Direction: CustomField<Direction>;
+	Speed: CustomField<number>;
+	Distance: CustomField<number>;
+	Cooldown: CustomField<number>;
 }
+
+export type EntityCustomFieldTypeMap = {
+	ActivationGroup: string;
+	ActivationCount: number;
+	StaysOn: boolean;
+	OnlyKillThePlayer: boolean;
+	Direction: number;
+	Speed: number;
+	Distance: number;
+	Cooldown: number;
+};
+
+export type EntityCustomField = keyof EntityCustomFieldsData;
+
+export interface CustomField<T> {
+	value: T | undefined;
+	doesExist: boolean | undefined;
+}
+
+export const DummyEntityCustomFields: EntityCustomFieldsData = {
+	ActivationGroup: {
+		doesExist: false,
+		value: undefined,
+	},
+	ActivationCount: {
+		doesExist: false,
+		value: undefined,
+	},
+	StaysOn: {
+		doesExist: false,
+		value: undefined,
+	},
+	OnlyKillThePlayer: {
+		doesExist: false,
+		value: undefined,
+	},
+	Direction: {
+		doesExist: false,
+		value: undefined,
+	},
+	Speed: {
+		doesExist: false,
+		value: undefined,
+	},
+	Distance: {
+		doesExist: false,
+		value: undefined,
+	},
+	Cooldown: {
+		doesExist: false,
+		value: undefined,
+	},
+} as const;
+
 export interface EntityFieldInstance {
 	__identifier: string;
 	__type: string;

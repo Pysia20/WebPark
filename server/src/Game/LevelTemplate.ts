@@ -8,6 +8,9 @@ import {
 	LevelFieldInstance,
 	LevelCustomFieldsData,
 	EntityCustomFieldsData,
+	EntityCustomFieldTypeMap,
+	CustomField,
+	DummyEntityCustomFields,
 } from "@shared/commonLevelModels";
 import { Entity } from "./Entities/Entity";
 import { Button } from "./Entities/Button";
@@ -75,13 +78,25 @@ export class LevelTemplate {
 	}
 
 	private parseEntityFields(e: EntityInstance): EntityCustomFieldsData {
-		// const fields: EntityCustomFieldsData = {};
+		const parsedFields: EntityCustomFieldsData = { ...DummyEntityCustomFields };
 
-		const fields: EntityCustomFieldsData = Object.fromEntries(
-			e.fieldInstances.map((instance) => [instance.__identifier, instance.__value]),
-		);
+		for (const field of e.fieldInstances) {
+			if (field.__identifier in DummyEntityCustomFields) {
+				const id = field.__identifier as keyof EntityCustomFieldTypeMap;
+				type T = EntityCustomFieldTypeMap[typeof id];
 
-		return fields;
+				parsedFields[field.__identifier as keyof EntityCustomFieldsData] = {
+					value: field.__value,
+					doesExist: undefined,
+				} satisfies CustomField<T>;
+			} else {
+				LOG.warn(
+					`Unknown field (${field.__identifier}) in ${e.__identifier} (${e.__worldX}, ${e.__worldY})`,
+				);
+			}
+		}
+
+		return parsedFields;
 	}
 
 	private parseIntGrid(data: LevelData): number[][] {

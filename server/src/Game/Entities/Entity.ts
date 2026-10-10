@@ -1,7 +1,7 @@
 import { ServerEntityData, Vector2 } from "@shared/commonModels";
 import { Player } from "../Player";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
-import { isColliding } from "../../Global";
+import { isColliding, RequiredField } from "../../Global";
 import { LOG } from "../../Logger";
 import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
 import { EntityBuilder } from "./EntityBuilder";
@@ -14,13 +14,41 @@ export class Entity {
 	public visualSize: Vector2;
 	public customFields: EntityCustomFieldsData;
 
+	public readonly usedFields: RequiredField[] = [];
+
 	public id: number = -1;
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		this.pos = pos;
 		this.size = size;
 		this.visualSize = this.size;
-		this.customFields = customFields;
+		this.customFields = this.validateCustomFields(customFields);
+	}
+
+	protected validateCustomFields(customFields: EntityCustomFieldsData): EntityCustomFieldsData {
+		let newCustomFields: EntityCustomFieldsData = { ...customFields };
+
+		for (let field of this.usedFields) {
+			if (field.isMissing) {
+				newCustomFields[field.name].doesExist = false;
+				if (field.isRequired) {
+					LOG.error(
+						`${this.type} doesn't have an '${field.name}' custom field or it's value is invalid. (${this.pos.x}, ${this.pos.y})`,
+					);
+					throw Error(
+						`${this.type} doesn't have an '${field.name}' custom field or it's value is invalid. (${this.pos.x}, ${this.pos.y})`,
+					);
+				}
+
+				LOG.warn(
+					`${this.type} doesn't have an '${field.name}' custom field or it's value is invalid. (${this.pos.x}, ${this.pos.y})`,
+				);
+			}
+
+			newCustomFields[field.name].doesExist = true;
+		}
+
+		return newCustomFields;
 	}
 
 	/**
@@ -128,6 +156,4 @@ export class Entity {
 			visualSize: this.visualSize,
 		};
 	}
-
-	public validateCustomFields() {}
 }

@@ -5,33 +5,62 @@ import { playJump } from "./Audio";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 
 class Leg {
-    orginPos: Vector2
-    footPos: Vector2
-    legOffset: Vector2
+    stepStart: Vector2 = {x: 0, y: 0}
+    footPos: Vector2 = {x: 0, y: 0}
+    stepTarget: Vector2 = {x: 0, y: 0}
+    hipPos: Vector2 = {x: 0, y: 0}
+    stepProgress: number = 1.0
+    isStepping: boolean = false
     leg: Graphics = new Graphics()
 
+    MAX_STRETCH = 24
+
     constructor() {
-        this.orginPos = {x: 0, y: 0}
-        this.footPos = {x: 0, y: 0}
-        this.legOffset = {x: 0, y: 0}
         this.leg.position.set(0, 0)
     }
 
-    updateLegs(hipOrgin: Vector2, legOffset: Vector2) {
-        this.orginPos = hipOrgin;
-        this.legOffset = legOffset
-        const footY = this.orginPos.y + (PLAYER_CONFIG.HEIGHT / 10) - this.legOffset.y;
-        const footX = this.orginPos.x + this.legOffset.x;
+    updateLeg(hip: Vector2, otherLeg: Leg, velocity: Vector2, ground: number, deltaTime: number) {
+        const distance = Math.abs(hip.x - this.footPos.x)
+        this.hipPos = hip
 
-        this.leg.clear().moveTo(this.orginPos.x, this.orginPos.y - 2).lineTo(footX, footY).stroke({ color: "#000000", width: 3, cap: "round" });
+        if (!this.isStepping && !otherLeg.isStepping && distance > this.MAX_STRETCH) {
+            this.isStepping = true
+            this.stepProgress = 0
+            this.stepStart = {x: this.footPos.x, y: this.footPos.y}
+            const fowardOffset = (velocity.x > 0) ? 16 : -16
+            this.stepTarget = {x: hip.x + fowardOffset, y: ground}
+        }
+
+        if (this.isStepping) {
+            this.stepProgress += 0.15 * deltaTime
+
+            if (this.stepProgress >= 1.0) {
+                this.stepProgress = 1.0
+                this.isStepping = false
+                this.footPos = {x: this.stepTarget.x, y: this.stepTarget.y}
+            } else {
+                this.footPos.x = this.stepStart.x + (this.stepTarget.x - this.stepStart.x) * this.stepProgress
+                const liftArc = Math.sin(this.stepProgress * Math.PI) * 8
+                this.footPos.y = ground - liftArc
+            }
+        }
+
+        this.leg.clear().moveTo(this.hipPos.x, this.hipPos.y - 2).lineTo(this.footPos.x, this.footPos.y).stroke({ color: "#000000", width: 3, cap: "round" });
+
+        // this.orginPos = hipOrgin;
+        // this.legOffset = legOffset
+        // const footY = this.orginPos.y + (PLAYER_CONFIG.HEIGHT / 10) - this.legOffset.y;
+        // const footX = this.orginPos.x + this.legOffset.x;
+        //
+        // this.leg.clear().moveTo(this.orginPos.x, this.orginPos.y - 2).lineTo(footX, footY).stroke({ color: "#000000", width: 3, cap: "round" });
     }
 
     curlUp(orgin: Vector2) {
-        this.orginPos = orgin
-        this.footPos.x = this.orginPos.x
-        this.footPos.y = this.orginPos.y + (PLAYER_CONFIG.HEIGHT / 30)
+        this.hipPos = orgin
+        this.footPos.x = this.hipPos.x
+        this.footPos.y = this.hipPos.y + (PLAYER_CONFIG.HEIGHT / 30)
 
-        this.leg.clear().moveTo(this.orginPos.x, this.orginPos.y - 2).lineTo(this.footPos.x, this.footPos.y).stroke({color: "#000000", width: 3, cap: "round"})
+        this.leg.clear().moveTo(this.hipPos.x, this.hipPos.y - 2).lineTo(this.footPos.x, this.footPos.y).stroke({color: "#000000", width: 3, cap: "round"})
     }
 }
 
@@ -66,7 +95,6 @@ export class Player {
     velocity: Vector2 = {x: 0, y: 0}
 
     inAir: boolean = false
-    walkPhase: number = 0
     deltaT: number = 0
 
     legs: Leg[]
@@ -119,32 +147,18 @@ export class Player {
         )
     }
 
+    //(hip: Vector2, otherLeg: Leg, velocity: Vector2, ground: number, deltaTime: number)
     updateLegs() {
         const legOffsetX = PLAYER_CONFIG.WIDTH / 4
         const legOffsetY = (PLAYER_CONFIG.HEIGHT / 10) * 9
 
-        if (this.velocity.x != 0 && !this.inAir) {
-            this.walkPhase += 0.2 * this.deltaT
-        } else {
-            this.walkPhase = 0
-        }
-
         if (!this.inAir) {
-            const SWING = 12;
-            const LIFT = 6;
-
-            const leftX = Math.sin(this.walkPhase) * SWING;
-            const leftY = Math.max(0, -Math.sin(this.walkPhase)) * LIFT;
-
-            const rightPhase = this.walkPhase + Math.PI;
-            const rightX = Math.sin(rightPhase) * SWING;
-            const rightY = Math.max(0, -Math.sin(rightPhase)) * LIFT;
-
             const hipLeft = { x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY };
             const hipRight = {x: this.pos.x + legOffsetX * 3, y: this.pos.y + legOffsetY}
 
-            this.legs[0].updateLegs(hipLeft, {x: leftX, y:leftY})
-            this.legs[1].updateLegs(hipRight, {x: rightX, y: rightY})
+            const ground = this.pos.y + PLAYER_CONFIG.HEIGHT
+            this.legs[0].updateLeg(hipLeft, this.legs[1], this.velocity, ground, this.deltaT)
+            this.legs[1].updateLeg(hipRight, this.legs[0], this.velocity, ground, this.deltaT)
         } else {
             this.legs[0].curlUp({x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY})
             this.legs[1].curlUp({x: this.pos.x + (legOffsetX * 3), y: this.pos.y + legOffsetY})

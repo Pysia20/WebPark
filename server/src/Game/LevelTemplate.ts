@@ -77,11 +77,11 @@ export class LevelTemplate {
 	private parseEntityFields(e: EntityInstance): EntityCustomFieldsData {
 		// const fields: EntityCustomFieldsData = {};
 
-		const fields = Object.fromEntries(
+		const fields: EntityCustomFieldsData = Object.fromEntries(
 			e.fieldInstances.map((instance) => [instance.__identifier, instance.__value]),
 		);
 
-		return fields as EntityCustomFieldsData;
+		return fields;
 	}
 
 	private parseIntGrid(data: LevelData): number[][] {

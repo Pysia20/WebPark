@@ -3,7 +3,7 @@ import { Entity } from "./Entity";
 import { Vector2 } from "@shared/commonModels";
 import { LOG } from "../../Logger";
 import { Player } from "../Player";
-import { isColliding } from "../../Global";
+import { isColliding, RequiredFields, ValidateEntityCustomFields } from "../../Global";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { Level } from "../Level";
 import { ServerButtonDoorData } from "@shared/commonEntityData";
@@ -118,33 +118,27 @@ export class ButtonDoor extends Entity {
 	}
 
 	public override validateCustomFields() {
-		const requiredFields = [
+		const requiredFields: RequiredFields[] = [
 			{
 				name: "ActivationGroup",
 				value: this.customFields.ActivationGroup,
 				isMissing: (v: any) => v === "" || v === undefined,
+				isRequired: true,
 			},
 			{
 				name: "ActivationCount",
 				value: this.customFields.ActivationCount,
 				isMissing: (v: any) => v === 0 || v === undefined,
+				isRequired: true,
 			},
 			{
 				name: "StaysOn",
 				value: this.customFields.StaysOn,
 				isMissing: (v: any) => v === undefined,
+				isRequired: true,
 			},
 		];
 
-		for (let field of requiredFields) {
-			if (field.isMissing(field.value)) {
-				LOG.info(
-					`ButtonDoor doesn't have an '${field.name}' custom field. (${this.pos.x}, ${this.pos.y})`,
-				);
-				return false;
-			}
-		}
-
-		return true;
+		return ValidateEntityCustomFields(requiredFields, this);
 	}
 }

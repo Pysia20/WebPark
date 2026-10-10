@@ -129,7 +129,5 @@ export class Entity {
 		};
 	}
 
-	public validateCustomFields(): boolean {
-		return true;
-	}
+	public validateCustomFields() {}
 }

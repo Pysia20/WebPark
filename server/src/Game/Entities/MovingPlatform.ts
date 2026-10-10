@@ -9,9 +9,10 @@ import {
 	MapCollider,
 } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG, WORLD_CONFIG } from "@shared/commonVariables";
-import { clamp, isColliding } from "../../Global";
+import { clamp, ValidateEntityCustomFields, isColliding, RequiredFields } from "../../Global";
 import { Player } from "../Player";
 import { LOG } from "../../Logger";
+import e from "cors";
 
 export class MovingPlatform extends Entity {
 	public override type: EntityType = "MovingPlatform";
@@ -21,10 +22,56 @@ export class MovingPlatform extends Entity {
 	public timer: number = 0;
 	public reversed: boolean = true;
 	public readonly speed: number;
+	public shouldRun: boolean = false;
+
+	public readonly requiredFields: RequiredFields[] = [
+		{
+			name: "ActivationGroup",
+			value: this.customFields.ActivationGroup,
+			isMissing: (v: any) => v === "" || v === undefined || v == null,
+			isRequired: false,
+		},
+		{
+			name: "ActivationCount",
+			value: this.customFields.ActivationCount,
+			isMissing: (v: any) => v === 0 || v === undefined || v == null,
+			isRequired: false,
+		},
+		{
+			name: "StaysOn",
+			value: this.customFields.StaysOn,
+			isMissing: (v: any) => v === undefined || v == null,
+			isRequired: false,
+		},
+		{
+			name: "Direction",
+			value: this.customFields.Direction,
+			isMissing: (v: any) => v === undefined || v == null,
+			isRequired: true,
+		},
+		{
+			name: "Speed",
+			value: this.customFields.Speed,
+			isMissing: (v: any) => v === undefined || v <= 0 || v == null,
+			isRequired: true,
+		},
+		{
+			name: "Distance",
+			value: this.customFields.Distance,
+			isMissing: (v: any) => v === undefined || v <= 0 || v == null,
+			isRequired: true,
+		},
+		{
+			name: "Cooldown",
+			value: this.customFields.Distance,
+			isMissing: (v: any) => v === undefined || v < 0 || v == null,
+			isRequired: true,
+		},
+	] as const;
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
-		this.validateCustomFields();
+		ValidateEntityCustomFields(this.requiredFields, this);
 
 		this.speed = this.customFields.Speed!;
 		this.startPos = { ...this.pos };
@@ -87,59 +134,5 @@ export class MovingPlatform extends Entity {
 
 	public override clone() {
 		return new MovingPlatform({ ...this.pos }, { ...this.size }, { ...this.customFields });
-	}
-
-	public override validateCustomFields() {
-		const requiredFields = [
-			{
-				name: "ActivationGroup",
-				value: this.customFields.ActivationGroup,
-				isMissing: (v: any) => v === "" || v === undefined,
-			},
-			{
-				name: "ActivationCount",
-				value: this.customFields.ActivationCount,
-				isMissing: (v: any) => v === 0 || v === undefined,
-			},
-			{
-				name: "StaysOn",
-				value: this.customFields.StaysOn,
-				isMissing: (v: any) => v === undefined,
-			},
-			{
-				name: "Direction",
-				value: this.customFields.Direction,
-				isMissing: (v: any) => v === undefined,
-			},
-			{
-				name: "Speed",
-				value: this.customFields.Speed,
-				isMissing: (v: any) => v === undefined || v <= 0,
-			},
-			{
-				name: "Distance",
-				value: this.customFields.Distance,
-				isMissing: (v: any) => v === undefined || v <= 0,
-			},
-			{
-				name: "Cooldown",
-				value: this.customFields.Distance,
-				isMissing: (v: any) => v === undefined || v < 0,
-			},
-		];
-
-		for (let field of requiredFields) {
-			if (field.isMissing(field.value)) {
-				LOG.info(
-					`ButtonDoor doesn't have an '${field.name}' custom field or it's value is invalid. (${this.pos.x}, ${this.pos.y})`,
-				);
-				throw Error(
-					`ButtonDoor doesn't have an '${field.name}' custom field or it's value is invalid. (${this.pos.x}, ${this.pos.y})`,
-				);
-				return false;
-			}
-		}
-
-		return true;
 	}
 }

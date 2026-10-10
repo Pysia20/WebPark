@@ -1,4 +1,4 @@
-import { MapCollider } from "@shared/commonLevelModels";
+import { EntityCustomField, MapCollider } from "@shared/commonLevelModels";
 import { Room } from "./Game/Room";
 import { Entity } from "./Game/Entities/Entity";
 import { Player } from "./Game/Player";
@@ -45,6 +45,38 @@ export function generateRoomCode() {
 
 export function clamp(v: number, min: number, max: number) {
 	return Math.min(max, Math.max(v, min));
+}
+
+export interface RequiredFields {
+	name: string;
+	value: any;
+	isMissing: Function;
+	isRequired: boolean;
+}
+
+export function ValidateEntityCustomFields(fields: RequiredFields[], entity: Entity): boolean {
+	let isFilled = true;
+
+	for (let field of fields) {
+		if (field.isMissing(field.value)) {
+			if (field.isRequired) {
+				LOG.error(
+					`${entity.type} doesn't have an '${field.name}' custom field or it's value is invalid. (${entity.pos.x}, ${entity.pos.y})`,
+				);
+				throw Error(
+					`${entity.type} doesn't have an '${field.name}' custom field or it's value is invalid. (${entity.pos.x}, ${entity.pos.y})`,
+				);
+			}
+
+			LOG.warn(
+				`${entity.type} doesn't have an '${field.name}' custom field or it's value is invalid. (${entity.pos.x}, ${entity.pos.y})`,
+			);
+
+			isFilled = false;
+		}
+	}
+
+	return isFilled;
 }
 
 function extractTransform(object: Player | MapCollider | Entity): [number, number, number, number] {

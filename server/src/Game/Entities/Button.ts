@@ -1,7 +1,7 @@
 import { Vector2 } from "@shared/commonModels";
 import { Player } from "../Player";
 import { Entity } from "./Entity";
-import { isColliding } from "../../Global";
+import { ValidateEntityCustomFields, isColliding, RequiredFields } from "../../Global";
 import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { Level } from "../Level";
@@ -125,23 +125,15 @@ export class Button extends Entity {
 	}
 
 	public override validateCustomFields() {
-		const requiredFields = [
+		const requiredFields: RequiredFields[] = [
 			{
 				name: "ActivationGroup",
 				value: this.customFields.ActivationGroup,
 				isMissing: (v: any) => v === "" || v === undefined,
+				isRequired: true,
 			},
 		];
 
-		for (let field of requiredFields) {
-			if (field.isMissing(field.value)) {
-				LOG.info(
-					`Button doesn't have an '${field.name}' custom field. (${this.pos.x}, ${this.pos.y})`,
-				);
-				return false;
-			}
-		}
-
-		return true;
+		return ValidateEntityCustomFields(requiredFields, this);
 	}
 }

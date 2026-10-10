@@ -4,38 +4,26 @@ import { PlayerTextures } from "./Assets";
 import { playJump } from "./Audio";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 
-enum LegSide {
-    left,
-    right
-}
-
 class Leg {
     orginPos: Vector2
     footPos: Vector2
+    legOffset: Vector2
     leg: Graphics = new Graphics()
-
-    STEP_SPACER = 20
 
     constructor() {
         this.orginPos = {x: 0, y: 0}
         this.footPos = {x: 0, y: 0}
+        this.legOffset = {x: 0, y: 0}
         this.leg.position.set(0, 0)
     }
 
-    updateLegs(orgin: Vector2, canStep: boolean) {
-        this.orginPos = orgin
-        let stepped = false
+    updateLegs(hipOrgin: Vector2, legOffset: Vector2) {
+        this.orginPos = hipOrgin;
+        this.legOffset = legOffset
+        const footY = this.orginPos.y + (PLAYER_CONFIG.HEIGHT / 10) - this.legOffset.y;
+        const footX = this.orginPos.x + this.legOffset.x;
 
-        if (Math.abs(this.orginPos.x - this.footPos.x) > this.STEP_SPACER && canStep) {
-            stepped = true
-            this.footPos.x = (this.orginPos.x > this.footPos.x) ? this.orginPos.x + this.STEP_SPACER : this.orginPos.x - this.STEP_SPACER
-        }
-        this.footPos.y = this.orginPos.y + (PLAYER_CONFIG.HEIGHT / 10)
-        // if (Math.abs(this.orginPos.y - this.footPos.y) > (PLAYER_CONFIG.HEIGHT / 10)) this.footPos.y = this.orginPos.y + (PLAYER_CONFIG.HEIGHT / 10)
-
-        this.leg.clear().moveTo(this.orginPos.x, this.orginPos.y - 2).lineTo(this.footPos.x, this.footPos.y).stroke({color: "#000000", width: 3, cap: "round"})
-
-        return stepped
+        this.leg.clear().moveTo(this.orginPos.x, this.orginPos.y - 2).lineTo(footX, footY).stroke({ color: "#000000", width: 3, cap: "round" });
     }
 
     curlUp(orgin: Vector2) {
@@ -69,12 +57,17 @@ class Eye {
 export class Player {
     id: number
     isHost: boolean
+
     nick: PixiText
     color: string
+
     pos: Vector2 = {x: 0.0, y: 0.0}
     targetPos: Vector2 = {x: 0.0, y: 0.0}
+    velocity: Vector2 = {x: 0, y: 0}
+
     inAir: boolean = false
-    activeLeg: LegSide = LegSide.left
+    walkPhase: number = 0
+    deltaT: number = 0
 
     legs: Leg[]
     torso: Torso
@@ -102,6 +95,8 @@ export class Player {
     }
 
     updatePos() {
+        this.checkInAir(this.velocity)
+
         this.pos.x += (this.targetPos.x - this.pos.x) * this.LERP_SPEED
         this.pos.y += (this.targetPos.y - this.pos.y) * this.LERP_SPEED
         this.updateTorso()
@@ -128,15 +123,28 @@ export class Player {
         const legOffsetX = PLAYER_CONFIG.WIDTH / 4
         const legOffsetY = (PLAYER_CONFIG.HEIGHT / 10) * 9
 
-        if (!this.inAir) {
-            const leftStepped = this.legs[0].updateLegs({x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY}, (this.activeLeg == LegSide.left))
-            const rightStepped = this.legs[1].updateLegs({x: this.pos.x + (legOffsetX * 3), y: this.pos.y + legOffsetY}, (this.activeLeg == LegSide.right))
+        if (this.velocity.x != 0 && !this.inAir) {
+            this.walkPhase += 0.2 * this.deltaT
+        } else {
+            this.walkPhase = 0
+        }
 
-            if (leftStepped) {
-                this.activeLeg = LegSide.right
-            } else if (rightStepped) {
-                this.activeLeg = LegSide.left
-            }
+        if (!this.inAir) {
+            const SWING = 12;
+            const LIFT = 6;
+
+            const leftX = Math.sin(this.walkPhase) * SWING;
+            const leftY = Math.max(0, -Math.sin(this.walkPhase)) * LIFT;
+
+            const rightPhase = this.walkPhase + Math.PI;
+            const rightX = Math.sin(rightPhase) * SWING;
+            const rightY = Math.max(0, -Math.sin(rightPhase)) * LIFT;
+
+            const hipLeft = { x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY };
+            const hipRight = {x: this.pos.x + legOffsetX * 3, y: this.pos.y + legOffsetY}
+
+            this.legs[0].updateLegs(hipLeft, {x: leftX, y:leftY})
+            this.legs[1].updateLegs(hipRight, {x: rightX, y: rightY})
         } else {
             this.legs[0].curlUp({x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY})
             this.legs[1].curlUp({x: this.pos.x + (legOffsetX * 3), y: this.pos.y + legOffsetY})
@@ -156,6 +164,11 @@ export class Player {
         world.removeChild(this.torso.sprite)
         world.removeChild(this.legs[0].leg)
         world.removeChild(this.legs[1].leg)
+    }
+
+    updateData(velocity: Vector2, deltaTime: number) {
+        this.deltaT = deltaTime
+        this.velocity = velocity
     }
 }
 

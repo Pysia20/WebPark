@@ -35,7 +35,7 @@ class Coordinator {
             const tempPlayer = this.players.get(Number(playerId))
                 if (tempPlayer) {
                     tempPlayer.targetPos = playerData.pos
-                    tempPlayer.checkInAir(playerData.velocity)
+                    tempPlayer.updateData(playerData.velocity, deltaTime)
                 } else {
                     console.log("unknown player")
                 }

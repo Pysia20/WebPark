@@ -4,6 +4,11 @@ import { PlayerTextures } from "./Assets";
 import { playJump } from "./Audio";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 
+enum LegSide {
+    left,
+    right
+}
+
 class Leg {
     orginPos: Vector2
     footPos: Vector2
@@ -17,13 +22,20 @@ class Leg {
         this.leg.position.set(0, 0)
     }
 
-    updateLegs(orgin: Vector2) {
+    updateLegs(orgin: Vector2, canStep: boolean) {
         this.orginPos = orgin
-        if (Math.abs(this.orginPos.x - this.footPos.x) > this.STEP_SPACER) this.footPos.x = (this.orginPos.x > this.footPos.x) ? this.orginPos.x + this.STEP_SPACER : this.orginPos.x - this.STEP_SPACER
-        // if (Math.abs(this.orginPos.y - this.footPos.y) > (PLAYER_CONFIG.HEIGHT / 10)) this.footPos.y = this.orginPos.y + (PLAYER_CONFIG.HEIGHT / 10)
+        let stepped = false
+
+        if (Math.abs(this.orginPos.x - this.footPos.x) > this.STEP_SPACER && canStep) {
+            stepped = true
+            this.footPos.x = (this.orginPos.x > this.footPos.x) ? this.orginPos.x + this.STEP_SPACER : this.orginPos.x - this.STEP_SPACER
+        }
         this.footPos.y = this.orginPos.y + (PLAYER_CONFIG.HEIGHT / 10)
+        // if (Math.abs(this.orginPos.y - this.footPos.y) > (PLAYER_CONFIG.HEIGHT / 10)) this.footPos.y = this.orginPos.y + (PLAYER_CONFIG.HEIGHT / 10)
 
         this.leg.clear().moveTo(this.orginPos.x, this.orginPos.y - 2).lineTo(this.footPos.x, this.footPos.y).stroke({color: "#000000", width: 3, cap: "round"})
+
+        return stepped
     }
 
     curlUp(orgin: Vector2) {
@@ -62,6 +74,7 @@ export class Player {
     pos: Vector2 = {x: 0.0, y: 0.0}
     targetPos: Vector2 = {x: 0.0, y: 0.0}
     inAir: boolean = false
+    activeLeg: LegSide = LegSide.left
 
     legs: Leg[]
     torso: Torso
@@ -116,8 +129,14 @@ export class Player {
         const legOffsetY = (PLAYER_CONFIG.HEIGHT / 10) * 9
 
         if (!this.inAir) {
-            this.legs[0].updateLegs({x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY})
-            this.legs[1].updateLegs({x: this.pos.x + (legOffsetX * 3), y: this.pos.y + legOffsetY})
+            const leftStepped = this.legs[0].updateLegs({x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY}, (this.activeLeg == LegSide.left))
+            const rightStepped = this.legs[1].updateLegs({x: this.pos.x + (legOffsetX * 3), y: this.pos.y + legOffsetY}, (this.activeLeg == LegSide.right))
+
+            if (leftStepped) {
+                this.activeLeg = LegSide.right
+            } else if (rightStepped) {
+                this.activeLeg = LegSide.left
+            }
         } else {
             this.legs[0].curlUp({x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY})
             this.legs[1].curlUp({x: this.pos.x + (legOffsetX * 3), y: this.pos.y + legOffsetY})

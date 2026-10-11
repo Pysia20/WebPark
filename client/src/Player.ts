@@ -40,7 +40,6 @@ class Leg {
             this.stepTarget = {x: hip.x + fowardOffset, y: ground}
         }
 
-
         if (this.isStepping) {
             this.stepProgress += 0.15 * deltaTime
 
@@ -60,7 +59,7 @@ class Leg {
             this.kneePos.x = (this.hipPos.x + this.footPos.x) / 2
             this.kneePos.y = (this.hipPos.y + this.footPos.y) / 2
         } else {
-            //Brain hurtsss, also yes AI help with the math (sorry I didn't reinvent inverse kinematics)
+            //Brain hurtsss, also yes AI helped with the math (sorry I didn't reinvent inverse kinematics)
             const scaryMath = ((this.LEG_LENGTH / 2) + (straightDistance ** 2) - (this.LEG_LENGTH / 2)) / (2 * (this.LEG_LENGTH / 2) * straightDistance)
             const angle = Math.acos(scaryMath)
 
@@ -98,6 +97,17 @@ class Torso {
         this.sprite = new Sprite(texture)
         this.sprite.setSize(PLAYER_CONFIG.WIDTH, PLAYER_CONFIG.HEIGHT - (PLAYER_CONFIG.HEIGHT / 10))
     }
+
+    updateTorso(pos: Vector2, velocity: Vector2) {
+        this.sprite.position.set(pos.x, pos.y)
+        /*  not rly usefull rn but if we ever add the face drawing it will be
+        if (velocity.x < 0) {
+            this.sprite.scale.x = -1;
+        } else if (velocity.x > 0) {
+            this.sprite.scale.x = 1;
+        }
+         */
+    }
 }
 
 class Eye {
@@ -118,6 +128,7 @@ export class Player {
     pos: Vector2 = {x: 0.0, y: 0.0}
     targetPos: Vector2 = {x: 0.0, y: 0.0}
     velocity: Vector2 = {x: 0, y: 0}
+    prevVelocity: Vector2 = {x: 0, y: 0}
 
     inAir: boolean = false
     deltaT: number = 0
@@ -148,7 +159,8 @@ export class Player {
     }
 
     updatePos() {
-        this.checkInAir(this.velocity)
+        this.checkIfJumped()
+        this.checkInAir()
 
         this.pos.x += (this.targetPos.x - this.pos.x) * this.LERP_SPEED
         this.pos.y += (this.targetPos.y - this.pos.y) * this.LERP_SPEED
@@ -156,6 +168,9 @@ export class Player {
         this.updateNick()
         this.updateLegs()
 
+        console.log(this.velocity)
+
+        this.prevVelocity = this.velocity
     }
 
     updateNick() {
@@ -166,10 +181,7 @@ export class Player {
     }
 
     updateTorso() {
-        this.torso.sprite.position.set(
-            this.pos.x,
-            this.pos.y
-        )
+        this.torso.updateTorso(this.pos, this.velocity)
     }
 
     updateLegs() {
@@ -177,7 +189,7 @@ export class Player {
         const legOffsetY = (PLAYER_CONFIG.HEIGHT / 10) * 9
 
         if (!this.inAir) {
-            const hipLeft = { x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY };
+            const hipLeft = {x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY};
             const hipRight = {x: this.pos.x + legOffsetX * 3, y: this.pos.y + legOffsetY}
 
             const ground = this.pos.y + PLAYER_CONFIG.HEIGHT
@@ -189,12 +201,12 @@ export class Player {
         }
     }
 
-    updateSprtie() {
-        console.log("nope")
-    }
-
-    checkInAir(velocity: Vector2) {
-        this.inAir = (velocity.y != 0)
+    checkInAir() {
+        if (this.velocity.y != 0) {
+            this.inAir = true
+        } else if (this.prevVelocity.y > 0 ) {
+            this.inAir = false
+        }
     }
 
     beGone(world: Container) {
@@ -208,81 +220,10 @@ export class Player {
         this.deltaT = deltaTime
         this.velocity = velocity
     }
-}
 
-/*
-interface animController {
-    ANIM_SPEED: number
-    animTimer: number
-    animFrames: Texture[]
-}
-
-export class Player {
-    id: number
-    isHost: boolean
-    nick: PixiText
-    color: string
-    sprite: Sprite
-    textures: PlayerTextures = {} as PlayerTextures
-    walkingAnim: animController
-    pos: Vector2 = {x: 0.0, y: 0.0}
-    prevVelocity: Vector2 = {x: 0.0, y: 0.0}
-    targetPos: Vector2 = {x: 0.0, y: 0.0}
-
-    LERP_SPEED: number = 0.3
-
-
-    constructor(id: number, color: string, textures: PlayerTextures, nick: PixiText) {
-        this.id = id
-        this.color = color
-        this.isHost = (id == 0)
-        this.textures = textures
-        this.sprite = new Sprite(textures.idle)
-        this.sprite.anchor.set(0.5, 0.0)
-        this.sprite.tint = color
-        this.sprite.setSize(PLAYER_CONFIG.WIDTH, PLAYER_CONFIG.HEIGHT)
-        this.walkingAnim = {ANIM_SPEED: 0.1, animFrames: [this.textures.idle, this.textures.walk], animTimer: 0}
-        this.nick = nick
-    }
-
-    updatePos() {
-        this.pos.x += (this.targetPos.x - this.pos.x) * this.LERP_SPEED
-        this.pos.y += (this.targetPos.y - this.pos.y) * this.LERP_SPEED
-        this.sprite.position.set(
-            this.pos.x + PLAYER_CONFIG.WIDTH / 2,
-            this.pos.y
-        )
-        this.nick.position.set(
-            this.pos.x + PLAYER_CONFIG.WIDTH / 2,
-            this.pos.y
-        )
-    }
-
-    updateSprite(velocity: Vector2, deltaTime: number) {
-        this.walkingAnim.animTimer += this.walkingAnim.ANIM_SPEED * deltaTime
-        if (velocity.x < 0) {
-            this.sprite.scale.x = -(PLAYER_CONFIG.WIDTH / this.textures.idle.width)
-            this.sprite.texture = this.walkingAnim.animFrames[Math.floor(this.walkingAnim.animTimer) % this.walkingAnim.animFrames.length]
-        } else if (velocity.x > 0) {
-            this.sprite.scale.x = (PLAYER_CONFIG.WIDTH / this.textures.idle.width)
-            this.sprite.texture = this.walkingAnim.animFrames[Math.floor(this.walkingAnim.animTimer) % this.walkingAnim.animFrames.length]
-        } else {
-            this.sprite.texture = this.textures.idle
-        }
-         if (velocity.y != 0) {
-             this.sprite.texture = this.textures.jump
-         } else if (this.sprite.texture == this.textures.jump) {
-             this.sprite.texture = this.textures.idle
-         }
-
-        this.checkIfJumped(velocity)
-        this.prevVelocity = velocity
-    }
-
-    checkIfJumped(currentVelocity: Vector2) {
-        if (currentVelocity.y < 0 && this.prevVelocity.y == 0) {
+    checkIfJumped() {
+        if (this.velocity.y < 0 && this.prevVelocity.y == 0) {
             playJump()
         }
     }
 }
- */

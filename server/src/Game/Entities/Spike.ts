@@ -14,6 +14,7 @@ export class Spike extends Entity {
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
+		this.customFields = this.validateCustomFields(customFields);
 	}
 
 	public override handleCollisions(

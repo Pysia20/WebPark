@@ -3,7 +3,7 @@ import { Level } from "../Level";
 import { Entity } from "./Entity";
 import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
-import { isColliding } from "../../Global";
+import { isColliding, RequiredField } from "../../Global";
 import { Player } from "../Player";
 
 //! DO NOT IMPORT!!!
@@ -15,8 +15,19 @@ import { Player } from "../Player";
 
 export class ENTITY_NAME extends Entity {
 	public override type: EntityType = "JohnEntity";
+
+	public readonly usedFields: RequiredField[] = [
+		{
+			name: "ActivationGroup",
+			value: this.customFields.ActivationGroup,
+			isMissing: (v: any) => v === "" || v === undefined || v == null,
+			isRequired: false,
+		},
+	] as const;
+
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
+		this.customFields = this.validateCustomFields(customFields);
 	}
 
 	public override handleCollisions(

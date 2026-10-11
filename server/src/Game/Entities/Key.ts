@@ -16,6 +16,7 @@ export class Key extends Entity {
 	public override type: EntityType = "Key";
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
+		this.customFields = this.validateCustomFields(customFields);
 	}
 
 	public override handleCollisions(

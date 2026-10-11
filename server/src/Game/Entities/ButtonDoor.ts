@@ -36,6 +36,7 @@ export class ButtonDoor extends Entity {
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
+		this.customFields = this.validateCustomFields(customFields);
 	}
 
 	public override handleCollisions(
@@ -115,8 +116,11 @@ export class ButtonDoor extends Entity {
 		if (
 			!this.customFields.ActivationCount.doesExist ||
 			!this.customFields.ActivationGroup.doesExist
-		)
+		) {
+			console.log(this.customFields.ActivationGroup);
+			console.log(this.customFields.ActivationCount);
 			return;
+		}
 
 		if (
 			this.customFields.ActivationCount.value! <=
@@ -124,7 +128,7 @@ export class ButtonDoor extends Entity {
 		) {
 			this.isPassable = true;
 		} else {
-			if (!this.customFields.StaysOn.doesExist) {
+			if (!(this.customFields.StaysOn.doesExist && this.customFields.StaysOn.value)) {
 				this.isPassable = false;
 			}
 		}

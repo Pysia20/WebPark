@@ -20,57 +20,68 @@ export class MovingPlatform extends Entity {
 	public startPos: Vector2;
 	public endPos: Vector2;
 	public timer: number = 0;
-	public reversed: boolean = true;
+	public reversed: boolean = false;
 	public readonly speed: number;
 	public shouldRun: boolean = false;
 
 	public readonly usedFields: RequiredField[] = [
 		{
 			name: "ActivationGroup",
-			value: this.customFields.ActivationGroup,
-			isMissing: (v: any) => v === "" || v === undefined || v == null,
+			value: this.customFields.ActivationGroup.value,
+			isMissing: (v: any) => v === "" || v === undefined || !v,
 			isRequired: false,
 		},
 		{
 			name: "ActivationCount",
-			value: this.customFields.ActivationCount,
-			isMissing: (v: any) => v === 0 || v === undefined || v == null,
+			value: this.customFields.ActivationCount.value,
+			isMissing: (v: any) => v === 0 || v === undefined || !v,
 			isRequired: false,
 		},
 		{
 			name: "StaysOn",
-			value: this.customFields.StaysOn,
-			isMissing: (v: any) => v === undefined || v == null,
+			value: this.customFields.StaysOn.value,
+			isMissing: (v: any) => v === undefined || !v,
 			isRequired: false,
 		},
 		{
 			name: "Direction",
-			value: this.customFields.Direction,
-			isMissing: (v: any) => v === undefined || v == null,
+			value: this.customFields.Direction.value,
+			isMissing: (v: any) => v === undefined || !v,
 			isRequired: true,
 		},
 		{
 			name: "Speed",
-			value: this.customFields.Speed,
-			isMissing: (v: any) => v === undefined || v <= 0 || v == null,
+			value: this.customFields.Speed.value,
+			isMissing: (v: any) => v === undefined || v <= 0 || !v,
 			isRequired: true,
 		},
 		{
 			name: "Distance",
-			value: this.customFields.Distance,
-			isMissing: (v: any) => v === undefined || v <= 0 || v == null,
+			value: this.customFields.Distance.value,
+			isMissing: (v: any) => v === undefined || v <= 0 || !v,
 			isRequired: true,
 		},
 		{
 			name: "Cooldown",
-			value: this.customFields.Distance,
-			isMissing: (v: any) => v === undefined || v < 0 || v == null,
+			value: this.customFields.Distance.value,
+			isMissing: (v: any) => v === undefined || v < 0 || !v,
 			isRequired: true,
 		},
 	] as const;
 
+	private isActivated: boolean = true;
+	private changedThisTick: boolean = false;
+
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
+		this.customFields = this.validateCustomFields(customFields);
+
+		if (
+			this.customFields.ActivationCount.doesExist &&
+			this.customFields.ActivationGroup.doesExist
+		) {
+			this.isActivated = false;
+		}
 
 		this.speed = this.customFields.Speed.value!;
 		this.startPos = { ...this.pos };
@@ -87,8 +98,6 @@ export class MovingPlatform extends Entity {
 	}
 
 	public override handleBehaviour(l: Level) {
-		// Activation states needs to be added
-
 		if (
 			this.customFields.ActivationGroup.doesExist &&
 			this.customFields.ActivationCount.doesExist
@@ -96,11 +105,28 @@ export class MovingPlatform extends Entity {
 			const group = this.customFields.ActivationGroup.value;
 			const count = this.customFields.ActivationCount.value;
 
-			if (l.activationStates.get(group!)! < count!) {
-				this.timer = 0;
-				return;
+			const activaitonCount = l.activationStates.get(group!);
+
+			if (activaitonCount! >= count! != this.isActivated) {
+				this.changedThisTick = true;
+			}
+
+			if (this.changedThisTick) {
+				if (activaitonCount! >= count!) {
+					this.isActivated = true;
+				} else {
+					this.isActivated = false;
+				}
+
+				if (this.isActivated) {
+					this.timer = this.customFields.Cooldown.value!;
+
+					this.changedThisTick = false;
+				}
 			}
 		}
+
+		if (!this.isActivated) return;
 
 		if (this.timer < this.customFields.Cooldown.value!) {
 			this.timer++;

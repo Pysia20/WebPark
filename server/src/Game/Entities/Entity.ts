@@ -25,11 +25,12 @@ export class Entity {
 		this.customFields = this.validateCustomFields(customFields);
 	}
 
-	protected validateCustomFields(customFields: EntityCustomFieldsData): EntityCustomFieldsData {
+	public validateCustomFields(customFields: EntityCustomFieldsData): EntityCustomFieldsData {
 		let newCustomFields: EntityCustomFieldsData = { ...customFields };
 
 		for (let field of this.usedFields) {
-			if (field.isMissing) {
+			newCustomFields[field.name].doesExist = true;
+			if (field.isMissing(field.value)) {
 				newCustomFields[field.name].doesExist = false;
 				if (field.isRequired) {
 					LOG.error(
@@ -40,12 +41,10 @@ export class Entity {
 					);
 				}
 
-				LOG.warn(
-					`${this.type} doesn't have an '${field.name}' custom field or it's value is invalid. (${this.pos.x}, ${this.pos.y})`,
-				);
+				// LOG.warn(
+				// 	`${this.type} doesn't have an '${field.name}' custom field or it's value is invalid. (${this.pos.x}, ${this.pos.y})`,
+				// );
 			}
-
-			newCustomFields[field.name].doesExist = true;
 		}
 
 		return newCustomFields;

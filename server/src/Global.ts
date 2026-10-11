@@ -50,7 +50,7 @@ export function clamp(v: number, min: number, max: number) {
 export interface RequiredField {
 	name: EntityCustomField;
 	value: any;
-	isMissing: Function;
+	isMissing: (v: any) => boolean;
 	isRequired: boolean;
 }
 

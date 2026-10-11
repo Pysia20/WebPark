@@ -15,6 +15,7 @@ export class PlayerSpawner extends Entity {
 	public override type: EntityType = "PlayerSpawner";
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
+		this.customFields = this.validateCustomFields(customFields);
 	}
 
 	public override handleCollisions(

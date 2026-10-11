@@ -17,19 +17,19 @@ export class ButtonDoor extends Entity {
 		{
 			name: "ActivationGroup",
 			value: this.customFields.ActivationGroup,
-			isMissing: (v: any) => v === "" || v === undefined,
+			isMissing: (v: any) => v === "" || v === undefined || !v,
 			isRequired: true,
 		},
 		{
 			name: "ActivationCount",
 			value: this.customFields.ActivationCount,
-			isMissing: (v: any) => v === 0 || v === undefined,
+			isMissing: (v: any) => v === 0 || v === undefined || !v,
 			isRequired: true,
 		},
 		{
 			name: "StaysOn",
 			value: this.customFields.StaysOn,
-			isMissing: (v: any) => v === undefined,
+			isMissing: (v: any) => v === undefined || !v,
 			isRequired: true,
 		},
 	];

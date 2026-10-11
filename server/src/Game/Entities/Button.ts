@@ -19,7 +19,7 @@ export class Button extends Entity {
 		{
 			name: "ActivationGroup",
 			value: this.customFields.ActivationGroup,
-			isMissing: (v: any) => v === "" || v === undefined,
+			isMissing: (v: any) => v === "" || v === undefined || !v,
 			isRequired: true,
 		},
 	];

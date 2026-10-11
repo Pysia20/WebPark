@@ -176,7 +176,7 @@
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": null,
-					"__smartColor": "#FF1600",
+					"__smartColor": "#2C0400",
 					"iid": "3425f8b0-bde0-11f1-80a3-45362f021d4b",
 					"width": 64,
 					"height": 64,
@@ -266,6 +266,33 @@
 					],
 					"__worldX": 384,
 					"__worldY": -64
+				},
+				{
+					"__identifier": "Laser",
+					"__grid": [10,13],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#FB1600",
+					"iid": "df8400e0-bde0-11f1-b41a-e50750f3fd6a",
+					"width": 64,
+					"height": 512,
+					"defUid": 42,
+					"px": [640,896],
+					"fieldInstances": [
+						{ "__identifier": "ActivationGroup", "__type": "String", "__value": "Door", "__tile": null, "defUid": 43, "realEditorValues": [{
+							"id": "V_String",
+							"params": ["Door"]
+						}] },
+						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 46, "realEditorValues": [] },
+						{ "__identifier": "StaysOn", "__type": "Bool", "__value": true, "__tile": null, "defUid": 45, "realEditorValues": [{
+							"id": "V_Bool",
+							"params": [ true ]
+						}] },
+						{ "__identifier": "OnlyKillThePlayer", "__type": "Bool", "__value": false, "__tile": null, "defUid": 44, "realEditorValues": [] }
+					],
+					"__worldX": 640,
+					"__worldY": 192
 				}
 			]
 		},

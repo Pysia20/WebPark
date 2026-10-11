@@ -20,7 +20,7 @@ export class ENTITY_NAME extends Entity {
 		{
 			name: "ActivationGroup",
 			value: this.customFields.ActivationGroup,
-			isMissing: (v: any) => v === "" || v === undefined || v == null,
+			isMissing: (v: any) => v === "" || v === undefined || !v,
 			isRequired: false,
 		},
 	] as const;

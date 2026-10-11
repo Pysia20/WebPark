@@ -207,7 +207,8 @@ export type EntityType =
 	| "Pushable"
 	| "Spike"
 	| "PlayerSpawner"
-	| "MovingPlatform";
+	| "MovingPlatform"
+	| "Laser";
 
 export class MapCollider {
 	private _forceInstance!: void;

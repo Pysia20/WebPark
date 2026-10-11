@@ -12,6 +12,15 @@ export class Spike extends Entity {
 
 	public override type: EntityType = "Spike";
 
+	public readonly usedFields: RequiredField[] = [
+		{
+			name: "OnlyKillThePlayer",
+			value: this.customFields.OnlyKillThePlayer,
+			isMissing: (v: any) => v === undefined,
+			isRequired: true,
+		},
+	] as const;
+
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
 		this.customFields = this.validateCustomFields(customFields);

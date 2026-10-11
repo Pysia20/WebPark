@@ -14,6 +14,7 @@ import { Pushable } from "./Pushable";
 import { Spike } from "./Spike";
 import { PlayerSpawner } from "./PlayerSpawner";
 import { MovingPlatform } from "./MovingPlatform";
+import { Laser } from "./Laser";
 
 type EntityConstructor = new (pos: any, size: any, customFields: any) => Entity;
 
@@ -35,6 +36,7 @@ export class EntityBuilder {
 		Spike: Spike,
 		PlayerSpawner: PlayerSpawner,
 		MovingPlatform: MovingPlatform,
+		Laser: Laser,
 	};
 
 	constructor(type: EntityType) {

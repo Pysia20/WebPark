@@ -9,6 +9,7 @@ class Leg {
     footPos: Vector2 = {x: 0, y: 0}
     stepTarget: Vector2 = {x: 0, y: 0}
     hipPos: Vector2 = {x: 0, y: 0}
+    kneePos: Vector2 = {x: 0, y: 0}
     stepProgress: number = 1.0
     isStepping: boolean = false
     leg: Graphics = new Graphics()
@@ -16,6 +17,7 @@ class Leg {
 
     MAX_STRETCH = 24
     LERP_SPEED: number = 0.3
+    LEG_LENGTH: number = (PLAYER_CONFIG.HEIGHT / 10) * 1.25
 
     constructor() {
         this.leg.position.set(0, 0)
@@ -53,7 +55,22 @@ class Leg {
             }
         }
 
-        this.leg.clear().moveTo(this.hipPos.x, this.hipPos.y - 2).lineTo(this.footPos.x, this.footPos.y).stroke({ color: "#000000", width: 3, cap: "round" });
+        const straightDistance = Math.sqrt(((this.footPos.x - this.hipPos.x) ** 2) + ((this.footPos.y - this.hipPos.y) ** 2))
+        if (straightDistance >= this.LEG_LENGTH) {
+            this.kneePos.x = (this.hipPos.x + this.footPos.x) / 2
+            this.kneePos.y = (this.hipPos.y + this.footPos.y) / 2
+        } else {
+            //Brain hurtsss, also yes AI help with the math (sorry I didn't reinvent inverse kinematics)
+            const scaryMath = ((this.LEG_LENGTH / 2) + (straightDistance ** 2) - (this.LEG_LENGTH / 2)) / (2 * (this.LEG_LENGTH / 2) * straightDistance)
+            const angle = Math.acos(scaryMath)
+
+            const baseAngle = Math.atan2(this.footPos.y - hip.y, this.footPos.x - hip.x)
+            const kneeAngle = (velocity.x >= 0) ? baseAngle - angle : baseAngle + angle
+            this.kneePos.x = hip.x + Math.cos(kneeAngle) * (this.LEG_LENGTH / 2)
+            this.kneePos.y = hip.y + Math.sin(kneeAngle) * (this.LEG_LENGTH / 2)
+        }
+
+        this.leg.clear().moveTo(this.hipPos.x, this.hipPos.y - 2).lineTo(this.kneePos.x, this.kneePos.y).lineTo(this.footPos.x, this.footPos.y).stroke({ color: "#000000", width: 3, cap: "round" });
     }
 
     curlUp(hip: Vector2) {

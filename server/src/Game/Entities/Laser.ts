@@ -20,25 +20,25 @@ export class Laser extends Entity {
 	public readonly usedFields: RequiredField[] = [
 		{
 			name: "ActivationGroup",
-			value: this.customFields.ActivationGroup,
+			value: this.customFields.ActivationGroup.value,
 			isMissing: (v: any) => v === "" || v === undefined || !v,
 			isRequired: true,
 		},
 		{
 			name: "ActivationCount",
-			value: this.customFields.ActivationCount,
+			value: this.customFields.ActivationCount.value,
 			isMissing: (v: any) => v === 0 || v === undefined || !v,
 			isRequired: true,
 		},
 		{
 			name: "StaysOn",
-			value: this.customFields.StaysOn,
-			isMissing: (v: any) => v === undefined || !v,
+			value: this.customFields.StaysOn.value,
+			isMissing: (v: any) => v === undefined,
 			isRequired: true,
 		},
 		{
 			name: "OnlyKillThePlayer",
-			value: this.customFields.OnlyKillThePlayer,
+			value: this.customFields.OnlyKillThePlayer.value,
 			isMissing: (v: any) => v === undefined,
 			isRequired: true,
 		},

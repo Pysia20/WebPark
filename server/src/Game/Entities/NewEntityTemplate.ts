@@ -19,7 +19,7 @@ export class ENTITY_NAME extends Entity {
 	public readonly usedFields: RequiredField[] = [
 		{
 			name: "ActivationGroup",
-			value: this.customFields.ActivationGroup,
+			value: this.customFields.ActivationGroup.value,
 			isMissing: (v: any) => v === "" || v === undefined || !v,
 			isRequired: false,
 		},

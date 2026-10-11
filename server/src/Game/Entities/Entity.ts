@@ -41,10 +41,14 @@ export class Entity {
 					);
 				}
 
-				// LOG.warn(
-				// 	`${this.type} doesn't have an '${field.name}' custom field or it's value is invalid. (${this.pos.x}, ${this.pos.y})`,
-				// );
+				LOG.warn(
+					`${this.type} doesn't have an '${field.name}' custom field or it's value is invalid. (${this.pos.x}, ${this.pos.y})`,
+				);
 			}
+		}
+		if (this.type == "Laser") {
+			// console.log(customFields);
+			// console.log(newCustomFields);
 		}
 
 		return newCustomFields;

@@ -15,7 +15,7 @@ export class Spike extends Entity {
 	public readonly usedFields: RequiredField[] = [
 		{
 			name: "OnlyKillThePlayer",
-			value: this.customFields.OnlyKillThePlayer,
+			value: this.customFields.OnlyKillThePlayer.value,
 			isMissing: (v: any) => v === undefined,
 			isRequired: true,
 		},

@@ -4,6 +4,11 @@ import { PlayerTextures } from "./Assets";
 import { playJump } from "./Audio";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 
+enum Directions {
+    Left,
+    Right
+}
+
 class Leg {
     stepStart: Vector2 = {x: 0, y: 0}
     footPos: Vector2 = {x: 0, y: 0}
@@ -14,6 +19,7 @@ class Leg {
     isStepping: boolean = false
     leg: Graphics = new Graphics()
     prevGround: number = 0
+    direction: Directions = Directions.Right
 
     MAX_STRETCH = 24
     LERP_SPEED: number = 0.3
@@ -26,6 +32,10 @@ class Leg {
     updateLeg(hip: Vector2, otherLeg: Leg, velocity: Vector2, ground: number, deltaTime: number) {
         const distance = Math.abs(hip.x - this.footPos.x)
         this.hipPos = hip
+
+        if (velocity.x != 0) {
+            this.direction = (velocity.x > 0) ? Directions.Right : Directions.Left
+        }
 
         if (this.prevGround != ground) {
             this.footPos.y = ground
@@ -49,7 +59,7 @@ class Leg {
                 this.footPos = {x: this.stepTarget.x, y: this.stepTarget.y}
             } else {
                 this.footPos.x = this.stepStart.x + (this.stepTarget.x - this.stepStart.x) * this.stepProgress
-                const liftArc = Math.sin(this.stepProgress * Math.PI) * 8
+                const liftArc = Math.sin(this.stepProgress * Math.PI) * (PLAYER_CONFIG.HEIGHT / 10.5)
                 this.footPos.y = ground - liftArc
             }
         }
@@ -61,15 +71,16 @@ class Leg {
         } else {
             //Brain hurtsss, also yes AI helped with the math (sorry I didn't reinvent inverse kinematics)
             const scaryMath = ((this.LEG_LENGTH / 2) + (straightDistance ** 2) - (this.LEG_LENGTH / 2)) / (2 * (this.LEG_LENGTH / 2) * straightDistance)
-            const angle = Math.acos(scaryMath)
+            const clampedMath = Math.min(1, Math.max(-1, scaryMath))
+            const angle = Math.acos(clampedMath)
 
             const baseAngle = Math.atan2(this.footPos.y - hip.y, this.footPos.x - hip.x)
-            const kneeAngle = (velocity.x >= 0) ? baseAngle - angle : baseAngle + angle
+            const kneeAngle = (this.direction == Directions.Right) ? baseAngle - angle : baseAngle + angle
             this.kneePos.x = hip.x + Math.cos(kneeAngle) * (this.LEG_LENGTH / 2)
             this.kneePos.y = hip.y + Math.sin(kneeAngle) * (this.LEG_LENGTH / 2)
         }
 
-        this.leg.clear().moveTo(this.hipPos.x, this.hipPos.y - 2).lineTo(this.kneePos.x, this.kneePos.y).lineTo(this.footPos.x, this.footPos.y).stroke({ color: "#000000", width: 3, cap: "round" });
+        this.leg.clear().moveTo(this.hipPos.x, this.hipPos.y - 2).lineTo(this.kneePos.x, this.kneePos.y).lineTo(this.footPos.x, this.footPos.y).stroke({ color: "#000000", width: 3, cap: "round", join: "miter" });
     }
 
     curlUp(hip: Vector2) {
@@ -91,6 +102,7 @@ class Leg {
 class Torso {
     color: string
     sprite: Sprite
+    rotation: number = 0
 
     constructor(texture: Texture, color: string) {
         this.color = color
@@ -100,14 +112,18 @@ class Torso {
 
     updateTorso(pos: Vector2, velocity: Vector2) {
         this.sprite.position.set(pos.x, pos.y)
-        /*  not rly usefull rn but if we ever add the face drawing it will be
+
+
+
+    }
+
+    /*  not rly usefull rn but if we ever add the face drawing it will be
         if (velocity.x < 0) {
             this.sprite.scale.x = -1;
         } else if (velocity.x > 0) {
             this.sprite.scale.x = 1;
         }
-         */
-    }
+    */
 }
 
 class Eye {
@@ -168,8 +184,6 @@ export class Player {
         this.updateNick()
         this.updateLegs()
 
-        console.log(this.velocity)
-
         this.prevVelocity = this.velocity
     }
 
@@ -204,7 +218,7 @@ export class Player {
     checkInAir() {
         if (this.velocity.y != 0) {
             this.inAir = true
-        } else if (this.prevVelocity.y > 0 ) {
+        } else if (this.prevVelocity.y > 0) {
             this.inAir = false
         }
     }

@@ -15,6 +15,7 @@ class Leg {
     prevGround: number = 0
 
     MAX_STRETCH = 24
+    LERP_SPEED: number = 0.3
 
     constructor() {
         this.leg.position.set(0, 0)
@@ -55,10 +56,15 @@ class Leg {
         this.leg.clear().moveTo(this.hipPos.x, this.hipPos.y - 2).lineTo(this.footPos.x, this.footPos.y).stroke({ color: "#000000", width: 3, cap: "round" });
     }
 
-    curlUp(orgin: Vector2) {
-        this.hipPos = orgin
-        this.footPos.x = this.hipPos.x
-        this.footPos.y = this.hipPos.y + (PLAYER_CONFIG.HEIGHT / 30)
+    curlUp(hip: Vector2) {
+        this.hipPos = hip
+        const hipOffset = (PLAYER_CONFIG.HEIGHT / 30)
+
+        this.stepTarget.x = this.hipPos.x
+        this.stepTarget.y = this.hipPos.y + hipOffset
+        this.footPos.x += (this.stepTarget.x - this.footPos.x) * this.LERP_SPEED
+        this.footPos.y = (this.footPos.y > this.hipPos.y + hipOffset) ? this.footPos.y + (this.stepTarget.y - this.footPos.y) * this.LERP_SPEED : this.hipPos.y + hipOffset
+
         this.isStepping = false
         this.stepProgress = 1.0
 

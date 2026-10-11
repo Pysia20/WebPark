@@ -33,9 +33,7 @@ class Leg {
         const distance = Math.abs(hip.x - this.footPos.x)
         this.hipPos = hip
 
-        if (velocity.x != 0) {
-            this.direction = (velocity.x > 0) ? Directions.Right : Directions.Left
-        }
+        this.updateDirection(velocity)
 
         if (this.prevGround != ground) {
             this.footPos.y = ground
@@ -64,6 +62,18 @@ class Leg {
             }
         }
 
+        this.invertTheKinematics()
+
+        this.leg.clear().moveTo(this.hipPos.x, this.hipPos.y - 2).lineTo(this.kneePos.x, this.kneePos.y).lineTo(this.footPos.x, this.footPos.y).stroke({ color: "#000000", width: 3, cap: "round", join: "miter" });
+    }
+
+    updateDirection(velocity: Vector2) {
+        if (velocity.x != 0) {
+            this.direction = (velocity.x > 0) ? Directions.Right : Directions.Left
+        }
+    }
+
+    invertTheKinematics() {
         const straightDistance = Math.sqrt(((this.footPos.x - this.hipPos.x) ** 2) + ((this.footPos.y - this.hipPos.y) ** 2))
         if (straightDistance >= this.LEG_LENGTH) {
             this.kneePos.x = (this.hipPos.x + this.footPos.x) / 2
@@ -74,28 +84,30 @@ class Leg {
             const clampedMath = Math.min(1, Math.max(-1, scaryMath))
             const angle = Math.acos(clampedMath)
 
-            const baseAngle = Math.atan2(this.footPos.y - hip.y, this.footPos.x - hip.x)
+            const baseAngle = Math.atan2(this.footPos.y - this.hipPos.y, this.footPos.x - this.hipPos.x)
             const kneeAngle = (this.direction == Directions.Right) ? baseAngle - angle : baseAngle + angle
-            this.kneePos.x = hip.x + Math.cos(kneeAngle) * (this.LEG_LENGTH / 2)
-            this.kneePos.y = hip.y + Math.sin(kneeAngle) * (this.LEG_LENGTH / 2)
+            this.kneePos.x = this.hipPos.x + Math.cos(kneeAngle) * (this.LEG_LENGTH / 2)
+            this.kneePos.y = this.hipPos.y + Math.sin(kneeAngle) * (this.LEG_LENGTH / 2)
         }
-
-        this.leg.clear().moveTo(this.hipPos.x, this.hipPos.y - 2).lineTo(this.kneePos.x, this.kneePos.y).lineTo(this.footPos.x, this.footPos.y).stroke({ color: "#000000", width: 3, cap: "round", join: "miter" });
     }
 
-    curlUp(hip: Vector2) {
+    curlUp(hip: Vector2, velocity: Vector2) {
         this.hipPos = hip
-        const hipOffset = (PLAYER_CONFIG.HEIGHT / 30)
+        const hipOffset = (this.LEG_LENGTH / 2)
+
+        this.updateDirection(velocity)
 
         this.stepTarget.x = this.hipPos.x
         this.stepTarget.y = this.hipPos.y + hipOffset
-        this.footPos.x += (this.stepTarget.x - this.footPos.x) * this.LERP_SPEED
+        this.footPos.x += (this.stepTarget.x - this.footPos.x) * (this.LERP_SPEED / 2)
         this.footPos.y = (this.footPos.y > this.hipPos.y + hipOffset) ? this.footPos.y + (this.stepTarget.y - this.footPos.y) * this.LERP_SPEED : this.hipPos.y + hipOffset
 
         this.isStepping = false
         this.stepProgress = 1.0
 
-        this.leg.clear().moveTo(this.hipPos.x, this.hipPos.y - 2).lineTo(this.footPos.x, this.footPos.y).stroke({color: "#000000", width: 3, cap: "round"})
+        this.invertTheKinematics()
+
+        this.leg.clear().moveTo(this.hipPos.x, this.hipPos.y - 2).lineTo(this.kneePos.x, this.kneePos.y).lineTo(this.footPos.x, this.footPos.y).stroke({color: "#000000", width: 3, cap: "round"})
     }
 }
 
@@ -210,8 +222,8 @@ export class Player {
             this.legs[0].updateLeg(hipLeft, this.legs[1], this.velocity, ground, this.deltaT)
             this.legs[1].updateLeg(hipRight, this.legs[0], this.velocity, ground, this.deltaT)
         } else {
-            this.legs[0].curlUp({x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY})
-            this.legs[1].curlUp({x: this.pos.x + (legOffsetX * 3), y: this.pos.y + legOffsetY})
+            this.legs[0].curlUp({x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY}, this.velocity)
+            this.legs[1].curlUp({x: this.pos.x + (legOffsetX * 3), y: this.pos.y + legOffsetY}, this.velocity)
         }
     }
 

@@ -51,6 +51,12 @@ class Leg {
         if (this.isStepping) {
             this.stepProgress += 0.15 * deltaTime
 
+            //honestly not sure if this looks better or worse ngl
+            if (this.direction == Directions.Left) {
+                if (this.stepTarget.x > this.hipPos.x - (PLAYER_CONFIG.WIDTH / 12)) this.stepTarget.x -= (PLAYER_CONFIG.WIDTH / 11)
+            } else if (this.direction == Directions.Right) {
+                if (this.stepTarget.x < this.hipPos.x + (PLAYER_CONFIG.WIDTH / 12)) this.stepTarget.x += (PLAYER_CONFIG.WIDTH / 11)
+            }
             if (this.stepProgress >= 1.0) {
                 this.stepProgress = 1.0
                 this.isStepping = false
@@ -114,28 +120,26 @@ class Leg {
 class Torso {
     color: string
     sprite: Sprite
-    rotation: number = 0
 
     constructor(texture: Texture, color: string) {
         this.color = color
         this.sprite = new Sprite(texture)
         this.sprite.setSize(PLAYER_CONFIG.WIDTH, PLAYER_CONFIG.HEIGHT - (PLAYER_CONFIG.HEIGHT / 10))
+        this.sprite.anchor.set(0.5, 1.0)
     }
 
     updateTorso(pos: Vector2, velocity: Vector2) {
-        this.sprite.position.set(pos.x, pos.y)
+        this.sprite.position.set(pos.x + (PLAYER_CONFIG.WIDTH / 2), pos.y + ((PLAYER_CONFIG.HEIGHT / 10) * 9))
 
+        this.sprite.rotation = (velocity.x / (PLAYER_CONFIG.MAX_HORIZONTAL_SPEED * 3)) ** 3 // I think something is wrong server side? PLAYER_CONFIG.MAX_HORIZONTAL_SPEED < max velocity I'm getting
 
-
-    }
-
-    /*  not rly usefull rn but if we ever add the face drawing it will be
+        //not rly usefull rn but if we ever add the face drawing it will be
         if (velocity.x < 0) {
             this.sprite.scale.x = -1;
         } else if (velocity.x > 0) {
             this.sprite.scale.x = 1;
         }
-    */
+    }
 }
 
 class Eye {
@@ -174,8 +178,6 @@ export class Player {
         this.nick = nick
         this.torso = new Torso(textures.torso, color)
         this.eyes = [new Eye(), new Eye()]
-
-        const legOffset = PLAYER_CONFIG.WIDTH / 4
         this.legs = [new Leg(), new Leg()]
     }
 

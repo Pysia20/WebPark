@@ -104,19 +104,3 @@ export class levelManager {
 		//sprite.anchor.set(ent.__pivot[0],ent.__pivot[1]) not getting this from server rn and not sure if will need to
 	}
 }
-
-
-
-/* SAVE
-			if (layer.entityInstances.length > 0) {
-				const ents = layer.entityInstances
-
-				for (const ent of ents) {
-					const sprite = this.checkEntTexture(ent)
-					sprite.position.set(ent.px[0], ent.px[1])
-					sprite.setSize(ent.width, ent.height)
-					sprite.anchor.set(ent.__pivot[0],ent.__pivot[1])
-					this.world.addChild(sprite)
-				}
-			} else {
- */

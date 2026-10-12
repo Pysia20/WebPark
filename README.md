@@ -8,7 +8,7 @@
 
 ### Currently, in early development
 
-$\color{gray} \text{We will not be using pico park character, they are just placeholders!!!}$
+$\color{gray} \text{now without pico park sprites! revolutionary stuff}$
 
 ---
 
@@ -19,25 +19,24 @@ $\color{gray} \text{We will not be using pico park character, they are just plac
 ## Current features
 
 - Lobby system with joining using a code, data check, waiting for everyone to ready up, and lobby info display
-- Custom player colors, names
+- ~~Custom player colors~~ _(currently broken)_, custom names
 - Basic sound effects
 - Game synchronization
 - Movement and Physics
-- Different sprites for different actions
+- ~~Different sprites for different actions~~ Procedural animated player!
 - _Less_ basic main menu
-- Basic entities
+- Basic and not-so basic Entities (Buttons, Doors, Moving Platforms, Lasers, _everyone's favorite JohnEntity_ and more) with many options
 - Level loading from LDtk
 - Camera system that keeps all players on screen at once
 - Basic Hud/Ui
+- ART DIRECTION _~~but no final art yet~~_
 
 ## Planned features
-
-- Actual ~~not stolen~~ non placeholder sprites
-- More entities (for ex. moving platform)
-- Level changing
+- Maybe even more entities? _...probably even more entities_
+- Level changing _(no clue how we keep forgetting about this ngl)_
 - Better feeling movement
-- Entity updating clientside
-- FINALLY DECIDE ON ART DIRECTION
+- Drawing on the player cube to make your own face/mouth
+- More procedural animation because it's peak
 
 <br>
 
@@ -50,7 +49,7 @@ The game is being developed by 2 people
 - Pysia20 : all Frontend / client side stuff, so rendering, sending inputs, animations, menus, CSS etc. and in the future art
 - LLoydowski: all Backend / server side stuff, so physics, networking, server set up, entities/objects etc.
 
-We are desigining the game together
+We are designing the game together
 
 <br>
 
@@ -86,7 +85,7 @@ Backend:
 
 ## How to edit or run the project
 
-If you don't have pnpm its technically not required we **highly** recommend installing it since that's what the project was and this guide made on
+If you don't have pnpm it's technically not required, **but** we **highly** recommend installing it since that's what the project was and this guide made on
 
 Firstly download all the files and open them in your IDE, then run this command to install all the dependencies
 
@@ -114,4 +113,4 @@ And now everything _~~should~~_ work!
 
 ## AI Disclosure
 
-Since most of the tools here are entirely new to us, AI was used to help with learning and exploring them (ex. how to show a sprite using Pixi, how to play a sound effect with howler etc.) and general coding help (ex. how to use grid in CSS, how to tint an image in CSS)
+Since most of the tools here are entirely new to us, AI was used to help with learning and exploring them (ex. how to show a sprite using Pixi, how to play a sound effect with howler etc.), general coding help (ex. how to use grid in CSS, how to tint an image in CSS) and quite a lot of pure math in Player.ts since I didn't feel like reinventing inverse kinematics

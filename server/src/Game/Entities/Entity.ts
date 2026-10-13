@@ -9,10 +9,11 @@ import { Level } from "../Level";
 
 export class Entity {
 	public readonly type: EntityType = "JohnEntity";
-	public readonly pos: Vector2;
+	public pos: Vector2;
 	public readonly size: Vector2;
 	public visualSize: Vector2;
 	public customFields: EntityCustomFieldsData;
+	public level: Level | undefined;
 
 	public readonly usedFields: RequiredField[] = [];
 
@@ -23,6 +24,10 @@ export class Entity {
 		this.size = size;
 		this.visualSize = this.size;
 		this.customFields = this.validateCustomFields(customFields);
+	}
+
+	public setLevel(level: Level) {
+		this.level = level;
 	}
 
 	public validateCustomFields(customFields: EntityCustomFieldsData): EntityCustomFieldsData {

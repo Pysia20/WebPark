@@ -79,7 +79,7 @@
 				},
 				{
 					"__identifier": "JohnEntity",
-					"__grid": [0,13],
+					"__grid": [0,10],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": { "tilesetUid": 2, "x": 0, "y": 64, "w": 64, "h": 64 },
@@ -88,10 +88,10 @@
 					"width": 64,
 					"height": 64,
 					"defUid": 5,
-					"px": [0,896],
+					"px": [0,704],
 					"fieldInstances": [],
 					"__worldX": 0,
-					"__worldY": 192
+					"__worldY": 0
 				},
 				{
 					"__identifier": "Door",
@@ -156,7 +156,7 @@
 				},
 				{
 					"__identifier": "Pushable",
-					"__grid": [16,11],
+					"__grid": [2,12],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": null,
@@ -165,10 +165,10 @@
 					"width": 64,
 					"height": 64,
 					"defUid": 24,
-					"px": [1024,768],
+					"px": [128,832],
 					"fieldInstances": [],
-					"__worldX": 1024,
-					"__worldY": 64
+					"__worldX": 128,
+					"__worldY": 128
 				},
 				{
 					"__identifier": "Spike",

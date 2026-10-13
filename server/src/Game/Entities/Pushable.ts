@@ -5,6 +5,8 @@ import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonL
 import { PLAYER_CONFIG, PUSHABLE_CONFIG } from "@shared/commonVariables";
 import { isColliding } from "../../Global";
 import { Player } from "../Player";
+import CONFIG from "../../../config.json";
+import { diff } from "node:util";
 
 //TODO Add colision with other entities
 
@@ -27,6 +29,8 @@ export class Pushable extends Entity {
 	): boolean {
 		const { overlapX, overlapY, diffX, diffY } = isColliding(p, this);
 
+		let newPos: Vector2 = { ...this.pos };
+
 		if (overlapX != -1 && overlapY != -1) {
 			if (overlapX < overlapY) {
 				// Horizontal collison
@@ -38,7 +42,7 @@ export class Pushable extends Entity {
 					if (playerNewVel.x < 0) {
 						// playerNewPos.x += overlapX;
 						// playerNewVel.x = 0;
-						this.pos.x -= overlapX;
+						newPos.x -= overlapX;
 					}
 				} else {
 					// A is going right towards B
@@ -46,7 +50,7 @@ export class Pushable extends Entity {
 					if (playerNewVel.x > 0) {
 						// playerNewPos.x -= overlapX;
 						// playerNewVel.x = 0;
-						this.pos.x += overlapX;
+						newPos.x += overlapX;
 					}
 				}
 			} else {
@@ -87,18 +91,50 @@ export class Pushable extends Entity {
 			}
 		}
 
+		this.level?.room.getPlayers();
+
+		let TheGrandArray: (Player | MapCollider)[] = this.level?.getColliders()!;
+		TheGrandArray = [...TheGrandArray, ...this.level?.room.getPlayers()!.values()!];
+
+		TheGrandArray.forEach((c) => {
+			this.handleEntityCollisions(c, newPos);
+		});
+
+		this.level?.entities.forEach((e) => {
+			if (e === this) return;
+			let collider: MapCollider = new MapCollider(newPos.x, newPos.y, this.size.x, this.size.y);
+			const { overlapX, overlapY, diffX, diffY } = isColliding(e, collider);
+			if (overlapX != -1) {
+				if (playerNewVel.x > 0) {
+					newPos.x -= overlapX;
+					playerNewPos.x -= overlapX;
+				} else {
+					newPos.x += overlapX;
+					playerNewPos.x += overlapX;
+				}
+			}
+		});
+
+		this.pos = newPos;
+
 		return isGrounded;
 	}
 
 	public override handleBehaviour(l: Level) {
+		let newPos: Vector2 = { x: this.pos.x, y: this.pos.y };
+		this.isGrounded = false;
+
 		l.entities.forEach((e) => {
 			if (e === this) return;
-			this.handleEntityCollisions(e);
+			this.handleEntityCollisions(e, newPos);
 		});
-		this.applyPhysics();
+
+		this.applyPhysics(newPos);
+
+		this.pos = { ...newPos };
 	}
 
-	private applyPhysics() {
+	private applyPhysics(newPos: Vector2) {
 		if (this.velocity.x > PUSHABLE_CONFIG.DRAG) {
 			this.velocity.x -= PUSHABLE_CONFIG.DRAG;
 		} else if (this.velocity.x < -PUSHABLE_CONFIG.DRAG) {
@@ -110,12 +146,22 @@ export class Pushable extends Entity {
 		if (!this.isGrounded) {
 			this.velocity.y += PUSHABLE_CONFIG.GRAVITY;
 		}
+
+		this.level?.getColliders().forEach((c) => {
+			this.handleEntityCollisions(c, newPos);
+		});
+
+		newPos.x += this.velocity.x * (1 / CONFIG.TICKRATE);
+		newPos.y += this.velocity.y * (1 / CONFIG.TICKRATE);
+
+		this.pos = newPos;
 	}
 
-	private handleEntityCollisions(e2: Entity) {
+	private handleEntityCollisions(e2: Entity | MapCollider | Player, newPos: Vector2) {
 		const { overlapX, overlapY, diffX, diffY } = isColliding(e2, this);
 
 		if (overlapX != -1 && overlapY != -1) {
+			// console.log("Pushable collides");
 			if (overlapX < overlapY) {
 				// Horizontal collison
 
@@ -123,49 +169,41 @@ export class Pushable extends Entity {
 					// A is going left towards B
 					// Pushing out to the right
 
-					if (this.velocity.x < 0) {
-						// playerNewPos.x += overlapX;
-						// playerNewVel.x = 0;
-						this.pos.x -= overlapX;
-					}
+					// playerNewPos.x += overlapX;
+					// playerNewVel.x = 0;
+					newPos.x -= overlapX;
 				} else {
 					// A is going right towards B
 					// Pushing out to the left
-					if (this.velocity.x > 0) {
-						// playerNewPos.x -= overlapX;
-						// playerNewVel.x = 0;
-						this.pos.x += overlapX;
-					}
+					// playerNewPos.x -= overlapX;
+					// playerNewVel.x = 0;
+					newPos.x += overlapX;
 				}
 			} else {
 				// Vertical collision
 				if (diffY > 0) {
 					// A is going up towards B
 					// Pushing out downwards
-					if (this.velocity.y < 0) {
-						this.velocity.y += overlapY;
-						this.velocity.y = 0;
-					}
+					newPos.y -= overlapY;
+					this.velocity.y = 0;
 				} else {
 					// A is goung down towards B
 					// Pushign out upwards
 
-					if (this.velocity.y > 0) {
-						this.velocity.y -= overlapY;
-						this.velocity.y = 0;
-						this.isGrounded = true;
-					}
+					newPos.y += overlapY;
+					this.velocity.y = 0;
+					this.isGrounded = true;
 				}
 			}
 		} else if (!this.isGrounded) {
 			const collider: MapCollider = new MapCollider(
-				this.pos.x,
-				this.pos.y + PUSHABLE_CONFIG.GROUND_DETECTON_OFFSET,
+				newPos.x,
+				newPos.y + PUSHABLE_CONFIG.GROUND_DETECTON_OFFSET,
 				this.size.x,
 				this.size.y,
 			);
 
-			const { overlapX, overlapY, diffX, diffY } = isColliding(collider, this);
+			const { overlapX, overlapY, diffX, diffY } = isColliding(collider, e2);
 
 			if (overlapY != -1) {
 				this.isGrounded = true;

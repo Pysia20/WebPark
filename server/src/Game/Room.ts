@@ -9,9 +9,10 @@ import { LOG } from "../Logger";
 import { Entity } from "./Entities/Entity";
 import { Level } from "./Level";
 import e from "cors";
+import CONFIG from "../../config.json";
 
 export class Room {
-	private TICKRATE: number = 30; // Per second
+	private TICKRATE: number = CONFIG.TICKRATE; // Per second
 	private nextUserID: number = 0;
 
 	private id: string;
@@ -124,7 +125,6 @@ export class Room {
 			if (input.left) {
 				newVel.x -= PLAYER_CONFIG.ACCELERATION;
 			}
-
 			if (input.jump && player.isGrounded) {
 				newVel.y -= PLAYER_CONFIG.JUMP_FORCE;
 				player.isGrounded = false;

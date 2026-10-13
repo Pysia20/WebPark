@@ -34,6 +34,7 @@ export class Level {
 		this.levelTemplate.entities.forEach((e) => {
 			const clone: Entity = e.clone();
 			clone.id = this.entities.length;
+			clone.setLevel(this);
 			this.entities.push(clone);
 			if (e.customFields.ActivationGroup.doesExist) {
 				this.activationStates.set(e.customFields.ActivationGroup.value!, 0);

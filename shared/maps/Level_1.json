@@ -57,7 +57,24 @@
 			"seed": 9693337,
 			"overrideTilesetUid": null,
 			"gridTiles": [],
-			"entityInstances": []
+			"entityInstances": [
+				{
+					"__identifier": "PlayerSpawner",
+					"__grid": [1,7],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#D2D2D2",
+					"iid": "12fe7ee0-bde0-11f1-9096-ffe0149c127b",
+					"width": 64,
+					"height": 64,
+					"defUid": 28,
+					"px": [64,512],
+					"fieldInstances": [],
+					"__worldX": 1344,
+					"__worldY": 192
+				}
+			]
 		},
 		{
 			"__identifier": "Tiles",
@@ -128,8 +145,8 @@
 			"optionalRules": [],
 			"intGridCsv": [
 				0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-				0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-				0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1
+				0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,
+				0,0,0,0,0,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1
 			],
 			"autoLayerTiles": [],
 			"seed": 5652859,

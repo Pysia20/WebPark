@@ -4,16 +4,32 @@ import { Vector2 } from "@shared/commonModels";
 import { LOG } from "../../Logger";
 import { Level } from "../Level";
 import { MAP_LOADER } from "../LevelLoader";
+import { Player } from "../Player";
+import { isColliding } from "../../Global";
 
 export class Door extends Entity {
 	public override type: EntityType = "Door";
+
+	public playersInside: Player[] = [];
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
 		this.customFields = this.validateCustomFields(customFields);
 	}
 
-	public override handleCollisions(): boolean {
+	public override handleCollisions(
+		p: Player,
+		playerNewPos: Vector2,
+		playerNewVel: Vector2,
+		isGrounded: boolean,
+	): boolean {
+		const { overlapX, overlapY, diffX, diffY } = isColliding(this, p);
+
+		if (overlapX != -1 || overlapY != -1) {
+			this.playersInside.push(p);
+			p.isInsideDoor = true;
+		}
+
 		return false;
 	}
 
@@ -26,16 +42,12 @@ export class Door extends Entity {
 		return new Door({ ...this.pos }, { ...this.size }, { ...this.customFields });
 	}
 	public override handleBehaviour(l: Level) {
-		// Only when all needing to switch the room
-		if (false) {
-			const nextLevelID = MAP_LOADER.GetNextLevel(l.room)?.getID();
+		if (this.playersInside.length == l.room.getPlayers().size) {
+			console.log("All in door");
 
-			if (nextLevelID === undefined) {
-				// End of group
-				return;
-			}
+			const level: Level | undefined = MAP_LOADER.GetNextLevel(l.room);
 
-			this.enterDoor(nextLevelID!);
+			l.room.changeLevel(level);
 		}
 	}
 }

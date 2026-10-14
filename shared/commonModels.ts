@@ -35,6 +35,7 @@ export interface ServerPlayerData {
 	nick: string;
 	pos: Vector2;
 	velocity: Vector2;
+	isInsideDoor: boolean;
 }
 
 // What the client sends to the backend

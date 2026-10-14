@@ -6,8 +6,6 @@ import { PLAYER_CONFIG, PUSHABLE_CONFIG } from "@shared/commonVariables";
 import { isColliding } from "../../Global";
 import { Player } from "../Player";
 import CONFIG from "../../../config.json";
-import { diff } from "node:util";
-import { push } from "node:stream/iter";
 
 //TODO Add colision with other entities
 

@@ -8,8 +8,9 @@ import { MapCollider } from "@shared/commonLevelModels";
 import { LOG } from "../Logger";
 import { Entity } from "./Entities/Entity";
 import { Level } from "./Level";
-import e from "cors";
 import CONFIG from "../../config.json";
+import { PlayerSpawner } from "./Entities/PlayerSpawner";
+import { io } from "socket.io-client";
 
 export class Room {
 	private TICKRATE: number = CONFIG.TICKRATE; // Per second
@@ -19,6 +20,8 @@ export class Room {
 	private players: Map<number, Player> = new Map<number, Player>();
 	public level!: Level;
 	private gameLoop: NodeJS.Timeout | undefined;
+
+	private io: Namespace | undefined;
 
 	constructor(id: string) {
 		this.id = id;
@@ -61,8 +64,15 @@ export class Room {
 	public respawnPlayers(l: Level) {
 		let pIndex = 0;
 
+		if (l.spawners.length == 0) {
+			const message = "No spawners on level: " + l.getID();
+			LOG.error(message);
+			throw Error(message);
+		}
+
 		this.players.forEach((p) => {
-			const spawner = l.spawners[pIndex % l.spawners.length];
+			p.isInsideDoor = false;
+			const spawner: PlayerSpawner = l.spawners[pIndex % l.spawners.length];
 			const newPos = { ...spawner.pos };
 
 			newPos.y -= 1.5 * PLAYER_CONFIG.HEIGHT * Math.ceil(pIndex / l.spawners.length);
@@ -107,15 +117,17 @@ export class Room {
 				player.isGrounded = true;
 			}
 
-			if (input.right) {
-				newVel.x += PLAYER_CONFIG.ACCELERATION;
-			}
-			if (input.left) {
-				newVel.x -= PLAYER_CONFIG.ACCELERATION;
-			}
-			if (input.jump && player.isGrounded) {
-				newVel.y -= PLAYER_CONFIG.JUMP_FORCE;
-				player.isGrounded = false;
+			if (!player.isInsideDoor) {
+				if (input.right) {
+					newVel.x += PLAYER_CONFIG.ACCELERATION;
+				}
+				if (input.left) {
+					newVel.x -= PLAYER_CONFIG.ACCELERATION;
+				}
+				if (input.jump && player.isGrounded) {
+					newVel.y -= PLAYER_CONFIG.JUMP_FORCE;
+					player.isGrounded = false;
+				}
 			}
 
 			newVel.y = clamp(
@@ -150,6 +162,7 @@ export class Room {
 
 		this.players.forEach((p: Player) => {
 			if (p.id == player.id) return;
+			if (p.isInsideDoor) return;
 
 			const { overlapX, overlapY, diffX, diffY } = isColliding(player, p);
 
@@ -280,7 +293,10 @@ export class Room {
 	}
 
 	public startGameLoop(io: Namespace) {
+		this.io = io;
+
 		this.level = MAP_LOADER.GetLevel("Level_0", this);
+		this.level.reloadLevel();
 		this.gameLoop = setInterval(
 			async () => {
 				this.physicsUpdate();
@@ -296,6 +312,7 @@ export class Room {
 						nick: player.nick,
 						pos: pos,
 						velocity: player.velocity,
+						isInsideDoor: player.isInsideDoor,
 					};
 				});
 
@@ -309,6 +326,17 @@ export class Room {
 			},
 			(1 / this.TICKRATE) * 1000,
 		);
+	}
+
+	public changeLevel(level: Level | undefined) {
+		this.io?.to(this.id).emit("changeLevel", level?.getID());
+		LOG.info(`Room ${this.id} changes level to ${level ? level.getID() : "/GROUP FINNISHED/"}`);
+
+		if (level) {
+			LOG.info(`Instance of level ${this.level.getID()} was deleted in room ${this.id}`);
+			this.level = level;
+			this.level.reloadLevel();
+		}
 	}
 
 	public stopGameLoop() {

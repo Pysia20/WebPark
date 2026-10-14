@@ -7,6 +7,7 @@ import { isColliding } from "../../Global";
 import { Player } from "../Player";
 import CONFIG from "../../../config.json";
 import { diff } from "node:util";
+import { push } from "node:stream/iter";
 
 //TODO Add colision with other entities
 
@@ -15,6 +16,9 @@ export class Pushable extends Entity {
 
 	public isGrounded: boolean = false;
 	public velocity: Vector2 = { x: 0, y: 0 };
+
+	public pusher: Player | undefined;
+	public pusherNewPos: Vector2 | undefined;
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
@@ -43,6 +47,8 @@ export class Pushable extends Entity {
 						// playerNewPos.x += overlapX;
 						// playerNewVel.x = 0;
 						newPos.x -= overlapX;
+						this.pusher = p;
+						this.pusherNewPos = playerNewPos;
 					}
 				} else {
 					// A is going right towards B
@@ -51,6 +57,8 @@ export class Pushable extends Entity {
 						// playerNewPos.x -= overlapX;
 						// playerNewVel.x = 0;
 						newPos.x += overlapX;
+						this.pusher = p;
+						this.pusherNewPos = playerNewPos;
 					}
 				}
 			} else {
@@ -91,30 +99,6 @@ export class Pushable extends Entity {
 			}
 		}
 
-		this.level?.room.getPlayers();
-
-		let TheGrandArray: (Player | MapCollider)[] = this.level?.getColliders()!;
-		TheGrandArray = [...TheGrandArray, ...this.level?.room.getPlayers()!.values()!];
-
-		TheGrandArray.forEach((c) => {
-			this.handleEntityCollisions(c, newPos);
-		});
-
-		this.level?.entities.forEach((e) => {
-			if (e === this) return;
-			let collider: MapCollider = new MapCollider(newPos.x, newPos.y, this.size.x, this.size.y);
-			const { overlapX, overlapY, diffX, diffY } = isColliding(e, collider);
-			if (overlapX != -1) {
-				if (playerNewVel.x > 0) {
-					newPos.x -= overlapX;
-					playerNewPos.x -= overlapX;
-				} else {
-					newPos.x += overlapX;
-					playerNewPos.x += overlapX;
-				}
-			}
-		});
-
 		this.pos = newPos;
 
 		return isGrounded;
@@ -123,11 +107,6 @@ export class Pushable extends Entity {
 	public override handleBehaviour(l: Level) {
 		let newPos: Vector2 = { x: this.pos.x, y: this.pos.y };
 		this.isGrounded = false;
-
-		l.entities.forEach((e) => {
-			if (e === this) return;
-			this.handleEntityCollisions(e, newPos);
-		});
 
 		this.applyPhysics(newPos);
 
@@ -147,8 +126,12 @@ export class Pushable extends Entity {
 			this.velocity.y += PUSHABLE_CONFIG.GRAVITY;
 		}
 
-		this.level?.getColliders().forEach((c) => {
-			this.handleEntityCollisions(c, newPos);
+		let TheGrandArray: (Player | MapCollider | Entity)[] = this.level?.getColliders()!;
+		TheGrandArray = [...TheGrandArray, ...this.level?.room.getPlayers()!.values()!];
+		TheGrandArray = [...TheGrandArray, ...this.level?.entities!];
+
+		TheGrandArray.forEach((c) => {
+			this.handleEntityCollisions(c, newPos, this.pusher, this.pusherNewPos);
 		});
 
 		newPos.x += this.velocity.x * (1 / CONFIG.TICKRATE);
@@ -157,7 +140,14 @@ export class Pushable extends Entity {
 		this.pos = newPos;
 	}
 
-	private handleEntityCollisions(e2: Entity | MapCollider | Player, newPos: Vector2) {
+	private handleEntityCollisions(
+		e2: Entity | MapCollider | Player,
+		newPos: Vector2,
+		pusher: Player | undefined,
+		pusherNewPos: Vector2 | undefined,
+	) {
+		if (e2 === this) return;
+		if (e2 === pusher) return;
 		const { overlapX, overlapY, diffX, diffY } = isColliding(e2, this);
 
 		if (overlapX != -1 && overlapY != -1) {
@@ -169,15 +159,20 @@ export class Pushable extends Entity {
 					// A is going left towards B
 					// Pushing out to the right
 
-					// playerNewPos.x += overlapX;
-					// playerNewVel.x = 0;
 					newPos.x -= overlapX;
+					this.velocity.x = 0;
+					if (pusherNewPos) {
+						pusherNewPos.x -= overlapX;
+					}
 				} else {
 					// A is going right towards B
 					// Pushing out to the left
-					// playerNewPos.x -= overlapX;
-					// playerNewVel.x = 0;
 					newPos.x += overlapX;
+					this.velocity.x = 0;
+
+					if (pusherNewPos) {
+						pusherNewPos.x += overlapX;
+					}
 				}
 			} else {
 				// Vertical collision
@@ -214,6 +209,8 @@ export class Pushable extends Entity {
 
 	public override endTick() {
 		this.isGrounded = false;
+		this.pusher = undefined;
+		this.pusherNewPos = undefined;
 	}
 
 	public override clone() {

@@ -79,7 +79,7 @@
 				},
 				{
 					"__identifier": "JohnEntity",
-					"__grid": [0,10],
+					"__grid": [3,12],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": { "tilesetUid": 2, "x": 0, "y": 64, "w": 64, "h": 64 },
@@ -88,10 +88,10 @@
 					"width": 64,
 					"height": 64,
 					"defUid": 5,
-					"px": [0,704],
+					"px": [192,832],
 					"fieldInstances": [],
-					"__worldX": 0,
-					"__worldY": 0
+					"__worldX": 192,
+					"__worldY": 128
 				},
 				{
 					"__identifier": "Door",
@@ -156,7 +156,7 @@
 				},
 				{
 					"__identifier": "Pushable",
-					"__grid": [2,12],
+					"__grid": [3,11],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": null,
@@ -165,10 +165,10 @@
 					"width": 64,
 					"height": 64,
 					"defUid": 24,
-					"px": [128,832],
+					"px": [192,768],
 					"fieldInstances": [],
-					"__worldX": 128,
-					"__worldY": 128
+					"__worldX": 192,
+					"__worldY": 64
 				},
 				{
 					"__identifier": "Spike",
@@ -191,39 +191,7 @@
 				},
 				{
 					"__identifier": "PlayerSpawner",
-					"__grid": [1,2],
-					"__pivot": [0,1],
-					"__tags": [],
-					"__tile": null,
-					"__smartColor": "#D2D2D2",
-					"iid": "40352320-bde0-11f1-95bf-131376e3f36c",
-					"width": 64,
-					"height": 64,
-					"defUid": 28,
-					"px": [64,192],
-					"fieldInstances": [],
-					"__worldX": 64,
-					"__worldY": -512
-				},
-				{
-					"__identifier": "PlayerSpawner",
-					"__grid": [3,2],
-					"__pivot": [0,1],
-					"__tags": [],
-					"__tile": null,
-					"__smartColor": "#D2D2D2",
-					"iid": "40a04100-bde0-11f1-95bf-83cc65d0c794",
-					"width": 64,
-					"height": 64,
-					"defUid": 28,
-					"px": [192,192],
-					"fieldInstances": [],
-					"__worldX": 192,
-					"__worldY": -512
-				},
-				{
-					"__identifier": "PlayerSpawner",
-					"__grid": [5,2],
+					"__grid": [1,13],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": null,
@@ -232,10 +200,10 @@
 					"width": 64,
 					"height": 64,
 					"defUid": 28,
-					"px": [320,192],
+					"px": [64,896],
 					"fieldInstances": [],
-					"__worldX": 320,
-					"__worldY": -512
+					"__worldX": 64,
+					"__worldY": 192
 				},
 				{
 					"__identifier": "MovingPlatform",

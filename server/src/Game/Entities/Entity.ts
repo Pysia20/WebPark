@@ -164,4 +164,6 @@ export class Entity {
 			visualSize: this.visualSize,
 		};
 	}
+
+	public entityStanding(entity: Entity): void {}
 }

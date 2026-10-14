@@ -188,6 +188,9 @@ export class Pushable extends Entity {
 					newPos.y += overlapY;
 					this.velocity.y = 0;
 					this.isGrounded = true;
+					if (e2 instanceof Entity) {
+						e2.entityStanding(this);
+					}
 				}
 			}
 		} else if (!this.isGrounded) {
@@ -203,6 +206,9 @@ export class Pushable extends Entity {
 			if (overlapY != -1) {
 				this.isGrounded = true;
 				this.velocity.y = 0;
+				if (e2 instanceof Entity) {
+					e2.entityStanding(this);
+				}
 			}
 		}
 	}

@@ -11,8 +11,8 @@ import { ServerButtonData } from "@shared/commonEntityData";
 
 export class Button extends Entity {
 	public override type: EntityType = "Button";
-	public playersStanding: Player[] = [];
-	public newList: Player[] = [];
+	public thingsStanding: (Player | Entity)[] = [];
+	public newList: (Player | Entity)[] = [];
 	public hasChanged: boolean = false;
 
 	public readonly usedFields: RequiredField[] = [
@@ -99,7 +99,7 @@ export class Button extends Entity {
 	}
 
 	public isPressed(): boolean {
-		return this.playersStanding.length > 0;
+		return this.thingsStanding.length > 0;
 	}
 
 	public override clone(): Button {
@@ -113,13 +113,13 @@ export class Button extends Entity {
 
 		const prevCount = l.activationStates.get(this.customFields.ActivationGroup.value!)!;
 
-		if (this.newList.length > 0 && this.playersStanding.length == 0) {
+		if (this.newList.length > 0 && this.thingsStanding.length == 0) {
 			l.activationStates.set(this.customFields.ActivationGroup.value!, prevCount + 1);
-		} else if (this.newList.length == 0 && this.playersStanding.length > 0) {
+		} else if (this.newList.length == 0 && this.thingsStanding.length > 0) {
 			l.activationStates.set(this.customFields.ActivationGroup.value!, prevCount - 1);
 		}
 
-		this.playersStanding = this.newList;
+		this.thingsStanding = this.newList;
 		this.newList = [];
 	}
 
@@ -130,5 +130,9 @@ export class Button extends Entity {
 			visualSize: this.visualSize,
 			isPressed: this.isPressed(),
 		};
+	}
+
+	public override entityStanding(entity: Entity) {
+		this.newList.push(entity);
 	}
 }

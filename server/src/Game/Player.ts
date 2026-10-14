@@ -9,6 +9,8 @@ export class Player {
 	public roomID: string | undefined;
 	public isReady: boolean = false;
 	public isGrounded: boolean = false;
+	public isInsideDoor: boolean = false;
+
 	public lastInputs: PlayerInputs = {
 		right: false,
 		left: false,

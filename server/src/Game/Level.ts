@@ -3,6 +3,7 @@ import { LevelTemplate } from "./LevelTemplate";
 import { Entity } from "./Entities/Entity";
 import { Room } from "./Room";
 import { PlayerSpawner } from "./Entities/PlayerSpawner";
+import { LOG } from "../Logger";
 
 export class Level {
 	public readonly levelTemplate: LevelTemplate;
@@ -21,8 +22,6 @@ export class Level {
 	constructor(template: LevelTemplate, room: Room) {
 		this.levelTemplate = template;
 		this.room = room;
-
-		this.reloadLevel();
 	}
 
 	public reloadLevel() {

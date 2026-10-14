@@ -98,18 +98,6 @@ export class Room {
 				newVel.y += PLAYER_CONFIG.GRAVITY;
 			}
 
-			newVel.y = clamp(
-				newVel.y,
-				-PLAYER_CONFIG.MAX_VERTICAL_SPEED,
-				PLAYER_CONFIG.MAX_VERTICAL_SPEED,
-			);
-
-			newVel.x = clamp(
-				newVel.x,
-				-PLAYER_CONFIG.MAX_HORIZONTAL_SPEED,
-				PLAYER_CONFIG.MAX_HORIZONTAL_SPEED,
-			);
-
 			// if (newPos.y >= 720 - PLAYER_CONFIG.HEIGHT && !isJumping) {
 			// 	player.setGrounded(true);
 			// 	newVel.y = 0;
@@ -129,6 +117,18 @@ export class Room {
 				newVel.y -= PLAYER_CONFIG.JUMP_FORCE;
 				player.isGrounded = false;
 			}
+
+			newVel.y = clamp(
+				newVel.y,
+				-PLAYER_CONFIG.MAX_VERTICAL_SPEED,
+				PLAYER_CONFIG.MAX_VERTICAL_SPEED,
+			);
+
+			newVel.x = clamp(
+				newVel.x,
+				-PLAYER_CONFIG.MAX_HORIZONTAL_SPEED,
+				PLAYER_CONFIG.MAX_HORIZONTAL_SPEED,
+			);
 
 			newPos.x += newVel.x * (1 / this.TICKRATE);
 			newPos.y += newVel.y * (1 / this.TICKRATE);

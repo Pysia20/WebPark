@@ -43,8 +43,6 @@ export class Door extends Entity {
 	}
 	public override handleBehaviour(l: Level) {
 		if (this.playersInside.length == l.room.getPlayers().size) {
-			console.log("All in door");
-
 			const level: Level | undefined = MAP_LOADER.GetNextLevel(l.room);
 
 			l.room.changeLevel(level);

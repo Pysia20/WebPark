@@ -73,6 +73,22 @@
 					"fieldInstances": [],
 					"__worldX": 1344,
 					"__worldY": 192
+				},
+				{
+					"__identifier": "Door",
+					"__grid": [4,7],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": { "tilesetUid": 2, "x": 64, "y": 0, "w": 64, "h": 64 },
+					"__smartColor": "#E5652F",
+					"iid": "acddd290-bde0-11f1-812f-1771d1d592d8",
+					"width": 64,
+					"height": 128,
+					"defUid": 10,
+					"px": [256,512],
+					"fieldInstances": [],
+					"__worldX": 1536,
+					"__worldY": 192
 				}
 			]
 		},

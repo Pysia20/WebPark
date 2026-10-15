@@ -36,3 +36,17 @@
 - playerLeft
    - sends the name of user that left
    - Type: number
+
+### HTTP Endpoints
+
+- /api/ping:
+   - Description: Pong
+   - Type: {pong: true}
+
+- /api/createRoom:
+   - Description: Creates a room (CRAZY)
+   - Type: {roomID: string, userID: number}
+
+- /api/joinRoom/:id:
+   - Description: Joins user to a room of :id.
+   - Type: {roomID: string, userID: number}

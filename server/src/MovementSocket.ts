@@ -101,7 +101,17 @@ export function register(io: Server) {
 					return;
 				}
 
-				room.setPlayerReady(id, true);
+				if (socket.data.userID != id) {
+					const message = `SOCKET: playerReady | Socket id (${socket.data.userID}) / player id (${id}) mismatch`;
+					LOG.warn(message);
+					socket.emit("somethingBroke", {
+						name: "Error",
+						message: message,
+						eventName: "playerReady",
+					});
+				}
+
+				room.setPlayerReady(socket.data.userID!, true);
 
 				let readyCount = 0;
 
@@ -137,7 +147,17 @@ export function register(io: Server) {
 					return;
 				}
 
-				room.setPlayerReady(id, false);
+				if (socket.data.userID != id) {
+					const message = `SOCKET: playerUnReady | Socket id (${socket.data.userID}) / player id (${id}) mismatch`;
+					LOG.warn(message);
+					socket.emit("somethingBroke", {
+						name: "Error",
+						message: message,
+						eventName: "playerUnReady",
+					});
+				}
+
+				room.setPlayerReady(socket.data.userID!, false);
 
 				let readyCount = 0;
 

@@ -1,6 +1,5 @@
 import { GridTile, LayerInstance, LevelData } from "@shared/commonLevelModels"
 import { Container, Rectangle, Sprite, Texture } from "pixi.js"
-import {ServerEntityData} from "@shared/commonModels";
 import {AnyEntityData, ServerButtonData, ServerButtonDoorData} from "@shared/commonEntityData";
 
 interface entity {
@@ -8,18 +7,23 @@ interface entity {
 	sprite: Sprite
 }
 
-export class levelManager {
-	levels: LevelData[]
-	mapData: LevelData
-	world: Container
-	spriteSheet: Texture
+class levelManager {
+	levels!: Map<string, LevelData>
+	mapData!: LevelData
+	world!: Container
+	spriteSheet!: Texture
 	tileTextures: Map<number, Texture> = new Map()
-	entTextures: Map<string, Texture>
+	entTextures: Map<string, Texture> = new Map()
 	ents: Record<number, entity> = {}
+	renderedTiles: Sprite[] = []
 
-	constructor(world: Container, spriteSheet: Texture, levels: LevelData[], entTextures: Map<string, Texture>) {
+	init(world: Container, spriteSheet: Texture, levels: Map<string, LevelData>, entTextures: Map<string, Texture>) {
 		this.levels = levels
-		this.mapData = levels[0]
+		if (this.levels.has("Level_0")) {
+			this.mapData = levels.get("Level_0") as LevelData
+		} else {
+			console.log("WEWOWEWO NO LEVEL 0 FOUND!!!?!")
+		}
 		this.world = world
 		this.spriteSheet = spriteSheet
 		this.entTextures = entTextures
@@ -49,8 +53,27 @@ export class levelManager {
 		return new Sprite(this.entTextures.get(entName))
 	}
 
-	loadLevel(level: number) {
-		this.mapData = this.levels[level]
+	loadLevel(level: string | undefined) {
+		let tile: Sprite | undefined
+		while (tile = this.renderedTiles.pop()) {
+			this.world.removeChild(tile)
+		}
+		for (const [id, ent] of Object.entries(this.ents)) {
+			this.world.removeChild(ent.sprite)
+		}
+		this.ents = {}
+
+		if (level == undefined) {
+			console.log("NO MORE LEVELS!")
+			return
+		}
+
+		if (this.levels.has(level)) {
+			this.mapData = this.levels.get(level)!
+			this.renderLevel()
+		} else {
+			console.log("LEVEL: " + level + " NOT FOUND ON CLIENT")
+		}
 	}
 
 	renderLevel() {
@@ -63,6 +86,7 @@ export class levelManager {
 				const sprite = new Sprite(this.checkTileTexture(tile, layer))
 				sprite.position.set(tile.px[0], tile.px[1])
 				this.world.addChild(sprite)
+				this.renderedTiles.push(sprite)
 			}
 		}
 	}
@@ -104,3 +128,5 @@ export class levelManager {
 		//sprite.anchor.set(ent.__pivot[0],ent.__pivot[1]) not getting this from server rn and not sure if will need to
 	}
 }
+
+export const leveler = new levelManager()

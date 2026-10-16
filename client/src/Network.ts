@@ -2,7 +2,7 @@ import { io } from "socket.io-client"
 import { ServerData, PlayerInputs, RegisterUserData, PlayerJoinedData, ServerEntityData, SomethingBrokeData } from "@shared/commonModels"
 import { coordinator } from "./Coordinator";
 import { hud } from "./Hud";
-import {levelManager} from "./Leveler";
+import { leveler } from "./Leveler";
 
 const socket = io("/player", {
     path: '/api/socket.io',
@@ -55,6 +55,9 @@ socket.on("playerLeft", (playerID: number) => {
     coordinator.remove_player(playerID)
 })
 
+socket.on("changeLevel", (newLevel: string | undefined) => {
+    leveler.loadLevel(newLevel)
+})
 
 
 export function startNetworking() {

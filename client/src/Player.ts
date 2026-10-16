@@ -160,7 +160,10 @@ class Eye {
     eye: Graphics = new Graphics()
     length: number = 20
     direction: Directions = Directions.None
+    pos: Vector2 = {x: 0, y: 0}
     blinking: boolean = false
+
+    LERP_SPEED: number = 0.25
 
     constructor() {
         this.eye.position.set(0, 0)
@@ -177,8 +180,13 @@ class Eye {
         } else {
             this.direction = Directions.None
         }
-        const targetY: number = pos.y + this.length
-        this.eye.clear().moveTo(targetX, pos.y).lineTo(targetX, targetY).stroke({color: "#000000", width: 5, cap: "round"})
+
+        this.pos.x += (targetX - this.pos.x) * this.LERP_SPEED
+        this.pos.y += (pos.y - this.pos.y) * this.LERP_SPEED
+
+        const targetY: number = this.pos.y + this.length
+
+        this.eye.clear().moveTo(this.pos.x, this.pos.y).lineTo(this.pos.x, targetY).stroke({color: "#000000", width: 5, cap: "round"})
     }
 }
 

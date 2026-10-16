@@ -1,12 +1,12 @@
 import * as PIXI from 'pixi.js'
 
 import { getCurrentInputs } from "./Inputs"
-import {emitInputs, getServerData, startNetworking} from "./Network";
+import { emitInputs, getServerData, startNetworking } from "./Network";
 import { coordinator } from "./Coordinator";
-import {PlayerInputs, ServerData, Vector2} from "@shared/commonModels"
+import { PlayerInputs, Vector2 } from "@shared/commonModels"
 import { loadAssets } from "./Assets";
 import { CameraController } from "./Camera";
-import { levelManager } from "./Leveler";
+import { leveler } from "./Leveler";
 import { pageSetup } from "./Weber";
 import { hud } from "./Hud";
 
@@ -29,12 +29,13 @@ app.stage.addChild(hudContainer)
 pageSetup(app)
 
 const assets = await loadAssets()
-const leveler = new levelManager(worldContainer, assets.mapAssets.spritesheet, assets.mapAssets.levels, assets.mapAssets.entTextures)
-const map_size: Vector2 = {x: leveler.mapData.pxWid, y: leveler.mapData.pxHei}
-const camera = new CameraController(worldContainer, app.screen, map_size)
 
 hud.init(hudContainer, app.screen.width, app.screen.height)
 coordinator.init(assets.playerTextures, worldContainer)
+leveler.init(worldContainer, assets.mapAssets.spritesheet, assets.mapAssets.levels, assets.mapAssets.entTextures)
+
+const map_size: Vector2 = {x: leveler.mapData.pxWid, y: leveler.mapData.pxHei}
+const camera = new CameraController(worldContainer, app.screen, map_size)
 
 startNetworking()
 

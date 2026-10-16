@@ -125,7 +125,6 @@ class levelManager {
 			default:
 				break
 		}
-		//sprite.anchor.set(ent.__pivot[0],ent.__pivot[1]) not getting this from server rn and not sure if will need to
 	}
 }
 

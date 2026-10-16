@@ -181,11 +181,17 @@ class Eye {
             this.direction = Directions.None
         }
 
-        this.pos.x += (targetX - this.pos.x) * this.LERP_SPEED
-        this.pos.y += (pos.y - this.pos.y) * this.LERP_SPEED
+        const distX = Math.abs(targetX - this.pos.x )
+        if (distX > 3) {
+            this.pos.x += (targetX - this.pos.x) * this.LERP_SPEED
+        } else {
+            this.pos.x = targetX
+        }
+
+//        const distY = Math.abs(pos.y - this.pos.y) this is still very buggy bc of velocity so leaving it like this at least for now
+        this.pos.y = pos.y
 
         const targetY: number = this.pos.y + this.length
-
         this.eye.clear().moveTo(this.pos.x, this.pos.y).lineTo(this.pos.x, targetY).stroke({color: "#000000", width: 5, cap: "round"})
     }
 }

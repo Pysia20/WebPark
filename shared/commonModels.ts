@@ -48,6 +48,7 @@ export interface PlayerJoinedData {
 	playerID: number;
 	nick: string;
 	color: string;
+	level: string;
 }
 
 //###############################################################

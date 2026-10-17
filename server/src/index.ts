@@ -30,6 +30,10 @@ const io: SocketIOServer = new SocketIOServer<
 		methods: ["GET", "POST"],
 		credentials: true,
 	},
+	connectionStateRecovery: {
+		maxDisconnectionDuration: 2 * 60 * 1000,
+		skipMiddlewares: false,
+	},
 });
 
 movement.register(io);

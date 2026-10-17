@@ -20,6 +20,9 @@ export function register(io: Server) {
 	const endpoint = io.of("/player");
 
 	endpoint.on("connect", (socket: PlayerSocket) => {
+		if (socket.recovered) {
+			LOG.info("SOCKET RESTORED");
+		}
 		LOG.info(`SOCKET | User (${socket.id}) connected.`);
 
 		socket.on("registerUser", async (data: RegisterUserData, callback) => {
@@ -54,13 +57,18 @@ export function register(io: Server) {
 
 			await socket.join(data.roomID);
 
-			const player: Player = new Player(data.userID, data.userNick);
-			player.color = data.color;
+			if (room.getPlayers().get(data.userID)) {
+				socket.to(data.roomID).emit("log", `<li>${data.userNick} re-joined the room </li>`);
+				LOG.info(`User: ${data.userNick} (${data.userID}) re-joined the room (${data.roomID})`);
+			} else {
+				const player: Player = new Player(data.userID, data.userNick);
+				player.color = data.color;
 
-			room.addPlayer(player);
+				room.addPlayer(player);
 
-			socket.to(data.roomID).emit("log", `<li>${data.userNick} joined the room </li>`);
-			//TODO Color emit playerJoined
+				socket.to(data.roomID).emit("log", `<li>${data.userNick} joined the room </li>`);
+				LOG.info(`User: ${data.userNick} (${data.userID}) joined the room (${data.roomID})`);
+			}
 
 			const playerJoinedData: PlayerJoinedData[] = [];
 
@@ -72,6 +80,7 @@ export function register(io: Server) {
 						playerID: player.id,
 						nick: player.nick,
 						color: player.color,
+						level: room.level.getID(),
 					};
 
 					playerJoinedData.push(data);
@@ -82,8 +91,6 @@ export function register(io: Server) {
 			socket.data.roomID = data.roomID;
 			socket.data.userNick = data.userNick;
 			socket.data.userID = data.userID;
-
-			LOG.info(`User: ${data.userNick} (${data.userID}) joined the room (${data.roomID})`);
 		});
 
 		socket.on("playerReady", (id: number) => {

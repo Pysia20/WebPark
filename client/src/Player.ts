@@ -5,10 +5,15 @@ import { playJump } from "./Audio";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 
 enum Directions {
+    None = -1,
     Left,
     Right
 }
 
+//maybe I should just split this into separate files ngl
+//=============================
+//  LEG     LEG  LEG     LEG
+//==============================
 class Leg {
     stepStart: Vector2 = {x: 0, y: 0}
     footPos: Vector2 = {x: 0, y: 0}
@@ -117,6 +122,10 @@ class Leg {
     }
 }
 
+
+//=============================
+//  TORSO   TORSO  TORSO   TORSO
+//==============================
 class Torso {
     color: string
     sprite: Sprite
@@ -124,6 +133,7 @@ class Torso {
     constructor(texture: Texture, color: string) {
         this.color = color
         this.sprite = new Sprite(texture)
+        this.sprite.tint = this.color
         this.sprite.setSize(PLAYER_CONFIG.WIDTH, PLAYER_CONFIG.HEIGHT - (PLAYER_CONFIG.HEIGHT / 10))
         this.sprite.anchor.set(0.5, 1.0)
     }
@@ -142,14 +152,54 @@ class Torso {
     }
 }
 
+
+//=============================
+//  EYE   EYE  EYE   EYE
+//==============================
 class Eye {
-    pos: Vector2
+    eye: Graphics = new Graphics()
+    length: number = 20
+    direction: Directions = Directions.None
+    pos: Vector2 = {x: 0, y: 0}
+    blinking: boolean = false
+
+    LERP_SPEED: number = 0.25
 
     constructor() {
-        this.pos = {x: 0, y: 0}
+        this.eye.position.set(0, 0)
+    }
+
+    updateEye(pos: Vector2, velocity: Vector2) {
+        let targetX: number = pos.x
+        if (velocity.x < 0) {
+            this.direction = Directions.Left
+            targetX -= PLAYER_CONFIG.WIDTH / 10
+        } else if (velocity.x > 0) {
+            this.direction = Directions.Right
+            targetX += PLAYER_CONFIG.WIDTH / 10
+        } else {
+            this.direction = Directions.None
+        }
+
+        const distX = Math.abs(targetX - this.pos.x )
+        if (distX > 3) {
+            this.pos.x += (targetX - this.pos.x) * this.LERP_SPEED
+        } else {
+            this.pos.x = targetX
+        }
+
+//        const distY = Math.abs(pos.y - this.pos.y) this is still very buggy bc of velocity so leaving it like this at least for now
+        this.pos.y = pos.y
+
+        const targetY: number = this.pos.y + this.length
+        this.eye.clear().moveTo(this.pos.x, this.pos.y).lineTo(this.pos.x, targetY).stroke({color: "#000000", width: 5, cap: "round"})
     }
 }
 
+
+//=============================
+//  PLAYER   PLAYER  PLAYER   PLAYER
+//==============================
 export class Player {
     id: number
     isHost: boolean
@@ -186,6 +236,8 @@ export class Player {
         world.addChild(this.nick)
         world.addChild(this.legs[0].leg)
         world.addChild(this.legs[1].leg)
+        world.addChild(this.eyes[0].eye)
+        world.addChild(this.eyes[1].eye)
     }
 
     updatePos() {
@@ -197,6 +249,7 @@ export class Player {
         this.updateTorso()
         this.updateNick()
         this.updateLegs()
+        this.updateEyes()
 
         this.prevVelocity = this.velocity
     }
@@ -218,7 +271,7 @@ export class Player {
 
         if (!this.inAir) {
             const hipLeft = {x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY};
-            const hipRight = {x: this.pos.x + legOffsetX * 3, y: this.pos.y + legOffsetY}
+            const hipRight = {x: this.pos.x + (legOffsetX * 3), y: this.pos.y + legOffsetY}
 
             const ground = this.pos.y + PLAYER_CONFIG.HEIGHT
             this.legs[0].updateLeg(hipLeft, this.legs[1], this.velocity, ground, this.deltaT)
@@ -227,6 +280,17 @@ export class Player {
             this.legs[0].curlUp({x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY}, this.velocity)
             this.legs[1].curlUp({x: this.pos.x + (legOffsetX * 3), y: this.pos.y + legOffsetY}, this.velocity)
         }
+    }
+
+    updateEyes() {
+        const eyeOffsetX = PLAYER_CONFIG.WIDTH / 4
+        const eyeOffsetY = (PLAYER_CONFIG.HEIGHT / 10) * 2
+
+        const eyeLeft = {x: this.pos.x + eyeOffsetX, y: this.pos.y + eyeOffsetY}
+        const eyeRight = {x: this.pos.x + (eyeOffsetX * 3), y: this.pos.y + eyeOffsetY}
+
+        this.eyes[0].updateEye(eyeLeft, this.velocity)
+        this.eyes[1].updateEye(eyeRight, this.velocity)
     }
 
     checkInAir() {

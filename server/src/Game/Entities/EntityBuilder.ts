@@ -15,8 +15,11 @@ import { Spike } from "./Spike";
 import { PlayerSpawner } from "./PlayerSpawner";
 import { MovingPlatform } from "./MovingPlatform";
 import { Laser } from "./Laser";
+import { Entity } from "../Entity";
+import { Player } from "../Player";
+import { MapCollider } from "./MapCollider";
 
-type EntityConstructor = new (pos: any, size: any, customFields: any) => JohnEntity;
+type EntityConstructor = new (pos: any, size: any, customFields: any) => Entity;
 
 export class EntityBuilder {
 	public readonly type: EntityType;
@@ -37,6 +40,8 @@ export class EntityBuilder {
 		PlayerSpawner: PlayerSpawner,
 		MovingPlatform: MovingPlatform,
 		Laser: Laser,
+		Player: Player,
+		MapCollider: MapCollider,
 	};
 
 	constructor(type: EntityType) {
@@ -70,7 +75,7 @@ export class EntityBuilder {
 		return this;
 	}
 
-	public build(): JohnEntity {
+	public build(): Entity {
 		if (this.position.x == -1 || this.position.y == -1) {
 			LOG.error(`Entity of type ${this.type} doesn't have set position.`);
 			throw Error(`Entity of type ${this.type} doesn't have set position.`);

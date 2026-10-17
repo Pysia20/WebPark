@@ -1,15 +1,10 @@
-import {
-	CustomField,
-	DummyEntityCustomFields,
-	EntityCustomFieldsData,
-	EntityType,
-} from "@shared/commonLevelModels";
+import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
 import { ServerEntityData, Vector2 } from "@shared/commonModels";
 import { Level } from "../Game/Level";
 import { RequiredField } from "../Global";
 import { LOG } from "../Logger";
-import { EntryType } from "node:perf_hooks";
 import { GROUND_DETECTON_OFFSET } from "@shared/commonVariables";
+import { Player } from "./Player";
 
 export interface CollisionOutput {
 	correctionX: number;
@@ -18,9 +13,12 @@ export interface CollisionOutput {
 }
 
 export abstract class Entity {
+	public id: number = -1;
 	public velocity: Vector2 = { x: 0, y: 0 };
 	public level: Level | undefined;
-	// public readonly usedFields: RequiredField[] = [];
+	public isGrounded: boolean = false;
+	public newPos: Vector2 = { x: 0, y: 0 };
+	public newVelocity: Vector2 = { x: 0, y: 0 };
 
 	public getUsedFields(): RequiredField[] {
 		return [];
@@ -94,7 +92,7 @@ export abstract class Entity {
 		return isCollidingX && isCollidingY;
 	}
 
-	public handleCollision(other: Entity): CollisionOutput {
+	public handleCollision(other: Entity) {
 		if (!Entity.isColliding(this, other)) {
 			const isTopTouching = this.checkGrounded(other);
 			if (isTopTouching) {
@@ -107,6 +105,8 @@ export abstract class Entity {
 				isGrounded: isTopTouching,
 			};
 		}
+
+		this.newPos = { ...this.pos };
 
 		const centerA: Vector2 = {
 			x: this.pos.x + this.size.x / 2,
@@ -134,24 +134,26 @@ export abstract class Entity {
 			// Horizontal collision
 			if (diffX > 0) {
 				// Pushing out to the right
-				this.onRightCollision(output, { x: overlapX, y: overlapY }, other);
+				this.onRightCollision(output, { x: overlapX, y: 0 }, other);
 			} else {
 				// Pushing out to the left
-				this.onLeftCollision(output, { x: overlapX, y: overlapY }, other);
+				this.onLeftCollision(output, { x: -overlapX, y: 0 }, other);
 			}
 		} else {
 			if (diffY > 0) {
 				// Pushing out downwards
-				this.onDownCollision(output, { x: overlapX, y: overlapY }, other);
+				this.onDownCollision(output, { x: 0, y: overlapY }, other);
 			} else {
 				// Pushing out upwards
-				this.onUpCollision(output, { x: overlapX, y: overlapY }, other);
+				this.onUpCollision(output, { x: 0, y: -overlapY }, other);
 			}
 		}
 
-		this.onAnyCollision(other);
+		this.newPos.x += output.correctionX;
+		this.newPos.y += output.correctionY;
+		// this.isGrounded = output.isGrounded;
 
-		return output;
+		this.onAnyCollision(other);
 	}
 
 	protected onRightCollision(output: CollisionOutput, overlap: Vector2, other: Entity): void {
@@ -175,7 +177,9 @@ export abstract class Entity {
 		output.isGrounded = true;
 	}
 
-	protected onAnyCollision(other: Entity) {}
+	protected onAnyCollision(other: Entity) {
+		console.log(other.type);
+	}
 
 	protected onUpTouching(other: Entity): void {}
 
@@ -188,6 +192,13 @@ export abstract class Entity {
 	}
 
 	public handleBehaviour(level: Level) {}
+
+	public swapPosition() {
+		this.pos = { ...this.newPos };
+		this.velocity = { ...this.newVelocity };
+		this.isGrounded = false;
+	}
+
 	public endTick() {}
 
 	public abstract clone(): Entity;

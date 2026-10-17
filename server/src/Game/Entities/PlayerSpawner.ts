@@ -40,8 +40,7 @@ export class PlayerSpawner extends Entity {
 		other: Entity,
 	): void {}
 
-	public override handleBehaviour(l: Level) {}
-	public override endTick() {}
+	protected override onAnyCollision(other: Entity) {}
 
 	public override clone() {
 		return new PlayerSpawner({ ...this.pos }, { ...this.size }, { ...this.customFields });

@@ -19,6 +19,7 @@ import { Door } from "./Entities/Door";
 import { MAP_LOADER } from "./LevelLoader";
 import { Room } from "./Room";
 import { MapCollider } from "./Entities/MapCollider";
+import { Entity } from "./Entity";
 
 export class LevelTemplate {
 	public readonly id: string; // its name
@@ -26,7 +27,7 @@ export class LevelTemplate {
 	private height: number = -1;
 	private readonly intGrid: number[][];
 	public readonly colliders: MapCollider[];
-	public readonly entities: JohnEntity[] = [];
+	public readonly entities: Entity[] = [];
 	public readonly group: string;
 	public readonly groupIndex: number;
 
@@ -51,8 +52,8 @@ export class LevelTemplate {
 		return { groupName: groupName, groupIndex: groupIndex };
 	}
 
-	private parseEntities(data: LevelData): JohnEntity[] {
-		const entities: JohnEntity[] = [];
+	private parseEntities(data: LevelData): Entity[] {
+		const entities: Entity[] = [];
 
 		data.layerInstances.forEach((layer: LayerInstance) => {
 			if (layer.__type != "Entities") {
@@ -190,10 +191,9 @@ export class LevelTemplate {
 
 		// Scaling the intgrid to the real size
 		return new MapCollider(
-			startingX * WORLD_CONFIG.CELL_SIZE,
-			startingY * WORLD_CONFIG.CELL_SIZE,
-			width * WORLD_CONFIG.CELL_SIZE,
-			height * WORLD_CONFIG.CELL_SIZE,
+			{ x: startingX * WORLD_CONFIG.CELL_SIZE, y: startingY * WORLD_CONFIG.CELL_SIZE },
+			{ x: width * WORLD_CONFIG.CELL_SIZE, y: height * WORLD_CONFIG.CELL_SIZE },
+			DummyEntityCustomFields,
 		);
 	}
 }

@@ -12,9 +12,6 @@ import { Entity } from "../Entity";
 //TODO Add colision with other entities
 
 export class Pushable extends Entity {
-	public isGrounded: boolean = false;
-	public velocity: Vector2 = { x: 0, y: 0 };
-
 	public pusher: Player | undefined;
 	public pusherNewPos: Vector2 | undefined;
 

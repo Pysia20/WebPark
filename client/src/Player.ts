@@ -184,14 +184,14 @@ class Eye {
         if (this.blinkTimer <= 0 && !this.isBlinking) {
             this.blinkState = States.Down
             this.isBlinking = true
-            this.blinkTimer = 1 + rand
+            this.blinkTimer = 300 + rand
         } else {
             this.blinkTimer -= deltaT
         }
 
         if (this.isBlinking) {
             if (this.length > 0.0 && this.blinkState == States.Down) {
-                this.length -= 2 * deltaT
+                this.length -= 2.5 * deltaT
                 this.width += 0.5 * deltaT
                 pos.y = pos.y + ((this.MAX_LENGTH - this.length) / 2)
             } else {
@@ -204,7 +204,7 @@ class Eye {
             }
 
             if (this.length < this.MAX_LENGTH && this.blinkState == States.Up) {
-                this.length += 2 * deltaT
+                this.length += 2.5 * deltaT
                 this.width -= 0.5 * deltaT
                 pos.y = pos.y + ((this.MAX_LENGTH - this.length) / 2)
             } else if (this.length > this.MAX_LENGTH) {

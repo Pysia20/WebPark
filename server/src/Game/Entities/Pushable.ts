@@ -1,11 +1,12 @@
 import { Vector2 } from "@shared/commonModels";
 import { Level } from "../Level";
 import { JohnEntity } from "./JohnEntity";
-import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
+import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG, PUSHABLE_CONFIG } from "@shared/commonVariables";
 import { isColliding } from "../../Global";
 import { Player } from "../Player";
 import CONFIG from "../../../config.json";
+import { MapCollider } from "./MapCollider";
 
 //TODO Add colision with other entities
 

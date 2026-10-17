@@ -6,7 +6,6 @@ import {
 	DirectionOppositeMap,
 	EntityCustomFieldsData,
 	EntityType,
-	MapCollider,
 } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG, WORLD_CONFIG } from "@shared/commonVariables";
 import { clamp, isColliding, RequiredField } from "../../Global";

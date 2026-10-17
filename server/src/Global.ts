@@ -1,4 +1,4 @@
-import { EntityCustomField, EntityCustomFieldsData, MapCollider } from "@shared/commonLevelModels";
+import { EntityCustomField, EntityCustomFieldsData } from "@shared/commonLevelModels";
 import { Room } from "./Game/Room";
 import { JohnEntity } from "./Game/Entities/JohnEntity";
 import { Player } from "./Game/Player";
@@ -6,6 +6,7 @@ import { CollisionCheckResult, Vector2 } from "@shared/commonModels";
 import { LOG } from "./Logger";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { diff } from "node:util";
+import { MapCollider } from "./Game/Entities/MapCollider";
 
 export const games: Map<string, Room> = new Map<string, Room>();
 

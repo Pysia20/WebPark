@@ -14,6 +14,8 @@ export const WORLD_CONFIG = {
 	CELL_SIZE: 64,
 };
 
+export const GROUND_DETECTON_OFFSET = 1;
+
 export const ROOM_CONFIG = {
 	MAX_PLAYERS: 8,
 };

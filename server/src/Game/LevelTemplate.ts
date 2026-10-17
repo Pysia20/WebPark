@@ -1,7 +1,6 @@
 import { WORLD_CONFIG } from "@shared/commonVariables";
 import {
 	LevelData,
-	MapCollider,
 	LayerInstance,
 	EntityInstance,
 	EntityType,
@@ -19,6 +18,7 @@ import { EntityBuilder } from "./Entities/EntityBuilder";
 import { Door } from "./Entities/Door";
 import { MAP_LOADER } from "./LevelLoader";
 import { Room } from "./Room";
+import { MapCollider } from "./Entities/MapCollider";
 
 export class LevelTemplate {
 	public readonly id: string; // its name

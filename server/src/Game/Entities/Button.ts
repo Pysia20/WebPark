@@ -2,121 +2,49 @@ import { Vector2 } from "@shared/commonModels";
 import { Player } from "../Player";
 import { JohnEntity } from "./JohnEntity";
 import { isColliding, RequiredField } from "../../Global";
-import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
+import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { Level } from "../Level";
-import { runInThisContext } from "node:vm";
 import { LOG } from "../../Logger";
 import { ServerButtonData } from "@shared/commonEntityData";
+import { MapCollider } from "./MapCollider";
+import { CollisionOutput, Entity } from "../Entity";
 
-export class Button extends JohnEntity {
-	public override type: EntityType = "Button";
-	public thingsStanding: (Player | JohnEntity)[] = [];
-	public newList: (Player | JohnEntity)[] = [];
+export class Button extends Entity {
+	public thingsStanding: Entity[] = [];
+	public newList: Entity[] = [];
 	public hasChanged: boolean = false;
 
-	public readonly usedFields: RequiredField[] = [
-		{
-			name: "ActivationGroup",
-			value: this.customFields.ActivationGroup.value,
-			isMissing: (v: any) => v === "" || v === undefined || !v,
-			isRequired: true,
-		},
-	];
-
-	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
-		super(pos, size, customFields);
-		this.customFields = this.validateCustomFields(customFields);
+	public override getUsedFields(): RequiredField[] {
+		return [
+			{
+				name: "ActivationGroup",
+				value: this.customFields.ActivationGroup.value,
+				isMissing: (v: any) => v === "" || v === undefined || !v,
+				isRequired: true,
+			},
+		];
 	}
 
-	public handleCollisions(
-		p: Player,
-		playerNewPos: Vector2,
-		playerNewVel: Vector2,
-		isGrounded: boolean,
-	): boolean {
-		const { overlapX, overlapY, diffX, diffY } = isColliding(p, this);
-
-		if (overlapX != -1 && overlapY != -1) {
-			if (overlapX < overlapY) {
-				// Horizontal collison
-
-				if (diffX > 0) {
-					// A is going left towards B
-					// Pushing out to the right
-
-					if (playerNewVel.x < 0) {
-						playerNewPos.x += overlapX;
-						playerNewVel.x = 0;
-					}
-				} else {
-					// A is going right towards B
-					// Pushing out to the left
-					if (playerNewVel.x > 0) {
-						playerNewPos.x -= overlapX;
-						playerNewVel.x = 0;
-					}
-				}
-			} else {
-				// Vertical collision
-				if (diffY > 0) {
-					// A is going up towards B
-					// Pushing out downwards
-					if (playerNewVel.y < 0) {
-						playerNewPos.y += overlapY;
-						playerNewVel.y = 0;
-					}
-				} else {
-					// A is goung down towards B
-					// Pushign out upwards
-
-					if (playerNewVel.y > 0) {
-						playerNewPos.y -= overlapY;
-						playerNewVel.y = 0;
-						isGrounded = true;
-						this.newList.push(p);
-					}
-				}
-			}
-		} else if (!isGrounded) {
-			const collider: MapCollider = new MapCollider(
-				p.pos.x,
-				p.pos.y + PLAYER_CONFIG.GROUND_DETECTON_OFFSET,
-				PLAYER_CONFIG.WIDTH,
-				PLAYER_CONFIG.HEIGHT,
-			);
-
-			const { overlapX, overlapY, diffX, diffY } = isColliding(collider, this);
-
-			if (overlapY != -1) {
-				isGrounded = true;
-				this.newList.push(p);
-				playerNewVel.y = 0;
-			}
-		}
-
-		return isGrounded;
+	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
+		super(pos, size, customFields, "Button");
 	}
 
 	public isPressed(): boolean {
 		return this.thingsStanding.length > 0;
 	}
 
-	public override clone(): Button {
-		return new Button({ ...this.pos }, { ...this.size }, { ...this.customFields });
-	}
-
 	public override endTick() {}
 
-	public override handleBehaviour(l: Level) {
+	public override handleBehaviour(level: Level) {
 		if (!this.customFields.ActivationGroup.doesExist) return;
 
-		const prevCount = l.activationStates.get(this.customFields.ActivationGroup.value!)!;
+		const prevCount = level.activationStates.get(this.customFields.ActivationGroup.value!)!;
 
 		if (this.newList.length > 0 && this.thingsStanding.length == 0) {
-			l.activationStates.set(this.customFields.ActivationGroup.value!, prevCount + 1);
+			level.activationStates.set(this.customFields.ActivationGroup.value!, prevCount + 1);
 		} else if (this.newList.length == 0 && this.thingsStanding.length > 0) {
-			l.activationStates.set(this.customFields.ActivationGroup.value!, prevCount - 1);
+			level.activationStates.set(this.customFields.ActivationGroup.value!, prevCount - 1);
 		}
 
 		this.thingsStanding = this.newList;
@@ -127,12 +55,25 @@ export class Button extends JohnEntity {
 		return {
 			type: this.type,
 			pos: this.pos,
-			visualSize: this.visualSize,
+			visualSize: this.size,
 			isPressed: this.isPressed(),
 		};
 	}
 
-	public override entityStanding(entity: JohnEntity) {
+	public entityStanding(entity: Entity) {
 		this.newList.push(entity);
+	}
+
+	protected override onUpTouching(other: Entity) {
+		this.entityStanding(other);
+	}
+
+	protected override onUpCollision(output: CollisionOutput, overlap: Vector2, other: Entity) {
+		super.onUpCollision(output, overlap, other); // Default behaviour
+		this.entityStanding(other);
+	}
+
+	public override clone(): Button {
+		return new Button({ ...this.pos }, { ...this.size }, { ...this.customFields });
 	}
 }

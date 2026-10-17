@@ -3,9 +3,10 @@ import { Player } from "../Player";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { isColliding, RequiredField } from "../../Global";
 import { LOG } from "../../Logger";
-import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
+import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
 import { EntityBuilder } from "./EntityBuilder";
 import { Level } from "../Level";
+import { MapCollider } from "./MapCollider";
 
 export class JohnEntity {
 	public readonly type: EntityType = "JohnEntity";
@@ -138,10 +139,6 @@ export class JohnEntity {
 	 */
 	public clone(): JohnEntity {
 		return new JohnEntity({ ...this.pos }, { ...this.size }, { ...this.customFields });
-	}
-
-	public getTypeName(): string {
-		return this.constructor.name;
 	}
 
 	/**

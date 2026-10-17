@@ -1,10 +1,11 @@
 import { Vector2 } from "@shared/commonModels";
 import { Level } from "../Level";
 import { JohnEntity } from "./JohnEntity";
-import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
+import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { isColliding } from "../../Global";
 import { Player } from "../Player";
+import { MapCollider } from "./MapCollider";
 
 //! DO NOT IMPORT!!!
 //? IT IS A TEMPLATE FOR CREATING NEW ENTITY TYPES

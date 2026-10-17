@@ -4,10 +4,12 @@ import {
 	EntityCustomFieldsData,
 	EntityType,
 } from "@shared/commonLevelModels";
-import { Vector2 } from "@shared/commonModels";
-import { Level } from "pino";
+import { ServerEntityData, Vector2 } from "@shared/commonModels";
+import { Level } from "../Game/Level";
 import { RequiredField } from "../Global";
 import { LOG } from "../Logger";
+import { EntryType } from "node:perf_hooks";
+import { GROUND_DETECTON_OFFSET } from "@shared/commonVariables";
 
 export interface CollisionOutput {
 	correctionX: number;
@@ -15,8 +17,7 @@ export interface CollisionOutput {
 	isGrounded: boolean; // If other should be set as grounded after the collision
 }
 
-abstract class Entity {
-	public readonly type: EntityType = "JohnEntity";
+export abstract class Entity {
 	public velocity: Vector2 = { x: 0, y: 0 };
 	public level: Level | undefined;
 	// public readonly usedFields: RequiredField[] = [];
@@ -29,6 +30,7 @@ abstract class Entity {
 		public pos: Vector2,
 		public size: Vector2,
 		public customFields: EntityCustomFieldsData,
+		public readonly type: EntityType,
 	) {
 		this.pos = { ...pos };
 		this.size = { ...size };
@@ -74,12 +76,31 @@ abstract class Entity {
 		return isCollidingX && isCollidingY;
 	}
 
+	protected checkGrounded(other: Entity): boolean {
+		const xA = this.pos.x;
+		const yA = this.pos.y + GROUND_DETECTON_OFFSET;
+		const { x: widthA, y: heightA } = this.size;
+
+		const { x: xB, y: yB } = other.pos;
+		const { x: widthB, y: heightB } = other.size;
+
+		const isCollidingX = xB < xA + widthA && xA < xB + widthB;
+		const isCollidingY = yB < yA + heightA && yA < yB + heightB;
+
+		return isCollidingX && isCollidingY;
+	}
+
 	public handleCollision(other: Entity): CollisionOutput {
 		if (!Entity.isColliding(this, other)) {
+			const isTopTouching = this.checkGrounded(other);
+			if (isTopTouching) {
+				this.onUpTouching(other);
+			}
+
 			return {
 				correctionX: 0,
 				correctionY: 0,
-				isGrounded: false,
+				isGrounded: isTopTouching,
 			};
 		}
 
@@ -99,50 +120,72 @@ abstract class Entity {
 		const overlapX = (this.size.x + other.size.x) / 2 - Math.abs(diffX);
 		const overlapY = (this.size.y + other.size.y) / 2 - Math.abs(diffY);
 
-		if (overlapX < overlapY) {
-			// Horizontal collision
-			if (diffX > 0) {
-				// Pushing out to the right
-				this.onCollisonRight(other);
-			} else {
-				// Pushing out to the left
-				this.onCollisonLeft(other);
-			}
-		} else {
-			if (diffY > 0) {
-				// Pushing out downwards
-				this.onCollisonDown(other);
-			} else {
-				// Pushing out upwards
-				this.onCollisonUp(other);
-			}
-		}
-
-		return {
+		const output: CollisionOutput = {
 			correctionX: 0,
 			correctionY: 0,
 			isGrounded: false,
 		};
+
+		if (overlapX < overlapY) {
+			// Horizontal collision
+			if (diffX > 0) {
+				// Pushing out to the right
+				this.onRightCollision(output, { x: overlapX, y: overlapY }, other);
+			} else {
+				// Pushing out to the left
+				this.onLeftCollision(output, { x: overlapX, y: overlapY }, other);
+			}
+		} else {
+			if (diffY > 0) {
+				// Pushing out downwards
+				this.onDownCollision(output, { x: overlapX, y: overlapY }, other);
+			} else {
+				// Pushing out upwards
+				this.onUpCollision(output, { x: overlapX, y: overlapY }, other);
+			}
+		}
+
+		return output;
 	}
 
-	public onCollisonUp(other: Entity) {}
-	public onCollisonDown(other: Entity) {}
-	public onCollisonLeft(other: Entity) {}
-	public onCollisonRight(other: Entity) {}
-
-	public clone(): Entity {
-		return this; // In non-abstract entities call a constructor
+	protected onRightCollision(output: CollisionOutput, overlap: Vector2, other: Entity): void {
+		output.correctionX = overlap.x;
+		output.correctionY = overlap.y;
 	}
+
+	protected onLeftCollision(output: CollisionOutput, overlap: Vector2, other: Entity): void {
+		output.correctionX = overlap.x;
+		output.correctionY = overlap.y;
+	}
+
+	protected onDownCollision(output: CollisionOutput, overlap: Vector2, other: Entity): void {
+		output.correctionX = overlap.x;
+		output.correctionY = overlap.y;
+	}
+
+	protected onUpCollision(output: CollisionOutput, overlap: Vector2, other: Entity): void {
+		output.correctionX = overlap.x;
+		output.correctionY = overlap.y;
+		output.isGrounded = true;
+	}
+
+	protected onUpTouching(other: Entity): void {}
+
+	public getData(): ServerEntityData {
+		return {
+			type: this.type,
+			pos: this.pos,
+			visualSize: this.size,
+		};
+	}
+
+	public handleBehaviour(level: Level) {}
+	public endTick() {}
+
+	public abstract clone(): Entity;
 }
 
-export abstract class StaticEntity extends Entity {
-	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
-		super(pos, size, customFields);
-	}
-}
-export abstract class DynamicEntity extends Entity {}
-
-export class ExampleStaticEntity extends StaticEntity {
+export class ExampleStaticEntity extends Entity {
 	public getUsedFields(): RequiredField[] {
 		return [
 			{
@@ -154,7 +197,23 @@ export class ExampleStaticEntity extends StaticEntity {
 		];
 	}
 
-	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
-		super(pos, size, customFields);
+	constructor(
+		pos: Vector2,
+		size: Vector2,
+		customFields: EntityCustomFieldsData,
+		type: EntityType,
+	) {
+		super(pos, size, customFields, type);
+	}
+
+	public clone() {
+		return new ExampleStaticEntity(
+			{ ...this.pos },
+			{ ...this.size },
+			{
+				...this.customFields,
+			},
+			this.type,
+		);
 	}
 }

@@ -1,41 +1,15 @@
 import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
-import { JohnEntity } from "./JohnEntity";
 import { Vector2 } from "@shared/commonModels";
-import { LOG } from "../../Logger";
 import { Level } from "../Level";
 import { MAP_LOADER } from "../LevelLoader";
 import { Player } from "../Player";
-import { isColliding } from "../../Global";
+import { CollisionOutput, Entity } from "../Entity";
 
-export class Door extends JohnEntity {
-	public override type: EntityType = "Door";
-
+export class Door extends Entity {
 	public playersInside: Player[] = [];
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
-		super(pos, size, customFields);
-		this.customFields = this.validateCustomFields(customFields);
-	}
-
-	public override handleCollisions(
-		p: Player,
-		playerNewPos: Vector2,
-		playerNewVel: Vector2,
-		isGrounded: boolean,
-	): boolean {
-		const { overlapX, overlapY, diffX, diffY } = isColliding(this, p);
-
-		if (overlapX != -1 || overlapY != -1) {
-			this.playersInside.push(p);
-			p.isInsideDoor = true;
-		}
-
-		return false;
-	}
-
-	public enterDoor(nextLevelID: string) {
-		// TODO: Switch level
-		// LOG.info(nextLevelID);
+		super(pos, size, customFields, "Door");
 	}
 
 	public override clone(): Door {
@@ -46,6 +20,50 @@ export class Door extends JohnEntity {
 			const level: Level | undefined = MAP_LOADER.GetNextLevel(l.room);
 
 			l.room.changeLevel(level);
+		}
+	}
+
+	protected override onRightCollision(
+		output: CollisionOutput,
+		overlap: Vector2,
+		other: Entity,
+	): void {
+		if (other instanceof Player) {
+			this.playersInside.push(other);
+			other.isInsideDoor = true;
+		}
+	}
+
+	protected override onLeftCollision(
+		output: CollisionOutput,
+		overlap: Vector2,
+		other: Entity,
+	): void {
+		if (other instanceof Player) {
+			this.playersInside.push(other);
+			other.isInsideDoor = true;
+		}
+	}
+
+	protected override onDownCollision(
+		output: CollisionOutput,
+		overlap: Vector2,
+		other: Entity,
+	): void {
+		if (other instanceof Player) {
+			this.playersInside.push(other);
+			other.isInsideDoor = true;
+		}
+	}
+
+	protected override onUpCollision(
+		output: CollisionOutput,
+		overlap: Vector2,
+		other: Entity,
+	): void {
+		if (other instanceof Player) {
+			this.playersInside.push(other);
+			other.isInsideDoor = true;
 		}
 	}
 }

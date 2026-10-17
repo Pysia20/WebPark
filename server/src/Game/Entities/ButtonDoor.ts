@@ -34,7 +34,7 @@ export class ButtonDoor extends Entity {
 				isMissing: (v: any) => v === undefined,
 				isRequired: true,
 			},
-		];
+		] as const;
 	}
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {

@@ -1,19 +1,17 @@
 import { Vector2 } from "@shared/commonModels";
 import { Level } from "../Level";
-import { JohnEntity } from "./JohnEntity";
 import {
 	Direction,
 	DirectionOppositeMap,
 	EntityCustomFieldsData,
 	EntityType,
 } from "@shared/commonLevelModels";
-import { PLAYER_CONFIG, WORLD_CONFIG } from "@shared/commonVariables";
-import { clamp, isColliding, RequiredField } from "../../Global";
-import { Player } from "../Player";
+import { WORLD_CONFIG } from "@shared/commonVariables";
+import { clamp, RequiredField } from "../../Global";
 import { LOG } from "../../Logger";
-import e from "cors";
+import { Entity } from "../Entity";
 
-export class MovingPlatform extends JohnEntity {
+export class MovingPlatform extends Entity {
 	public override type: EntityType = "MovingPlatform";
 
 	public startPos: Vector2;
@@ -23,57 +21,58 @@ export class MovingPlatform extends JohnEntity {
 	public readonly speed: number;
 	public shouldRun: boolean = false;
 
-	public readonly usedFields: RequiredField[] = [
-		{
-			name: "ActivationGroup",
-			value: this.customFields.ActivationGroup.value,
-			isMissing: (v: any) => v === "" || v === undefined || !v,
-			isRequired: false,
-		},
-		{
-			name: "ActivationCount",
-			value: this.customFields.ActivationCount.value,
-			isMissing: (v: any) => v === 0 || v === undefined || !v,
-			isRequired: false,
-		},
-		{
-			name: "StaysOn",
-			value: this.customFields.StaysOn.value,
-			isMissing: (v: any) => v === undefined || !v,
-			isRequired: false,
-		},
-		{
-			name: "Direction",
-			value: this.customFields.Direction.value,
-			isMissing: (v: any) => v === undefined || !v,
-			isRequired: true,
-		},
-		{
-			name: "Speed",
-			value: this.customFields.Speed.value,
-			isMissing: (v: any) => v === undefined || v <= 0 || !v,
-			isRequired: true,
-		},
-		{
-			name: "Distance",
-			value: this.customFields.Distance.value,
-			isMissing: (v: any) => v === undefined || v <= 0 || !v,
-			isRequired: true,
-		},
-		{
-			name: "Cooldown",
-			value: this.customFields.Distance.value,
-			isMissing: (v: any) => v === undefined || v < 0 || !v,
-			isRequired: true,
-		},
-	] as const;
+	public override getUsedFields(): RequiredField[] {
+		return [
+			{
+				name: "ActivationGroup",
+				value: this.customFields.ActivationGroup.value,
+				isMissing: (v: any) => v === "" || v === undefined || !v,
+				isRequired: false,
+			},
+			{
+				name: "ActivationCount",
+				value: this.customFields.ActivationCount.value,
+				isMissing: (v: any) => v === 0 || v === undefined || !v,
+				isRequired: false,
+			},
+			{
+				name: "StaysOn",
+				value: this.customFields.StaysOn.value,
+				isMissing: (v: any) => v === undefined || !v,
+				isRequired: false,
+			},
+			{
+				name: "Direction",
+				value: this.customFields.Direction.value,
+				isMissing: (v: any) => v === undefined || !v,
+				isRequired: true,
+			},
+			{
+				name: "Speed",
+				value: this.customFields.Speed.value,
+				isMissing: (v: any) => v === undefined || v <= 0 || !v,
+				isRequired: true,
+			},
+			{
+				name: "Distance",
+				value: this.customFields.Distance.value,
+				isMissing: (v: any) => v === undefined || v <= 0 || !v,
+				isRequired: true,
+			},
+			{
+				name: "Cooldown",
+				value: this.customFields.Distance.value,
+				isMissing: (v: any) => v === undefined || v < 0 || !v,
+				isRequired: true,
+			},
+		] as const;
+	}
 
 	private isActivated: boolean = true;
 	private changedThisTick: boolean = false;
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
-		super(pos, size, customFields);
-		this.customFields = this.validateCustomFields(customFields);
+		super(pos, size, customFields, "MovingPlatform");
 
 		if (
 			this.customFields.ActivationCount.doesExist &&
@@ -166,8 +165,6 @@ export class MovingPlatform extends JohnEntity {
 			}
 		}
 	}
-
-	public override endTick() {}
 
 	public override clone() {
 		return new MovingPlatform({ ...this.pos }, { ...this.size }, { ...this.customFields });

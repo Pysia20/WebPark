@@ -37,6 +37,10 @@ export abstract class Entity {
 		this.customFields = this.validateCustomFields(customFields);
 	}
 
+	public setLevel(level: Level) {
+		this.level = level;
+	}
+
 	public validateCustomFields(customFields: EntityCustomFieldsData): EntityCustomFieldsData {
 		let newCustomFields: EntityCustomFieldsData = { ...customFields };
 
@@ -145,6 +149,8 @@ export abstract class Entity {
 			}
 		}
 
+		this.onAnyCollision(other);
+
 		return output;
 	}
 
@@ -168,6 +174,8 @@ export abstract class Entity {
 		output.correctionY = overlap.y;
 		output.isGrounded = true;
 	}
+
+	protected onAnyCollision(other: Entity) {}
 
 	protected onUpTouching(other: Entity): void {}
 

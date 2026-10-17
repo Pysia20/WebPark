@@ -1,8 +1,8 @@
 import { Vector2 } from "@shared/commonModels";
 import { Level } from "../Level";
-import { JohnEntity } from "./JohnEntity";
 import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
 import { Player } from "../Player";
+import { CollisionOutput, Entity } from "../Entity";
 
 //! DO NOT IMPORT!!!
 //? IT IS A TEMPLATE FOR CREATING NEW ENTITY TYPES
@@ -11,21 +11,34 @@ import { Player } from "../Player";
 //TODO Add the name to the EntityType in commonModels
 //TODO Add to the TYPE_MAP in the EntityBuilder
 
-export class PlayerSpawner extends JohnEntity {
-	public override type: EntityType = "PlayerSpawner";
+export class PlayerSpawner extends Entity {
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
-		super(pos, size, customFields);
-		this.customFields = this.validateCustomFields(customFields);
+		super(pos, size, customFields, "PlayerSpawner");
 	}
 
-	public override handleCollisions(
-		p: Player,
-		playerNewPos: Vector2,
-		playerNewVel: Vector2,
-		isGrounded: boolean,
-	): boolean {
-		return false;
-	}
+	protected override onRightCollision(
+		output: CollisionOutput,
+		overlap: Vector2,
+		other: Entity,
+	): void {}
+
+	protected override onLeftCollision(
+		output: CollisionOutput,
+		overlap: Vector2,
+		other: Entity,
+	): void {}
+
+	protected override onDownCollision(
+		output: CollisionOutput,
+		overlap: Vector2,
+		other: Entity,
+	): void {}
+
+	protected override onUpCollision(
+		output: CollisionOutput,
+		overlap: Vector2,
+		other: Entity,
+	): void {}
 
 	public override handleBehaviour(l: Level) {}
 	public override endTick() {}

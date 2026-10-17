@@ -23,7 +23,7 @@ export class Button extends Entity {
 				isMissing: (v: any) => v === "" || v === undefined || !v,
 				isRequired: true,
 			},
-		];
+		] as const;
 	}
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {

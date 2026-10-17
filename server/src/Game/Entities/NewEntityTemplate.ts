@@ -1,6 +1,6 @@
 import { Vector2 } from "@shared/commonModels";
 import { Level } from "../Level";
-import { Entity } from "./Entity";
+import { JohnEntity } from "./JohnEntity";
 import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { isColliding, RequiredField } from "../../Global";
@@ -13,7 +13,7 @@ import { Player } from "../Player";
 //TODO Add the name to the EntityType in commonModels
 //TODO Add to the TYPE_MAP in the EntityBuilder
 
-export class ENTITY_NAME extends Entity {
+export class ENTITY_NAME extends JohnEntity {
 	public override type: EntityType = "JohnEntity";
 
 	public readonly usedFields: RequiredField[] = [

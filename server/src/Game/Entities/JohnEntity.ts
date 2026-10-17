@@ -7,7 +7,7 @@ import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonL
 import { EntityBuilder } from "./EntityBuilder";
 import { Level } from "../Level";
 
-export class Entity {
+export class JohnEntity {
 	public readonly type: EntityType = "JohnEntity";
 	public pos: Vector2;
 	public readonly size: Vector2;
@@ -136,8 +136,8 @@ export class Entity {
 	/**
 	 * * Entity: Should be overriten on children
 	 */
-	public clone(): Entity {
-		return new Entity({ ...this.pos }, { ...this.size }, { ...this.customFields });
+	public clone(): JohnEntity {
+		return new JohnEntity({ ...this.pos }, { ...this.size }, { ...this.customFields });
 	}
 
 	public getTypeName(): string {
@@ -165,5 +165,5 @@ export class Entity {
 		};
 	}
 
-	public entityStanding(entity: Entity): void {}
+	public entityStanding(entity: JohnEntity): void {}
 }

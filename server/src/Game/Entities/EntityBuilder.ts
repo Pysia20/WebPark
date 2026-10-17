@@ -4,7 +4,7 @@ import {
 	EntityType,
 } from "@shared/commonLevelModels";
 import { LOG } from "../../Logger";
-import { Entity } from "./Entity";
+import { JohnEntity } from "./JohnEntity";
 import { Button } from "./Button";
 import { Door } from "./Door";
 import { Vector2 } from "@shared/commonModels";
@@ -16,7 +16,7 @@ import { PlayerSpawner } from "./PlayerSpawner";
 import { MovingPlatform } from "./MovingPlatform";
 import { Laser } from "./Laser";
 
-type EntityConstructor = new (pos: any, size: any, customFields: any) => Entity;
+type EntityConstructor = new (pos: any, size: any, customFields: any) => JohnEntity;
 
 export class EntityBuilder {
 	public readonly type: EntityType;
@@ -27,7 +27,7 @@ export class EntityBuilder {
 	private customFields: EntityCustomFieldsData = { ...DummyEntityCustomFields };
 
 	private static readonly TYPE_MAP: Record<EntityType, EntityConstructor> = {
-		JohnEntity: Entity,
+		JohnEntity: JohnEntity,
 		Button: Button,
 		Key: Key,
 		Door: Door,
@@ -70,7 +70,7 @@ export class EntityBuilder {
 		return this;
 	}
 
-	public build(): Entity {
+	public build(): JohnEntity {
 		if (this.position.x == -1 || this.position.y == -1) {
 			LOG.error(`Entity of type ${this.type} doesn't have set position.`);
 			throw Error(`Entity of type ${this.type} doesn't have set position.`);

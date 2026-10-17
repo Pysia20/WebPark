@@ -1,5 +1,5 @@
 import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
-import { Entity } from "./Entity";
+import { JohnEntity } from "./JohnEntity";
 import { Vector2 } from "@shared/commonModels";
 import { LOG } from "../../Logger";
 import { Player } from "../Player";
@@ -9,7 +9,7 @@ import { Level } from "../Level";
 import { ServerButtonDoorData } from "@shared/commonEntityData";
 import { z } from "zod";
 
-export class ButtonDoor extends Entity {
+export class ButtonDoor extends JohnEntity {
 	public override type: EntityType = "ButtonDoor";
 	public isPassable: boolean = false;
 

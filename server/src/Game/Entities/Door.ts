@@ -1,5 +1,5 @@
 import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
-import { Entity } from "./Entity";
+import { JohnEntity } from "./JohnEntity";
 import { Vector2 } from "@shared/commonModels";
 import { LOG } from "../../Logger";
 import { Level } from "../Level";
@@ -7,7 +7,7 @@ import { MAP_LOADER } from "../LevelLoader";
 import { Player } from "../Player";
 import { isColliding } from "../../Global";
 
-export class Door extends Entity {
+export class Door extends JohnEntity {
 	public override type: EntityType = "Door";
 
 	public playersInside: Player[] = [];

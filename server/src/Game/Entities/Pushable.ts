@@ -1,6 +1,6 @@
 import { Vector2 } from "@shared/commonModels";
 import { Level } from "../Level";
-import { Entity } from "./Entity";
+import { JohnEntity } from "./JohnEntity";
 import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG, PUSHABLE_CONFIG } from "@shared/commonVariables";
 import { isColliding } from "../../Global";
@@ -9,7 +9,7 @@ import CONFIG from "../../../config.json";
 
 //TODO Add colision with other entities
 
-export class Pushable extends Entity {
+export class Pushable extends JohnEntity {
 	public override type: EntityType = "Pushable";
 
 	public isGrounded: boolean = false;
@@ -124,7 +124,7 @@ export class Pushable extends Entity {
 			this.velocity.y += PUSHABLE_CONFIG.GRAVITY;
 		}
 
-		let TheGrandArray: (Player | MapCollider | Entity)[] = this.level?.getColliders()!;
+		let TheGrandArray: (Player | MapCollider | JohnEntity)[] = this.level?.getColliders()!;
 		TheGrandArray = [...TheGrandArray, ...this.level?.room.getPlayers()!.values()!];
 		TheGrandArray = [...TheGrandArray, ...this.level?.entities!];
 
@@ -139,7 +139,7 @@ export class Pushable extends Entity {
 	}
 
 	private handleEntityCollisions(
-		e2: Entity | MapCollider | Player,
+		e2: JohnEntity | MapCollider | Player,
 		newPos: Vector2,
 		pusher: Player | undefined,
 		pusherNewPos: Vector2 | undefined,
@@ -186,7 +186,7 @@ export class Pushable extends Entity {
 					newPos.y += overlapY;
 					this.velocity.y = 0;
 					this.isGrounded = true;
-					if (e2 instanceof Entity) {
+					if (e2 instanceof JohnEntity) {
 						e2.entityStanding(this);
 					}
 				}
@@ -204,7 +204,7 @@ export class Pushable extends Entity {
 			if (overlapY != -1) {
 				this.isGrounded = true;
 				this.velocity.y = 0;
-				if (e2 instanceof Entity) {
+				if (e2 instanceof JohnEntity) {
 					e2.entityStanding(this);
 				}
 			}

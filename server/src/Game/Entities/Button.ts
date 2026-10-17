@@ -1,6 +1,6 @@
 import { Vector2 } from "@shared/commonModels";
 import { Player } from "../Player";
-import { Entity } from "./Entity";
+import { JohnEntity } from "./JohnEntity";
 import { isColliding, RequiredField } from "../../Global";
 import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
@@ -9,10 +9,10 @@ import { runInThisContext } from "node:vm";
 import { LOG } from "../../Logger";
 import { ServerButtonData } from "@shared/commonEntityData";
 
-export class Button extends Entity {
+export class Button extends JohnEntity {
 	public override type: EntityType = "Button";
-	public thingsStanding: (Player | Entity)[] = [];
-	public newList: (Player | Entity)[] = [];
+	public thingsStanding: (Player | JohnEntity)[] = [];
+	public newList: (Player | JohnEntity)[] = [];
 	public hasChanged: boolean = false;
 
 	public readonly usedFields: RequiredField[] = [
@@ -132,7 +132,7 @@ export class Button extends Entity {
 		};
 	}
 
-	public override entityStanding(entity: Entity) {
+	public override entityStanding(entity: JohnEntity) {
 		this.newList.push(entity);
 	}
 }

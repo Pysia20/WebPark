@@ -6,7 +6,7 @@ import { clamp, isColliding } from "../Global";
 import { MAP_LOADER } from "./LevelLoader";
 import { MapCollider } from "@shared/commonLevelModels";
 import { LOG } from "../Logger";
-import { Entity } from "./Entities/Entity";
+import { JohnEntity } from "./Entities/JohnEntity";
 import { Level } from "./Level";
 import CONFIG from "../../config.json";
 import { PlayerSpawner } from "./Entities/PlayerSpawner";
@@ -285,7 +285,7 @@ export class Room {
 			}
 		});
 
-		this.level.entities.forEach((e: Entity) => {
+		this.level.entities.forEach((e: JohnEntity) => {
 			if (e.handleCollisions(player, newPos, newVel, isGrounded)) {
 				isGrounded = true;
 			}
@@ -317,7 +317,7 @@ export class Room {
 					};
 				});
 
-				this.level.entities.forEach((entity: Entity) => {
+				this.level.entities.forEach((entity: JohnEntity) => {
 					const data: ServerEntityData = entity.getData();
 
 					roomData.entityData[entity.id] = data;

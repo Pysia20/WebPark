@@ -1,6 +1,6 @@
 import { EntityCustomField, EntityCustomFieldsData, MapCollider } from "@shared/commonLevelModels";
 import { Room } from "./Game/Room";
-import { Entity } from "./Game/Entities/Entity";
+import { JohnEntity } from "./Game/Entities/JohnEntity";
 import { Player } from "./Game/Player";
 import { CollisionCheckResult, Vector2 } from "@shared/commonModels";
 import { LOG } from "./Logger";
@@ -54,7 +54,9 @@ export interface RequiredField {
 	isRequired: boolean;
 }
 
-function extractTransform(object: Player | MapCollider | Entity): [number, number, number, number] {
+function extractTransform(
+	object: Player | MapCollider | JohnEntity,
+): [number, number, number, number] {
 	let x, y, width, height;
 
 	if (object instanceof Player) {
@@ -67,7 +69,7 @@ function extractTransform(object: Player | MapCollider | Entity): [number, numbe
 		y = object.y;
 		width = object.width;
 		height = object.height;
-	} else if (object instanceof Entity) {
+	} else if (object instanceof JohnEntity) {
 		x = object.pos.x;
 		y = object.pos.y;
 		width = object.size.x;
@@ -90,8 +92,8 @@ function extractTransform(object: Player | MapCollider | Entity): [number, numbe
  * @returns {Vector2} - If collides, returns overlaps, otherwise returns {-1,-1}
  */
 export function isColliding(
-	objectA: Player | MapCollider | Entity,
-	objectB: Player | MapCollider | Entity,
+	objectA: Player | MapCollider | JohnEntity,
+	objectB: Player | MapCollider | JohnEntity,
 ): CollisionCheckResult {
 	let [xA, yA, widthA, heightA] = extractTransform(objectA);
 	let [xB, yB, widthB, heightB] = extractTransform(objectB);

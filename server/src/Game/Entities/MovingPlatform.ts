@@ -1,6 +1,6 @@
 import { Vector2 } from "@shared/commonModels";
 import { Level } from "../Level";
-import { Entity } from "./Entity";
+import { JohnEntity } from "./JohnEntity";
 import {
 	Direction,
 	DirectionOppositeMap,
@@ -14,7 +14,7 @@ import { Player } from "../Player";
 import { LOG } from "../../Logger";
 import e from "cors";
 
-export class MovingPlatform extends Entity {
+export class MovingPlatform extends JohnEntity {
 	public override type: EntityType = "MovingPlatform";
 
 	public startPos: Vector2;

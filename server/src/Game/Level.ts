@@ -1,6 +1,6 @@
 import { MapCollider } from "@shared/commonLevelModels";
 import { LevelTemplate } from "./LevelTemplate";
-import { Entity } from "./Entities/Entity";
+import { JohnEntity } from "./Entities/JohnEntity";
 import { Room } from "./Room";
 import { PlayerSpawner } from "./Entities/PlayerSpawner";
 import { LOG } from "../Logger";
@@ -11,7 +11,7 @@ export class Level {
 
 	private width: number = -1;
 	private height: number = -1;
-	public entities: Entity[] = [];
+	public entities: JohnEntity[] = [];
 	public group!: string;
 	public groupIndex!: number;
 	public spawners: PlayerSpawner[] = [];
@@ -31,7 +31,7 @@ export class Level {
 		this.entities = [];
 		this.spawners = [];
 		this.levelTemplate.entities.forEach((e) => {
-			const clone: Entity = e.clone();
+			const clone: JohnEntity = e.clone();
 			clone.id = this.entities.length;
 			clone.setLevel(this);
 			this.entities.push(clone);

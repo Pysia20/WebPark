@@ -1,13 +1,13 @@
 import { Vector2 } from "@shared/commonModels";
 import { Level } from "../Level";
-import { Entity } from "./Entity";
+import { JohnEntity } from "./JohnEntity";
 import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { isColliding, RequiredField } from "../../Global";
 import { Player } from "../Player";
 import { LOG } from "../../Logger";
 
-export class Spike extends Entity {
+export class Spike extends JohnEntity {
 	public shouldKill: boolean = false;
 
 	public override type: EntityType = "Spike";

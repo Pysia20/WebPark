@@ -12,7 +12,7 @@ import {
 	CustomField,
 	DummyEntityCustomFields,
 } from "@shared/commonLevelModels";
-import { Entity } from "./Entities/Entity";
+import { JohnEntity } from "./Entities/JohnEntity";
 import { Button } from "./Entities/Button";
 import { LOG } from "../Logger";
 import { EntityBuilder } from "./Entities/EntityBuilder";
@@ -26,7 +26,7 @@ export class LevelTemplate {
 	private height: number = -1;
 	private readonly intGrid: number[][];
 	public readonly colliders: MapCollider[];
-	public readonly entities: Entity[] = [];
+	public readonly entities: JohnEntity[] = [];
 	public readonly group: string;
 	public readonly groupIndex: number;
 
@@ -51,8 +51,8 @@ export class LevelTemplate {
 		return { groupName: groupName, groupIndex: groupIndex };
 	}
 
-	private parseEntities(data: LevelData): Entity[] {
-		const entities: Entity[] = [];
+	private parseEntities(data: LevelData): JohnEntity[] {
+		const entities: JohnEntity[] = [];
 
 		data.layerInstances.forEach((layer: LayerInstance) => {
 			if (layer.__type != "Entities") {

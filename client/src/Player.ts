@@ -172,7 +172,7 @@ class Eye {
 
     updateEye(pos: Vector2, velocity: Vector2, deltaT: number) {
         this.blinkTimer -= deltaT
-        if (this.blinkTimer < -10) {
+        if (this.blinkTimer < -19) {
             this.blinkTimer = 200
             this.blinking = false
             this.length = 20
@@ -181,8 +181,8 @@ class Eye {
         }
 
         if (this.blinking) {
-            pos.y -= this.blinkTimer
-            this.length += this.blinkTimer
+            pos.y += 2 * deltaT
+            this.length -= deltaT
             this.calcPos(pos, velocity)
         } else {
             this.calcPos(pos, velocity)

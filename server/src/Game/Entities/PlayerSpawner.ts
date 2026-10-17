@@ -16,6 +16,16 @@ export class PlayerSpawner extends Entity {
 		super(pos, size, customFields, "PlayerSpawner");
 	}
 
+	protected onRightCollision(overlap: Vector2, other: Entity) {}
+
+	protected onLeftCollision(overlap: Vector2, other: Entity) {}
+
+	protected onUpCollision(overlap: Vector2, other: Entity) {}
+
+	protected onDownCollision(overlap: Vector2, other: Entity) {}
+
+	protected onUpTouching(other: Entity): void {}
+
 	public override clone() {
 		return new PlayerSpawner({ ...this.pos }, { ...this.size }, { ...this.customFields });
 	}

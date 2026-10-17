@@ -2,7 +2,6 @@ import { Namespace } from "socket.io";
 import { Player } from "./Player";
 import { PlayerInputs, ServerData, Vector2, ServerEntityData } from "@shared/commonModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
-import { clamp, isColliding } from "../Global";
 import { MAP_LOADER } from "./LevelLoader";
 import { LOG } from "../Logger";
 import { JohnEntity } from "./Entities/JohnEntity";
@@ -18,7 +17,7 @@ export class Room {
 	private nextUserID: number = 0;
 
 	private id: string;
-	private players: Map<number, Player> = new Map<number, Player>();
+	public players: Map<number, Player> = new Map<number, Player>();
 	public level!: Level;
 	private gameLoop: NodeJS.Timeout | undefined;
 
@@ -88,46 +87,13 @@ export class Room {
 		});
 	}
 
-	private physicsUpdate() {
-		for (let [id, player] of this.players) {
-			this.handleCollisions(player);
-			player.handleBehaviour(this.level);
-		}
-
-		this.level.handleEntites(this);
-
-		this.level.endTick();
-		this.players.forEach((p) => p.endTick());
-	}
-
-	private handleCollisions(player: Player): boolean {
-		let isGrounded = false;
-
-		this.players.forEach((p: Player) => {
-			if (p.id == player.id) return;
-			if (p.isInsideDoor) return;
-
-			p.handleCollision(player);
-		});
-
-		this.level.getColliders().forEach((c: MapCollider) => {
-			c.handleCollision(player);
-		});
-
-		this.level.entities.forEach((e: Entity) => {
-			e.handleCollision(player);
-		});
-
-		return isGrounded;
-	}
-
 	public startGameLoop(io: Namespace) {
 		this.io = io;
 
 		this.level.reloadLevel();
 		this.gameLoop = setInterval(
 			async () => {
-				this.physicsUpdate();
+				this.level.physicsUpdate();
 
 				const roomData: ServerData = {
 					playerData: {},

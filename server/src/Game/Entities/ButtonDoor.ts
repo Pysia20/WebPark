@@ -85,16 +85,16 @@ export class ButtonDoor extends Entity {
 		// return undefined;
 	}
 
-	protected override onDownCollision(overlap: Vector2, other: Entity) {
+	protected override onUpCollision(overlap: Vector2, other: Entity) {
 		// if (!this.isPassable) {
-		return super.onDownCollision(overlap, other);
+		return super.onUpCollision(overlap, other);
 		// }
 		// return undefined;
 	}
 
-	protected override onUpCollision(overlap: Vector2, other: Entity) {
+	protected override onDownCollision(overlap: Vector2, other: Entity) {
 		// if (!this.isPassable) {
-		return super.onUpCollision(overlap, other);
+		return super.onDownCollision(overlap, other);
 		// }
 		// return undefined;
 	}

@@ -31,6 +31,8 @@ export class Player extends Entity {
 			"Player",
 		);
 		((this.id = id), (this.nick = nick));
+
+		this.isDynamic = true;
 	}
 
 	protected override onRightCollision(
@@ -47,6 +49,10 @@ export class Player extends Entity {
 		return undefined;
 	}
 
+	protected override onUpCollision(overlap: Vector2, other: Entity): CollisionOutput | undefined {
+		return undefined;
+	}
+
 	protected override onDownCollision(
 		overlap: Vector2,
 		other: Entity,
@@ -54,52 +60,46 @@ export class Player extends Entity {
 		return undefined;
 	}
 
-	protected override onUpCollision(overlap: Vector2, other: Entity): CollisionOutput | undefined {
-		return undefined;
-	}
-
 	public override handleBehaviour(l: Level) {
-		if (this.newVelocity.x > PLAYER_CONFIG.DRAG) {
-			this.newVelocity.x -= PLAYER_CONFIG.DRAG;
-		} else if (this.newVelocity.x < -PLAYER_CONFIG.DRAG) {
-			this.newVelocity.x += PLAYER_CONFIG.DRAG;
+		if (this.velocity.x > PLAYER_CONFIG.DRAG) {
+			this.velocity.x -= PLAYER_CONFIG.DRAG;
+		} else if (this.velocity.x < -PLAYER_CONFIG.DRAG) {
+			this.velocity.x += PLAYER_CONFIG.DRAG;
 		} else {
-			this.newVelocity.x = 0;
+			this.velocity.x = 0;
 		}
 
 		if (!this.isGrounded) {
-			this.newVelocity.y += PLAYER_CONFIG.GRAVITY;
+			this.velocity.y += PLAYER_CONFIG.GRAVITY;
 		}
 
 		if (!this.isInsideDoor) {
 			if (this.lastInputs.right) {
-				this.newVelocity.x += PLAYER_CONFIG.ACCELERATION;
+				this.velocity.x += PLAYER_CONFIG.ACCELERATION;
 			}
 			if (this.lastInputs.left) {
-				this.newVelocity.x -= PLAYER_CONFIG.ACCELERATION;
+				this.velocity.x -= PLAYER_CONFIG.ACCELERATION;
 			}
 			if (this.lastInputs.jump && this.isGrounded) {
-				this.newVelocity.y -= PLAYER_CONFIG.JUMP_FORCE;
+				this.velocity.y -= PLAYER_CONFIG.JUMP_FORCE;
 				this.isGrounded = false;
 			}
 		}
 
-		this.newVelocity.y = clamp(
-			this.newVelocity.y,
+		this.velocity.y = clamp(
+			this.velocity.y,
 			-PLAYER_CONFIG.MAX_VERTICAL_SPEED,
 			PLAYER_CONFIG.MAX_VERTICAL_SPEED,
 		);
 
-		this.newVelocity.x = clamp(
-			this.newVelocity.x,
+		this.velocity.x = clamp(
+			this.velocity.x,
 			-PLAYER_CONFIG.MAX_HORIZONTAL_SPEED,
 			PLAYER_CONFIG.MAX_HORIZONTAL_SPEED,
 		);
 
-		this.newPos.x += this.newVelocity.x * (1 / CONFIG.TICKRATE);
-		this.newPos.y += this.newVelocity.y * (1 / CONFIG.TICKRATE);
-
-		this.swapPosition();
+		this.pos.x += this.velocity.x * (1 / CONFIG.TICKRATE);
+		this.pos.y += this.velocity.y * (1 / CONFIG.TICKRATE);
 	}
 
 	public clone() {

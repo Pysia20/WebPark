@@ -75,4 +75,16 @@ export class Level {
 			}
 		}
 	}
+
+	public physicsUpdate() {
+		this.room.players.forEach((player, id) => {
+			player.handleBehaviour(this);
+		});
+
+		this.room.players.forEach((player, id) => {
+			this.getColliders().forEach((c) => {
+				c.handleCollision(player);
+			});
+		});
+	}
 }

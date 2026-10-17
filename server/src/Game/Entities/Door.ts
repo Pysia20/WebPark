@@ -39,7 +39,7 @@ export class Door extends Entity {
 		return undefined;
 	}
 
-	protected override onDownCollision(overlap: Vector2, other: Entity) {
+	protected override onUpCollision(overlap: Vector2, other: Entity) {
 		if (other instanceof Player) {
 			this.playersInside.push(other);
 			other.isInsideDoor = true;
@@ -47,7 +47,7 @@ export class Door extends Entity {
 		return undefined;
 	}
 
-	protected override onUpCollision(overlap: Vector2, other: Entity) {
+	protected override onDownCollision(overlap: Vector2, other: Entity) {
 		if (other instanceof Player) {
 			this.playersInside.push(other);
 			other.isInsideDoor = true;

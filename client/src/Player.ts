@@ -318,4 +318,22 @@ export class Player {
             playJump()
         }
     }
+
+    hide(shouldItho: boolean) {
+        if (shouldItho) {
+            this.torso.sprite.alpha = 0
+            this.eyes[0].eye.alpha = 0
+            this.eyes[1].eye.alpha = 0
+            this.legs[0].leg.alpha = 0
+            this.legs[1].leg.alpha = 0
+            this.nick.alpha = 0
+        } else {
+            this.torso.sprite.alpha = 1
+            this.eyes[0].eye.alpha = 1
+            this.eyes[1].eye.alpha = 1
+            this.legs[0].leg.alpha = 1
+            this.legs[1].leg.alpha = 1
+            this.nick.alpha = 1
+        }
+    }
 }

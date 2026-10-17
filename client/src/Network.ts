@@ -49,6 +49,7 @@ socket.on("tick", (newServerData: ServerData) => {
 socket.on("playerJoined", (data: PlayerJoinedData[]) => {
     coordinator.create_players(data)
     hud.updateHud()
+    leveler.loadLevel(data[0].level)
 })
 
 socket.on("playerLeft", (playerID: number) => {

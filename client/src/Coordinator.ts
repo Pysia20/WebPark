@@ -36,6 +36,7 @@ class Coordinator {
                 if (tempPlayer) {
                     tempPlayer.targetPos = playerData.pos
                     tempPlayer.updateData(playerData.velocity, deltaTime)
+                    tempPlayer.hide(playerData.isInsideDoor)
                 } else {
                     console.log("unknown player")
                 }

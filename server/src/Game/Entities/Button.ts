@@ -1,14 +1,9 @@
 import { Vector2 } from "@shared/commonModels";
-import { Player } from "../Player";
-import { JohnEntity } from "./JohnEntity";
-import { isColliding, RequiredField } from "../../Global";
-import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
-import { PLAYER_CONFIG } from "@shared/commonVariables";
+import { RequiredField } from "../../Global";
+import { EntityCustomFieldsData } from "@shared/commonLevelModels";
 import { Level } from "../Level";
-import { LOG } from "../../Logger";
 import { ServerButtonData } from "@shared/commonEntityData";
-import { MapCollider } from "./MapCollider";
-import { CollisionOutput, Entity } from "../Entity";
+import { Entity } from "../Entity";
 
 export class Button extends Entity {
 	public thingsStanding: Entity[] = [];
@@ -60,18 +55,16 @@ export class Button extends Entity {
 		};
 	}
 
-	public entityStanding(entity: Entity) {
-		this.newList.push(entity);
-	}
+	// protected override onUpTouching(other: Entity) {
+	// 	super.onUpTouching(other);
+	// 	this.newList.push(other);
+	// }
 
-	protected override onUpTouching(other: Entity) {
-		this.entityStanding(other);
-	}
-
-	protected override onUpCollision(output: CollisionOutput, overlap: Vector2, other: Entity) {
-		super.onUpCollision(output, overlap, other); // Default behaviour
-		this.entityStanding(other);
-	}
+	// protected override onUpCollision(overlap: Vector2, other: Entity) {
+	// 	const response = super.onUpCollision(overlap, other); // Default behaviour
+	// 	this.newList.push(other);
+	// 	return response;
+	// }
 
 	public override clone(): Button {
 		return new Button({ ...this.pos }, { ...this.size }, { ...this.customFields });

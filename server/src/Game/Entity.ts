@@ -106,8 +106,9 @@ export abstract class Entity {
 			};
 		}
 
-		this.newPos = { ...this.pos };
-
+		if (this.type == "MapCollider") {
+			console.log("AAA");
+		}
 		const centerA: Vector2 = {
 			x: this.pos.x + this.size.x / 2,
 			y: this.pos.y + this.size.y / 2,
@@ -124,7 +125,7 @@ export abstract class Entity {
 		const overlapX = (this.size.x + other.size.x) / 2 - Math.abs(diffX);
 		const overlapY = (this.size.y + other.size.y) / 2 - Math.abs(diffY);
 
-		const output: CollisionOutput = {
+		let output: CollisionOutput = {
 			correctionX: 0,
 			correctionY: 0,
 			isGrounded: false,
@@ -134,54 +135,63 @@ export abstract class Entity {
 			// Horizontal collision
 			if (diffX > 0) {
 				// Pushing out to the right
-				this.onRightCollision(output, { x: overlapX, y: 0 }, other);
+				const temp = this.onRightCollision({ x: -overlapX, y: 0 }, other);
+				if (temp) output = temp;
 			} else {
 				// Pushing out to the left
-				this.onLeftCollision(output, { x: -overlapX, y: 0 }, other);
+				const temp = this.onLeftCollision({ x: overlapX, y: 0 }, other);
+				if (temp) output = temp;
 			}
 		} else {
 			if (diffY > 0) {
 				// Pushing out downwards
-				this.onDownCollision(output, { x: 0, y: overlapY }, other);
+				const temp = this.onDownCollision({ x: 0, y: overlapY }, other);
+				if (temp) output = temp;
 			} else {
 				// Pushing out upwards
-				this.onUpCollision(output, { x: 0, y: -overlapY }, other);
+				const temp = this.onUpCollision({ x: 0, y: -overlapY }, other);
+				if (temp) output = temp;
 			}
 		}
 
-		this.newPos.x += output.correctionX;
-		this.newPos.y += output.correctionY;
-		// this.isGrounded = output.isGrounded;
+		other.newPos.x += output.correctionX;
+		other.newPos.y -= output.correctionY;
 
-		this.onAnyCollision(other);
+		if (output.correctionX != 0) {
+			other.newVelocity.x = 0;
+		}
+		if (output.correctionY != 0) {
+			other.newVelocity.y = 0;
+		}
+		if (output.isGrounded) {
+			other.isGrounded = true;
+		}
+
+		other.onAnyCollision(other);
 	}
 
-	protected onRightCollision(output: CollisionOutput, overlap: Vector2, other: Entity): void {
-		output.correctionX = overlap.x;
-		output.correctionY = overlap.y;
+	protected onRightCollision(overlap: Vector2, other: Entity): CollisionOutput | undefined {
+		return { correctionX: overlap.x, correctionY: overlap.y, isGrounded: false };
 	}
 
-	protected onLeftCollision(output: CollisionOutput, overlap: Vector2, other: Entity): void {
-		output.correctionX = overlap.x;
-		output.correctionY = overlap.y;
+	protected onLeftCollision(overlap: Vector2, other: Entity): CollisionOutput | undefined {
+		return { correctionX: overlap.x, correctionY: overlap.y, isGrounded: false };
 	}
 
-	protected onDownCollision(output: CollisionOutput, overlap: Vector2, other: Entity): void {
-		output.correctionX = overlap.x;
-		output.correctionY = overlap.y;
+	protected onDownCollision(overlap: Vector2, other: Entity): CollisionOutput | undefined {
+		return { correctionX: overlap.x, correctionY: overlap.y, isGrounded: false };
 	}
 
-	protected onUpCollision(output: CollisionOutput, overlap: Vector2, other: Entity): void {
-		output.correctionX = overlap.x;
-		output.correctionY = overlap.y;
-		output.isGrounded = true;
+	protected onUpCollision(overlap: Vector2, other: Entity): CollisionOutput | undefined {
+		return { correctionX: overlap.x, correctionY: overlap.y, isGrounded: true };
 	}
 
-	protected onAnyCollision(other: Entity) {
-		console.log(other.type);
-	}
+	protected onAnyCollision(other: Entity) {}
 
-	protected onUpTouching(other: Entity): void {}
+	protected onUpTouching(other: Entity): void {
+		other.newVelocity.y = 0;
+		other.isGrounded = true;
+	}
 
 	public getData(): ServerEntityData {
 		return {
@@ -196,10 +206,11 @@ export abstract class Entity {
 	public swapPosition() {
 		this.pos = { ...this.newPos };
 		this.velocity = { ...this.newVelocity };
-		this.isGrounded = false;
 	}
 
-	public endTick() {}
+	public endTick() {
+		this.isGrounded = false;
+	}
 
 	public abstract clone(): Entity;
 }

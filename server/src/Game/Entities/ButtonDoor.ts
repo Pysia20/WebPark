@@ -1,15 +1,10 @@
 import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
-import { JohnEntity } from "./JohnEntity";
 import { Vector2 } from "@shared/commonModels";
 import { LOG } from "../../Logger";
-import { Player } from "../Player";
-import { isColliding, RequiredField } from "../../Global";
-import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { Level } from "../Level";
 import { ServerButtonDoorData } from "@shared/commonEntityData";
-import { z } from "zod";
-import { MapCollider } from "./MapCollider";
 import { CollisionOutput, Entity } from "../Entity";
+import { RequiredField } from "../../Global";
 
 export class ButtonDoor extends Entity {
 	public isPassable: boolean = false;
@@ -59,7 +54,7 @@ export class ButtonDoor extends Entity {
 			this.customFields.ActivationCount.value! <=
 			l.activationStates.get(this.customFields.ActivationGroup.value!)!
 		) {
-			this.isPassable = true;
+			this.isPassable = false;
 		} else {
 			if (!(this.customFields.StaysOn.doesExist && this.customFields.StaysOn.value)) {
 				this.isPassable = false;
@@ -76,43 +71,31 @@ export class ButtonDoor extends Entity {
 		};
 	}
 
-	protected override onRightCollision(
-		output: CollisionOutput,
-		overlap: Vector2,
-		other: Entity,
-	): void {
-		if (!this.isPassable) {
-			super.onRightCollision(output, overlap, other);
-		}
+	protected override onRightCollision(overlap: Vector2, other: Entity) {
+		// if (!this.isPassable) {
+		return super.onRightCollision(overlap, other);
+		// }
+		// return undefined;
 	}
 
-	protected override onLeftCollision(
-		output: CollisionOutput,
-		overlap: Vector2,
-		other: Entity,
-	): void {
-		if (!this.isPassable) {
-			super.onLeftCollision(output, overlap, other);
-		}
+	protected override onLeftCollision(overlap: Vector2, other: Entity) {
+		// if (!this.isPassable) {
+		return super.onLeftCollision(overlap, other);
+		// }
+		// return undefined;
 	}
 
-	protected override onDownCollision(
-		output: CollisionOutput,
-		overlap: Vector2,
-		other: Entity,
-	): void {
-		if (!this.isPassable) {
-			super.onDownCollision(output, overlap, other);
-		}
+	protected override onDownCollision(overlap: Vector2, other: Entity) {
+		// if (!this.isPassable) {
+		return super.onDownCollision(overlap, other);
+		// }
+		// return undefined;
 	}
 
-	protected override onUpCollision(
-		output: CollisionOutput,
-		overlap: Vector2,
-		other: Entity,
-	): void {
-		if (!this.isPassable) {
-			super.onUpCollision(output, overlap, other);
-		}
+	protected override onUpCollision(overlap: Vector2, other: Entity) {
+		// if (!this.isPassable) {
+		return super.onUpCollision(overlap, other);
+		// }
+		// return undefined;
 	}
 }

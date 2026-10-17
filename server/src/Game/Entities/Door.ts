@@ -23,47 +23,35 @@ export class Door extends Entity {
 		}
 	}
 
-	protected override onRightCollision(
-		output: CollisionOutput,
-		overlap: Vector2,
-		other: Entity,
-	): void {
+	protected override onRightCollision(overlap: Vector2, other: Entity) {
 		if (other instanceof Player) {
 			this.playersInside.push(other);
 			other.isInsideDoor = true;
 		}
+		return undefined;
 	}
 
-	protected override onLeftCollision(
-		output: CollisionOutput,
-		overlap: Vector2,
-		other: Entity,
-	): void {
+	protected override onLeftCollision(overlap: Vector2, other: Entity) {
 		if (other instanceof Player) {
 			this.playersInside.push(other);
 			other.isInsideDoor = true;
 		}
+		return undefined;
 	}
 
-	protected override onDownCollision(
-		output: CollisionOutput,
-		overlap: Vector2,
-		other: Entity,
-	): void {
+	protected override onDownCollision(overlap: Vector2, other: Entity) {
 		if (other instanceof Player) {
 			this.playersInside.push(other);
 			other.isInsideDoor = true;
 		}
+		return undefined;
 	}
 
-	protected override onUpCollision(
-		output: CollisionOutput,
-		overlap: Vector2,
-		other: Entity,
-	): void {
+	protected override onUpCollision(overlap: Vector2, other: Entity) {
 		if (other instanceof Player) {
 			this.playersInside.push(other);
 			other.isInsideDoor = true;
 		}
+		return undefined;
 	}
 }

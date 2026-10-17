@@ -14,7 +14,7 @@ import { MapCollider } from "./Entities/MapCollider";
 import { Entity } from "./Entity";
 
 export class Room {
-	private TICKRATE: number = CONFIG.TICKRATE; // Per second
+	public readonly TICKRATE: number = CONFIG.TICKRATE; // Per second
 	private nextUserID: number = 0;
 
 	private id: string;
@@ -90,53 +90,8 @@ export class Room {
 
 	private physicsUpdate() {
 		for (let [id, player] of this.players) {
-			const input = player.lastInputs;
-
-			if (player.velocity.x > PLAYER_CONFIG.DRAG) {
-				player.velocity.x -= PLAYER_CONFIG.DRAG;
-			} else if (player.velocity.x < -PLAYER_CONFIG.DRAG) {
-				player.velocity.x += PLAYER_CONFIG.DRAG;
-			} else {
-				player.velocity.x = 0;
-			}
-
-			if (!player.isGrounded) {
-				player.velocity.y += PLAYER_CONFIG.GRAVITY;
-			}
-
-			if (this.handleCollisions(player)) {
-				player.isGrounded = true;
-			}
-
-			if (!player.isInsideDoor) {
-				if (input.right) {
-					player.velocity.x += PLAYER_CONFIG.ACCELERATION;
-				}
-				if (input.left) {
-					player.velocity.x -= PLAYER_CONFIG.ACCELERATION;
-				}
-				if (input.jump && player.isGrounded) {
-					player.velocity.y -= PLAYER_CONFIG.JUMP_FORCE;
-					player.isGrounded = false;
-				}
-			}
-
-			player.velocity.y = clamp(
-				player.velocity.y,
-				-PLAYER_CONFIG.MAX_VERTICAL_SPEED,
-				PLAYER_CONFIG.MAX_VERTICAL_SPEED,
-			);
-
-			player.velocity.x = clamp(
-				player.velocity.x,
-				-PLAYER_CONFIG.MAX_HORIZONTAL_SPEED,
-				PLAYER_CONFIG.MAX_HORIZONTAL_SPEED,
-			);
-
-			player.newPos.x += player.velocity.x * (1 / this.TICKRATE);
-			player.newPos.y += player.velocity.y * (1 / this.TICKRATE);
-
-			player.swapPosition();
+			this.handleCollisions(player);
+			player.handleBehaviour(this.level);
 		}
 
 		this.level.handleEntites(this);
@@ -152,15 +107,15 @@ export class Room {
 			if (p.id == player.id) return;
 			if (p.isInsideDoor) return;
 
-			player.handleCollision(p);
+			p.handleCollision(player);
 		});
 
 		this.level.getColliders().forEach((c: MapCollider) => {
-			player.handleCollision(c);
+			c.handleCollision(player);
 		});
 
 		this.level.entities.forEach((e: Entity) => {
-			player.handleCollision(e);
+			e.handleCollision(player);
 		});
 
 		return isGrounded;

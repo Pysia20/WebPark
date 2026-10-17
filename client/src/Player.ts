@@ -169,9 +169,9 @@ class Eye {
     isBlinking: boolean = false
     blinkTimer: number = 200
     blinkState: States = States.Down
-    blinkProgress: number = 20
 
     LERP_SPEED: number = 0.25
+    MAX_LENGTH: number = 20
 
     constructor() {
         this.eye.position.set(0, 0)
@@ -180,7 +180,6 @@ class Eye {
     updateEye(pos: Vector2, velocity: Vector2, deltaT: number) {
         if (this.blinkTimer <= 0 && !this.isBlinking) {
             this.isBlinking = true
-            this.blinkProgress = 20
             this.blinkState = States.Down
             this.blinkTimer = 200
         } else {
@@ -189,29 +188,22 @@ class Eye {
 
         if (this.isBlinking) {
             if (this.length > 1 && this.blinkState == States.Down) {
-                this.length -= 1 * deltaT
+                this.length -= 0.5 * deltaT
+                pos.y = pos.y + ((this.MAX_LENGTH - this.length) / 2)
             } else {
                 this.blinkState = States.Up
             }
 
-            if (this.length < 20 && this.blinkState == States.Up) {
-                this.length += 1 * deltaT
-            } else if (this.length > 20) {
-                this.length = 20
+            if (this.length < this.MAX_LENGTH && this.blinkState == States.Up) {
+                this.length += 0.5 * deltaT
+                pos.y = pos.y + ((this.MAX_LENGTH - this.length) / 2)
+            } else if (this.length > this.MAX_LENGTH) {
+                this.length = this.MAX_LENGTH
                 this.isBlinking = false
             }
         }
-
+        console.log(pos.y)
         this.calcPos(pos, velocity)
-        /* BAD PROTOTYPE
-        this.blinkTimer = ((this.blinkTimer % 200) + 200) % 200 //this is some bs right here
-        if (this.blinkTimer < 20) {
-            this.length = this.blinkTimer
-        } else {
-            this.length = 20
-        }
-        console.log(this.blinkTimer)
-         */
 
         this.eye.clear().moveTo(this.pos.x, this.pos.y).lineTo(this.target.x, this.target.y).stroke({color: "#000000", width: 5, cap: "round"})
     }

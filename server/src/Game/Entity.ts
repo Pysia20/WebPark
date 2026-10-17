@@ -19,7 +19,11 @@ abstract class Entity {
 	public readonly type: EntityType = "JohnEntity";
 	public velocity: Vector2 = { x: 0, y: 0 };
 	public level: Level | undefined;
-	public readonly usedFields: RequiredField[] = [];
+	// public readonly usedFields: RequiredField[] = [];
+
+	public getUsedFields(): RequiredField[] {
+		return [];
+	}
 
 	constructor(
 		public pos: Vector2,
@@ -34,7 +38,7 @@ abstract class Entity {
 	public validateCustomFields(customFields: EntityCustomFieldsData): EntityCustomFieldsData {
 		let newCustomFields: EntityCustomFieldsData = { ...customFields };
 
-		for (let field of this.usedFields) {
+		for (let field of this.getUsedFields()) {
 			newCustomFields[field.name].doesExist = true;
 
 			if (field.isMissing(field.value)) {
@@ -134,23 +138,23 @@ abstract class Entity {
 export abstract class StaticEntity extends Entity {
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
-		this.customFields = this.validateCustomFields(customFields);
 	}
 }
 export abstract class DynamicEntity extends Entity {}
 
-export class Test extends StaticEntity {
-	public readonly usedFields: RequiredField[] = [
-		{
-			name: "ActivationCount",
-			value: this.customFields.ActivationCount.value,
-			isRequired: true,
-			isMissing: (v) => !v || v <= 0,
-		},
-	];
+export class ExampleStaticEntity extends StaticEntity {
+	public getUsedFields(): RequiredField[] {
+		return [
+			{
+				name: "ActivationCount",
+				value: this.customFields.ActivationCount.value,
+				isRequired: true,
+				isMissing: (v) => !v || v <= 0,
+			},
+		];
+	}
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields);
-		this.customFields = this.validateCustomFields(customFields);
 	}
 }

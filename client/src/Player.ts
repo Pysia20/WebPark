@@ -162,15 +162,18 @@ class Torso {
 //==============================
 class Eye {
     eye: Graphics = new Graphics()
-    length: number = 20
+
     direction: Directions = Directions.None
     pos: Vector2 = {x: 0, y: 0}
     target: Vector2 = {x: 0, y: 0}
+
     isBlinking: boolean = false
     blinkTimer: number = 200
     blinkState: States = States.Down
+
     width: number = 5
-    highestStreach: number = 0
+    length: number = 20
+    highestWidth: number = 0
     lowestLength: number = 0
 
     LERP_SPEED: number = 0.25
@@ -181,6 +184,19 @@ class Eye {
     }
 
     updateEye(pos: Vector2, velocity: Vector2, deltaT: number, rand: number) {
+        this.updateBlink(pos, deltaT, rand)
+        this.updatePos(pos, velocity)
+
+        if (this.isBlinking && this.length < this.MAX_LENGTH / 2) {
+            const width =  ((this.width - this.highestWidth) - this.highestWidth) * -1
+            const length =  ((this.length - this.lowestLength) - this.lowestLength) * -1
+            this.eye.clear().moveTo(this.pos.x - (length / 2), (this.pos.y + this.target.y) / 2).lineTo(this.pos.x + (length / 2), (this.pos.y + this.target.y) / 2).stroke({color: "#000000", width: width, cap: "square"})
+        } else {
+            this.eye.clear().moveTo(this.pos.x, this.pos.y).lineTo(this.target.x, this.target.y).stroke({color: "#000000", width: this.width, cap: "square"})
+        }
+    }
+
+    updateBlink(pos: Vector2, deltaT: number, rand: number) {
         if (this.blinkTimer <= 0 && !this.isBlinking) {
             this.blinkState = States.Down
             this.isBlinking = true
@@ -199,7 +215,7 @@ class Eye {
             }
 
             if (this.length > this.MAX_LENGTH / 2) {
-                this.highestStreach = this.width
+                this.highestWidth = this.width
                 this.lowestLength = this.length
             }
 
@@ -207,14 +223,15 @@ class Eye {
                 this.length += 2.5 * deltaT
                 this.width -= 0.5 * deltaT
                 pos.y = pos.y + ((this.MAX_LENGTH - this.length) / 2)
-            } else if (this.length > this.MAX_LENGTH) {
+            } else if (this.length >= this.MAX_LENGTH) {
                 this.length = this.MAX_LENGTH
                 this.isBlinking = false
                 this.width = 5
             }
         }
+    }
 
-
+    updatePos(pos: Vector2, velocity: Vector2) {
         this.target.x = pos.x
         if (velocity.x < 0) {
             this.direction = Directions.Left
@@ -237,14 +254,6 @@ class Eye {
 //        const distY = Math.abs(pos.y - this.pos.y) this is still very buggy bc of velocity so leaving it like this at least for now
         this.pos.y = pos.y
         this.target.y = this.pos.y + this.length
-
-        if (this.isBlinking && this.length < this.MAX_LENGTH / 2) {
-            const width =  ((this.width - this.highestStreach) - this.highestStreach) * -1
-            const length =  ((this.length - this.lowestLength) - this.lowestLength) * -1
-            this.eye.clear().moveTo(this.pos.x - (length / 2), (this.pos.y + this.target.y) / 2).lineTo(this.pos.x + (length / 2), (this.pos.y + this.target.y) / 2).stroke({color: "#000000", width: width, cap: "square"})
-        } else {
-            this.eye.clear().moveTo(this.pos.x, this.pos.y).lineTo(this.target.x, this.target.y).stroke({color: "#000000", width: this.width, cap: "square"})
-        }
     }
 }
 

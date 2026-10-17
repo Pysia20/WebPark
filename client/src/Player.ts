@@ -10,6 +10,11 @@ enum Directions {
     Right
 }
 
+enum States {
+    Down = -1,
+    Up = 1
+}
+
 //maybe I should just split this into separate files ngl
 //=============================
 //  LEG     LEG  LEG     LEG
@@ -161,8 +166,10 @@ class Eye {
     direction: Directions = Directions.None
     pos: Vector2 = {x: 0, y: 0}
     target: Vector2 = {x: 0, y: 0}
-    blinking: boolean = false
+    isBlinking: boolean = false
     blinkTimer: number = 200
+    blinkState: States = States.Down
+    blinkProgress: number = 20
 
     LERP_SPEED: number = 0.25
 
@@ -171,23 +178,31 @@ class Eye {
     }
 
     updateEye(pos: Vector2, velocity: Vector2, deltaT: number) {
-        this.blinkTimer -= deltaT
-        if (this.blinkTimer < -19) {
+        if (this.blinkTimer <= 0 && !this.isBlinking) {
+            this.isBlinking = true
+            this.blinkProgress = 20
+            this.blinkState = States.Down
             this.blinkTimer = 200
-            this.blinking = false
-            this.length = 20
-        } else if (this.blinkTimer <= 0) {
-            this.blinking = true
-        }
-
-        if (this.blinking) {
-            pos.y += 2 * deltaT
-            this.length -= deltaT
-            this.calcPos(pos, velocity)
         } else {
-            this.calcPos(pos, velocity)
+            this.blinkTimer -= deltaT
         }
 
+        if (this.isBlinking) {
+            if (this.length > 1 && this.blinkState == States.Down) {
+                this.length -= 1 * deltaT
+            } else {
+                this.blinkState = States.Up
+            }
+
+            if (this.length < 20 && this.blinkState == States.Up) {
+                this.length += 1 * deltaT
+            } else if (this.length > 20) {
+                this.length = 20
+                this.isBlinking = false
+            }
+        }
+
+        this.calcPos(pos, velocity)
         /* BAD PROTOTYPE
         this.blinkTimer = ((this.blinkTimer % 200) + 200) % 200 //this is some bs right here
         if (this.blinkTimer < 20) {

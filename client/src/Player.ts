@@ -56,7 +56,6 @@ class Leg {
         if (this.isStepping) {
             this.stepProgress += 0.15 * deltaTime
 
-            //honestly not sure if this looks better or worse ngl
             if (this.direction == Directions.Left) {
                 if (this.stepTarget.x > this.hipPos.x - (PLAYER_CONFIG.WIDTH / 12)) this.stepTarget.x -= (PLAYER_CONFIG.WIDTH / 11)
             } else if (this.direction == Directions.Right) {
@@ -141,7 +140,7 @@ class Torso {
     updateTorso(pos: Vector2, velocity: Vector2) {
         this.sprite.position.set(pos.x + (PLAYER_CONFIG.WIDTH / 2), pos.y + ((PLAYER_CONFIG.HEIGHT / 10) * 9))
 
-        this.sprite.rotation = (velocity.x / (PLAYER_CONFIG.MAX_HORIZONTAL_SPEED * 3)) ** 3 // I think something is wrong server side? PLAYER_CONFIG.MAX_HORIZONTAL_SPEED < max velocity I'm getting
+        this.sprite.rotation = (velocity.x / (PLAYER_CONFIG.MAX_HORIZONTAL_SPEED * 3)) ** 3 // I think something is wrong server side? PLAYER_CONFIG.MAX_HORIZONTAL_SPEED < max velocity I'm getting TODO: CHECK IF THIS WAS FIXED YOU DUMMY
 
         //not rly usefull rn but if we ever add the face drawing it will be
         if (velocity.x < 0) {
@@ -161,7 +160,9 @@ class Eye {
     length: number = 20
     direction: Directions = Directions.None
     pos: Vector2 = {x: 0, y: 0}
+    target: Vector2 = {x: 0, y: 0}
     blinking: boolean = false
+    blinkTimer: number = 200
 
     LERP_SPEED: number = 0.25
 
@@ -169,30 +170,61 @@ class Eye {
         this.eye.position.set(0, 0)
     }
 
-    updateEye(pos: Vector2, velocity: Vector2) {
-        let targetX: number = pos.x
+    updateEye(pos: Vector2, velocity: Vector2, deltaT: number) {
+        this.blinkTimer -= deltaT
+        if (this.blinkTimer < -10) {
+            this.blinkTimer = 200
+            this.blinking = false
+            this.length = 20
+        } else if (this.blinkTimer <= 0) {
+            this.blinking = true
+        }
+
+        if (this.blinking) {
+            pos.y -= this.blinkTimer
+            this.length += this.blinkTimer
+            this.calcPos(pos, velocity)
+        } else {
+            this.calcPos(pos, velocity)
+        }
+
+        /* BAD PROTOTYPE
+        this.blinkTimer = ((this.blinkTimer % 200) + 200) % 200 //this is some bs right here
+        if (this.blinkTimer < 20) {
+            this.length = this.blinkTimer
+        } else {
+            this.length = 20
+        }
+        console.log(this.blinkTimer)
+         */
+
+        this.eye.clear().moveTo(this.pos.x, this.pos.y).lineTo(this.target.x, this.target.y).stroke({color: "#000000", width: 5, cap: "round"})
+    }
+
+    calcPos(pos: Vector2, velocity: Vector2) {
+        this.target.x = pos.x
         if (velocity.x < 0) {
             this.direction = Directions.Left
-            targetX -= PLAYER_CONFIG.WIDTH / 10
+            this.target.x -= PLAYER_CONFIG.WIDTH / 10
         } else if (velocity.x > 0) {
             this.direction = Directions.Right
-            targetX += PLAYER_CONFIG.WIDTH / 10
+            this.target.x += PLAYER_CONFIG.WIDTH / 10
         } else {
             this.direction = Directions.None
         }
 
-        const distX = Math.abs(targetX - this.pos.x )
+        const distX = Math.abs(this.target.x - this.pos.x )
         if (distX > 3) {
-            this.pos.x += (targetX - this.pos.x) * this.LERP_SPEED
+            this.pos.x += (this.target.x - this.pos.x) * this.LERP_SPEED
+            this.target.x = this.pos.x
         } else {
-            this.pos.x = targetX
+            this.pos.x = this.target.x
         }
 
 //        const distY = Math.abs(pos.y - this.pos.y) this is still very buggy bc of velocity so leaving it like this at least for now
         this.pos.y = pos.y
 
-        const targetY: number = this.pos.y + this.length
-        this.eye.clear().moveTo(this.pos.x, this.pos.y).lineTo(this.pos.x, targetY).stroke({color: "#000000", width: 5, cap: "round"})
+        this.target.y = this.pos.y + this.length
     }
 }
 
@@ -289,8 +321,8 @@ export class Player {
         const eyeLeft = {x: this.pos.x + eyeOffsetX, y: this.pos.y + eyeOffsetY}
         const eyeRight = {x: this.pos.x + (eyeOffsetX * 3), y: this.pos.y + eyeOffsetY}
 
-        this.eyes[0].updateEye(eyeLeft, this.velocity)
-        this.eyes[1].updateEye(eyeRight, this.velocity)
+        this.eyes[0].updateEye(eyeLeft, this.velocity, this.deltaT)
+        this.eyes[1].updateEye(eyeRight, this.velocity, this.deltaT)
     }
 
     checkInAir() {

@@ -169,6 +169,9 @@ class Eye {
     isBlinking: boolean = false
     blinkTimer: number = 200
     blinkState: States = States.Down
+    width: number = 5
+    highestStreach: number = 0
+    lowestLength: number = 0
 
     LERP_SPEED: number = 0.25
     MAX_LENGTH: number = 20
@@ -177,38 +180,41 @@ class Eye {
         this.eye.position.set(0, 0)
     }
 
-    updateEye(pos: Vector2, velocity: Vector2, deltaT: number) {
+    updateEye(pos: Vector2, velocity: Vector2, deltaT: number, rand: number) {
         if (this.blinkTimer <= 0 && !this.isBlinking) {
-            this.isBlinking = true
             this.blinkState = States.Down
-            this.blinkTimer = 200
+            this.isBlinking = true
+            this.blinkTimer = 1 + rand
         } else {
             this.blinkTimer -= deltaT
         }
 
         if (this.isBlinking) {
-            if (this.length > 1 && this.blinkState == States.Down) {
-                this.length -= 0.5 * deltaT
+            if (this.length > 0.0 && this.blinkState == States.Down) {
+                this.length -= 2 * deltaT
+                this.width += 0.5 * deltaT
                 pos.y = pos.y + ((this.MAX_LENGTH - this.length) / 2)
             } else {
                 this.blinkState = States.Up
             }
 
+            if (this.length > this.MAX_LENGTH / 2) {
+                this.highestStreach = this.width
+                this.lowestLength = this.length
+            }
+
             if (this.length < this.MAX_LENGTH && this.blinkState == States.Up) {
-                this.length += 0.5 * deltaT
+                this.length += 2 * deltaT
+                this.width -= 0.5 * deltaT
                 pos.y = pos.y + ((this.MAX_LENGTH - this.length) / 2)
             } else if (this.length > this.MAX_LENGTH) {
                 this.length = this.MAX_LENGTH
                 this.isBlinking = false
+                this.width = 5
             }
         }
-        console.log(pos.y)
-        this.calcPos(pos, velocity)
 
-        this.eye.clear().moveTo(this.pos.x, this.pos.y).lineTo(this.target.x, this.target.y).stroke({color: "#000000", width: 5, cap: "round"})
-    }
 
-    calcPos(pos: Vector2, velocity: Vector2) {
         this.target.x = pos.x
         if (velocity.x < 0) {
             this.direction = Directions.Left
@@ -230,8 +236,15 @@ class Eye {
 
 //        const distY = Math.abs(pos.y - this.pos.y) this is still very buggy bc of velocity so leaving it like this at least for now
         this.pos.y = pos.y
-
         this.target.y = this.pos.y + this.length
+
+        if (this.isBlinking && this.length < this.MAX_LENGTH / 2) {
+            const width =  ((this.width - this.highestStreach) - this.highestStreach) * -1
+            const length =  ((this.length - this.lowestLength) - this.lowestLength) * -1
+            this.eye.clear().moveTo(this.pos.x - (length / 2), (this.pos.y + this.target.y) / 2).lineTo(this.pos.x + (length / 2), (this.pos.y + this.target.y) / 2).stroke({color: "#000000", width: width, cap: "square"})
+        } else {
+            this.eye.clear().moveTo(this.pos.x, this.pos.y).lineTo(this.target.x, this.target.y).stroke({color: "#000000", width: this.width, cap: "square"})
+        }
     }
 }
 
@@ -328,8 +341,10 @@ export class Player {
         const eyeLeft = {x: this.pos.x + eyeOffsetX, y: this.pos.y + eyeOffsetY}
         const eyeRight = {x: this.pos.x + (eyeOffsetX * 3), y: this.pos.y + eyeOffsetY}
 
-        this.eyes[0].updateEye(eyeLeft, this.velocity, this.deltaT)
-        this.eyes[1].updateEye(eyeRight, this.velocity, this.deltaT)
+        const rand = Math.floor(Math.random() * 500)
+
+        this.eyes[0].updateEye(eyeLeft, this.velocity, this.deltaT, rand)
+        this.eyes[1].updateEye(eyeRight, this.velocity, this.deltaT, rand)
     }
 
     checkInAir() {

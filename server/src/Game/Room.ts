@@ -25,6 +25,8 @@ export class Room {
 
 	constructor(id: string) {
 		this.id = id;
+
+		this.level = MAP_LOADER.GetLevel("Level_0", this);
 	}
 
 	public getID(): string | undefined {
@@ -295,7 +297,6 @@ export class Room {
 	public startGameLoop(io: Namespace) {
 		this.io = io;
 
-		this.level = MAP_LOADER.GetLevel("Level_0", this);
 		this.level.reloadLevel();
 		this.gameLoop = setInterval(
 			async () => {

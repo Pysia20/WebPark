@@ -2,7 +2,7 @@ import {Container, Text as PixiText} from "pixi.js";
 import {Vector2} from "@shared/commonModels"
 import {PlayerTextures} from "../Assets";
 import {playJump} from "../Audio";
-import {PLAYER_CONFIG} from "@shared/commonVariables";
+import {PLAYER_CONFIG, PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
 import {Leg} from "./Leg";
 import {Torso} from "./Torso";
 import {Eye} from "./Eye";
@@ -26,7 +26,7 @@ export class Player {
     torso: Torso
     eyes: Eye[]
 
-    LERP_SPEED: number = 0.3
+    LERP_SPEED: number = PLAYER_VISUAL_CONFIG.PLAYER_LERP
 
     constructor(id: number, color: string, nick: PixiText, textures: PlayerTextures) {
         this.id = id
@@ -39,12 +39,12 @@ export class Player {
     }
 
     addToWorld(world: Container) {
-        world.addChild(this.torso.sprite)
-        world.addChild(this.nick)
         world.addChild(this.legs[0].leg)
         world.addChild(this.legs[1].leg)
+        world.addChild(this.torso.sprite)
         world.addChild(this.eyes[0].eye)
         world.addChild(this.eyes[1].eye)
+        world.addChild(this.nick)
     }
 
     updatePos() {
@@ -63,7 +63,7 @@ export class Player {
 
     updateNick() {
         this.nick.position.set(
-            this.pos.x + PLAYER_CONFIG.WIDTH / 2,
+            this.pos.x + PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.NICK_OFFSET,
             this.pos.y
         )
     }
@@ -73,30 +73,30 @@ export class Player {
     }
 
     updateLegs() {
-        const legOffsetX = PLAYER_CONFIG.WIDTH / 4
-        const legOffsetY = (PLAYER_CONFIG.HEIGHT / 10) * 9
+        const legOffsetX = PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.HIP_X_OFFSET_RATIO
+        const legOffsetY = PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.HIP_Y_OFFSET_RATIO
 
         if (!this.inAir) {
             const hipLeft = {x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY};
-            const hipRight = {x: this.pos.x + (legOffsetX * 3), y: this.pos.y + legOffsetY}
+            const hipRight = {x: this.pos.x + (PLAYER_CONFIG.WIDTH - legOffsetX), y: this.pos.y + legOffsetY}
 
             const ground = this.pos.y + PLAYER_CONFIG.HEIGHT
             this.legs[0].updateLeg(hipLeft, this.legs[1], this.velocity, ground, this.deltaT)
             this.legs[1].updateLeg(hipRight, this.legs[0], this.velocity, ground, this.deltaT)
         } else {
             this.legs[0].curlUp({x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY}, this.velocity)
-            this.legs[1].curlUp({x: this.pos.x + (legOffsetX * 3), y: this.pos.y + legOffsetY}, this.velocity)
+            this.legs[1].curlUp({x: this.pos.x + (PLAYER_CONFIG.WIDTH - legOffsetX), y: this.pos.y + legOffsetY}, this.velocity)
         }
     }
 
     updateEyes() {
-        const eyeOffsetX = PLAYER_CONFIG.WIDTH / 4
-        const eyeOffsetY = (PLAYER_CONFIG.HEIGHT / 10) * 2
+        const eyeOffsetX = PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.EYE_X_OFFSET_RATIO
+        const eyeOffsetY = PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.EYE_Y_OFFSET_RATIO
 
         const eyeLeft = {x: this.pos.x + eyeOffsetX, y: this.pos.y + eyeOffsetY}
-        const eyeRight = {x: this.pos.x + (eyeOffsetX * 3), y: this.pos.y + eyeOffsetY}
+        const eyeRight = {x: this.pos.x + (PLAYER_CONFIG.WIDTH - eyeOffsetX), y: this.pos.y + eyeOffsetY}
 
-        const rand = Math.floor(Math.random() * 500)
+        const rand = Math.floor(Math.random() * PLAYER_VISUAL_CONFIG.BLINK_INTERVAL_RANDOM)
 
         this.eyes[0].updateEye(eyeLeft, this.velocity, this.deltaT, rand)
         this.eyes[1].updateEye(eyeRight, this.velocity, this.deltaT, rand)
@@ -115,6 +115,8 @@ export class Player {
         world.removeChild(this.torso.sprite)
         world.removeChild(this.legs[0].leg)
         world.removeChild(this.legs[1].leg)
+        world.removeChild(this.eyes[0].eye)
+        world.removeChild(this.eyes[1].eye)
     }
 
     updateData(velocity: Vector2, deltaTime: number) {

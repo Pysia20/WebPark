@@ -1,23 +1,25 @@
 import {Vector2} from "@shared/commonModels";
 import {Graphics} from "pixi.js";
-import {PLAYER_CONFIG} from "@shared/commonVariables";
+import {PLAYER_CONFIG, PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
 import {Directions} from "./PlayerEnums";
 
 export class Leg {
+    leg: Graphics = new Graphics()
+
     stepStart: Vector2 = {x: 0, y: 0}
     footPos: Vector2 = {x: 0, y: 0}
     stepTarget: Vector2 = {x: 0, y: 0}
     hipPos: Vector2 = {x: 0, y: 0}
     kneePos: Vector2 = {x: 0, y: 0}
+
     stepProgress: number = 1.0
     isStepping: boolean = false
-    leg: Graphics = new Graphics()
     prevGround: number = 0
+
     direction: Directions = Directions.Right
 
-    MAX_STRETCH = 24
-    LERP_SPEED: number = 0.3
-    LEG_LENGTH: number = (PLAYER_CONFIG.HEIGHT / 10) * 1.25
+    LERP_SPEED: number = PLAYER_VISUAL_CONFIG.LEG_LERP
+    LEG_LENGTH: number = PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.LEG_LENGTH_RATIO
 
     constructor() {
         this.leg.position.set(0, 0)
@@ -34,21 +36,21 @@ export class Leg {
             this.prevGround = ground
         }
 
-        if (!this.isStepping && !otherLeg.isStepping && distance > this.MAX_STRETCH) {
+        if (!this.isStepping && !otherLeg.isStepping && distance > PLAYER_VISUAL_CONFIG.LEG_MAX_STRETCH) {
             this.isStepping = true
             this.stepProgress = 0
             this.stepStart = {x: this.footPos.x, y: this.footPos.y}
-            const fowardOffset = (velocity.x > 0) ? 16 : -16
+            const fowardOffset = (velocity.x > 0) ? PLAYER_VISUAL_CONFIG.LEG_STEP : -PLAYER_VISUAL_CONFIG.LEG_STEP
             this.stepTarget = {x: hip.x + fowardOffset, y: ground}
         }
 
         if (this.isStepping) {
-            this.stepProgress += 0.15 * deltaTime
+            this.stepProgress += PLAYER_VISUAL_CONFIG.LEG_STEP_SPEED * deltaTime
 
             if (this.direction == Directions.Left) {
-                if (this.stepTarget.x > this.hipPos.x - (PLAYER_CONFIG.WIDTH / 12)) this.stepTarget.x -= (PLAYER_CONFIG.WIDTH / 11)
+                if (this.stepTarget.x > this.hipPos.x - (PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.LEG_STEP_MIN_OFFSET_RATIO)) this.stepTarget.x -= (PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.LEG_STEP_NUDGE_RATIO)
             } else if (this.direction == Directions.Right) {
-                if (this.stepTarget.x < this.hipPos.x + (PLAYER_CONFIG.WIDTH / 12)) this.stepTarget.x += (PLAYER_CONFIG.WIDTH / 11)
+                if (this.stepTarget.x < this.hipPos.x + (PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.LEG_STEP_MIN_OFFSET_RATIO)) this.stepTarget.x += (PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.LEG_STEP_NUDGE_RATIO)
             }
             if (this.stepProgress >= 1.0) {
                 this.stepProgress = 1.0
@@ -56,16 +58,16 @@ export class Leg {
                 this.footPos = {x: this.stepTarget.x, y: this.stepTarget.y}
             } else {
                 this.footPos.x = this.stepStart.x + (this.stepTarget.x - this.stepStart.x) * this.stepProgress
-                const liftArc = Math.sin(this.stepProgress * Math.PI) * (PLAYER_CONFIG.HEIGHT / 10.5)
+                const liftArc = Math.sin(this.stepProgress * Math.PI) * (PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.LEG_LIFT_RATIO)
                 this.footPos.y = ground - liftArc
             }
         }
 
         this.invertTheKinematics()
 
-        this.leg.clear().moveTo(this.hipPos.x, this.hipPos.y - 2).lineTo(this.kneePos.x, this.kneePos.y).lineTo(this.footPos.x, this.footPos.y).stroke({
+        this.leg.clear().moveTo(this.hipPos.x, this.hipPos.y - PLAYER_VISUAL_CONFIG.HIP_TUCK).lineTo(this.kneePos.x, this.kneePos.y).lineTo(this.footPos.x, this.footPos.y).stroke({
             color: "#000000",
-            width: 3,
+            width: PLAYER_VISUAL_CONFIG.LEG_STROKE_WIDTH,
             cap: "round",
             join: "miter"
         });
@@ -111,9 +113,9 @@ export class Leg {
 
         this.invertTheKinematics()
 
-        this.leg.clear().moveTo(this.hipPos.x, this.hipPos.y - 2).lineTo(this.kneePos.x, this.kneePos.y).lineTo(this.footPos.x, this.footPos.y).stroke({
+        this.leg.clear().moveTo(this.hipPos.x, this.hipPos.y - PLAYER_VISUAL_CONFIG.HIP_TUCK).lineTo(this.kneePos.x, this.kneePos.y).lineTo(this.footPos.x, this.footPos.y).stroke({
             color: "#000000",
-            width: 3,
+            width: PLAYER_VISUAL_CONFIG.LEG_STROKE_WIDTH,
             cap: "round"
         })
     }

@@ -1,6 +1,6 @@
 import {Graphics} from "pixi.js";
 import {Vector2} from "@shared/commonModels";
-import {PLAYER_CONFIG} from "@shared/commonVariables";
+import {PLAYER_CONFIG, PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
 import {Directions, States} from "./PlayerEnums";
 
 export class Eye {
@@ -11,27 +11,25 @@ export class Eye {
     target: Vector2 = {x: 0, y: 0}
 
     isBlinking: boolean = false
-    blinkTimer: number = 200
+    blinkTimer: number = PLAYER_VISUAL_CONFIG.BLINK_INTERVAL_BASE
     blinkState: States = States.Down
 
-    width: number = 5
-    length: number
+    width: number = PLAYER_VISUAL_CONFIG.EYE_STROKE_WIDTH
+    length: number = PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH
     highestWidth: number = 0
     lowestLength: number = 0
 
-    LERP_SPEED: number = 0.25
-    MAX_LENGTH: number = 16
+    LERP_SPEED: number = PLAYER_VISUAL_CONFIG.EYE_LERP
 
     constructor() {
         this.eye.position.set(0, 0)
-        this.length = this.MAX_LENGTH
     }
 
     updateEye(pos: Vector2, velocity: Vector2, deltaT: number, rand: number) {
         this.updateBlink(pos, deltaT, rand)
         this.updatePos(pos, velocity)
 
-        if (this.isBlinking && this.length < this.MAX_LENGTH / 2) {
+        if (this.isBlinking && this.length < PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH / 2) {
             const width = ((this.width - this.highestWidth) - this.highestWidth) * -1
             const length = ((this.length - this.lowestLength) - this.lowestLength) * -1
             this.eye.clear().moveTo(this.pos.x - (length / 2), (this.pos.y + this.target.y) / 2).lineTo(this.pos.x + (length / 2), (this.pos.y + this.target.y) / 2).stroke({
@@ -52,33 +50,33 @@ export class Eye {
         if (this.blinkTimer <= 0 && !this.isBlinking) {
             this.blinkState = States.Down
             this.isBlinking = true
-            this.blinkTimer = 300 + rand
+            this.blinkTimer = PLAYER_VISUAL_CONFIG.BLINK_INTERVAL_BASE + rand
         } else {
             this.blinkTimer -= deltaT
         }
 
         if (this.isBlinking) {
             if (this.length > 0.0 && this.blinkState == States.Down) {
-                this.length -= 2.5 * deltaT
-                this.width += 0.5 * deltaT
-                pos.y = pos.y + ((this.MAX_LENGTH - this.length) / 2)
+                this.length -= PLAYER_VISUAL_CONFIG.BLINK_SPEED * deltaT
+                this.width += PLAYER_VISUAL_CONFIG.BLINK_WIDTH_SPEED * deltaT
+                pos.y = pos.y + ((PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH - this.length) / 2)
             } else {
                 this.blinkState = States.Up
             }
 
-            if (this.length > this.MAX_LENGTH / 2) {
+            if (this.length > PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH / 2) {
                 this.highestWidth = this.width
                 this.lowestLength = this.length
             }
 
-            if (this.length < this.MAX_LENGTH && this.blinkState == States.Up) {
-                this.length += 2.5 * deltaT
-                this.width -= 0.5 * deltaT
-                pos.y = pos.y + ((this.MAX_LENGTH - this.length) / 2)
-            } else if (this.length >= this.MAX_LENGTH) {
-                this.length = this.MAX_LENGTH
+            if (this.length < PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH && this.blinkState == States.Up) {
+                this.length += PLAYER_VISUAL_CONFIG.BLINK_SPEED * deltaT
+                this.width -= PLAYER_VISUAL_CONFIG.BLINK_WIDTH_SPEED * deltaT
+                pos.y = pos.y + ((PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH - this.length) / 2)
+            } else if (this.length >= PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH) {
+                this.length = PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH
                 this.isBlinking = false
-                this.width = 5
+                this.width = PLAYER_VISUAL_CONFIG.EYE_STROKE_WIDTH
             }
         }
     }
@@ -87,16 +85,16 @@ export class Eye {
         this.target.x = pos.x
         if (velocity.x < 0) {
             this.direction = Directions.Left
-            this.target.x -= PLAYER_CONFIG.WIDTH / 10
+            this.target.x -= PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.EYE_LOOK_OFFSET_RATIO
         } else if (velocity.x > 0) {
             this.direction = Directions.Right
-            this.target.x += PLAYER_CONFIG.WIDTH / 10
+            this.target.x += PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.EYE_LOOK_OFFSET_RATIO
         } else {
             this.direction = Directions.None
         }
 
         const distX = Math.abs(this.target.x - this.pos.x)
-        if (distX > 3) {
+        if (distX > PLAYER_VISUAL_CONFIG.EYE_SNAP_THRESHOLD) {
             this.pos.x += (this.target.x - this.pos.x) * this.LERP_SPEED
             this.target.x = this.pos.x
         } else {

@@ -2,7 +2,7 @@ import {Graphics} from "pixi.js";
 import {Vector2} from "@shared/commonModels";
 import {PLAYER_CONFIG, PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
 import {Directions, States} from "./PlayerEnums";
-
+// TODO: MAKE THE EYE REACT TO VEL, MAKE IT FOLLOW THE MOUSE WHEN STANDING STILL
 export class Eye {
     eye: Graphics = new Graphics()
 

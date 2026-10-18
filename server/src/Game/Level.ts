@@ -65,26 +65,39 @@ export class Level {
 		});
 	}
 
-	public handleEntites(room: Room) {
-		for (let e of this.entities) {
-			e.handleBehaviour(this);
-			if (this.shouldRestart) {
-				this.shouldRestart = false;
-				this.reloadLevel();
-				break;
-			}
-		}
-	}
-
 	public physicsUpdate() {
 		this.room.players.forEach((player, id) => {
-			player.handleBehaviour(this);
-		});
-
-		this.room.players.forEach((player, id) => {
+			this.room.players.forEach((p) => {
+				p.handleCollision(player);
+			});
 			this.getColliders().forEach((c) => {
 				c.handleCollision(player);
 			});
+			this.entities.forEach((e) => {
+				e.handleCollision(player);
+			});
 		});
+
+		this.room.players.forEach((player, id) => {
+			player.handleBehaviour(this);
+		});
+		this.entities.forEach((e) => {
+			e.handleBehaviour(this);
+		});
+
+		this.room.players.forEach((p, id) => {
+			p.endTick();
+		});
+		this.getColliders().forEach((c) => {
+			c.endTick();
+		});
+		this.entities.forEach((e) => {
+			e.endTick();
+		});
+
+		if (this.shouldRestart) {
+			this.shouldRestart = false;
+			this.reloadLevel();
+		}
 	}
 }

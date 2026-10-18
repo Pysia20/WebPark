@@ -54,12 +54,14 @@ export class ButtonDoor extends Entity {
 			this.customFields.ActivationCount.value! <=
 			l.activationStates.get(this.customFields.ActivationGroup.value!)!
 		) {
-			this.isPassable = false;
+			this.isPassable = true;
 		} else {
-			if (!(this.customFields.StaysOn.doesExist && this.customFields.StaysOn.value)) {
+			if (!this.customFields.StaysOn.value) {
 				this.isPassable = false;
 			}
 		}
+
+		console.log(this.isPassable);
 	}
 
 	public override getData(): ServerButtonDoorData {
@@ -72,30 +74,26 @@ export class ButtonDoor extends Entity {
 	}
 
 	protected override onRightCollision(overlap: Vector2, other: Entity) {
-		// if (!this.isPassable) {
-		return super.onRightCollision(overlap, other);
-		// }
-		// return undefined;
+		if (!this.isPassable) {
+			super.onRightCollision(overlap, other);
+		}
 	}
 
 	protected override onLeftCollision(overlap: Vector2, other: Entity) {
-		// if (!this.isPassable) {
-		return super.onLeftCollision(overlap, other);
-		// }
-		// return undefined;
+		if (!this.isPassable) {
+			super.onLeftCollision(overlap, other);
+		}
 	}
 
 	protected override onUpCollision(overlap: Vector2, other: Entity) {
-		// if (!this.isPassable) {
-		return super.onUpCollision(overlap, other);
-		// }
-		// return undefined;
+		if (!this.isPassable) {
+			super.onUpCollision(overlap, other);
+		}
 	}
 
 	protected override onDownCollision(overlap: Vector2, other: Entity) {
-		// if (!this.isPassable) {
-		return super.onDownCollision(overlap, other);
-		// }
-		// return undefined;
+		if (!this.isPassable) {
+			super.onDownCollision(overlap, other);
+		}
 	}
 }

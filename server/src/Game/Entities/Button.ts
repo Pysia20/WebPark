@@ -29,8 +29,6 @@ export class Button extends Entity {
 		return this.thingsStanding.length > 0;
 	}
 
-	public override endTick() {}
-
 	public override handleBehaviour(level: Level) {
 		if (!this.customFields.ActivationGroup.doesExist) return;
 
@@ -55,16 +53,15 @@ export class Button extends Entity {
 		};
 	}
 
-	// protected override onUpTouching(other: Entity) {
-	// 	super.onUpTouching(other);
-	// 	this.newList.push(other);
-	// }
+	protected override onUpTouching(other: Entity) {
+		super.onUpTouching(other);
+		this.newList.push(other);
+	}
 
-	// protected override onUpCollision(overlap: Vector2, other: Entity) {
-	// 	const response = super.onUpCollision(overlap, other); // Default behaviour
-	// 	this.newList.push(other);
-	// 	return response;
-	// }
+	protected override onUpCollision(overlap: Vector2, other: Entity) {
+		super.onUpCollision(overlap, other); // Default behaviour
+		this.newList.push(other);
+	}
 
 	public override clone(): Button {
 		return new Button({ ...this.pos }, { ...this.size }, { ...this.customFields });

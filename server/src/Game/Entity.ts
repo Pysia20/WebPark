@@ -69,7 +69,7 @@ export abstract class Entity {
 		const { x: widthA, y: heightA } = A.size;
 
 		const { x: xB, y: yB } = B.pos;
-		const { x: widthB, y: heightB } = A.size;
+		const { x: widthB, y: heightB } = B.size;
 
 		const isCollidingX = xB < xA + widthA && xA < xB + widthB;
 		const isCollidingY = yB < yA + heightA && yA < yB + heightB;
@@ -132,59 +132,47 @@ export abstract class Entity {
 			}
 		} else {
 			if (diffY > 0) {
-				// Pushing out downwards
+				// Pushing out upwards
 				this.onUpCollision({ x: overlapX, y: overlapY }, other);
 			} else {
-				// Pushing out upwards
+				// Pushing out downwards
 				this.onDownCollision({ x: overlapX, y: overlapY }, other);
 			}
 		}
 
-		other.onAnyCollision(other);
+		this.onAnyCollision(other);
 	}
 
 	protected onRightCollision(overlap: Vector2, other: Entity) {
 		other.pos.x -= overlap.x;
 		other.velocity.x = 0;
-		if (this.type == "MapCollider") {
-			console.log("RIGHT");
-		}
 	}
 
 	protected onLeftCollision(overlap: Vector2, other: Entity) {
 		other.pos.x += overlap.x;
 		other.velocity.x = 0;
-		if (this.type == "MapCollider") {
-			console.log("LEFT");
-		}
 	}
 
 	protected onUpCollision(overlap: Vector2, other: Entity) {
 		other.pos.y -= overlap.y;
-		other.velocity.y = 0;
-
-		if (this.type == "MapCollider") {
-			console.log("UP");
+		if (other.velocity.y >= 0) {
+			other.velocity.y = 0;
 		}
+		other.isGrounded = true;
 	}
 
 	protected onDownCollision(overlap: Vector2, other: Entity) {
 		other.pos.y += overlap.y;
 		other.velocity.y = 0;
-		if (this.type == "MapCollider") {
-			console.log("DOWN");
-		}
 	}
 
 	protected onAnyCollision(other: Entity) {}
 
 	protected onUpTouching(other: Entity): void {
-		if (other.velocity) other.velocity.y = 0;
-		other.isGrounded = true;
-
-		if (this.type == "MapCollider") {
-			console.log("TOuch");
+		if (other.velocity.y >= 0) {
+			other.velocity.y = 0;
 		}
+		other.isGrounded = true;
 	}
 
 	public getData(): ServerEntityData {

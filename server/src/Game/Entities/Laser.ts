@@ -56,6 +56,14 @@ export class Laser extends Entity {
 		this.shouldKill = true;
 	}
 
+	protected override onRightCollision(overlap: Vector2, other: Entity) {}
+
+	protected override onLeftCollision(overlap: Vector2, other: Entity) {}
+
+	protected override onUpCollision(overlap: Vector2, other: Entity) {}
+
+	protected override onDownCollision(overlap: Vector2, other: Entity) {}
+
 	public override handleBehaviour(l: Level) {
 		if (
 			l.activationStates.get(this.customFields.ActivationGroup.value!)! >=

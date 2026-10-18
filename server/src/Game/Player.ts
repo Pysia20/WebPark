@@ -35,30 +35,13 @@ export class Player extends Entity {
 		this.isDynamic = true;
 	}
 
-	protected override onRightCollision(
-		overlap: Vector2,
-		other: Entity,
-	): CollisionOutput | undefined {
-		return undefined;
-	}
+	protected override onRightCollision(overlap: Vector2, other: Entity) {}
 
-	protected override onLeftCollision(
-		overlap: Vector2,
-		other: Entity,
-	): CollisionOutput | undefined {
-		return undefined;
-	}
+	protected override onLeftCollision(overlap: Vector2, other: Entity) {}
 
-	protected override onUpCollision(overlap: Vector2, other: Entity): CollisionOutput | undefined {
-		return undefined;
-	}
+	protected override onUpCollision(overlap: Vector2, other: Entity) {}
 
-	protected override onDownCollision(
-		overlap: Vector2,
-		other: Entity,
-	): CollisionOutput | undefined {
-		return undefined;
-	}
+	protected override onDownCollision(overlap: Vector2, other: Entity) {}
 
 	public override handleBehaviour(l: Level) {
 		if (this.velocity.x > PLAYER_CONFIG.DRAG) {

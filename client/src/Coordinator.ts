@@ -1,4 +1,4 @@
-import { Player } from "./Player";
+import { Player } from "./Player/Player";
 import {PlayerJoinedData, ServerData, ServerPlayerData} from "@shared/commonModels"
 import { Container, Text as PixiText } from "pixi.js";
 import { PlayerTextures } from "./Assets";
@@ -36,6 +36,7 @@ class Coordinator {
                 if (tempPlayer) {
                     tempPlayer.targetPos = playerData.pos
                     tempPlayer.updateData(playerData.velocity, deltaTime)
+                    tempPlayer.hide(playerData.isInsideDoor)
                 } else {
                     console.log("unknown player")
                 }

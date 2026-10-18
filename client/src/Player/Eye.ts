@@ -2,7 +2,8 @@ import {Graphics} from "pixi.js";
 import {Vector2} from "@shared/commonModels";
 import {PLAYER_CONFIG, PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
 import {Directions, States} from "./PlayerEnums";
-// TODO: MAKE THE EYE REACT TO VEL, MAKE IT FOLLOW THE MOUSE WHEN STANDING STILL
+import {getCurrentMousePos} from "../Inputs";
+// TODO: MAKE IT FOLLOW THE MOUSE WHEN STANDING STILL
 export class Eye {
     eye: Graphics = new Graphics()
 
@@ -30,6 +31,7 @@ export class Eye {
         this.updateSquint(velocity)
         this.updateBlink(pos, deltaT, rand)
         this.updatePos(pos, velocity)
+        if (velocity.x == 0 && velocity.y == 0) this.lookAtMouse()
 
         if (this.isBlinking && this.length < this.currentMaxLength / 2) {
             const width = ((this.width - this.highestWidth) - this.highestWidth) * -1
@@ -114,5 +116,9 @@ export class Eye {
 //        const distY = Math.abs(pos.y - this.pos.y) this is still very buggy bc of velocity so leaving it like this at least for now
         this.pos.y = pos.y
         this.target.y = this.pos.y + this.length
+    }
+
+    lookAtMouse() {
+        console.log(getCurrentMousePos())
     }
 }

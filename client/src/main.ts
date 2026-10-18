@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js'
 
-import { getCurrentInputs } from "./Inputs"
+import {createMouseListiner, getCurrentInputs} from "./Inputs"
 import { emitInputs, getServerData, startNetworking } from "./Network";
 import { coordinator } from "./Coordinator";
 import { PlayerInputs, Vector2 } from "@shared/commonModels"
@@ -18,6 +18,8 @@ await app.init({
     autoDensity: true,
     backgroundColor: 0x222222
 })
+app.stage.eventMode = "static"
+app.stage.hitArea = app.screen
 app.canvas.classList.add("hidden")
 document.body.appendChild(app.canvas)
 
@@ -25,6 +27,7 @@ const worldContainer = new PIXI.Container()
 const hudContainer = new PIXI.Container()
 app.stage.addChild(worldContainer)
 app.stage.addChild(hudContainer)
+createMouseListiner(app, worldContainer)
 
 pageSetup(app)
 

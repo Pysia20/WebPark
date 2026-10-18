@@ -18,6 +18,7 @@ export class Eye {
     length: number = PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH
     highestWidth: number = 0
     lowestLength: number = 0
+    currentMaxLength = PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH
 
     LERP_SPEED: number = PLAYER_VISUAL_CONFIG.EYE_LERP
 
@@ -26,10 +27,11 @@ export class Eye {
     }
 
     updateEye(pos: Vector2, velocity: Vector2, deltaT: number, rand: number) {
+        this.updateSquint(velocity)
         this.updateBlink(pos, deltaT, rand)
         this.updatePos(pos, velocity)
 
-        if (this.isBlinking && this.length < PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH / 2) {
+        if (this.isBlinking && this.length < this.currentMaxLength / 2) {
             const width = ((this.width - this.highestWidth) - this.highestWidth) * -1
             const length = ((this.length - this.lowestLength) - this.lowestLength) * -1
             this.eye.clear().moveTo(this.pos.x - (length / 2), (this.pos.y + this.target.y) / 2).lineTo(this.pos.x + (length / 2), (this.pos.y + this.target.y) / 2).stroke({
@@ -46,6 +48,12 @@ export class Eye {
         }
     }
 
+    updateSquint(velocity: Vector2) {
+        const absVelocity: Vector2 = {x: Math.abs(velocity.x), y: Math.abs(velocity.y)}
+        const squint = (absVelocity.y > PLAYER_CONFIG.MAX_HORIZONTAL_SPEED) ? (PLAYER_CONFIG.MAX_HORIZONTAL_SPEED / PLAYER_VISUAL_CONFIG.EYE_SQUINT) : Math.max(absVelocity.x / PLAYER_VISUAL_CONFIG.EYE_SQUINT, absVelocity.y / PLAYER_VISUAL_CONFIG.EYE_SQUINT)
+        this.currentMaxLength = PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH - squint
+    }
+
     updateBlink(pos: Vector2, deltaT: number, rand: number) {
         if (this.blinkTimer <= 0 && !this.isBlinking) {
             this.blinkState = States.Down
@@ -59,25 +67,27 @@ export class Eye {
             if (this.length > 0.0 && this.blinkState == States.Down) {
                 this.length -= PLAYER_VISUAL_CONFIG.BLINK_SPEED * deltaT
                 this.width += PLAYER_VISUAL_CONFIG.BLINK_WIDTH_SPEED * deltaT
-                pos.y = pos.y + ((PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH - this.length) / 2)
+                pos.y = pos.y + ((this.currentMaxLength - this.length) / 2)
             } else {
                 this.blinkState = States.Up
             }
 
-            if (this.length > PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH / 2) {
+            if (this.length > this.currentMaxLength / 2) {
                 this.highestWidth = this.width
                 this.lowestLength = this.length
             }
 
-            if (this.length < PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH && this.blinkState == States.Up) {
+            if (this.length < this.currentMaxLength && this.blinkState == States.Up) {
                 this.length += PLAYER_VISUAL_CONFIG.BLINK_SPEED * deltaT
                 this.width -= PLAYER_VISUAL_CONFIG.BLINK_WIDTH_SPEED * deltaT
-                pos.y = pos.y + ((PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH - this.length) / 2)
-            } else if (this.length >= PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH) {
-                this.length = PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH
+                pos.y = pos.y + ((this.currentMaxLength - this.length) / 2)
+            } else if (this.length >= this.currentMaxLength) {
+                this.length = this.currentMaxLength
                 this.isBlinking = false
                 this.width = PLAYER_VISUAL_CONFIG.EYE_STROKE_WIDTH
             }
+        } else {
+            this.length = this.currentMaxLength
         }
     }
 

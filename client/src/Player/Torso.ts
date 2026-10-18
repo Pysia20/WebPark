@@ -18,7 +18,7 @@ export class Torso {
         this.sprite.position.set(pos.x + (PLAYER_CONFIG.WIDTH / 2), pos.y + (PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.TORSO_HEIGHT_RATIO))
 
         const ratio = Math.abs(velocity.x / (PLAYER_CONFIG.MAX_HORIZONTAL_SPEED * PLAYER_VISUAL_CONFIG.TORSO_LEAN));
-        this.sprite.rotation = Math.sign(velocity.x) * (ratio ** 3);
+        this.sprite.rotation = Math.sign(velocity.x) * (ratio ** PLAYER_VISUAL_CONFIG.TORSO_LEAN);
 
         //not rly usefull rn but if we ever add the face drawing it will be
         const baseScaleX = Math.abs(this.sprite.scale.x)

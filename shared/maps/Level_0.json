@@ -79,7 +79,7 @@
 				},
 				{
 					"__identifier": "JohnEntity",
-					"__grid": [3,12],
+					"__grid": [17,8],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": { "tilesetUid": 2, "x": 0, "y": 64, "w": 64, "h": 64 },
@@ -88,10 +88,10 @@
 					"width": 64,
 					"height": 64,
 					"defUid": 5,
-					"px": [192,832],
+					"px": [1088,576],
 					"fieldInstances": [],
-					"__worldX": 192,
-					"__worldY": 128
+					"__worldX": 1088,
+					"__worldY": -128
 				},
 				{
 					"__identifier": "Door",
@@ -111,7 +111,7 @@
 				},
 				{
 					"__identifier": "ButtonDoor",
-					"__grid": [11,13],
+					"__grid": [12,13],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": { "tilesetUid": 2, "x": 64, "y": 0, "w": 64, "h": 64 },
@@ -120,24 +120,24 @@
 					"width": 64,
 					"height": 128,
 					"defUid": 20,
-					"px": [704,896],
+					"px": [768,896],
 					"fieldInstances": [
 						{ "__identifier": "ActivationGroup", "__type": "String", "__value": "Door", "__tile": null, "defUid": 21, "realEditorValues": [{
 							"id": "V_String",
 							"params": ["Door"]
 						}] },
 						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 22, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
-						{ "__identifier": "StaysOn", "__type": "Bool", "__value": false, "__tile": null, "defUid": 23, "realEditorValues": [{
+						{ "__identifier": "StaysOn", "__type": "Bool", "__value": true, "__tile": null, "defUid": 23, "realEditorValues": [{
 							"id": "V_Bool",
-							"params": [ false ]
+							"params": [ true ]
 						}] }
 					],
-					"__worldX": 704,
+					"__worldX": 768,
 					"__worldY": 192
 				},
 				{
 					"__identifier": "Button",
-					"__grid": [6,13],
+					"__grid": [6,11],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": { "tilesetUid": 2, "x": 64, "y": 64, "w": 64, "h": 64 },
@@ -146,17 +146,17 @@
 					"width": 64,
 					"height": 32,
 					"defUid": 8,
-					"px": [384,896],
+					"px": [384,768],
 					"fieldInstances": [{ "__identifier": "ActivationGroup", "__type": "String", "__value": "Door", "__tile": null, "defUid": 18, "realEditorValues": [{
 						"id": "V_String",
 						"params": ["Door"]
 					}] }],
 					"__worldX": 384,
-					"__worldY": 192
+					"__worldY": 64
 				},
 				{
 					"__identifier": "Pushable",
-					"__grid": [3,11],
+					"__grid": [9,13],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": null,
@@ -165,10 +165,10 @@
 					"width": 64,
 					"height": 64,
 					"defUid": 24,
-					"px": [192,768],
+					"px": [576,896],
 					"fieldInstances": [],
-					"__worldX": 192,
-					"__worldY": 64
+					"__worldX": 576,
+					"__worldY": 192
 				},
 				{
 					"__identifier": "Spike",
@@ -191,7 +191,7 @@
 				},
 				{
 					"__identifier": "PlayerSpawner",
-					"__grid": [1,13],
+					"__grid": [3,11],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": null,
@@ -200,14 +200,14 @@
 					"width": 64,
 					"height": 64,
 					"defUid": 28,
-					"px": [64,896],
+					"px": [192,768],
 					"fieldInstances": [],
-					"__worldX": 64,
-					"__worldY": 192
+					"__worldX": 192,
+					"__worldY": 64
 				},
 				{
 					"__identifier": "MovingPlatform",
-					"__grid": [6,9],
+					"__grid": [13,5],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": null,
@@ -216,7 +216,7 @@
 					"width": 192,
 					"height": 64,
 					"defUid": 29,
-					"px": [384,640],
+					"px": [832,384],
 					"fieldInstances": [
 						{ "__identifier": "Direction", "__type": "LocalEnum.Direction", "__value": "Right", "__tile": null, "defUid": 31, "realEditorValues": [] },
 						{ "__identifier": "Speed", "__type": "Int", "__value": 1, "__tile": null, "defUid": 32, "realEditorValues": [] },
@@ -232,8 +232,8 @@
 							"params": [ false ]
 						}] }
 					],
-					"__worldX": 384,
-					"__worldY": -64
+					"__worldX": 832,
+					"__worldY": -320
 				},
 				{
 					"__identifier": "Laser",
@@ -261,6 +261,54 @@
 					],
 					"__worldX": 640,
 					"__worldY": 192
+				},
+				{
+					"__identifier": "JohnEntity",
+					"__grid": [8,14],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": { "tilesetUid": 2, "x": 0, "y": 64, "w": 64, "h": 64 },
+					"__smartColor": "#BE4A2F",
+					"iid": "9db5cdf0-bde0-11f1-a676-b789b94605ee",
+					"width": 64,
+					"height": 64,
+					"defUid": 5,
+					"px": [512,960],
+					"fieldInstances": [],
+					"__worldX": 512,
+					"__worldY": 256
+				},
+				{
+					"__identifier": "JohnEntity",
+					"__grid": [0,13],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": { "tilesetUid": 2, "x": 0, "y": 64, "w": 64, "h": 64 },
+					"__smartColor": "#BE4A2F",
+					"iid": "97d11c40-bde0-11f1-a676-ad96cbd78ad4",
+					"width": 64,
+					"height": 64,
+					"defUid": 5,
+					"px": [0,896],
+					"fieldInstances": [],
+					"__worldX": 0,
+					"__worldY": 192
+				},
+				{
+					"__identifier": "JohnEntity",
+					"__grid": [3,9],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": { "tilesetUid": 2, "x": 0, "y": 64, "w": 64, "h": 64 },
+					"__smartColor": "#BE4A2F",
+					"iid": "981b44a0-bde0-11f1-a676-0d5431c7744e",
+					"width": 64,
+					"height": 64,
+					"defUid": 5,
+					"px": [192,640],
+					"fieldInstances": [],
+					"__worldX": 192,
+					"__worldY": -64
 				}
 			]
 		},

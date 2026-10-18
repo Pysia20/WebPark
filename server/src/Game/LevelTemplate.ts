@@ -1,7 +1,6 @@
 import { WORLD_CONFIG } from "@shared/commonVariables";
 import {
 	LevelData,
-	MapCollider,
 	LayerInstance,
 	EntityInstance,
 	EntityType,
@@ -12,13 +11,15 @@ import {
 	CustomField,
 	DummyEntityCustomFields,
 } from "@shared/commonLevelModels";
-import { Entity } from "./Entities/Entity";
+import { JohnEntity } from "./Entities/JohnEntity";
 import { Button } from "./Entities/Button";
 import { LOG } from "../Logger";
 import { EntityBuilder } from "./Entities/EntityBuilder";
 import { Door } from "./Entities/Door";
 import { MAP_LOADER } from "./LevelLoader";
 import { Room } from "./Room";
+import { MapCollider } from "./Entities/MapCollider";
+import { Entity } from "./Entity";
 
 export class LevelTemplate {
 	public readonly id: string; // its name
@@ -190,10 +191,9 @@ export class LevelTemplate {
 
 		// Scaling the intgrid to the real size
 		return new MapCollider(
-			startingX * WORLD_CONFIG.CELL_SIZE,
-			startingY * WORLD_CONFIG.CELL_SIZE,
-			width * WORLD_CONFIG.CELL_SIZE,
-			height * WORLD_CONFIG.CELL_SIZE,
+			{ x: startingX * WORLD_CONFIG.CELL_SIZE, y: startingY * WORLD_CONFIG.CELL_SIZE },
+			{ x: width * WORLD_CONFIG.CELL_SIZE, y: height * WORLD_CONFIG.CELL_SIZE },
+			DummyEntityCustomFields,
 		);
 	}
 }

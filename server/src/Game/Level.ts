@@ -1,9 +1,10 @@
-import { MapCollider } from "@shared/commonLevelModels";
 import { LevelTemplate } from "./LevelTemplate";
-import { Entity } from "./Entities/Entity";
+import { JohnEntity } from "./Entities/JohnEntity";
 import { Room } from "./Room";
 import { PlayerSpawner } from "./Entities/PlayerSpawner";
 import { LOG } from "../Logger";
+import { Entity } from "./Entity";
+import { MapCollider } from "./Entities/MapCollider";
 
 export class Level {
 	public readonly levelTemplate: LevelTemplate;
@@ -41,8 +42,9 @@ export class Level {
 		});
 
 		for (let i = this.entities.length - 1; i >= 0; i--) {
-			if (this.entities[i] instanceof PlayerSpawner) {
-				this.spawners.push(this.entities[i]);
+			const entity: Entity = this.entities[i];
+			if (entity instanceof PlayerSpawner) {
+				this.spawners.push(entity);
 			}
 		}
 
@@ -63,14 +65,39 @@ export class Level {
 		});
 	}
 
-	public handleEntites(room: Room) {
-		for (let e of this.entities) {
+	public physicsUpdate() {
+		this.room.players.forEach((player, id) => {
+			this.room.players.forEach((p) => {
+				p.handleCollision(player);
+			});
+			this.getColliders().forEach((c) => {
+				c.handleCollision(player);
+			});
+			this.entities.forEach((e) => {
+				e.handleCollision(player);
+			});
+		});
+
+		this.room.players.forEach((player, id) => {
+			player.handleBehaviour(this);
+		});
+		this.entities.forEach((e) => {
 			e.handleBehaviour(this);
-			if (this.shouldRestart) {
-				this.shouldRestart = false;
-				this.reloadLevel();
-				break;
-			}
+		});
+
+		this.room.players.forEach((p, id) => {
+			p.endTick();
+		});
+		this.getColliders().forEach((c) => {
+			c.endTick();
+		});
+		this.entities.forEach((e) => {
+			e.endTick();
+		});
+
+		if (this.shouldRestart) {
+			this.shouldRestart = false;
+			this.reloadLevel();
 		}
 	}
 }

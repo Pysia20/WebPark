@@ -1,11 +1,12 @@
 import { Vector2 } from "@shared/commonModels";
 import { Level } from "../Level";
-import { Entity } from "./Entity";
-import { EntityCustomFieldsData, EntityType, MapCollider } from "@shared/commonLevelModels";
+import { JohnEntity } from "./JohnEntity";
+import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { isColliding, RequiredField } from "../../Global";
 import { Player } from "../Player";
 import e from "cors";
+import { Entity } from "../Entity";
 
 //! DO NOT IMPORT!!!
 //? IT IS A TEMPLATE FOR CREATING NEW ENTITY TYPES
@@ -15,57 +16,53 @@ import e from "cors";
 //TODO Add to the TYPE_MAP in the EntityBuilder
 
 export class Laser extends Entity {
-	public override type: EntityType = "Laser";
+	public override getUsedFields(): RequiredField[] {
+		return [
+			{
+				name: "ActivationGroup",
+				value: this.customFields.ActivationGroup.value,
+				isMissing: (v: any) => v === "" || v === undefined || !v,
+				isRequired: true,
+			},
+			{
+				name: "ActivationCount",
+				value: this.customFields.ActivationCount.value,
+				isMissing: (v: any) => v === 0 || v === undefined || !v,
+				isRequired: true,
+			},
+			{
+				name: "StaysOn",
+				value: this.customFields.StaysOn.value,
+				isMissing: (v: any) => v === undefined,
+				isRequired: true,
+			},
+			{
+				name: "OnlyKillThePlayer",
+				value: this.customFields.OnlyKillThePlayer.value,
+				isMissing: (v: any) => v === undefined,
+				isRequired: true,
+			},
+		] as const;
+	}
 
-	public readonly usedFields: RequiredField[] = [
-		{
-			name: "ActivationGroup",
-			value: this.customFields.ActivationGroup.value,
-			isMissing: (v: any) => v === "" || v === undefined || !v,
-			isRequired: true,
-		},
-		{
-			name: "ActivationCount",
-			value: this.customFields.ActivationCount.value,
-			isMissing: (v: any) => v === 0 || v === undefined || !v,
-			isRequired: true,
-		},
-		{
-			name: "StaysOn",
-			value: this.customFields.StaysOn.value,
-			isMissing: (v: any) => v === undefined,
-			isRequired: true,
-		},
-		{
-			name: "OnlyKillThePlayer",
-			value: this.customFields.OnlyKillThePlayer.value,
-			isMissing: (v: any) => v === undefined,
-			isRequired: true,
-		},
-	] as const;
+	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
+		super(pos, size, customFields, "Laser");
+	}
 
 	private shouldKill: boolean = false;
 	private isActivated: boolean = true;
 
-	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
-		super(pos, size, customFields);
-		this.customFields = this.validateCustomFields(customFields);
+	protected onAnyCollision() {
+		this.shouldKill = true;
 	}
 
-	public override handleCollisions(
-		p: Player,
-		playerNewPos: Vector2,
-		playerNewVel: Vector2,
-		isGrounded: boolean,
-	): boolean {
-		const { overlapX, overlapY, diffX, diffY } = isColliding(p, this);
+	protected override onRightCollision(overlap: Vector2, other: Entity) {}
 
-		if (overlapX != -1 || overlapY != -1) {
-			this.shouldKill = true;
-		}
+	protected override onLeftCollision(overlap: Vector2, other: Entity) {}
 
-		return false;
-	}
+	protected override onUpCollision(overlap: Vector2, other: Entity) {}
+
+	protected override onDownCollision(overlap: Vector2, other: Entity) {}
 
 	public override handleBehaviour(l: Level) {
 		if (
@@ -82,11 +79,8 @@ export class Laser extends Entity {
 			l.shouldRestart = true;
 		}
 	}
-	public override endTick() {}
 
 	public override clone() {
 		return new Laser({ ...this.pos }, { ...this.size }, { ...this.customFields });
 	}
-
-	// public override getData(){}
 }

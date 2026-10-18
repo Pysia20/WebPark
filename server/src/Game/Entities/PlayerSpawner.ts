@@ -1,8 +1,8 @@
 import { Vector2 } from "@shared/commonModels";
 import { Level } from "../Level";
-import { Entity } from "./Entity";
 import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
 import { Player } from "../Player";
+import { CollisionOutput, Entity } from "../Entity";
 
 //! DO NOT IMPORT!!!
 //? IT IS A TEMPLATE FOR CREATING NEW ENTITY TYPES
@@ -12,23 +12,19 @@ import { Player } from "../Player";
 //TODO Add to the TYPE_MAP in the EntityBuilder
 
 export class PlayerSpawner extends Entity {
-	public override type: EntityType = "PlayerSpawner";
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
-		super(pos, size, customFields);
-		this.customFields = this.validateCustomFields(customFields);
+		super(pos, size, customFields, "PlayerSpawner");
 	}
 
-	public override handleCollisions(
-		p: Player,
-		playerNewPos: Vector2,
-		playerNewVel: Vector2,
-		isGrounded: boolean,
-	): boolean {
-		return false;
-	}
+	protected onRightCollision(overlap: Vector2, other: Entity) {}
 
-	public override handleBehaviour(l: Level) {}
-	public override endTick() {}
+	protected onLeftCollision(overlap: Vector2, other: Entity) {}
+
+	protected onUpCollision(overlap: Vector2, other: Entity) {}
+
+	protected onDownCollision(overlap: Vector2, other: Entity) {}
+
+	protected onUpTouching(other: Entity): void {}
 
 	public override clone() {
 		return new PlayerSpawner({ ...this.pos }, { ...this.size }, { ...this.customFields });

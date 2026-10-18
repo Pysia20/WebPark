@@ -4,7 +4,7 @@ import {
 	EntityType,
 } from "@shared/commonLevelModels";
 import { LOG } from "../../Logger";
-import { Entity } from "./Entity";
+import { JohnEntity } from "./JohnEntity";
 import { Button } from "./Button";
 import { Door } from "./Door";
 import { Vector2 } from "@shared/commonModels";
@@ -15,6 +15,9 @@ import { Spike } from "./Spike";
 import { PlayerSpawner } from "./PlayerSpawner";
 import { MovingPlatform } from "./MovingPlatform";
 import { Laser } from "./Laser";
+import { Entity } from "../Entity";
+import { Player } from "../Player";
+import { MapCollider } from "./MapCollider";
 
 type EntityConstructor = new (pos: any, size: any, customFields: any) => Entity;
 
@@ -27,7 +30,7 @@ export class EntityBuilder {
 	private customFields: EntityCustomFieldsData = { ...DummyEntityCustomFields };
 
 	private static readonly TYPE_MAP: Record<EntityType, EntityConstructor> = {
-		JohnEntity: Entity,
+		JohnEntity: JohnEntity,
 		Button: Button,
 		Key: Key,
 		Door: Door,
@@ -37,6 +40,8 @@ export class EntityBuilder {
 		PlayerSpawner: PlayerSpawner,
 		MovingPlatform: MovingPlatform,
 		Laser: Laser,
+		Player: Player,
+		MapCollider: MapCollider,
 	};
 
 	constructor(type: EntityType) {

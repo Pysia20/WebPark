@@ -6,7 +6,7 @@
 
 ### An online multiplayer co-op game inspired by pico park
 
-### Currently, in early development
+### Currently, in early-ish development
 
 $\color{gray} \text{now without pico park sprites! revolutionary stuff}$
 
@@ -19,24 +19,26 @@ $\color{gray} \text{now without pico park sprites! revolutionary stuff}$
 ## Current features
 
 - Lobby system with joining using a code, data check, waiting for everyone to ready up, and lobby info display
-- ~~Custom player colors~~ _(currently broken)_, custom names
+- Custom player colors _(currently no longer broken)_, custom names
 - Basic sound effects
 - Game synchronization
-- Movement and Physics
-- ~~Different sprites for different actions~~ Procedural animated player!
+- Movement and Physics ~~that are currently mid-rewrite~~
+- ~~Different sprites for different actions~~ Procedurally animated player! Eyes, legs, torso, pretty much everything!
 - _Less_ basic main menu
 - Basic and not-so basic Entities (Buttons, Doors, Moving Platforms, Lasers, _everyone's favorite JohnEntity_ and more) with many options
 - Level loading from LDtk
 - Camera system that keeps all players on screen at once
 - Basic Hud/Ui
-- ART DIRECTION _~~but no final art yet~~_
+- ART DIRECTION _~~but no final art yet, except players~~_
+- Level changing _~~after only 100h~~_
+
+<br>
 
 ## Planned features
 - Maybe even more entities? _...probably even more entities_
-- Level changing _(no clue how we keep forgetting about this ngl)_
 - Better feeling movement
 - Drawing on the player cube to make your own face/mouth
-- More procedural animation because it's peak
+- Probably even more procedural animation because it's peak
 
 <br>
 
@@ -51,8 +53,6 @@ The game is being developed by 2 people
 
 We are designing the game together
 
-<br>
-
 ### What we used:
 
 Core :
@@ -64,12 +64,12 @@ Core :
 Frontend :
 
 - Vanilla HTML and CSS for the websites
-- WebStorm for coding _(also the thing you are reading right now)_
 - GIMP for making images
 - Audacity for a _very lil bit_ of audio editing
 - PixiJS for rendering
 - Socket.io Client for communicating with the server
 - Howler.js for audio
+- WebStorm for coding _(also the thing you are reading right now)_
 
 Backend:
 
@@ -113,4 +113,11 @@ And now everything _~~should~~_ work!
 
 ## AI Disclosure
 
-Since most of the tools here are entirely new to us, AI was used to help with learning and exploring them (ex. how to show a sprite using Pixi, how to play a sound effect with howler etc.), general coding help (ex. how to use grid in CSS, how to tint an image in CSS) and quite a lot of pure math in Player.ts since I didn't feel like reinventing inverse kinematics
+Since most of the tools here are entirely new to us, AI was used to help with learning and exploring them (ex. how to show a sprite using Pixi, how to play a sound effect with howler etc.), general coding help (ex. how to use grid in CSS, how to tint an image in CSS) and some pure math since I didn't feel like reinventing inverse kinematics
+
+<br>
+<br>
+<br>
+<br>
+
+<img src="client/public/sprites/JohnEntity.png" alt="John entity" width="30.67" title="John entity">

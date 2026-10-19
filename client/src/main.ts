@@ -9,7 +9,7 @@ import { CameraController } from "./Camera";
 import { leveler } from "./Leveler";
 import { pageSetup } from "./Weber";
 import { hud } from "./Hud";
-
+//TODO: LARP EVERYTHING RAAAAAAAAAAAAAAAAAAAAAAAAAAAA (player and ents)
 const app = new PIXI.Application()
 await app.init({
     width: 1280,

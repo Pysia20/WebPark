@@ -33,6 +33,11 @@ export function createMouseListiner(app: Application, world: Container) {
         mousePos.x = worldCords.x
         mousePos.y = worldCords.y
     })
+
+    app.stage.on("pointerleave", (e) => {
+        mousePos.x = 0
+        mousePos.y = 0
+    })
 }
 
 export function getCurrentMousePos() {

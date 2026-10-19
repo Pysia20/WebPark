@@ -119,6 +119,17 @@ export class Eye {
     }
 
     lookAtMouse() {
-        console.log(getCurrentMousePos())
+        const mousePos = getCurrentMousePos()
+        if (mousePos.x == 0 && mousePos.y == 0) return;
+
+        const centerX = this.pos.x + (this.width / 2)
+        const centerY = this.pos.y + (this.length / 2)
+
+        const angle = Math.atan2(mousePos.y - centerY, mousePos.x - centerX)
+
+        this.pos.x = this.pos.x + Math.cos(angle) * PLAYER_VISUAL_CONFIG.EYE_X_LOOK
+        this.target.x = this.target.x + Math.cos(angle) * PLAYER_VISUAL_CONFIG.EYE_X_LOOK
+        this.pos.y = this.pos.y + Math.sin(angle) * PLAYER_VISUAL_CONFIG.EYE_Y_LOOK
+        this.target.y = this.target.y + Math.sin(angle) * PLAYER_VISUAL_CONFIG.EYE_Y_LOOK
     }
 }

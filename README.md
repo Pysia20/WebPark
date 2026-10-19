@@ -23,13 +23,12 @@ $\color{gray} \text{now without pico park sprites! revolutionary stuff}$
 - Basic sound effects
 - Game synchronization
 - Movement and Physics ~~that are currently mid-rewrite~~
-- ~~Different sprites for different actions~~ Procedurally animated player! Eyes, legs, torso, pretty much everything!
+- Procedurally animated players! Eyes, legs, torso, pretty much everything!
 - _Less_ basic main menu
 - Basic and not-so basic Entities (Buttons, Doors, Moving Platforms, Lasers, _everyone's favorite JohnEntity_ and more) with many options
 - Level loading from LDtk
 - Camera system that keeps all players on screen at once
 - Basic Hud/Ui
-- ART DIRECTION _~~but no final art yet, except players~~_
 - Level changing _~~after only 100h~~_
 
 <br>
@@ -119,5 +118,6 @@ Since most of the tools here are entirely new to us, AI was used to help with le
 <br>
 <br>
 <br>
+<br>
 
-<img src="client/public/sprites/JohnEntity.png" alt="John entity" width="30.67" title="John entity">
+<img src="client/public/sprites/JohnEntity.png" alt="JohnEntity" width="30.67" title="JohnEntity">

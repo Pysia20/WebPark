@@ -2,7 +2,7 @@ import {Graphics} from "pixi.js";
 import {Vector2} from "@shared/commonModels";
 import {PLAYER_CONFIG, PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
 import {Directions, States} from "./PlayerEnums";
-import {getCurrentMousePos} from "../Inputs";
+import {getCurrentMousePos, isClicking} from "../Inputs";
 export class Eye {
     eye: Graphics = new Graphics()
     isMe: boolean
@@ -132,5 +132,9 @@ export class Eye {
         this.target.x = this.target.x + Math.cos(angle) * PLAYER_VISUAL_CONFIG.EYE_X_LOOK
         this.pos.y = this.pos.y + Math.sin(angle) * PLAYER_VISUAL_CONFIG.EYE_Y_LOOK
         this.target.y = this.target.y + Math.sin(angle) * PLAYER_VISUAL_CONFIG.EYE_Y_LOOK
+
+        if (isClicking()) {
+            this.blinkTimer = 1
+        }
     }
 }

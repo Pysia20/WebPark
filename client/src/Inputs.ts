@@ -3,6 +3,7 @@ import {Application, Container} from "pixi.js";
 
 let Inputs = new Set<string>
 let mousePos: Vector2 = {x: 0, y: 0}
+let clicking: boolean = false
 
 addEventListener("keydown", (e) => {
     if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)) e.preventDefault()
@@ -16,6 +17,7 @@ window.addEventListener("blur", () => {
     Inputs.clear()
     mousePos.x = 0
     mousePos.y = 0
+    clicking = false
 })
 
 export function getCurrentInputs() : PlayerInputs {
@@ -34,12 +36,25 @@ export function createMouseListiner(app: Application, world: Container) {
         mousePos.y = worldCords.y
     })
 
+    app.stage.on("pointerdown", (e) => {
+        clicking = true
+    })
+
+    app.stage.on("pointerup", (e) => {
+        clicking = false
+    })
+
     app.stage.on("pointerleave", (e) => {
         mousePos.x = 0
         mousePos.y = 0
+        clicking = false
     })
 }
 
 export function getCurrentMousePos() {
     return mousePos
+}
+
+export function isClicking() {
+    return clicking
 }

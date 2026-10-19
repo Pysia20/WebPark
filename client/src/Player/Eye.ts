@@ -3,7 +3,6 @@ import {Vector2} from "@shared/commonModels";
 import {PLAYER_CONFIG, PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
 import {Directions, States} from "./PlayerEnums";
 import {getCurrentMousePos} from "../Inputs";
-// TODO: MAKE IT FOLLOW THE MOUSE WHEN STANDING STILL
 export class Eye {
     eye: Graphics = new Graphics()
 

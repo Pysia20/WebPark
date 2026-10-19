@@ -6,7 +6,7 @@ import {PLAYER_CONFIG, PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
 import {Leg} from "./Leg";
 import {Torso} from "./Torso";
 import {Eye} from "./Eye";
-
+//TODO: SHARE AND SYNC WHERE PLAYER IS LOOKING
 export class Player {
     id: number
     isHost: boolean
@@ -28,13 +28,13 @@ export class Player {
 
     LERP_SPEED: number = PLAYER_VISUAL_CONFIG.PLAYER_LERP
 
-    constructor(id: number, color: string, nick: PixiText, textures: PlayerTextures) {
+    constructor(id: number, color: string, nick: PixiText, textures: PlayerTextures, isMe: boolean) {
         this.id = id
         this.color = color
         this.isHost = (id == 0)
         this.nick = nick
         this.torso = new Torso(textures.torso, color)
-        this.eyes = [new Eye(), new Eye()]
+        this.eyes = [new Eye(isMe), new Eye(isMe)]
         this.legs = [new Leg(), new Leg()]
     }
 

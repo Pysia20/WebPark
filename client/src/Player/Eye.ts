@@ -5,6 +5,7 @@ import {Directions, States} from "./PlayerEnums";
 import {getCurrentMousePos} from "../Inputs";
 export class Eye {
     eye: Graphics = new Graphics()
+    isMe: boolean
 
     direction: Directions = Directions.None
     pos: Vector2 = {x: 0, y: 0}
@@ -22,15 +23,16 @@ export class Eye {
 
     LERP_SPEED: number = PLAYER_VISUAL_CONFIG.EYE_LERP
 
-    constructor() {
+    constructor(isMe: boolean) {
         this.eye.position.set(0, 0)
+        this.isMe = isMe
     }
 
     updateEye(pos: Vector2, velocity: Vector2, deltaT: number, rand: number) {
         this.updateSquint(velocity)
         this.updateBlink(pos, deltaT, rand)
         this.updatePos(pos, velocity)
-        if (velocity.x == 0 && velocity.y == 0) this.lookAtMouse()
+        if (velocity.x == 0 && velocity.y == 0 && this.isMe) this.lookAtMouse()
 
         if (this.isBlinking && this.length < this.currentMaxLength / 2) {
             const width = ((this.width - this.highestWidth) - this.highestWidth) * -1

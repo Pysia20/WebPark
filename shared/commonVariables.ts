@@ -43,13 +43,16 @@ export const PLAYER_VISUAL_CONFIG = {
 	EYE_X_LOOK: 1.8,
 	EYE_Y_LOOK: 1.6,
 
+	// Nick stuff
+	NICK_OFFSET: 0.5,
+	NICK_COLOR: "#ffffff",
+	NICK_ME_COLOR: "#FFD700",
+	NICK_FONT_SIZE: 12,
+
 	// Larping
 	PLAYER_LERP: 0.3,
 	EYE_LERP: 0.25,
-	LEG_LERP: 0.3,
-
-	// Other
-	NICK_OFFSET: 0.5
+	LEG_LERP: 0.3
 }
 
 export const WORLD_CONFIG = {

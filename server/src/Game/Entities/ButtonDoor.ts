@@ -45,8 +45,6 @@ export class ButtonDoor extends Entity {
 			!this.customFields.ActivationCount.doesExist ||
 			!this.customFields.ActivationGroup.doesExist
 		) {
-			console.log(this.customFields.ActivationGroup);
-			console.log(this.customFields.ActivationCount);
 			return;
 		}
 
@@ -60,8 +58,6 @@ export class ButtonDoor extends Entity {
 				this.isPassable = false;
 			}
 		}
-
-		console.log(this.isPassable);
 	}
 
 	public override getData(): ServerButtonDoorData {

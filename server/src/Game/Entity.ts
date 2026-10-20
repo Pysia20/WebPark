@@ -3,7 +3,7 @@ import { ServerEntityData, Vector2 } from "@shared/commonModels";
 import { Level } from "../Game/Level";
 import { RequiredField } from "../Global";
 import { LOG } from "../Logger";
-import { GROUND_DETECTON_OFFSET } from "@shared/commonVariables";
+import { GROUND_DETECTON_OFFSET, MAX_OMITTED_HORIZONTAL_OVERLAP } from "@shared/commonVariables";
 import { Player } from "./Player";
 
 export interface CollisionOutput {
@@ -155,7 +155,7 @@ export abstract class Entity {
 
 	protected onUpCollision(overlap: Vector2, other: Entity) {
 		other.pos.y -= overlap.y;
-		if (other.velocity.y >= 0) {
+		if (other.velocity.y > 0) {
 			other.velocity.y = 0;
 		}
 		other.isGrounded = true;
@@ -163,13 +163,15 @@ export abstract class Entity {
 
 	protected onDownCollision(overlap: Vector2, other: Entity) {
 		other.pos.y += overlap.y;
-		other.velocity.y = 0;
+		if (other.velocity.y < 0) {
+			other.velocity.y = 0;
+		}
 	}
 
 	protected onAnyCollision(other: Entity) {}
 
 	protected onUpTouching(other: Entity): void {
-		if (other.velocity.y >= 0) {
+		if (other.velocity.y > 0) {
 			other.velocity.y = 0;
 		}
 		other.isGrounded = true;
@@ -185,9 +187,7 @@ export abstract class Entity {
 
 	public handleBehaviour(level: Level) {}
 
-	public endTick() {
-		this.isGrounded = false;
-	}
+	public endTick() {}
 
 	public abstract clone(): Entity;
 }

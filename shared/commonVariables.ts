@@ -52,14 +52,15 @@ export const PLAYER_VISUAL_CONFIG = {
 	// Larping
 	PLAYER_LERP: 0.3,
 	EYE_LERP: 0.25,
-	LEG_LERP: 0.3
-}
+	LEG_LERP: 0.3,
+};
 
 export const WORLD_CONFIG = {
 	CELL_SIZE: 64,
 };
 
 export const GROUND_DETECTON_OFFSET = 1;
+export const MAX_OMITTED_HORIZONTAL_OVERLAP = 0;
 
 export const ROOM_CONFIG = {
 	MAX_PLAYERS: 8,

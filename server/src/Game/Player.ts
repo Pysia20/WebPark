@@ -64,7 +64,7 @@ export class Player extends Entity {
 				this.velocity.x -= PLAYER_CONFIG.ACCELERATION;
 			}
 			if (this.lastInputs.jump && this.isGrounded) {
-				this.velocity.y -= PLAYER_CONFIG.JUMP_FORCE;
+				this.velocity.y = -PLAYER_CONFIG.JUMP_FORCE;
 				this.isGrounded = false;
 			}
 		}
@@ -83,6 +83,8 @@ export class Player extends Entity {
 
 		this.pos.x += this.velocity.x * (1 / CONFIG.TICKRATE);
 		this.pos.y += this.velocity.y * (1 / CONFIG.TICKRATE);
+
+		this.isGrounded = false;
 	}
 
 	public clone() {

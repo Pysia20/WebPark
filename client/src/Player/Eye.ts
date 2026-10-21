@@ -54,7 +54,7 @@ export class Eye {
     updateSquint(velocity: Vector2) {
         const absVelocity: Vector2 = {x: Math.abs(velocity.x), y: Math.abs(velocity.y)}
         const squint = (absVelocity.y > PLAYER_CONFIG.MAX_HORIZONTAL_SPEED) ? (PLAYER_CONFIG.MAX_HORIZONTAL_SPEED / PLAYER_VISUAL_CONFIG.EYE_SQUINT) : Math.max(absVelocity.x / PLAYER_VISUAL_CONFIG.EYE_SQUINT, absVelocity.y / PLAYER_VISUAL_CONFIG.EYE_SQUINT)
-        this.currentMaxLength = PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH - squint
+        this.currentMaxLength += ((PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH - squint) - this.currentMaxLength) * this.LERP_SPEED
     }
 
     updateBlink(pos: Vector2, deltaT: number, rand: number) {
@@ -132,6 +132,18 @@ export class Eye {
         this.target.x = this.target.x + Math.cos(angle) * PLAYER_VISUAL_CONFIG.EYE_X_LOOK
         this.pos.y = this.pos.y + Math.sin(angle) * PLAYER_VISUAL_CONFIG.EYE_Y_LOOK
         this.target.y = this.target.y + Math.sin(angle) * PLAYER_VISUAL_CONFIG.EYE_Y_LOOK
+
+        /*  doesn't work because of how the pos is updated, might implement later
+                const posX = this.pos.x + Math.cos(angle) * PLAYER_VISUAL_CONFIG.EYE_X_LOOK
+        const targetX = this.target.x + Math.cos(angle) * PLAYER_VISUAL_CONFIG.EYE_X_LOOK
+        const posY = this.pos.y + Math.sin(angle) * PLAYER_VISUAL_CONFIG.EYE_Y_LOOK
+        const targetY = this.target.y + Math.sin(angle) * PLAYER_VISUAL_CONFIG.EYE_Y_LOOK
+
+        this.pos.x += (posX - this.pos.x) * this.LERP_SPEED
+        this.target.x += (targetX - this.target.x) * this.LERP_SPEED
+        this.pos.y += (posY - this.pos.y) * this.LERP_SPEED
+        this.target.y += (targetY - this.target.y) * this.LERP_SPEED
+        */
 
         if (isClicking()) {
             this.blinkTimer = 1

@@ -10,6 +10,7 @@ export class Eye {
     direction: Directions = Directions.None
     pos: Vector2 = {x: 0, y: 0}
     target: Vector2 = {x: 0, y: 0}
+    lookOffset: Vector2 = {x: 0, y:0}
 
     isBlinking: boolean = false
     blinkTimer: number = PLAYER_VISUAL_CONFIG.BLINK_INTERVAL_BASE
@@ -34,16 +35,20 @@ export class Eye {
         this.updatePos(pos, velocity)
         if (velocity.x == 0 && velocity.y == 0 && this.isMe) this.lookAtMouse()
 
+        const baseX = this.pos.x + this.lookOffset.x;
+        const baseY = this.pos.y + this.lookOffset.y;
+        const targetX = this.target.x + this.lookOffset.x;
+        const targetY = this.target.y + this.lookOffset.y;
         if (this.isBlinking && this.length < this.currentMaxLength / 2) {
             const width = ((this.width - this.highestWidth) - this.highestWidth) * -1
             const length = ((this.length - this.lowestLength) - this.lowestLength) * -1
-            this.eye.clear().moveTo(this.pos.x - (length / 2), (this.pos.y + this.target.y) / 2).lineTo(this.pos.x + (length / 2), (this.pos.y + this.target.y) / 2).stroke({
+            this.eye.clear().moveTo(baseX - (length / 2), (baseY + targetY) / 2).lineTo(baseX + (length / 2), (baseY + targetY) / 2).stroke({
                 color: "#000000",
                 width: width,
                 cap: "square"
             })
         } else {
-            this.eye.clear().moveTo(this.pos.x, this.pos.y).lineTo(this.target.x, this.target.y).stroke({
+            this.eye.clear().moveTo(baseX, baseY).lineTo(targetX, targetY).stroke({
                 color: "#000000",
                 width: this.width,
                 cap: "square"
@@ -121,29 +126,22 @@ export class Eye {
 
     lookAtMouse() {
         const mousePos = getCurrentMousePos()
-        if (mousePos.x == 0 && mousePos.y == 0) return;
+        if (mousePos.x == 0 && mousePos.y == 0) {
+            this.lookOffset.x += (0 - this.lookOffset.x) * this.LERP_SPEED
+            this.lookOffset.y += (0 - this.lookOffset.y) * this.LERP_SPEED
+            return;
+        }
 
         const centerX = this.pos.x + (this.width / 2)
         const centerY = this.pos.y + (this.length / 2)
 
         const angle = Math.atan2(mousePos.y - centerY, mousePos.x - centerX)
 
-        this.pos.x = this.pos.x + Math.cos(angle) * PLAYER_VISUAL_CONFIG.EYE_X_LOOK
-        this.target.x = this.target.x + Math.cos(angle) * PLAYER_VISUAL_CONFIG.EYE_X_LOOK
-        this.pos.y = this.pos.y + Math.sin(angle) * PLAYER_VISUAL_CONFIG.EYE_Y_LOOK
-        this.target.y = this.target.y + Math.sin(angle) * PLAYER_VISUAL_CONFIG.EYE_Y_LOOK
+        const targetX = Math.cos(angle) * PLAYER_VISUAL_CONFIG.EYE_X_LOOK
+        const targetY = Math.sin(angle) * PLAYER_VISUAL_CONFIG.EYE_Y_LOOK
 
-        /*  doesn't work because of how the pos is updated, might implement later
-                const posX = this.pos.x + Math.cos(angle) * PLAYER_VISUAL_CONFIG.EYE_X_LOOK
-        const targetX = this.target.x + Math.cos(angle) * PLAYER_VISUAL_CONFIG.EYE_X_LOOK
-        const posY = this.pos.y + Math.sin(angle) * PLAYER_VISUAL_CONFIG.EYE_Y_LOOK
-        const targetY = this.target.y + Math.sin(angle) * PLAYER_VISUAL_CONFIG.EYE_Y_LOOK
-
-        this.pos.x += (posX - this.pos.x) * this.LERP_SPEED
-        this.target.x += (targetX - this.target.x) * this.LERP_SPEED
-        this.pos.y += (posY - this.pos.y) * this.LERP_SPEED
-        this.target.y += (targetY - this.target.y) * this.LERP_SPEED
-        */
+        this.lookOffset.x += (targetX - this.lookOffset.x) * this.LERP_SPEED
+        this.lookOffset.y += (targetY - this.lookOffset.y) * this.LERP_SPEED
 
         if (isClicking()) {
             this.blinkTimer = 1

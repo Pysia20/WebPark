@@ -1,11 +1,8 @@
 import { GridTile, LayerInstance, LevelData } from "@shared/commonLevelModels"
 import { Container, Rectangle, Sprite, Texture } from "pixi.js"
-import {AnyEntityData, ServerButtonData, ServerButtonDoorData} from "@shared/commonEntityData";
-
-interface entity {
-	data: AnyEntityData
-	sprite: Sprite
-}
+import { AnyEntityData, ServerButtonData, ServerButtonDoorData } from "@shared/commonEntityData";
+import { Ent } from "./Entities/Ent";
+import {Laser} from "./Entities/Laser";
 
 class levelManager {
 	levels!: Map<string, LevelData>
@@ -14,7 +11,7 @@ class levelManager {
 	spriteSheet!: Texture
 	tileTextures: Map<number, Texture> = new Map()
 	entTextures: Map<string, Texture> = new Map()
-	ents: Record<number, entity> = {}
+	ents: Record<number, Ent> = {}
 	renderedTiles: Sprite[] = []
 
 	init(world: Container, spriteSheet: Texture, levels: Map<string, LevelData>, entTextures: Map<string, Texture>) {
@@ -97,7 +94,16 @@ class levelManager {
 				this.ents[Number(entId)].data = entData
 				this.renderEnt(Number(entId))
 			} else {
-				this.ents[Number(entId)] = {data: entData} as entity
+				let newEnt: Ent
+
+				switch (entData.type) {
+					case "Laser":
+						newEnt = new Laser()
+					default:
+						break
+				}
+
+				this.ents[Number(entId)] = new Ent()
 				this.renderEnt(Number(entId))
 			}
 		}
@@ -122,6 +128,8 @@ class levelManager {
 				const buttonData = ent.data as ServerButtonData
 				ent.sprite.alpha = buttonData.isPressed ? 0.5 : 1
 				break
+			case "Laser":
+
 			default:
 				break
 		}

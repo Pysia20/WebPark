@@ -2,7 +2,7 @@ import { Graphics } from "pixi.js";
 import { Ent } from "./Ent";
 import { ServerEntityData } from "@shared/commonModels";
 
-export class Laser extends Ent {
+export class LaserEnt extends Ent {
     wave: Graphics
     offset: number = 0
     length: number
@@ -20,12 +20,15 @@ export class Laser extends Ent {
     }
 
     update(data: ServerEntityData, deltaT: number) {
+        this.wave.position.set(data.pos.x + (data.visualSize.x / 2), data.pos.y)
+        this.length = data.visualSize.y
+
         this.offset += 0.2 * deltaT
 
         this.wave.clear()
 
-        for (let i = 0; i <= this.length; i += 5) {
-            const test = Math.sin(this.offset)
+        for (let i = 0; i <= this.length; i += 4) {
+            const test = Math.sin(this.offset + i * 200) * 20
 
             if (i === 0) {
                 this.wave.moveTo(test, i)
@@ -34,6 +37,25 @@ export class Laser extends Ent {
             }
         }
 
-        this.wave.stroke({color: "#ff0000", width: 5})
+        this.wave.stroke({color: "#ff0000", width: 5, cap: "round", join: "miter"})
     }
 }
+
+/*
+export class JohnEnt extends Ent {
+    sprite: Sprite
+    data: ServerEntityData
+
+    constructor(data: ServerEntityData, sprite: Sprite) {
+        super(sprite)
+
+        this.data = data
+        this.sprite = sprite
+    }
+
+    update(data: ServerEntityData, deltaT: number) {
+        this.sprite.position.set(data.pos.x, data.pos.y)
+        this.sprite.setSize(data.visualSize.x, data.visualSize.y)
+    }
+}
+ */

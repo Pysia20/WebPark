@@ -98,11 +98,7 @@ export abstract class Entity {
 			if (isTopTouching) {
 				this.onUpTouching(other);
 			}
-			return {
-				correctionX: 0,
-				correctionY: 0,
-				isGrounded: isTopTouching,
-			};
+			return;
 		}
 
 		const centerA: Vector2 = {
@@ -122,8 +118,8 @@ export abstract class Entity {
 		const overlapY = (this.size.y + other.size.y) / 2 - Math.abs(diffY);
 
 		if (overlapX < overlapY) {
-			// Horizontal collision
 			if (diffX > 0) {
+				// Horizontal collision
 				// Pushing out to the right
 				this.onRightCollision({ x: overlapX, y: overlapY }, other);
 			} else {

@@ -3,7 +3,7 @@ import { Level } from "../Level";
 import { JohnEntity } from "./JohnEntity";
 import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG, PUSHABLE_CONFIG } from "@shared/commonVariables";
-import { isColliding } from "../../Global";
+import { clamp, isColliding } from "../../Global";
 import { Player } from "../Player";
 import CONFIG from "../../../config.json";
 import { MapCollider } from "./MapCollider";
@@ -12,49 +12,58 @@ import { Entity } from "../Entity";
 //TODO Add colision with other entities
 
 export class Pushable extends Entity {
-	public pusher: Player | undefined;
-	public pusherNewPos: Vector2 | undefined;
-
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields, "Pushable");
+
+		this.isDynamic = true;
 	}
 
-	// TODO: Needs to be re-done
+	protected override onRightCollision(overlap: Vector2, other: Entity) {
+		// super.onRightCollision(overlap, other);
+	}
+
+	protected override onLeftCollision(overlap: Vector2, other: Entity) {
+		// super.onLeftCollision(overlap, other);
+	}
+
+	protected override onUpCollision(overlap: Vector2, other: Entity) {
+		// super.onUpCollision(overlap, other);
+	}
+
+	protected override onDownCollision(overlap: Vector2, other: Entity) {
+		// super.onDownCollision(overlap, other);
+	}
 
 	public override handleBehaviour(l: Level) {
-		let newPos: Vector2 = { x: this.pos.x, y: this.pos.y };
-		this.isGrounded = false;
-
-		this.applyPhysics(newPos);
-
-		this.pos = { ...newPos };
-	}
-
-	private applyPhysics(newPos: Vector2) {
-		if (this.velocity.x > PUSHABLE_CONFIG.DRAG) {
-			this.velocity.x -= PUSHABLE_CONFIG.DRAG;
-		} else if (this.velocity.x < -PUSHABLE_CONFIG.DRAG) {
-			this.velocity.x += PUSHABLE_CONFIG.DRAG;
+		if (this.velocity.x > PLAYER_CONFIG.DRAG) {
+			this.velocity.x -= PLAYER_CONFIG.DRAG;
+		} else if (this.velocity.x < -PLAYER_CONFIG.DRAG) {
+			this.velocity.x += PLAYER_CONFIG.DRAG;
 		} else {
 			this.velocity.x = 0;
 		}
 
-		if (!this.isGrounded) {
-			this.velocity.y += PUSHABLE_CONFIG.GRAVITY;
-		}
+		// if (!this.isGrounded) {
+		// 	this.velocity.y += PLAYER_CONFIG.GRAVITY;
+		// }
 
-		newPos.x += this.velocity.x * (1 / CONFIG.TICKRATE);
-		newPos.y += this.velocity.y * (1 / CONFIG.TICKRATE);
+		this.velocity.y = clamp(
+			this.velocity.y,
+			-PLAYER_CONFIG.MAX_VERTICAL_SPEED,
+			PLAYER_CONFIG.MAX_VERTICAL_SPEED,
+		);
 
-		this.pos = newPos;
-	}
+		this.velocity.x = clamp(
+			this.velocity.x,
+			-PLAYER_CONFIG.MAX_HORIZONTAL_SPEED,
+			PLAYER_CONFIG.MAX_HORIZONTAL_SPEED,
+		);
 
-	public override endTick() {
+		this.pos.x += this.velocity.x * (1 / CONFIG.TICKRATE);
+		this.pos.y += this.velocity.y * (1 / CONFIG.TICKRATE);
+
 		this.isGrounded = false;
-		this.pusher = undefined;
-		this.pusherNewPos = undefined;
 	}
-
 	public override clone() {
 		return new Pushable({ ...this.pos }, { ...this.size }, { ...this.customFields });
 	}

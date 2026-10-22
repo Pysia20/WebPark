@@ -30,18 +30,28 @@ export class Player extends Entity {
 			DummyEntityCustomFields,
 			"Player",
 		);
-		((this.id = id), (this.nick = nick));
+
+		this.id = id;
+		this.nick = nick;
 
 		this.isDynamic = true;
 	}
 
-	protected override onRightCollision(overlap: Vector2, other: Entity) {}
+	protected override onRightCollision(overlap: Vector2, other: Entity) {
+		// super.onRightCollision(overlap, other);
+	}
 
-	protected override onLeftCollision(overlap: Vector2, other: Entity) {}
+	protected override onLeftCollision(overlap: Vector2, other: Entity) {
+		// super.onLeftCollision(overlap, other);
+	}
 
-	protected override onUpCollision(overlap: Vector2, other: Entity) {}
+	protected override onUpCollision(overlap: Vector2, other: Entity) {
+		// super.onUpCollision(overlap, other);
+	}
 
-	protected override onDownCollision(overlap: Vector2, other: Entity) {}
+	protected override onDownCollision(overlap: Vector2, other: Entity) {
+		// super.onDownCollision(overlap, other);
+	}
 
 	public override handleBehaviour(l: Level) {
 		if (this.velocity.x > PLAYER_CONFIG.DRAG) {

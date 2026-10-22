@@ -13,6 +13,9 @@ export class Level {
 	private width: number = -1;
 	private height: number = -1;
 	public entities: Entity[] = [];
+	public allEntities: Entity[] = [];
+	public dynamicEntities: Entity[] = [];
+	public staticEntities: Entity[] = [];
 	public group!: string;
 	public groupIndex!: number;
 	public spawners: PlayerSpawner[] = [];
@@ -29,6 +32,8 @@ export class Level {
 		this.group = this.levelTemplate.group;
 		this.groupIndex = this.levelTemplate.groupIndex;
 
+		this.dynamicEntities = [];
+		this.staticEntities = [];
 		this.entities = [];
 		this.spawners = [];
 		this.levelTemplate.entities.forEach((e) => {
@@ -38,6 +43,11 @@ export class Level {
 			this.entities.push(clone);
 			if (e.customFields.ActivationGroup.doesExist) {
 				this.activationStates.set(e.customFields.ActivationGroup.value!, 0);
+			}
+			if (e.isDynamic) {
+				this.dynamicEntities.push(e);
+			} else {
+				this.staticEntities.push(e);
 			}
 		});
 
@@ -49,6 +59,16 @@ export class Level {
 		}
 
 		this.room.respawnPlayers(this);
+
+		this.allEntities = [
+			...this.entities,
+			...this.room.getPlayers().values(),
+			...this.getColliders(),
+		];
+
+		this.staticEntities = [...this.staticEntities, ...this.getColliders()];
+
+		this.dynamicEntities = [...this.dynamicEntities, ...this.room.getPlayers().values()];
 	}
 
 	public getColliders(): MapCollider[] {
@@ -66,38 +86,12 @@ export class Level {
 	}
 
 	public physicsUpdate() {
-		this.room.players.forEach((player, id) => {
-			player.handleBehaviour(this);
-		});
-		this.entities.forEach((e) => {
-			e.handleBehaviour(this);
-		});
-
-		this.room.players.forEach((player, id) => {
-			this.room.players.forEach((p) => {
-				p.handleCollision(player);
-			});
-			this.entities.forEach((e) => {
-				e.handleCollision(player);
-			});
-			this.getColliders().forEach((c) => {
-				c.handleCollision(player);
-			});
-		});
-
-		this.room.players.forEach((p, id) => {
-			p.endTick();
-		});
-		this.getColliders().forEach((c) => {
-			c.endTick();
-		});
-		this.entities.forEach((e) => {
-			e.endTick();
-		});
-
-		if (this.shouldRestart) {
-			this.shouldRestart = false;
-			this.reloadLevel();
-		}
+		// WHAT SHOULD BE HAPPENING
+		// 1. CALCULATE FORCES
+		// 2. Move Axis 1
+		// 3. Collisions for Axis 1
+		// 4. Move Axis 2
+		// 5. Collisions for Axis 2
+		// 6. Other behaviour
 	}
 }

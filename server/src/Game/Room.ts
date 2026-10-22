@@ -72,12 +72,16 @@ export class Room {
 			throw Error(message);
 		}
 
-		this.players.forEach((p) => {
+		this.players.forEach((p, id) => {
 			p.isInsideDoor = false;
-			const spawner: PlayerSpawner = l.spawners[pIndex % l.spawners.length];
+			const spawnerIndex = pIndex % l.spawners.length;
+
+			const spawner: PlayerSpawner = l.spawners[spawnerIndex];
 			const newPos = { ...spawner.pos };
 
-			newPos.y -= 1.5 * PLAYER_CONFIG.HEIGHT * Math.ceil(pIndex / l.spawners.length);
+			newPos.y -=
+				PLAYER_CONFIG.HEIGHT / 4 +
+				PLAYER_CONFIG.HEIGHT * 1.2 * ((pIndex - spawnerIndex) / l.spawners.length);
 
 			p.pos = { ...newPos };
 			p.velocity = { x: 0, y: 0 };

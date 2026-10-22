@@ -75,22 +75,6 @@
 					"__worldY": 192
 				},
 				{
-					"__identifier": "PlayerSpawner",
-					"__grid": [0,13],
-					"__pivot": [0,1],
-					"__tags": [],
-					"__tile": null,
-					"__smartColor": "#00FF41",
-					"iid": "970097e0-bde0-11f1-88ae-a9eb0ab73b02",
-					"width": 64,
-					"height": 64,
-					"defUid": 28,
-					"px": [0,896],
-					"fieldInstances": [],
-					"__worldX": 0,
-					"__worldY": 192
-				},
-				{
 					"__identifier": "Spike",
 					"__grid": [19,13],
 					"__pivot": [0,1],

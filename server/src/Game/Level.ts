@@ -113,5 +113,9 @@ export class Level {
 		// 6. Other behaviour
 
 		this.allEntities.forEach((e) => e.handleBehaviour(this));
+
+		if (this.shouldRestart) {
+			this.reloadLevel();
+		}
 	}
 }

@@ -152,6 +152,8 @@ export abstract class Entity {
 				// Pushing out downwards
 				this.onDownCollision(overlap, other);
 			}
+		} else if (this.checkGrounded(other)) {
+			this.onUpTouching(other);
 		}
 	}
 

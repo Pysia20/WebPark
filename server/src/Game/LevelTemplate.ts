@@ -149,6 +149,14 @@ export class LevelTemplate {
 			}
 		}
 
+		if (this.id == "Level_0") {
+			colliders.forEach((c) => {
+				console.log("============================");
+				console.log(`POS: ${c.pos.x} | ${c.pos.y}`);
+				console.log(`SIZE: ${c.size.x} | ${c.size.y}`);
+			});
+		}
+
 		return colliders;
 	}
 

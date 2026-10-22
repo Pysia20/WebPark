@@ -1,16 +1,34 @@
-import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
+import {
+	DummyEntityCustomFields,
+	EntityCustomFieldsData,
+	EntityType,
+} from "@shared/commonLevelModels";
 import { ServerEntityData, Vector2 } from "@shared/commonModels";
 import { Level } from "../Game/Level";
-import { RequiredField } from "../Global";
+import { isColliding, RequiredField } from "../Global";
 import { LOG } from "../Logger";
-import { GROUND_DETECTON_OFFSET, MAX_OMITTED_HORIZONTAL_OVERLAP } from "@shared/commonVariables";
-import { Player } from "./Player";
+import { COLLISION_MARGIN_X, GROUND_DETECTON_OFFSET } from "@shared/commonVariables";
+import { overwrite } from "zod";
+import CONFIG from "../../config.json";
+import { MapCollider } from "./Entities/MapCollider";
 
-export interface CollisionOutput {
-	correctionX: number;
-	correctionY: number;
-	isGrounded: boolean; // If other should be set as grounded after the collision
+interface CollisionData {
+	collidesX: boolean;
+	collidesY: boolean;
+	overlapX: number;
+	overlapY: number;
+	diffX: number;
+	diffY: number;
 }
+
+const emptyCollisionData: CollisionData = {
+	collidesX: false,
+	collidesY: true,
+	overlapX: 0,
+	overlapY: 0,
+	diffX: 0,
+	diffY: 0,
+} as const;
 
 export abstract class Entity {
 	public id: number = -1;
@@ -18,6 +36,8 @@ export abstract class Entity {
 	public level: Level | undefined;
 	public isGrounded: boolean = false;
 	public isDynamic: boolean = false;
+
+	public collisionData: CollisionData = { ...emptyCollisionData };
 
 	public getUsedFields(): RequiredField[] {
 		return [];
@@ -64,17 +84,20 @@ export abstract class Entity {
 		return newCustomFields;
 	}
 
-	public static isColliding(A: Entity, B: Entity): boolean {
+	public static isColliding(
+		A: Entity | { pos: Vector2; size: Vector2 },
+		B: Entity | { pos: Vector2; size: Vector2 },
+	): { collidesX: boolean; collidesY: boolean } {
 		const { x: xA, y: yA } = A.pos;
 		const { x: widthA, y: heightA } = A.size;
 
 		const { x: xB, y: yB } = B.pos;
 		const { x: widthB, y: heightB } = B.size;
 
-		const isCollidingX = xB < xA + widthA && xA < xB + widthB;
-		const isCollidingY = yB < yA + heightA && yA < yB + heightB;
+		const collidesX = xB < xA + widthA && xA < xB + widthB;
+		const collidesY = yB < yA + heightA && yA < yB + heightB;
 
-		return isCollidingX && isCollidingY;
+		return { collidesX, collidesY };
 	}
 
 	protected checkGrounded(other: Entity): boolean {
@@ -92,73 +115,76 @@ export abstract class Entity {
 		return isCollidingX && isCollidingY;
 	}
 
-	public handleCollision(other: Entity) {
-		if (!Entity.isColliding(this, other)) {
-			const isTopTouching = this.checkGrounded(other);
-			if (isTopTouching) {
-				this.onUpTouching(other);
-			}
-			return;
-		}
+	public calculateCollisionsX(other: Entity) {
+		const newPos = { ...other.pos };
+		newPos.y += COLLISION_MARGIN_X / 2;
+		const newSize = { ...other.size };
+		newSize.y -= COLLISION_MARGIN_X / 2;
 
-		const centerA: Vector2 = {
-			x: this.pos.x + this.size.x / 2,
-			y: this.pos.y + this.size.y / 2,
-		};
-
-		const centerB: Vector2 = {
-			x: other.pos.x + other.size.x / 2,
-			y: other.pos.y + other.size.y / 2,
-		};
-
-		const diffX = centerA.x - centerB.x;
-		const diffY = centerA.y - centerB.y;
-
-		const overlapX = (this.size.x + other.size.x) / 2 - Math.abs(diffX);
-		const overlapY = (this.size.y + other.size.y) / 2 - Math.abs(diffY);
-
-		if (overlapX < overlapY) {
-			if (diffX > 0) {
+		const { collidesX, collidesY } = Entity.isColliding(this, { pos: newPos, size: newSize });
+		if (collidesX && collidesY) {
+			const centerA = this.pos.x + this.size.x / 2;
+			const centerB = other.pos.x + other.size.x / 2;
+			const diff = centerA - centerB;
+			const overlap = (this.size.x + other.size.x) / 2 - Math.abs(diff);
+			if (diff > 0) {
 				// Horizontal collision
 				// Pushing out to the right
-				this.onRightCollision({ x: overlapX, y: overlapY }, other);
+				this.onRightCollision(overlap, other);
 			} else {
 				// Pushing out to the left
-				this.onLeftCollision({ x: overlapX, y: overlapY }, other);
-			}
-		} else {
-			if (diffY > 0) {
-				// Pushing out upwards
-				this.onUpCollision({ x: overlapX, y: overlapY }, other);
-			} else {
-				// Pushing out downwards
-				this.onDownCollision({ x: overlapX, y: overlapY }, other);
+				this.onLeftCollision(overlap, other);
 			}
 		}
-
-		this.onAnyCollision(other);
 	}
 
-	protected onRightCollision(overlap: Vector2, other: Entity) {
-		other.pos.x -= overlap.x;
+	public calculateCollisionsY(other: Entity) {
+		const { collidesX, collidesY } = Entity.isColliding(this, other);
+		if (collidesX && collidesY) {
+			const centerA = this.pos.y + this.size.y / 2;
+			const centerB = other.pos.y + other.size.y / 2;
+			const diff = centerA - centerB;
+			const overlap = (this.size.y + other.size.y) / 2 - Math.abs(diff);
+			if (diff > 0) {
+				// Pushing out upwards
+				this.onUpCollision(overlap, other);
+			} else {
+				// Pushing out downwards
+				this.onDownCollision(overlap, other);
+			}
+		}
+	}
+
+	public calculateVelocities() {}
+
+	public moveXAxis() {
+		this.pos.x += this.velocity.x * (1 / CONFIG.TICKRATE);
+	}
+
+	public moveYAxis() {
+		this.pos.y += this.velocity.y * (1 / CONFIG.TICKRATE);
+	}
+
+	protected onRightCollision(overlap: number, other: Entity) {
+		other.pos.x -= overlap;
 		other.velocity.x = 0;
 	}
 
-	protected onLeftCollision(overlap: Vector2, other: Entity) {
-		other.pos.x += overlap.x;
+	protected onLeftCollision(overlap: number, other: Entity) {
+		other.pos.x += overlap;
 		other.velocity.x = 0;
 	}
 
-	protected onUpCollision(overlap: Vector2, other: Entity) {
-		other.pos.y -= overlap.y;
+	protected onUpCollision(overlap: number, other: Entity) {
+		other.pos.y -= overlap;
 		if (other.velocity.y > 0) {
 			other.velocity.y = 0;
 		}
 		other.isGrounded = true;
 	}
 
-	protected onDownCollision(overlap: Vector2, other: Entity) {
-		other.pos.y += overlap.y;
+	protected onDownCollision(overlap: number, other: Entity) {
+		other.pos.y += overlap;
 		if (other.velocity.y < 0) {
 			other.velocity.y = 0;
 		}
@@ -183,7 +209,9 @@ export abstract class Entity {
 
 	public handleBehaviour(level: Level) {}
 
-	public endTick() {}
+	public endTick() {
+		this.collisionData = { ...emptyCollisionData };
+	}
 
 	public abstract clone(): Entity;
 }

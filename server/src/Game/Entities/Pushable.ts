@@ -18,19 +18,19 @@ export class Pushable extends Entity {
 		this.isDynamic = true;
 	}
 
-	protected override onRightCollision(overlap: Vector2, other: Entity) {
+	protected override onRightCollision(overlap: number, other: Entity) {
 		// super.onRightCollision(overlap, other);
 	}
 
-	protected override onLeftCollision(overlap: Vector2, other: Entity) {
+	protected override onLeftCollision(overlap: number, other: Entity) {
 		// super.onLeftCollision(overlap, other);
 	}
 
-	protected override onUpCollision(overlap: Vector2, other: Entity) {
+	protected override onUpCollision(overlap: number, other: Entity) {
 		// super.onUpCollision(overlap, other);
 	}
 
-	protected override onDownCollision(overlap: Vector2, other: Entity) {
+	protected override onDownCollision(overlap: number, other: Entity) {
 		// super.onDownCollision(overlap, other);
 	}
 

@@ -60,7 +60,7 @@ export const WORLD_CONFIG = {
 };
 
 export const GROUND_DETECTON_OFFSET = 1;
-export const MAX_OMITTED_HORIZONTAL_OVERLAP = 0;
+export const COLLISION_MARGIN_X = 50;
 
 export const ROOM_CONFIG = {
 	MAX_PLAYERS: 8,

@@ -1,5 +1,5 @@
 import { PlayerInputs, Vector2 } from "@shared/commonModels";
-import { CollisionOutput, Entity } from "./Entity";
+import { Entity } from "./Entity";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { DummyEntityCustomFields } from "@shared/commonLevelModels";
 import { LOG } from "../Logger";
@@ -37,23 +37,23 @@ export class Player extends Entity {
 		this.isDynamic = true;
 	}
 
-	protected override onRightCollision(overlap: Vector2, other: Entity) {
+	protected override onRightCollision(overlap: number, other: Entity) {
 		// super.onRightCollision(overlap, other);
 	}
 
-	protected override onLeftCollision(overlap: Vector2, other: Entity) {
+	protected override onLeftCollision(overlap: number, other: Entity) {
 		// super.onLeftCollision(overlap, other);
 	}
 
-	protected override onUpCollision(overlap: Vector2, other: Entity) {
+	protected override onUpCollision(overlap: number, other: Entity) {
 		// super.onUpCollision(overlap, other);
 	}
 
-	protected override onDownCollision(overlap: Vector2, other: Entity) {
+	protected override onDownCollision(overlap: number, other: Entity) {
 		// super.onDownCollision(overlap, other);
 	}
 
-	public override handleBehaviour(l: Level) {
+	public override calculateVelocities() {
 		if (this.velocity.x > PLAYER_CONFIG.DRAG) {
 			this.velocity.x -= PLAYER_CONFIG.DRAG;
 		} else if (this.velocity.x < -PLAYER_CONFIG.DRAG) {
@@ -90,9 +90,6 @@ export class Player extends Entity {
 			-PLAYER_CONFIG.MAX_HORIZONTAL_SPEED,
 			PLAYER_CONFIG.MAX_HORIZONTAL_SPEED,
 		);
-
-		this.pos.x += this.velocity.x * (1 / CONFIG.TICKRATE);
-		this.pos.y += this.velocity.y * (1 / CONFIG.TICKRATE);
 
 		this.isGrounded = false;
 	}

@@ -34,6 +34,7 @@ export class Level {
 
 		this.dynamicEntities = [];
 		this.staticEntities = [];
+		this.allEntities = [];
 		this.entities = [];
 		this.spawners = [];
 		this.levelTemplate.entities.forEach((e) => {
@@ -88,10 +89,29 @@ export class Level {
 	public physicsUpdate() {
 		// WHAT SHOULD BE HAPPENING
 		// 1. CALCULATE FORCES
+		this.allEntities.forEach((e) => e.calculateVelocities());
 		// 2. Move Axis 1
+		this.allEntities.forEach((e) => e.moveXAxis());
+
 		// 3. Collisions for Axis 1
+		this.allEntities.forEach((e) => {
+			this.allEntities.forEach((other) => {
+				if (other == e) return;
+				e.calculateCollisionsX(other);
+			});
+		});
+
 		// 4. Move Axis 2
+		this.allEntities.forEach((e) => e.moveYAxis());
 		// 5. Collisions for Axis 2
+		this.allEntities.forEach((e) => {
+			this.allEntities.forEach((other) => {
+				if (other == e) return;
+				e.calculateCollisionsY(other);
+			});
+		});
 		// 6. Other behaviour
+
+		this.allEntities.forEach((e) => e.handleBehaviour(this));
 	}
 }

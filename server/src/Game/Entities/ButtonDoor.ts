@@ -3,7 +3,7 @@ import { Vector2 } from "@shared/commonModels";
 import { LOG } from "../../Logger";
 import { Level } from "../Level";
 import { ServerButtonDoorData } from "@shared/commonEntityData";
-import { CollisionOutput, Entity } from "../Entity";
+import { Entity } from "../Entity";
 import { RequiredField } from "../../Global";
 
 export class ButtonDoor extends Entity {
@@ -69,25 +69,25 @@ export class ButtonDoor extends Entity {
 		};
 	}
 
-	protected override onRightCollision(overlap: Vector2, other: Entity) {
+	protected override onRightCollision(overlap: number, other: Entity) {
 		if (!this.isPassable) {
 			super.onRightCollision(overlap, other);
 		}
 	}
 
-	protected override onLeftCollision(overlap: Vector2, other: Entity) {
+	protected override onLeftCollision(overlap: number, other: Entity) {
 		if (!this.isPassable) {
 			super.onLeftCollision(overlap, other);
 		}
 	}
 
-	protected override onUpCollision(overlap: Vector2, other: Entity) {
+	protected override onUpCollision(overlap: number, other: Entity) {
 		if (!this.isPassable) {
 			super.onUpCollision(overlap, other);
 		}
 	}
 
-	protected override onDownCollision(overlap: Vector2, other: Entity) {
+	protected override onDownCollision(overlap: number, other: Entity) {
 		if (!this.isPassable) {
 			super.onDownCollision(overlap, other);
 		}

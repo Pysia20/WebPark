@@ -3,7 +3,7 @@ import { Vector2 } from "@shared/commonModels";
 import { Level } from "../Level";
 import { MAP_LOADER } from "../LevelLoader";
 import { Player } from "../Player";
-import { CollisionOutput, Entity } from "../Entity";
+import { Entity } from "../Entity";
 
 export class Door extends Entity {
 	public playersInside: Player[] = [];
@@ -23,7 +23,7 @@ export class Door extends Entity {
 		}
 	}
 
-	protected override onRightCollision(overlap: Vector2, other: Entity) {
+	protected override onRightCollision(overlap: number, other: Entity) {
 		if (other instanceof Player) {
 			this.playersInside.push(other);
 			other.isInsideDoor = true;
@@ -31,7 +31,7 @@ export class Door extends Entity {
 		return undefined;
 	}
 
-	protected override onLeftCollision(overlap: Vector2, other: Entity) {
+	protected override onLeftCollision(overlap: number, other: Entity) {
 		if (other instanceof Player) {
 			this.playersInside.push(other);
 			other.isInsideDoor = true;
@@ -39,7 +39,7 @@ export class Door extends Entity {
 		return undefined;
 	}
 
-	protected override onUpCollision(overlap: Vector2, other: Entity) {
+	protected override onUpCollision(overlap: number, other: Entity) {
 		if (other instanceof Player) {
 			this.playersInside.push(other);
 			other.isInsideDoor = true;
@@ -47,7 +47,7 @@ export class Door extends Entity {
 		return undefined;
 	}
 
-	protected override onDownCollision(overlap: Vector2, other: Entity) {
+	protected override onDownCollision(overlap: number, other: Entity) {
 		if (other instanceof Player) {
 			this.playersInside.push(other);
 			other.isInsideDoor = true;

@@ -2,7 +2,7 @@ import { Vector2 } from "@shared/commonModels";
 import { Level } from "../Level";
 import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
 import { Player } from "../Player";
-import { CollisionOutput, Entity } from "../Entity";
+import { Entity } from "../Entity";
 
 //! DO NOT IMPORT!!!
 //? IT IS A TEMPLATE FOR CREATING NEW ENTITY TYPES
@@ -16,13 +16,13 @@ export class PlayerSpawner extends Entity {
 		super(pos, size, customFields, "PlayerSpawner");
 	}
 
-	protected onRightCollision(overlap: Vector2, other: Entity) {}
+	protected onRightCollision(overlap: number, other: Entity) {}
 
-	protected onLeftCollision(overlap: Vector2, other: Entity) {}
+	protected onLeftCollision(overlap: number, other: Entity) {}
 
-	protected onUpCollision(overlap: Vector2, other: Entity) {}
+	protected onUpCollision(overlap: number, other: Entity) {}
 
-	protected onDownCollision(overlap: Vector2, other: Entity) {}
+	protected onDownCollision(overlap: number, other: Entity) {}
 
 	protected onUpTouching(other: Entity): void {}
 

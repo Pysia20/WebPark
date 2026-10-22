@@ -58,7 +58,7 @@ export class Button extends Entity {
 		this.newList.push(other);
 	}
 
-	protected override onUpCollision(overlap: Vector2, other: Entity) {
+	protected override onUpCollision(overlap: number, other: Entity) {
 		super.onUpCollision(overlap, other); // Default behaviour
 		this.newList.push(other);
 	}

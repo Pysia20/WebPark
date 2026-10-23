@@ -117,5 +117,11 @@ export class Level {
 		if (this.shouldRestart) {
 			this.reloadLevel();
 		}
+
+		this.dynamicEntities.forEach((e) => {
+			this.dynamicEntities.forEach((other) => {
+				e.handleDynamicCollision(other);
+			});
+		});
 	}
 }

@@ -11,6 +11,7 @@ import { COLLISION_MARGIN_X, GROUND_DETECTON_OFFSET } from "@shared/commonVariab
 import { overwrite } from "zod";
 import CONFIG from "../../config.json";
 import { MapCollider } from "./Entities/MapCollider";
+import { EntryType } from "node:perf_hooks";
 
 interface CollisionData {
 	collidesX: boolean;
@@ -200,6 +201,85 @@ export abstract class Entity {
 		}
 		other.isGrounded = true;
 	}
+
+	// DYNAMIC COLLISIONS
+
+	public handleDynamicCollision(other: Entity) {
+		if (other == this) return;
+
+		const { collidesX, collidesY } = Entity.isColliding(this, other);
+		if (collidesX && collidesY) {
+			const averageVelocity: Vector2 = {
+				x: (this.velocity.x + other.velocity.x) / 4,
+				y: (this.velocity.y + other.velocity.y) / 4,
+			};
+
+			const centerA: Vector2 = {
+				x: this.pos.x + this.size.x / 2,
+				y: this.pos.y + this.size.y / 2,
+			};
+
+			const centerB: Vector2 = {
+				x: other.pos.x + other.size.x / 2,
+				y: other.pos.y + other.size.y / 2,
+			};
+
+			const diffX = centerA.x - centerB.x;
+			const diffY = centerA.y - centerB.y;
+
+			const overlapX = (this.size.x + other.size.x) / 2 - Math.abs(diffX);
+			const overlapY = (this.size.y + other.size.y) / 2 - Math.abs(diffY);
+
+			if (overlapX < overlapY) {
+				// Horizontal collision
+				if (diffX > 0) {
+					// Pushing out to the right
+					this.onRightDynamicCollision(overlapX, other);
+				} else {
+					// Pushing out to the left
+					this.onLeftDynamicCollision(overlapX, other);
+				}
+			} else {
+				if (diffY > 0) {
+					// Pushing out upwards
+					this.onUpDynamicCollision(overlapY, other);
+				} else {
+					// Pushing out downwards
+					this.onDownDynamicCollision(overlapY, other);
+				}
+			}
+
+			this.onAnyDynamicCollision(other);
+
+			this.velocity = { ...averageVelocity };
+			other.velocity = { ...averageVelocity };
+		}
+	}
+
+	protected onRightDynamicCollision(overlap: number, other: Entity) {
+		other.pos.x -= overlap;
+	}
+
+	protected onLeftDynamicCollision(overlap: number, other: Entity) {
+		other.pos.x += overlap;
+	}
+
+	protected onUpDynamicCollision(overlap: number, other: Entity) {
+		other.pos.y -= overlap;
+		other.isGrounded = true;
+		if (other.velocity.y > 0) {
+			other.velocity.y = 0;
+		}
+	}
+
+	protected onDownDynamicCollision(overlap: number, other: Entity) {
+		other.pos.y += overlap;
+		if (other.velocity.y < 0) {
+			other.velocity.y = 0;
+		}
+	}
+
+	protected onAnyDynamicCollision(other: Entity) {}
 
 	public getData(): ServerEntityData {
 		return {

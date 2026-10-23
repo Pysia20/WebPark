@@ -43,9 +43,9 @@ export class Pushable extends Entity {
 			this.velocity.x = 0;
 		}
 
-		// if (!this.isGrounded) {
-		// 	this.velocity.y += PLAYER_CONFIG.GRAVITY;
-		// }
+		if (!this.isGrounded) {
+			this.velocity.y += PLAYER_CONFIG.GRAVITY;
+		}
 
 		this.velocity.y = clamp(
 			this.velocity.y,

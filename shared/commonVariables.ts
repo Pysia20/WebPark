@@ -10,6 +10,30 @@ export const PLAYER_CONFIG = {
 	// GROUND_DETECTON_OFFSET: 1,
 };
 
+export const WORLD_CONFIG = {
+	CELL_SIZE: 64,
+};
+
+export const GROUND_DETECTON_OFFSET = 1;
+export const MAX_OMITTED_HORIZONTAL_OVERLAP = 0;
+
+export const ROOM_CONFIG = {
+	MAX_PLAYERS: 8,
+};
+
+export const PUSHABLE_CONFIG = {
+	DRAG: 10,
+	GRAVITY: PLAYER_CONFIG.GRAVITY,
+	// GROUND_DETECTON_OFFSET: PLAYER_CONFIG.GROUND_DETECTON_OFFSET,
+};
+
+
+/*
+==========================================
+VISUAL		VISUAL		VISUAL		VISUAL
+==========================================
+ */
+
 export const PLAYER_VISUAL_CONFIG = {
 	// Torso Stuff
 	TORSO_HEIGHT_RATIO: 0.9,
@@ -52,22 +76,17 @@ export const PLAYER_VISUAL_CONFIG = {
 	// Larping
 	PLAYER_LERP: 0.3,
 	EYE_LERP: 0.25,
-	LEG_LERP: 0.3,
+	LEG_LERP: 0.3
 };
 
-export const WORLD_CONFIG = {
-	CELL_SIZE: 64,
-};
-
-export const GROUND_DETECTON_OFFSET = 1;
-export const MAX_OMITTED_HORIZONTAL_OVERLAP = 0;
-
-export const ROOM_CONFIG = {
-	MAX_PLAYERS: 8,
-};
-
-export const PUSHABLE_CONFIG = {
-	DRAG: 10,
-	GRAVITY: PLAYER_CONFIG.GRAVITY,
-	// GROUND_DETECTON_OFFSET: PLAYER_CONFIG.GROUND_DETECTON_OFFSET,
-};
+export const ENTITY_VISUAL_CONFIG = {
+	LASER: {
+		AMPLITUDE: 25, //~30 == one block (64px)
+		FREQUENCY: 0.25,
+		OFFSET: 0.5,
+		STEP: 28, //kind of like quality? length / STEP
+		JITTER: 30,
+		WIDTH: 5,
+		COLOR: "#ff0000"
+	}
+}

@@ -10,26 +10,6 @@ import { LOG } from "../Logger";
 import { COLLISION_MARGIN_X, GROUND_DETECTON_OFFSET } from "@shared/commonVariables";
 import { overwrite } from "zod";
 import CONFIG from "../../config.json";
-import { MapCollider } from "./Entities/MapCollider";
-import { EntryType } from "node:perf_hooks";
-
-interface CollisionData {
-	collidesX: boolean;
-	collidesY: boolean;
-	overlapX: number;
-	overlapY: number;
-	diffX: number;
-	diffY: number;
-}
-
-const emptyCollisionData: CollisionData = {
-	collidesX: false,
-	collidesY: true,
-	overlapX: 0,
-	overlapY: 0,
-	diffX: 0,
-	diffY: 0,
-} as const;
 
 export abstract class Entity {
 	public id: number = -1;
@@ -37,8 +17,7 @@ export abstract class Entity {
 	public level: Level | undefined;
 	public isGrounded: boolean = false;
 	public isDynamic: boolean = false;
-
-	public collisionData: CollisionData = { ...emptyCollisionData };
+	public velocityStack: Vector2[] = [];
 
 	public getUsedFields(): RequiredField[] {
 		return [];
@@ -204,82 +183,75 @@ export abstract class Entity {
 
 	// DYNAMIC COLLISIONS
 
-	public handleDynamicCollision(other: Entity) {
-		if (other == this) return;
+	public static handleDynamicCollision(a: Entity, b: Entity) {
+		if (a == b) return;
 
-		const { collidesX, collidesY } = Entity.isColliding(this, other);
+		const { collidesX, collidesY } = Entity.isColliding(a, b);
 		if (collidesX && collidesY) {
 			const averageVelocity: Vector2 = {
-				x: (this.velocity.x + other.velocity.x) / 4,
-				y: (this.velocity.y + other.velocity.y) / 4,
+				x: (a.velocity.x + b.velocity.x) / 4,
+				y: (a.velocity.y + b.velocity.y) / 4,
 			};
 
 			const centerA: Vector2 = {
-				x: this.pos.x + this.size.x / 2,
-				y: this.pos.y + this.size.y / 2,
+				x: a.pos.x + a.size.x / 2,
+				y: a.pos.y + a.size.y / 2,
 			};
 
 			const centerB: Vector2 = {
-				x: other.pos.x + other.size.x / 2,
-				y: other.pos.y + other.size.y / 2,
+				x: b.pos.x + b.size.x / 2,
+				y: b.pos.y + b.size.y / 2,
 			};
 
 			const diffX = centerA.x - centerB.x;
 			const diffY = centerA.y - centerB.y;
 
-			const overlapX = (this.size.x + other.size.x) / 2 - Math.abs(diffX);
-			const overlapY = (this.size.y + other.size.y) / 2 - Math.abs(diffY);
+			const overlapX = (a.size.x + b.size.x) / 2 - Math.abs(diffX);
+			const overlapY = (a.size.y + b.size.y) / 2 - Math.abs(diffY);
 
 			if (overlapX < overlapY) {
 				// Horizontal collision
 				if (diffX > 0) {
 					// Pushing out to the right
-					this.onRightDynamicCollision(overlapX, other);
+					a.pos.x += overlapX / 2;
+					b.pos.x -= overlapX / 2;
 				} else {
 					// Pushing out to the left
-					this.onLeftDynamicCollision(overlapX, other);
+					a.pos.x -= overlapX / 2;
+					b.pos.x += overlapX / 2;
 				}
 			} else {
 				if (diffY > 0) {
+					a.pos.y += overlapY / 2;
+					if (a.velocity.y < 0) {
+						a.velocity.y = 0;
+					}
+
 					// Pushing out upwards
-					this.onUpDynamicCollision(overlapY, other);
+					b.pos.y -= overlapY / 2;
+					b.isGrounded = true;
+					if (b.velocity.y > 0) {
+						b.velocity.y = 0;
+					}
 				} else {
+					a.pos.y -= overlapY / 2;
+					a.isGrounded = true;
+					if (a.velocity.y > 0) {
+						a.velocity.y = 0;
+					}
+
 					// Pushing out downwards
-					this.onDownDynamicCollision(overlapY, other);
+					b.pos.y += overlapY / 2;
+					if (b.velocity.y < 0) {
+						b.velocity.y = 0;
+					}
 				}
 			}
 
-			this.onAnyDynamicCollision(other);
-
-			this.velocity = { ...averageVelocity };
-			other.velocity = { ...averageVelocity };
+			a.velocityStack.push({ ...averageVelocity });
+			b.velocityStack.push({ ...averageVelocity });
 		}
 	}
-
-	protected onRightDynamicCollision(overlap: number, other: Entity) {
-		other.pos.x -= overlap;
-	}
-
-	protected onLeftDynamicCollision(overlap: number, other: Entity) {
-		other.pos.x += overlap;
-	}
-
-	protected onUpDynamicCollision(overlap: number, other: Entity) {
-		other.pos.y -= overlap;
-		other.isGrounded = true;
-		if (other.velocity.y > 0) {
-			other.velocity.y = 0;
-		}
-	}
-
-	protected onDownDynamicCollision(overlap: number, other: Entity) {
-		other.pos.y += overlap;
-		if (other.velocity.y < 0) {
-			other.velocity.y = 0;
-		}
-	}
-
-	protected onAnyDynamicCollision(other: Entity) {}
 
 	public getData(): ServerEntityData {
 		return {
@@ -292,7 +264,12 @@ export abstract class Entity {
 	public handleBehaviour(level: Level) {}
 
 	public endTick() {
-		this.collisionData = { ...emptyCollisionData };
+		this.velocityStack.forEach((v) => {
+			this.velocity.x += v.x;
+			this.velocity.y += v.y;
+		});
+
+		this.velocityStack = [];
 	}
 
 	public abstract clone(): Entity;

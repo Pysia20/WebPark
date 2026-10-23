@@ -118,10 +118,13 @@ export class Level {
 			this.reloadLevel();
 		}
 
-		this.dynamicEntities.forEach((e) => {
-			this.dynamicEntities.forEach((other) => {
-				e.handleDynamicCollision(other);
-			});
-		});
+		for (let i = 0; i < this.dynamicEntities.length; i++) {
+			for (let j = i + 1; j < this.dynamicEntities.length; j++) {
+				const a = this.dynamicEntities[i];
+				const b = this.dynamicEntities[j];
+
+				Entity.handleDynamicCollision(a, b);
+			}
+		}
 	}
 }

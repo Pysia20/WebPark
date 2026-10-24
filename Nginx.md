@@ -10,7 +10,8 @@
 
 <span style="color: #ff2828; text-align: center;">
 
-Other distros may and most likely will have diffrent configuration directories or need diffrent tools.
+> [!WARNING]
+> Other distros may and most likely will have diffrent configuration directories or need diffrent tools.
 
 </span>
 

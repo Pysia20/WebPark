@@ -127,12 +127,8 @@ server {
 
 Now, if you started the frontend and backend servers, you should be able to play on https://localhost or https://yourdomain.me.
 
-<span style="color: #ff2828; text-align: center;">
-
-[!WARNING]
-
-### ⚠️ SOME DISTROS NEED THIS COMMAND TO LET NGINX SERVE HTTPS ⚠️
-
-`sudo setsebool -P httpd_can_network_connect 1`
-
-</span>
+> [!CAUTION]
+>
+> SOME DISTROS NEED THIS COMMAND TO LET NGINX SERVE HTTPS
+>
+> `sudo setsebool -P httpd_can_network_connect 1`

@@ -25,12 +25,12 @@ export class LaserEnt extends Ent {
 
         this.data = data
         this.wave = wave
-        this.length = data.visualSize.y - (ENTITY_VISUAL_CONFIG.LASER.GLOW_WIDTH / 2)
+        this.length = data.visualSize.y - (ENTITY_VISUAL_CONFIG.LASER.WIDTH / 2)
         this.step = this.length / ENTITY_VISUAL_CONFIG.LASER.STEP
         this.halfJitter = ENTITY_VISUAL_CONFIG.LASER.JITTER / 2
 
-        this.wave.position.set(data.pos.x + (data.visualSize.x / 2), data.pos.y + (ENTITY_VISUAL_CONFIG.LASER.BASE_WIDTH / 2))
-        this.glow.position.set(data.pos.x + (data.visualSize.x / 2), data.pos.y + (ENTITY_VISUAL_CONFIG.LASER.BASE_WIDTH / 2))
+        this.wave.position.set(data.pos.x + (data.visualSize.x / 2), data.pos.y + (ENTITY_VISUAL_CONFIG.LASER.WIDTH / 2))
+        this.glow.position.set(data.pos.x + (data.visualSize.x / 2), data.pos.y + (ENTITY_VISUAL_CONFIG.LASER.WIDTH / 2))
         this.baseUp.position.set(data.pos.x, data.pos.y)
         this.baseDown.position.set(data.pos.x, data.pos.y)
 
@@ -64,21 +64,21 @@ export class LaserEnt extends Ent {
 
     //this seems very meh
     drawBase() {
-        let start: Vector2 = {x: -1, y: 0}
-        let wall: Vector2 = {x: 0, y: -5}
-        let spike: Vector2 = {x: this.data.visualSize.x / 2, y: -10}
-        let wall2: Vector2 = {x: this.data.visualSize.x, y: -5}
-        let end: Vector2 = {x: this.data.visualSize.x + 1, y: 0}
+        let start: Vector2 = {x: -ENTITY_VISUAL_CONFIG.LASER.BASE_START_OFFSET, y: 0}
+        let wall: Vector2 = {x: 0, y: -ENTITY_VISUAL_CONFIG.LASER.BASE_WALL_OFFSET}
+        let spike: Vector2 = {x: this.data.visualSize.x / 2, y: -ENTITY_VISUAL_CONFIG.LASER.BASE_SPIKE_OFFSET}
+        let wall2: Vector2 = {x: this.data.visualSize.x, y: -ENTITY_VISUAL_CONFIG.LASER.BASE_WALL_OFFSET}
+        let end: Vector2 = {x: this.data.visualSize.x + ENTITY_VISUAL_CONFIG.LASER.BASE_START_OFFSET, y: 0}
 
-        this.baseUp.poly([start.x, start.y, wall.x , wall.y, spike.x, spike.y, wall2.x, wall2.y, end.x, end.y]).fill({color: "#ff0000"})
+        this.baseUp.poly([start.x, start.y, wall.x , wall.y, spike.x, spike.y, wall2.x, wall2.y, end.x, end.y]).fill({color: ENTITY_VISUAL_CONFIG.LASER.BASE_COLOR})
 
         start.y  = this.data.visualSize.y
-        wall.y = this.data.visualSize.y + 5
-        spike.y  = this.data.visualSize.y + 10
-        wall2.y  = this.data.visualSize.y + 5
+        wall.y = this.data.visualSize.y + ENTITY_VISUAL_CONFIG.LASER.BASE_WALL_OFFSET
+        spike.y  = this.data.visualSize.y + ENTITY_VISUAL_CONFIG.LASER.BASE_SPIKE_OFFSET
+        wall2.y  = this.data.visualSize.y + ENTITY_VISUAL_CONFIG.LASER.BASE_WALL_OFFSET
         end.y = this.data.visualSize.y
 
-        this.baseDown.poly([start.x, start.y, wall.x , wall.y, spike.x, spike.y, wall2.x, wall2.y, end.x, end.y]).fill({color: "#ff0000"})
+        this.baseDown.poly([start.x, start.y, wall.x , wall.y, spike.x, spike.y, wall2.x, wall2.y, end.x, end.y]).fill({color: ENTITY_VISUAL_CONFIG.LASER.BASE_COLOR})
 
         /*
         this.base.moveTo(0, 0)

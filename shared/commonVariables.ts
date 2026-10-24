@@ -86,16 +86,18 @@ export const ENTITY_VISUAL_CONFIG = {
 		OFFSET: 0.5,
 		STEP: 28, //kind of like quality? length / STEP
 		JITTER: 30,
-		WIDTH: 5,
+		WIDTH: 4,
 		COLOR: "#ff0000",
 		OPACITY: 0.8,
 
-		BASE_COLOR: "#000000",
-		BASE_WIDTH: 6,
+		BASE_COLOR: "#d90000",
+		BASE_START_OFFSET: 1, //X
+		BASE_WALL_OFFSET: 5, //Y
+		BASE_SPIKE_OFFSET: 10, //Y
 
 		GLOW_COLOR: "#ff0000",
 		GLOW_OPACITY: 0.4,
-		GLOW_WIDTH: 10,
+		GLOW_WIDTH: 12,
 
 	}
 }

@@ -34,6 +34,7 @@ $\color{gray} \text{now without pico park sprites! revolutionary stuff}$
 <br>
 
 ## Planned features
+
 - Maybe even more entities? _...probably even more entities_
 - Better feeling movement
 - Drawing on the player cube to make your own face/mouth
@@ -105,6 +106,8 @@ pnpm --filter client dev
 ```
 
 You also need to uncomment the proxy in client/vite.config.ts to allow the client to connect to the server (unless you know how to use nginx)
+The project will work without nginx, but we recomend using nginx. It wasn't build based on the vite proxy and unexpected bugs may appear.
+[To setup nginx follow this guide.](Nginx.md)
 
 And now everything _~~should~~_ work!
 

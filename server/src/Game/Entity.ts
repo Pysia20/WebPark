@@ -7,7 +7,11 @@ import { ServerEntityData, Vector2 } from "@shared/commonModels";
 import { Level } from "../Game/Level";
 import { isColliding, RequiredField } from "../Global";
 import { LOG } from "../Logger";
-import { COLLISION_MARGIN_Y, GROUND_DETECTON_OFFSET } from "@shared/commonVariables";
+import {
+	COLLISION_MARGIN_Y,
+	GROUND_DETECTON_OFFSET,
+	HORIZONTAL_BIAS,
+} from "@shared/commonVariables";
 import { overwrite } from "zod";
 import CONFIG from "../../config.json";
 import { aborted } from "node:util";
@@ -209,6 +213,11 @@ export abstract class Entity {
 			y: (a.size.y + b.size.y) / 2 - Math.abs(diff.y),
 		};
 
+		const relativeVelocity: Vector2 = {
+			x: a.velocity.x - b.velocity.x,
+			y: a.velocity.y - b.velocity.y,
+		};
+
 		if (overlap.x < overlap.y) {
 			if (diff.x > 0) {
 				// Pushing out to the right
@@ -229,26 +238,32 @@ export abstract class Entity {
 			b.velocityStack.push(averageVelocity);
 		} else {
 			if (diff.y > 0) {
-				a.pos.y += overlap.y / 2;
+				if (a.isGrounded) {
+					b.pos.y -= overlap.y;
+				} else {
+					a.pos.y += overlap.y / 2;
+					b.pos.y -= overlap.y / 2;
+				}
 
 				// Pushing out upwards
-				b.pos.y -= overlap.y / 2;
-				b.isGrounded = true;
+				if (b.velocity.y > 0) {
+					b.isGrounded = true;
+					b.velocity.y = 0;
+				}
 			} else {
-				a.pos.y -= overlap.y / 2;
-				a.isGrounded = true;
+				if (b.isGrounded) {
+					a.pos.y -= overlap.y;
+				} else {
+					a.pos.y -= overlap.y / 2;
 
-				// Pushing out downwards
-				b.pos.y += overlap.y / 2;
+					// Pushing out downwards
+					b.pos.y += overlap.y / 2;
+				}
+				if (a.velocity.y > 0) {
+					a.isGrounded = true;
+					a.velocity.y = 0;
+				}
 			}
-
-			const averageVelocity: Vector2 = {
-				x: 0,
-				y: (a.velocity.y + b.velocity.y) / 2,
-			};
-
-			a.velocityStack.push(averageVelocity);
-			b.velocityStack.push(averageVelocity);
 		}
 	}
 

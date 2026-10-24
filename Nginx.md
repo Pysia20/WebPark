@@ -1,19 +1,13 @@
 # Nginx Setup Guide
 
-<span style="color: #ff2828; text-align: center;">
-
-### Exact configuration may differ based on your OS or distro
-
-</span>
+> [!WARNING]
+>
+> ### Exact configuration may differ based on your OS or distro
 
 ## Linux (based on Debian)
 
-<span style="color: #ff2828; text-align: center;">
-
 > [!WARNING]
 > Other distros may and most likely will have diffrent configuration directories or need diffrent tools.
-
-</span>
 
 ### Requirements:
 
@@ -134,6 +128,8 @@ server {
 Now, if you started the frontend and backend servers, you should be able to play on https://localhost or https://yourdomain.me.
 
 <span style="color: #ff2828; text-align: center;">
+
+[!WARNING]
 
 ### ⚠️ SOME DISTROS NEED THIS COMMAND TO LET NGINX SERVE HTTPS ⚠️
 

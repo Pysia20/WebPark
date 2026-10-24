@@ -4,6 +4,120 @@
 >
 > ### Exact configuration may differ based on your OS or distro
 
+## Windows
+
+### Requirements:
+
+- Nginx
+- mkcert\* (SSL Certificates for local development)
+- utility for public certificates\*\*
+
+\* - optional, but without SSL Certificates the config will need some tweaking. Choose one based on usecase.
+
+\*\* - I have no experience with SSL Certificates on windows and I don't want to put something misleading in a guide.
+
+### Nginx config:
+
+- Extract nginx.zip inside `C:/nginx/`.
+- You should have `conf` folder inside there, open it.
+- Here, create 2 other folders: `conf.d` and `certs`.
+- Inside `C:/nginx/conf` you should have `nginx.conf` file, paste that into it:
+
+```
+worker_processes  1;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    include C:/nginx/conf/conf.d/*.conf;
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    sendfile        on;
+
+    keepalive_timeout  65;
+
+    server {
+        listen       80;
+        server_name  localhost;
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+
+    }
+
+}
+```
+
+- Next enter the `conf.d` folder and create `app.conf` file in there.
+- This file should contain this config:
+
+```
+server {
+    listen 80;
+    server_name localhost; # or your domain (domain.com www.domain.com)
+
+    return 301 https://$host$request_uri;
+}
+
+
+server {
+    listen 443 ssl;
+    server_name localhost; # or your domain (domain.com www.domain.com)
+
+    # Paths to your SSL certificates
+    ssl_certificate C:/nginx/conf/certs/fullchain.pem;
+    ssl_certificate_key C:/nginx/conf/certs/privkey.pem;
+
+    location / {
+        proxy_pass http://127.0.0.1:5173;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:3005;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+
+}
+```
+
+- If you want to host it publicly, change `localhost` to `domain.com www.domain.com` in both `server_name` in both `server{...}` blocks.
+
+### SSL Certificates
+
+#### mkcert (local development):
+
+- Download mkcert, you should have an `mkcert-vx.x.x-windows-xxx.exe` file.
+- Move this file into previously created `C:/nginx/conf/certs/` folder.
+- Open terminal here and paste the file name followed by `-install`.
+- Then, paste the file name again followed by: ` -key-file privkey.pem -cert-file fullchain.pem localhost 127.0.0.1`
+- You can restart nginx again to make it read those certificates. Make sure that certificates are in the `C:/nginx/conf/certs/` directory.
+
+> [!IMPORTANT]
+> You can use public SSL Certificates to run this, but I unfortunetly don't know how to generate one on windows. But if you know how, or are willing to find out you can.
+
+> [!NOTE]
+> If you know how to generate SSL Certificate on Windows and have some spare time, feel free to make a PR correcting this guide. Any help would be greatly appreciated!.
+
 ## Linux (based on Debian)
 
 > [!WARNING]
@@ -110,7 +224,7 @@ server {
 
 - (If you din't have nginx on just enter `sudo systemctl enable --now nginx`)
 
-### SSL Certificates (optional, but recommended)
+### SSL Certificates
 
 #### mkcert (local development):
 

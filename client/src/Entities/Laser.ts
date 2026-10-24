@@ -1,11 +1,12 @@
 import { Container, Graphics } from "pixi.js";
 import { Ent } from "./Ent";
-import { ServerEntityData } from "@shared/commonModels";
+import {ServerEntityData, Vector2} from "@shared/commonModels";
 import { ENTITY_VISUAL_CONFIG } from "@shared/commonVariables";
 
 export class LaserEnt extends Ent {
     wave: Graphics
-    base: Graphics
+    baseUp: Graphics
+    baseDown: Graphics
     glow: Graphics
 
     offset: number = 0
@@ -18,18 +19,20 @@ export class LaserEnt extends Ent {
     constructor(data: ServerEntityData) {
         const wave = new Graphics()
         super(wave)
-        this.base = new Graphics()
+        this.baseUp = new Graphics()
+        this.baseDown = new Graphics()
         this.glow = new Graphics()
 
         this.data = data
         this.wave = wave
-        this.length = data.visualSize.y - (ENTITY_VISUAL_CONFIG.LASER.BASE_WIDTH / 2)
+        this.length = data.visualSize.y - (ENTITY_VISUAL_CONFIG.LASER.GLOW_WIDTH / 2)
         this.step = this.length / ENTITY_VISUAL_CONFIG.LASER.STEP
         this.halfJitter = ENTITY_VISUAL_CONFIG.LASER.JITTER / 2
 
         this.wave.position.set(data.pos.x + (data.visualSize.x / 2), data.pos.y + (ENTITY_VISUAL_CONFIG.LASER.BASE_WIDTH / 2))
         this.glow.position.set(data.pos.x + (data.visualSize.x / 2), data.pos.y + (ENTITY_VISUAL_CONFIG.LASER.BASE_WIDTH / 2))
-        this.base.position.set(data.pos.x, data.pos.y)
+        this.baseUp.position.set(data.pos.x, data.pos.y)
+        this.baseDown.position.set(data.pos.x, data.pos.y)
 
         this.drawBase()
     }
@@ -55,12 +58,29 @@ export class LaserEnt extends Ent {
             }
         }
 
-        this.wave.stroke({color: ENTITY_VISUAL_CONFIG.LASER.COLOR, width: ENTITY_VISUAL_CONFIG.LASER.WIDTH, cap: "butt", join: "round", alpha: ENTITY_VISUAL_CONFIG.LASER.OPACITY})
-        this.glow.stroke({color: ENTITY_VISUAL_CONFIG.LASER.GLOW_COLOR, width: ENTITY_VISUAL_CONFIG.LASER.GLOW_WIDTH, cap: "butt", join: "round", alpha: ENTITY_VISUAL_CONFIG.LASER.GLOW_OPACITY})
+        this.wave.stroke({color: ENTITY_VISUAL_CONFIG.LASER.COLOR, width: ENTITY_VISUAL_CONFIG.LASER.WIDTH, cap: "round", join: "round", alpha: ENTITY_VISUAL_CONFIG.LASER.OPACITY})
+        this.glow.stroke({color: ENTITY_VISUAL_CONFIG.LASER.GLOW_COLOR, width: ENTITY_VISUAL_CONFIG.LASER.GLOW_WIDTH, cap: "round", join: "round", alpha: ENTITY_VISUAL_CONFIG.LASER.GLOW_OPACITY})
     }
 
     //this seems very meh
     drawBase() {
+        let start: Vector2 = {x: -1, y: 0}
+        let wall: Vector2 = {x: 0, y: -5}
+        let spike: Vector2 = {x: this.data.visualSize.x / 2, y: -10}
+        let wall2: Vector2 = {x: this.data.visualSize.x, y: -5}
+        let end: Vector2 = {x: this.data.visualSize.x + 1, y: 0}
+
+        this.baseUp.poly([start.x, start.y, wall.x , wall.y, spike.x, spike.y, wall2.x, wall2.y, end.x, end.y]).fill({color: "#ff0000"})
+
+        start.y  = this.data.visualSize.y
+        wall.y = this.data.visualSize.y + 5
+        spike.y  = this.data.visualSize.y + 10
+        wall2.y  = this.data.visualSize.y + 5
+        end.y = this.data.visualSize.y
+
+        this.baseDown.poly([start.x, start.y, wall.x , wall.y, spike.x, spike.y, wall2.x, wall2.y, end.x, end.y]).fill({color: "#ff0000"})
+
+        /*
         this.base.moveTo(0, 0)
         this.base.lineTo(this.data.visualSize.x, 0)
         this.base.stroke({color: ENTITY_VISUAL_CONFIG.LASER.BASE_COLOR, width: ENTITY_VISUAL_CONFIG.LASER.BASE_WIDTH, cap: "round"})
@@ -68,18 +88,21 @@ export class LaserEnt extends Ent {
         this.base.moveTo(0, this.data.visualSize.y)
         this.base.lineTo(this.data.visualSize.x, this.data.visualSize.y)
         this.base.stroke({color: ENTITY_VISUAL_CONFIG.LASER.BASE_COLOR, width: ENTITY_VISUAL_CONFIG.LASER.BASE_WIDTH, cap: "round"})
+         */
     }
 
     override beGone(world: Container) {
         super.beGone(world);
 
         world.removeChild(this.glow)
-        world.removeChild(this.base)
+        world.removeChild(this.baseUp)
+        world.removeChild(this.baseDown)
     }
 
     override spawnIn(world: Container) {
         world.addChild(this.glow)
         super.spawnIn(world)
-        world.addChild(this.base)
+        world.addChild(this.baseUp)
+        world.addChild(this.baseDown)
     }
 }

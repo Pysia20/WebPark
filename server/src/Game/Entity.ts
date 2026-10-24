@@ -7,9 +7,10 @@ import { ServerEntityData, Vector2 } from "@shared/commonModels";
 import { Level } from "../Game/Level";
 import { isColliding, RequiredField } from "../Global";
 import { LOG } from "../Logger";
-import { COLLISION_MARGIN_X, GROUND_DETECTON_OFFSET } from "@shared/commonVariables";
+import { COLLISION_MARGIN_Y, GROUND_DETECTON_OFFSET } from "@shared/commonVariables";
 import { overwrite } from "zod";
 import CONFIG from "../../config.json";
+import { aborted } from "node:util";
 
 export abstract class Entity {
 	public id: number = -1;
@@ -97,9 +98,9 @@ export abstract class Entity {
 
 	public calculateCollisionsX(other: Entity) {
 		const newPos = { ...other.pos };
-		newPos.y += COLLISION_MARGIN_X / 2;
+		newPos.y += COLLISION_MARGIN_Y / 2;
 		const newSize = { ...other.size };
-		newSize.y -= COLLISION_MARGIN_X / 2;
+		newSize.y -= COLLISION_MARGIN_Y / 2;
 
 		const { collidesX, collidesY } = Entity.isColliding(this, { pos: newPos, size: newSize });
 		if (collidesX && collidesY) {
@@ -182,74 +183,72 @@ export abstract class Entity {
 	}
 
 	// DYNAMIC COLLISIONS
-
 	public static handleDynamicCollision(a: Entity, b: Entity) {
 		if (a == b) return;
 
 		const { collidesX, collidesY } = Entity.isColliding(a, b);
-		if (collidesX && collidesY) {
-			const averageVelocity: Vector2 = {
-				x: (a.velocity.x + b.velocity.x) / 4,
-				y: (a.velocity.y + b.velocity.y) / 4,
-			};
+		if (!collidesX || !collidesY) return;
 
-			const centerA: Vector2 = {
-				x: a.pos.x + a.size.x / 2,
-				y: a.pos.y + a.size.y / 2,
-			};
+		const centerA: Vector2 = {
+			x: a.pos.x + a.size.x / 2,
+			y: a.pos.y + a.size.y / 2,
+		};
 
-			const centerB: Vector2 = {
-				x: b.pos.x + b.size.x / 2,
-				y: b.pos.y + b.size.y / 2,
-			};
+		const centerB: Vector2 = {
+			x: b.pos.x + b.size.x / 2,
+			y: b.pos.y + b.size.y / 2,
+		};
 
-			const diffX = centerA.x - centerB.x;
-			const diffY = centerA.y - centerB.y;
+		const diff: Vector2 = {
+			x: centerA.x - centerB.x,
+			y: centerA.y - centerB.y,
+		};
 
-			const overlapX = (a.size.x + b.size.x) / 2 - Math.abs(diffX);
-			const overlapY = (a.size.y + b.size.y) / 2 - Math.abs(diffY);
+		const overlap: Vector2 = {
+			x: (a.size.x + b.size.x) / 2 - Math.abs(diff.x),
+			y: (a.size.y + b.size.y) / 2 - Math.abs(diff.y),
+		};
 
-			if (overlapX < overlapY) {
-				// Horizontal collision
-				if (diffX > 0) {
-					// Pushing out to the right
-					a.pos.x += overlapX / 2;
-					b.pos.x -= overlapX / 2;
-				} else {
-					// Pushing out to the left
-					a.pos.x -= overlapX / 2;
-					b.pos.x += overlapX / 2;
-				}
+		if (overlap.x < overlap.y) {
+			if (diff.x > 0) {
+				// Pushing out to the right
+				a.pos.x += overlap.x / 2;
+				b.pos.x -= overlap.x / 2;
 			} else {
-				if (diffY > 0) {
-					a.pos.y += overlapY / 2;
-					if (a.velocity.y < 0) {
-						a.velocity.y = 0;
-					}
-
-					// Pushing out upwards
-					b.pos.y -= overlapY / 2;
-					b.isGrounded = true;
-					if (b.velocity.y > 0) {
-						b.velocity.y = 0;
-					}
-				} else {
-					a.pos.y -= overlapY / 2;
-					a.isGrounded = true;
-					if (a.velocity.y > 0) {
-						a.velocity.y = 0;
-					}
-
-					// Pushing out downwards
-					b.pos.y += overlapY / 2;
-					if (b.velocity.y < 0) {
-						b.velocity.y = 0;
-					}
-				}
+				// Pushing out to the left
+				a.pos.x -= overlap.x / 2;
+				b.pos.x += overlap.x / 2;
 			}
 
-			a.velocityStack.push({ ...averageVelocity });
-			b.velocityStack.push({ ...averageVelocity });
+			const averageVelocity: Vector2 = {
+				x: (a.velocity.x + b.velocity.x) / 2,
+				y: 0,
+			};
+
+			a.velocityStack.push(averageVelocity);
+			b.velocityStack.push(averageVelocity);
+		} else {
+			if (diff.y > 0) {
+				a.pos.y += overlap.y / 2;
+
+				// Pushing out upwards
+				b.pos.y -= overlap.y / 2;
+				b.isGrounded = true;
+			} else {
+				a.pos.y -= overlap.y / 2;
+				a.isGrounded = true;
+
+				// Pushing out downwards
+				b.pos.y += overlap.y / 2;
+			}
+
+			const averageVelocity: Vector2 = {
+				x: 0,
+				y: (a.velocity.y + b.velocity.y) / 2,
+			};
+
+			a.velocityStack.push(averageVelocity);
+			b.velocityStack.push(averageVelocity);
 		}
 	}
 

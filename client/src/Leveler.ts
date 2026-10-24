@@ -59,7 +59,7 @@ class levelManager {
 			this.world.removeChild(tile)
 		}
 		for (const [id, ent] of Object.entries(this.ents)) {
-			this.world.removeChild(ent.theThing)
+			ent.beGone(this.world)
 		}
 		this.ents = {}
 
@@ -114,8 +114,8 @@ class levelManager {
 						break
 				}
 				newEnt.update(entData, deltaT)
+				newEnt.spawnIn(this.world)
 
-				this.world.addChild(newEnt.theThing)
 				this.ents[Number(entId)] = newEnt
 			}
 		}

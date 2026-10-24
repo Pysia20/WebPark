@@ -10,4 +10,12 @@ export abstract class Ent {
     }
 
     abstract update(data: AnyEntityData, deltaT: number): void
+
+     beGone(world: Container) {
+        world.removeChild(this.theThing)
+    }
+
+    spawnIn(world: Container) {
+        world.addChild(this.theThing)
+    }
 }

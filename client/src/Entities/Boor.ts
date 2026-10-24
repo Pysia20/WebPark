@@ -1,5 +1,4 @@
 import { Sprite } from "pixi.js";
-import { ServerEntityData } from "@shared/commonModels";
 import { Ent } from "./Ent";
 import {ServerButtonDoorData} from "@shared/commonEntityData";
 

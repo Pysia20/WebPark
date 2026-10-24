@@ -87,6 +87,15 @@ export const ENTITY_VISUAL_CONFIG = {
 		STEP: 28, //kind of like quality? length / STEP
 		JITTER: 30,
 		WIDTH: 5,
-		COLOR: "#ff0000"
+		COLOR: "#ff0000",
+		OPACITY: 0.8,
+
+		BASE_COLOR: "#000000",
+		BASE_WIDTH: 6,
+
+		GLOW_COLOR: "#ff0000",
+		GLOW_OPACITY: 0.4,
+		GLOW_WIDTH: 10,
+
 	}
 }

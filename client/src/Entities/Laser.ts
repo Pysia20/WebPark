@@ -23,12 +23,12 @@ export class LaserEnt extends Ent {
 
         this.data = data
         this.wave = wave
-        this.length = data.visualSize.y
+        this.length = data.visualSize.y - (ENTITY_VISUAL_CONFIG.LASER.BASE_WIDTH / 2)
         this.step = this.length / ENTITY_VISUAL_CONFIG.LASER.STEP
         this.halfJitter = ENTITY_VISUAL_CONFIG.LASER.JITTER / 2
 
-        this.wave.position.set(data.pos.x + (data.visualSize.x / 2), data.pos.y)
-        this.glow.position.set(data.pos.x + (data.visualSize.x / 2), data.pos.y)
+        this.wave.position.set(data.pos.x + (data.visualSize.x / 2), data.pos.y + (ENTITY_VISUAL_CONFIG.LASER.BASE_WIDTH / 2))
+        this.glow.position.set(data.pos.x + (data.visualSize.x / 2), data.pos.y + (ENTITY_VISUAL_CONFIG.LASER.BASE_WIDTH / 2))
         this.base.position.set(data.pos.x, data.pos.y)
 
         this.drawBase()
@@ -55,19 +55,19 @@ export class LaserEnt extends Ent {
             }
         }
 
-        this.wave.stroke({color: ENTITY_VISUAL_CONFIG.LASER.COLOR, width: ENTITY_VISUAL_CONFIG.LASER.WIDTH, cap: "round", join: "round", alpha: 0.8})
-        this.glow.stroke({color: ENTITY_VISUAL_CONFIG.LASER.COLOR, width: ENTITY_VISUAL_CONFIG.LASER.WIDTH + 5, cap: "round", join: "round", alpha: 0.4})
+        this.wave.stroke({color: ENTITY_VISUAL_CONFIG.LASER.COLOR, width: ENTITY_VISUAL_CONFIG.LASER.WIDTH, cap: "butt", join: "round", alpha: ENTITY_VISUAL_CONFIG.LASER.OPACITY})
+        this.glow.stroke({color: ENTITY_VISUAL_CONFIG.LASER.GLOW_COLOR, width: ENTITY_VISUAL_CONFIG.LASER.GLOW_WIDTH, cap: "butt", join: "round", alpha: ENTITY_VISUAL_CONFIG.LASER.GLOW_OPACITY})
     }
 
     //this seems very meh
     drawBase() {
         this.base.moveTo(0, 0)
         this.base.lineTo(this.data.visualSize.x, 0)
-        this.base.stroke({color: "#000000", width: ENTITY_VISUAL_CONFIG.LASER.WIDTH, cap: "round"})
+        this.base.stroke({color: ENTITY_VISUAL_CONFIG.LASER.BASE_COLOR, width: ENTITY_VISUAL_CONFIG.LASER.BASE_WIDTH, cap: "round"})
 
         this.base.moveTo(0, this.data.visualSize.y)
         this.base.lineTo(this.data.visualSize.x, this.data.visualSize.y)
-        this.base.stroke({color: "#000000", width: ENTITY_VISUAL_CONFIG.LASER.WIDTH, cap: "round"})
+        this.base.stroke({color: ENTITY_VISUAL_CONFIG.LASER.BASE_COLOR, width: ENTITY_VISUAL_CONFIG.LASER.BASE_WIDTH, cap: "round"})
     }
 
     override beGone(world: Container) {

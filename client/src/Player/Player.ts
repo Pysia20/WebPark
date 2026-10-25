@@ -64,7 +64,7 @@ export class Player {
         this.updateNick()
         this.updateLegs()
         this.updateEyes()
-        this.updateArms()
+    //    this.updateArms() for now
 
         this.prevVelocity = this.velocity
     }

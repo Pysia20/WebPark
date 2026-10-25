@@ -5,7 +5,7 @@ import {
 } from "@shared/commonLevelModels";
 import { ServerEntityData, Vector2 } from "@shared/commonModels";
 import { Level } from "../Game/Level";
-import { isColliding, RequiredField } from "../Global";
+import { RequiredField } from "../Global";
 import { LOG } from "../Logger";
 import {
 	COLLISION_MARGIN_Y,
@@ -60,9 +60,9 @@ export abstract class Entity {
 					);
 				}
 
-				LOG.warn(
-					`${this.type} doesn't have an '${field.name}' custom field or it's value is invalid. (${this.pos.x}, ${this.pos.y})`,
-				);
+				// LOG.warn(
+				// 	`${this.type} doesn't have an '${field.name}' custom field or it's value is invalid. (${this.pos.x}, ${this.pos.y})`,
+				// );
 			}
 		}
 
@@ -120,6 +120,8 @@ export abstract class Entity {
 				// Pushing out to the left
 				this.onLeftCollision(overlap, other);
 			}
+
+			this.onAnyCollision(other);
 		}
 	}
 
@@ -137,6 +139,8 @@ export abstract class Entity {
 				// Pushing out downwards
 				this.onDownCollision(overlap, other);
 			}
+
+			this.onAnyCollision(other);
 		} else if (this.checkGrounded(other)) {
 			this.onUpTouching(other);
 		}

@@ -114,19 +114,19 @@
 				},
 				{
 					"__identifier": "Pushable",
-					"__grid": [10,2],
+					"__grid": [12,1],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": null,
 					"__smartColor": "#7C7C7C",
 					"iid": "b7b58c70-bde0-11f1-88ae-2b7cb65a4b84",
-					"width": 128,
-					"height": 128,
+					"width": 64,
+					"height": 64,
 					"defUid": 24,
-					"px": [640,192],
+					"px": [768,128],
 					"fieldInstances": [{ "__identifier": "Mass", "__type": "Int", "__value": 1, "__tile": null, "defUid": 47, "realEditorValues": [] }],
-					"__worldX": 640,
-					"__worldY": -512
+					"__worldX": 768,
+					"__worldY": -576
 				},
 				{
 					"__identifier": "PlayerSpawner",

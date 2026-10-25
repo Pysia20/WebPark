@@ -77,7 +77,7 @@ Backend:
 - Express.js for HTTP API
 - Socket.io for player synchronization, live updates
 - Zod for data validation
-- Nginx to merge frontend and backend, proxies
+- Nginx to merge frontend and backend
 - Pino for logging
 - Visual Studio Code for coding
 

@@ -3,7 +3,7 @@ import { Level } from "../Level";
 import { JohnEntity } from "./JohnEntity";
 import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG, PUSHABLE_CONFIG } from "@shared/commonVariables";
-import { clamp, isColliding } from "../../Global";
+import { clamp, RequiredField } from "../../Global";
 import { Player } from "../Player";
 import CONFIG from "../../../config.json";
 import { MapCollider } from "./MapCollider";
@@ -12,6 +12,17 @@ import { Entity } from "../Entity";
 //TODO Add colision with other entities
 
 export class Pushable extends Entity {
+	public override getUsedFields() {
+		return [
+			{
+				name: "Mass",
+				value: this.customFields.Mass.value,
+				isRequired: true,
+				isMissing: (v) => !v || v <= 0,
+			} as RequiredField,
+		];
+	}
+
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields, "Pushable");
 
@@ -19,20 +30,19 @@ export class Pushable extends Entity {
 	}
 
 	protected override onRightCollision(overlap: number, other: Entity) {
-		// super.onRightCollision(overlap, other);
+		//TODO
+		// if (other instanceof Player) {
+		// 	const playersPushing = other.getPlayersBehind(-1, [...this.level!.room.players.values()]);
+		// 	let playersCount = 1 + playersPushing.length; // This + others
+		// 	console.log(playersCount);
+		// }
 	}
 
-	protected override onLeftCollision(overlap: number, other: Entity) {
-		// super.onLeftCollision(overlap, other);
-	}
+	protected override onLeftCollision(overlap: number, other: Entity) {}
 
-	protected override onUpCollision(overlap: number, other: Entity) {
-		// super.onUpCollision(overlap, other);
-	}
+	protected override onUpCollision(overlap: number, other: Entity) {}
 
-	protected override onDownCollision(overlap: number, other: Entity) {
-		// super.onDownCollision(overlap, other);
-	}
+	protected override onDownCollision(overlap: number, other: Entity) {}
 
 	public override handleBehaviour(l: Level) {
 		if (this.velocity.x > PLAYER_CONFIG.DRAG) {

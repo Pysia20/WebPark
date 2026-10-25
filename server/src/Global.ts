@@ -1,12 +1,5 @@
-import { EntityCustomField, EntityCustomFieldsData } from "@shared/commonLevelModels";
+import { EntityCustomField } from "@shared/commonLevelModels";
 import { Room } from "./Game/Room";
-import { JohnEntity } from "./Game/Entities/JohnEntity";
-import { Player } from "./Game/Player";
-import { CollisionCheckResult, Vector2 } from "@shared/commonModels";
-import { LOG } from "./Logger";
-import { PLAYER_CONFIG } from "@shared/commonVariables";
-import { diff } from "node:util";
-import { MapCollider } from "./Game/Entities/MapCollider";
 
 export const games: Map<string, Room> = new Map<string, Room>();
 
@@ -53,72 +46,4 @@ export interface RequiredField {
 	value: any;
 	isMissing: (v: any) => boolean;
 	isRequired: boolean;
-}
-
-function extractTransform(
-	object: Player | MapCollider | JohnEntity,
-): [number, number, number, number] {
-	let x, y, width, height;
-
-	if (object instanceof Player) {
-		x = object.pos.x;
-		y = object.pos.y;
-		width = PLAYER_CONFIG.WIDTH;
-		height = PLAYER_CONFIG.HEIGHT;
-	} else if (object instanceof MapCollider) {
-		x = object.x;
-		y = object.y;
-		width = object.width;
-		height = object.height;
-	} else if (object instanceof JohnEntity) {
-		x = object.pos.x;
-		y = object.pos.y;
-		width = object.size.x;
-		height = object.size.y;
-	} else {
-		LOG.error("Invalid object A in collision detection.");
-		throw Error("Invalid object A in collision detection.");
-	}
-
-	return [x, y, width, height];
-}
-
-//TODO Add better ground detection
-
-/**
- *
- * @param objectA
- * @param objectB
- *
- * @returns {Vector2} - If collides, returns overlaps, otherwise returns {-1,-1}
- */
-export function isColliding(
-	objectA: Player | MapCollider | JohnEntity,
-	objectB: Player | MapCollider | JohnEntity,
-): CollisionCheckResult {
-	let [xA, yA, widthA, heightA] = extractTransform(objectA);
-	let [xB, yB, widthB, heightB] = extractTransform(objectB);
-
-	const isCollidingX = xB < xA + widthA && xA < xB + widthB;
-	const isCollidingY = yB < yA + heightA && yA < yB + heightB;
-
-	if (!isCollidingX || !isCollidingY) return { overlapX: -1, overlapY: -1, diffX: -1, diffY: -1 }; // Objects arent colliding
-
-	const centerA: Vector2 = {
-		x: xA + widthA / 2,
-		y: yA + heightA / 2,
-	};
-
-	const centerB: Vector2 = {
-		x: xB + widthB / 2,
-		y: yB + heightB / 2,
-	};
-
-	const diffX = centerA.x - centerB.x;
-	const diffY = centerA.y - centerB.y;
-
-	const overlapX = widthA / 2 + widthB / 2 - Math.abs(diffX);
-	const overlapY = heightA / 2 + heightB / 2 - Math.abs(diffY);
-
-	return { overlapX: overlapX, overlapY: overlapY, diffX: diffX, diffY: diffY };
 }

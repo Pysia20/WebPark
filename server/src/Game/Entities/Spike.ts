@@ -3,7 +3,7 @@ import { Level } from "../Level";
 import { JohnEntity } from "./JohnEntity";
 import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
-import { isColliding, RequiredField } from "../../Global";
+import { RequiredField } from "../../Global";
 import { Player } from "../Player";
 import { LOG } from "../../Logger";
 import { Entity } from "../Entity";
@@ -28,6 +28,7 @@ export class Spike extends Entity {
 
 	protected override onAnyCollision(other: Entity) {
 		this.shouldKill = true;
+		console.log("KILLING BY EVIL SPIKE");
 	}
 
 	public override handleBehaviour(l: Level) {

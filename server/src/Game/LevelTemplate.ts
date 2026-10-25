@@ -11,13 +11,8 @@ import {
 	CustomField,
 	DummyEntityCustomFields,
 } from "@shared/commonLevelModels";
-import { JohnEntity } from "./Entities/JohnEntity";
-import { Button } from "./Entities/Button";
 import { LOG } from "../Logger";
 import { EntityBuilder } from "./Entities/EntityBuilder";
-import { Door } from "./Entities/Door";
-import { MAP_LOADER } from "./LevelLoader";
-import { Room } from "./Room";
 import { MapCollider } from "./Entities/MapCollider";
 import { Entity } from "./Entity";
 
@@ -59,7 +54,6 @@ export class LevelTemplate {
 			if (layer.__type != "Entities") {
 				return;
 			}
-
 			layer.entityInstances.forEach((entityData: EntityInstance) => {
 				const builder: EntityBuilder = new EntityBuilder(entityData.__identifier as EntityType)
 					.setPosition({
@@ -71,7 +65,9 @@ export class LevelTemplate {
 				const customFields = this.parseEntityFields(entityData);
 				builder.setCustomFields(customFields);
 
-				entities.push(builder.build());
+				const entity = builder.build();
+
+				entities.push(entity);
 			});
 		});
 
@@ -147,14 +143,6 @@ export class LevelTemplate {
 
 				colliders.push(this.generateCollider(x, y, visited));
 			}
-		}
-
-		if (this.id == "Level_0") {
-			colliders.forEach((c) => {
-				console.log("============================");
-				console.log(`POS: ${c.pos.x} | ${c.pos.y}`);
-				console.log(`SIZE: ${c.size.x} | ${c.size.y}`);
-			});
 		}
 
 		return colliders;

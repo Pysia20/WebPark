@@ -94,6 +94,29 @@ export class Player extends Entity {
 		this.isGrounded = false;
 	}
 
+	/**  1 - right | -1 - left */
+	public getPlayersBehind(direction: 1 | -1, players: Player[]) {
+		let theList: Player[] = [];
+
+		const maxXDiffrence = direction * (PLAYER_CONFIG.WIDTH + 5);
+		const maxYDiffrence = PLAYER_CONFIG.HEIGHT;
+
+		players.forEach((p) => {
+			const isBehind =
+				Math.abs(p.pos.x - this.pos.x) <= maxXDiffrence &&
+				Math.abs(p.pos.y - this.pos.y) <= maxYDiffrence;
+
+			const isPlayerGoingTowards =
+				(direction == 1 && p.lastInputs.right) || (direction == -1 && p.lastInputs.left);
+
+			if (isBehind && isPlayerGoingTowards) {
+				theList.push(p);
+			}
+		});
+
+		return theList;
+	}
+
 	public clone() {
 		LOG.warn("You shouldn't use .clone() on a Player. It only returns a reference");
 		return this;

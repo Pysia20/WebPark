@@ -38,7 +38,7 @@ export class MovingPlatform extends Entity {
 			{
 				name: "StaysOn",
 				value: this.customFields.StaysOn.value,
-				isMissing: (v: any) => v === undefined || !v,
+				isMissing: (v: any) => v === undefined,
 				isRequired: false,
 			},
 			{

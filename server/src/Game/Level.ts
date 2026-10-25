@@ -114,10 +114,6 @@ export class Level {
 
 		this.allEntities.forEach((e) => e.handleBehaviour(this));
 
-		if (this.shouldRestart) {
-			this.reloadLevel();
-		}
-
 		for (let i = 0; i < this.dynamicEntities.length; i++) {
 			for (let j = i + 1; j < this.dynamicEntities.length; j++) {
 				const a = this.dynamicEntities[i];
@@ -125,6 +121,11 @@ export class Level {
 
 				Entity.handleDynamicCollision(a, b);
 			}
+		}
+
+		if (this.shouldRestart) {
+			this.shouldRestart = false;
+			this.reloadLevel();
 		}
 	}
 }

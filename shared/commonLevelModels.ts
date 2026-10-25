@@ -128,6 +128,7 @@ export interface EntityCustomFieldsData {
 	Speed: CustomField<number>;
 	Distance: CustomField<number>;
 	Cooldown: CustomField<number>;
+	Mass: CustomField<number>;
 }
 
 export type EntityCustomFieldTypeMap = {
@@ -139,6 +140,7 @@ export type EntityCustomFieldTypeMap = {
 	Speed: number;
 	Distance: number;
 	Cooldown: number;
+	Mass: number;
 };
 
 export type EntityCustomField = keyof EntityCustomFieldsData;
@@ -178,6 +180,10 @@ export const DummyEntityCustomFields: EntityCustomFieldsData = {
 		value: undefined,
 	},
 	Cooldown: {
+		doesExist: false,
+		value: undefined,
+	},
+	Mass: {
 		doesExist: false,
 		value: undefined,
 	},

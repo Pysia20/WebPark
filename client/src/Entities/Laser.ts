@@ -86,7 +86,7 @@ export class LaserEnt extends Ent {
         let wall2: Vector2 = {x: this.data.visualSize.x, y: -ENTITY_VISUAL_CONFIG.LASER.BASE_WALL_OFFSET}
         let end: Vector2 = {x: this.data.visualSize.x + ENTITY_VISUAL_CONFIG.LASER.BASE_START_OFFSET, y: 0}
 
-        this.baseUp.poly([start.x, start.y, wall.x , wall.y, spike.x, spike.y, wall2.x, wall2.y, end.x, end.y]).fill({color: ENTITY_VISUAL_CONFIG.LASER.BASE_COLOR})
+        this.baseUp.poly([start.x, start.y, wall.x , wall.y, spike.x, spike.y, wall2.x, wall2.y, end.x, end.y]).fill({color: ENTITY_VISUAL_CONFIG.LASER.BASE_COLOR}).stroke({width: 2, color: ENTITY_VISUAL_CONFIG.LASER.BASE_COLOR, join: "round"})
 
         start.y  = this.data.visualSize.y
         wall.y = this.data.visualSize.y + ENTITY_VISUAL_CONFIG.LASER.BASE_WALL_OFFSET
@@ -94,7 +94,7 @@ export class LaserEnt extends Ent {
         wall2.y  = this.data.visualSize.y + ENTITY_VISUAL_CONFIG.LASER.BASE_WALL_OFFSET
         end.y = this.data.visualSize.y
 
-        this.baseDown.poly([start.x, start.y, wall.x , wall.y, spike.x, spike.y, wall2.x, wall2.y, end.x, end.y]).fill({color: ENTITY_VISUAL_CONFIG.LASER.BASE_COLOR})
+        this.baseDown.poly([start.x, start.y, wall.x , wall.y, spike.x, spike.y, wall2.x, wall2.y, end.x, end.y]).fill({color: ENTITY_VISUAL_CONFIG.LASER.BASE_COLOR}).stroke({width: 2, color: ENTITY_VISUAL_CONFIG.LASER.BASE_COLOR, join: "round"})
     }
 
     damp(isActive: boolean) {

@@ -3,10 +3,11 @@ import { Level } from "../Level";
 import { JohnEntity } from "./JohnEntity";
 import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
-import { isColliding, RequiredField } from "../../Global";
+import { RequiredField } from "../../Global";
 import { Player } from "../Player";
 import e from "cors";
 import { Entity } from "../Entity";
+import { ServerButtonDoorData } from "@shared/commonEntityData";
 
 //! DO NOT IMPORT!!!
 //? IT IS A TEMPLATE FOR CREATING NEW ENTITY TYPES
@@ -82,5 +83,14 @@ export class Laser extends Entity {
 
 	public override clone() {
 		return new Laser({ ...this.pos }, { ...this.size }, { ...this.customFields });
+	}
+
+	public override getData(): ServerButtonDoorData {
+		return {
+			pos: this.pos,
+			visualSize: this.size,
+			type: this.type,
+			isOpen: this.isActivated,
+		};
 	}
 }

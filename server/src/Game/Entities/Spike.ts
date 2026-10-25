@@ -28,7 +28,6 @@ export class Spike extends Entity {
 
 	protected override onAnyCollision(other: Entity) {
 		this.shouldKill = true;
-		console.log("KILLING BY EVIL SPIKE");
 	}
 
 	public override handleBehaviour(l: Level) {

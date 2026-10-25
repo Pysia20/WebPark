@@ -3,7 +3,11 @@ import { ServerEntityData, Vector2 } from "@shared/commonModels";
 import { Level } from "../Game/Level";
 import { RequiredField } from "../Global";
 import { LOG } from "../Logger";
-import { COLLISION_MARGIN_Y, GROUND_DETECTON_OFFSET } from "@shared/commonVariables";
+import {
+	COLLISION_MARGIN_X,
+	COLLISION_MARGIN_Y,
+	GROUND_DETECTON_OFFSET,
+} from "@shared/commonVariables";
 import CONFIG from "../../config.json";
 
 export abstract class Entity {
@@ -116,7 +120,11 @@ export abstract class Entity {
 	}
 
 	public calculateCollisionsY(other: Entity) {
-		const { collidesX, collidesY } = Entity.isColliding(this, other);
+		const newPos = { ...other.pos };
+		newPos.x += COLLISION_MARGIN_X / 2;
+		const newSize = { ...other.size };
+		newSize.x -= COLLISION_MARGIN_X / 2;
+		const { collidesX, collidesY } = Entity.isColliding(this, { pos: newPos, size: newSize });
 		if (collidesX && collidesY) {
 			const centerA = this.pos.y + this.size.y / 2;
 			const centerB = other.pos.y + other.size.y / 2;
@@ -183,13 +191,6 @@ export abstract class Entity {
 	// DYNAMIC COLLISIONS
 	public static handleDynamicCollision(a: Entity, b: Entity) {
 		if (a == b) return;
-
-		if (a.type == "Pushable") {
-			console.log(a.pos);
-		}
-		if (b.type == "Pushable") {
-			console.log(b.pos);
-		}
 
 		const { collidesX, collidesY } = Entity.isColliding(a, b);
 		if (!collidesX || !collidesY) return;

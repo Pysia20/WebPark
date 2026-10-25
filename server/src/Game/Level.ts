@@ -143,9 +143,6 @@ export class Level {
 				e.calculateCollisionsY(other);
 			});
 		});
-		// 6. Other behaviour
-
-		this.allEntities.forEach((e) => e.handleBehaviour(this));
 
 		for (let i = 0; i < this.dynamicEntities.length; i++) {
 			for (let j = i + 1; j < this.dynamicEntities.length; j++) {
@@ -155,6 +152,10 @@ export class Level {
 				Entity.handleDynamicCollision(a, b);
 			}
 		}
+
+		// 6. Other behaviour
+
+		this.allEntities.forEach((e) => e.handleBehaviour(this));
 
 		if (this.shouldRestart) {
 			this.shouldRestart = false;

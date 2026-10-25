@@ -13,6 +13,8 @@ export class LaserEnt extends Ent {
     length: number
     halfJitter: number
     step: number
+    currentAmplitude: number = ENTITY_VISUAL_CONFIG.LASER.AMPLITUDE
+    alphaOffset: number = 0
 
     data: ServerEntityData
 
@@ -44,10 +46,12 @@ export class LaserEnt extends Ent {
         this.wave.clear()
         this.glow.clear()
 
+        this.damp(false)
+
         for (let i = 0; i <= this.length; i += this.step) {
             const rand  = (Math.random() * ENTITY_VISUAL_CONFIG.LASER.JITTER) - this.halfJitter
 
-            const waveX = Math.sin((i * ENTITY_VISUAL_CONFIG.LASER.FREQUENCY) + this.offset) * (ENTITY_VISUAL_CONFIG.LASER.AMPLITUDE + rand)
+            const waveX = Math.sin((i * ENTITY_VISUAL_CONFIG.LASER.FREQUENCY) + this.offset) * (this.currentAmplitude + rand)
 
             //i == waveY btw
             if (i === 0) {
@@ -58,9 +62,10 @@ export class LaserEnt extends Ent {
                 this.glow.lineTo(waveX, i)
             }
         }
+        console.log(ENTITY_VISUAL_CONFIG.LASER.OPACITY - this.alphaOffset)
 
-        this.wave.stroke({color: ENTITY_VISUAL_CONFIG.LASER.COLOR, width: ENTITY_VISUAL_CONFIG.LASER.WIDTH, cap: "round", join: "round", alpha: ENTITY_VISUAL_CONFIG.LASER.OPACITY})
-        this.glow.stroke({color: ENTITY_VISUAL_CONFIG.LASER.GLOW_COLOR, width: ENTITY_VISUAL_CONFIG.LASER.GLOW_WIDTH, cap: "round", join: "round", alpha: ENTITY_VISUAL_CONFIG.LASER.GLOW_OPACITY})
+        this.wave.stroke({color: ENTITY_VISUAL_CONFIG.LASER.COLOR, width: ENTITY_VISUAL_CONFIG.LASER.WIDTH, cap: "round", join: "round", alpha: ENTITY_VISUAL_CONFIG.LASER.OPACITY - this.alphaOffset})
+        this.glow.stroke({color: ENTITY_VISUAL_CONFIG.LASER.GLOW_COLOR, width: ENTITY_VISUAL_CONFIG.LASER.GLOW_WIDTH, cap: "round", join: "round", alpha: ENTITY_VISUAL_CONFIG.LASER.GLOW_OPACITY - this.alphaOffset})
     }
 
     //this seems very meh
@@ -80,6 +85,19 @@ export class LaserEnt extends Ent {
         end.y = this.data.visualSize.y
 
         this.baseDown.poly([start.x, start.y, wall.x , wall.y, spike.x, spike.y, wall2.x, wall2.y, end.x, end.y]).fill({color: ENTITY_VISUAL_CONFIG.LASER.BASE_COLOR})
+    }
+
+    damp(isActive: boolean) {
+        if (!isActive && this.currentAmplitude > 0) {
+            this.currentAmplitude += (0 - this.currentAmplitude) * 0.04
+            this.alphaOffset += (1 - this.alphaOffset) * 0.04
+        } else if (this.currentAmplitude < ENTITY_VISUAL_CONFIG.LASER.AMPLITUDE) {
+            this.currentAmplitude += (ENTITY_VISUAL_CONFIG.LASER.AMPLITUDE - this.currentAmplitude) * 0.08
+            this.alphaOffset += (0 - this.alphaOffset) * 0.08
+        } else {
+            this.currentAmplitude = ENTITY_VISUAL_CONFIG.LASER.AMPLITUDE
+            this.alphaOffset = 0
+        }
     }
 
     override beGone(world: Container) {

@@ -21,3 +21,4 @@ Thumbs.db
 *.log
 
 server/src/test.ts
+/.wakatime-project

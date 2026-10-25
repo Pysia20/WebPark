@@ -50,9 +50,9 @@ export class LaserEnt extends Ent {
         this.wave.clear()
         this.glow.clear()
 
-        if (getCurrentInputs().jump) {
-            this.test = !this.test
-        }
+        //if (getCurrentInputs().jump) {
+        //    this.test = !this.test
+        //}
 
         this.damp(this.test)
 

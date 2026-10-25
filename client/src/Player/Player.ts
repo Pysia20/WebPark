@@ -1,15 +1,15 @@
-import {Container, Text as PixiText} from "pixi.js";
-import {Vector2} from "@shared/commonModels"
-import {PlayerTextures} from "../Assets";
-import {playJump} from "../Audio";
-import {PLAYER_CONFIG, PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
-import {Leg} from "./Leg";
-import {Torso} from "./Torso";
-import {Eye} from "./Eye";
-import {Arm} from "./Arm";
-import {Directions} from "./PlayerEnums";
-import {getCurrentInputs} from "../Inputs";
-//TODO: SHARE AND SYNC WHERE PLAYER IS LOOKING
+import { Container, Text as PixiText} from "pixi.js";
+import { Vector2 } from "@shared/commonModels"
+import { PlayerTextures } from "../Assets";
+import { playJump } from "../Audio";
+import { PLAYER_CONFIG, PLAYER_VISUAL_CONFIG } from "@shared/commonVariables";
+import { Leg } from "./Leg";
+import { Torso } from "./Torso";
+import { Eye } from "./Eye";
+import { Arm } from "./Arm";
+import { Directions } from "./PlayerEnums";
+import { getCurrentInputs } from "../Inputs";
+
 export class Player {
     id: number
     isHost: boolean

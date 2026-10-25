@@ -1,8 +1,7 @@
 import { Container, Graphics } from "pixi.js";
 import { Ent } from "./Ent";
 import { ServerEntityData, Vector2 } from "@shared/commonModels";
-import {ENTITY_VISUAL_CONFIG, PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
-import {getCurrentInputs} from "../Inputs";
+import { ENTITY_VISUAL_CONFIG } from "@shared/commonVariables";
 
 export class LaserEnt extends Ent {
     wave: Graphics
@@ -109,7 +108,7 @@ export class LaserEnt extends Ent {
         } else {
             this.currentAmplitude = ENTITY_VISUAL_CONFIG.LASER.AMPLITUDE
             this.alphaOffset = 0
-            this.randOffset = 0
+            this.randOffset = 1
         }
     }
 

@@ -2,13 +2,13 @@
 
 # Web Park
 
-<img src="GitHub/EpicCapture.PNG" alt="the guy" width="750">
+<img src="GitHub/EpicCapture.png" alt="the guy" width="750">
 
 ### An online multiplayer co-op game inspired by pico park
 
 ### Currently, in early-ish development
 
-$\color{gray} \text{now without pico park sprites! revolutionary stuff}$
+$\color{gray} \text{now ~~mostly~~ without pico park sprites! revolutionary stuff}$
 
 ---
 
@@ -22,10 +22,10 @@ $\color{gray} \text{now without pico park sprites! revolutionary stuff}$
 - Custom player colors _(currently no longer broken)_, custom names
 - Basic sound effects
 - Game synchronization
-- Movement and Physics ~~that are currently mid-rewrite~~
+- Movement and Physics ~~that are currently mid-rewrite hell~~
 - Procedurally animated players! Eyes, legs, torso, pretty much everything!
 - _Less_ basic main menu
-- Basic and not-so basic Entities (Buttons, Doors, Moving Platforms, Lasers, _everyone's favorite JohnEntity_ and more) with many options
+- Basic and not-so basic Entities (Buttons, Doors, Moving Platforms, Procedurall Lasers, _everyone's favorite JohnEntity_ and more) with many options
 - Level loading from LDtk
 - Camera system that keeps all players on screen at once
 - Basic Hud/Ui
@@ -66,7 +66,7 @@ Frontend :
 - Vanilla HTML and CSS for the websites
 - GIMP for making images
 - Audacity for a _very lil bit_ of audio editing
-- PixiJS for rendering
+- PixiJS for rendering (insanely good docs btw)
 - Socket.io Client for communicating with the server
 - Howler.js for audio
 - WebStorm for coding _(also the thing you are reading right now)_

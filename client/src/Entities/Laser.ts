@@ -2,6 +2,7 @@ import { Container, Graphics } from "pixi.js";
 import { Ent } from "./Ent";
 import { ServerEntityData, Vector2 } from "@shared/commonModels";
 import { ENTITY_VISUAL_CONFIG } from "@shared/commonVariables";
+import {getCurrentInputs} from "../Inputs";
 
 export class LaserEnt extends Ent {
     wave: Graphics
@@ -15,6 +16,9 @@ export class LaserEnt extends Ent {
     step: number
     currentAmplitude: number = ENTITY_VISUAL_CONFIG.LASER.AMPLITUDE
     alphaOffset: number = 0
+    randOffset: number = 1
+
+    test: boolean = true
 
     data: ServerEntityData
 
@@ -46,12 +50,16 @@ export class LaserEnt extends Ent {
         this.wave.clear()
         this.glow.clear()
 
-        this.damp(false)
+        if (getCurrentInputs().jump) {
+            this.test = !this.test
+        }
+
+        this.damp(this.test)
 
         for (let i = 0; i <= this.length; i += this.step) {
             const rand  = (Math.random() * ENTITY_VISUAL_CONFIG.LASER.JITTER) - this.halfJitter
 
-            const waveX = Math.sin((i * ENTITY_VISUAL_CONFIG.LASER.FREQUENCY) + this.offset) * (this.currentAmplitude + rand)
+            const waveX = Math.sin((i * ENTITY_VISUAL_CONFIG.LASER.FREQUENCY) + this.offset) * (this.currentAmplitude + (rand / this.randOffset))
 
             //i == waveY btw
             if (i === 0) {
@@ -62,13 +70,15 @@ export class LaserEnt extends Ent {
                 this.glow.lineTo(waveX, i)
             }
         }
-        console.log(ENTITY_VISUAL_CONFIG.LASER.OPACITY - this.alphaOffset)
 
-        this.wave.stroke({color: ENTITY_VISUAL_CONFIG.LASER.COLOR, width: ENTITY_VISUAL_CONFIG.LASER.WIDTH, cap: "round", join: "round", alpha: ENTITY_VISUAL_CONFIG.LASER.OPACITY - this.alphaOffset})
-        this.glow.stroke({color: ENTITY_VISUAL_CONFIG.LASER.GLOW_COLOR, width: ENTITY_VISUAL_CONFIG.LASER.GLOW_WIDTH, cap: "round", join: "round", alpha: ENTITY_VISUAL_CONFIG.LASER.GLOW_OPACITY - this.alphaOffset})
+        const waveAlpha = Math.max(0, ENTITY_VISUAL_CONFIG.LASER.OPACITY - this.alphaOffset)
+        const glowAlpha = Math.max(0, ENTITY_VISUAL_CONFIG.LASER.GLOW_OPACITY - this.alphaOffset)
+
+        this.wave.stroke({color: ENTITY_VISUAL_CONFIG.LASER.COLOR, width: ENTITY_VISUAL_CONFIG.LASER.WIDTH, cap: "round", join: "round", alpha: waveAlpha})
+        this.glow.stroke({color: ENTITY_VISUAL_CONFIG.LASER.GLOW_COLOR, width: ENTITY_VISUAL_CONFIG.LASER.GLOW_WIDTH, cap: "round", join: "round", alpha: glowAlpha})
     }
 
-    //this seems very meh
+    //this seems very meh... still
     drawBase() {
         let start: Vector2 = {x: -ENTITY_VISUAL_CONFIG.LASER.BASE_START_OFFSET, y: 0}
         let wall: Vector2 = {x: 0, y: -ENTITY_VISUAL_CONFIG.LASER.BASE_WALL_OFFSET}
@@ -90,13 +100,16 @@ export class LaserEnt extends Ent {
     damp(isActive: boolean) {
         if (!isActive && this.currentAmplitude > 0) {
             this.currentAmplitude += (0 - this.currentAmplitude) * 0.04
-            this.alphaOffset += (1 - this.alphaOffset) * 0.04
+            this.alphaOffset += (1 - this.alphaOffset) * 0.04 / 2
+            this.randOffset += (ENTITY_VISUAL_CONFIG.LASER.JITTER - this.randOffset) * 0.04 * 4
         } else if (this.currentAmplitude < ENTITY_VISUAL_CONFIG.LASER.AMPLITUDE) {
             this.currentAmplitude += (ENTITY_VISUAL_CONFIG.LASER.AMPLITUDE - this.currentAmplitude) * 0.08
             this.alphaOffset += (0 - this.alphaOffset) * 0.08
+            this.randOffset += (1 - this.randOffset) * 0.08 * 4
         } else {
             this.currentAmplitude = ENTITY_VISUAL_CONFIG.LASER.AMPLITUDE
             this.alphaOffset = 0
+            this.randOffset = 0
         }
     }
 

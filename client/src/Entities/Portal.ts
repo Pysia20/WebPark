@@ -1,7 +1,5 @@
-import { Container, Graphics } from "pixi.js";
+import { Graphics } from "pixi.js";
 import { Ent } from "./Ent";
-import { ENTITY_VISUAL_CONFIG } from "@shared/commonVariables";
-import { ServerLaserEntityData } from "@shared/commonEntityData";
 import {pulseer} from "../Shaders";
 import {ServerEntityData} from "@shared/commonModels";
 
@@ -19,7 +17,7 @@ export class PortalEnt extends Ent {
     }
 
     update(data: ServerEntityData, deltaT: number) {
-        pulseer.resources.timeUniforms.uniforms.uTime += 0.05 * deltaT;
+
     }
 
     /*

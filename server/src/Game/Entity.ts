@@ -17,6 +17,7 @@ export abstract class Entity {
 	public isGrounded: boolean = false;
 	public isDynamic: boolean = false;
 	public velocityStack: Vector2[] = [];
+	public isPushing: boolean = false;
 
 	public getUsedFields(): RequiredField[] {
 		return [];
@@ -144,7 +145,9 @@ export abstract class Entity {
 		}
 	}
 
-	public calculateVelocities() {}
+	public calculateVelocities() {
+		this.isPushing = false;
+	}
 
 	public moveXAxis() {
 		this.pos.x += this.velocity.x * (1 / CONFIG.TICKRATE);
@@ -229,6 +232,15 @@ export abstract class Entity {
 				// Pushing out to the left
 				a.pos.x -= overlap.x / 2;
 				b.pos.x += overlap.x / 2;
+			}
+
+			if (a.velocity.x > b.velocity.x) {
+				a.isPushing = true;
+			} else if (b.velocity.x > a.velocity.x) {
+				b.isPushing = true;
+			} else {
+				a.isPushing = true;
+				b.isPushing = true;
 			}
 
 			const averageVelocity: Vector2 = {

@@ -24,7 +24,7 @@ export class PlayerSpawner extends Entity {
 
 	protected onDownCollision(overlap: number, other: Entity) {}
 
-	protected onUpTouching(other: Entity): void {}
+	protected onUpTouching(other: Entity) {}
 
 	public override clone() {
 		return new PlayerSpawner({ ...this.pos }, { ...this.size }, { ...this.customFields });

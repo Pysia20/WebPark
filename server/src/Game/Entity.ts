@@ -280,11 +280,6 @@ export abstract class Entity {
 	public handleBehaviour(level: Level) {}
 
 	public endTick() {
-		this.velocityStack.forEach((v) => {
-			this.velocity.x += v.x;
-			this.velocity.y += v.y;
-		});
-
 		this.velocityStack = [];
 	}
 

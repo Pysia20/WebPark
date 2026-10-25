@@ -5,6 +5,7 @@ import { PlayerSpawner } from "./Entities/PlayerSpawner";
 import { LOG } from "../Logger";
 import { Entity } from "./Entity";
 import { MapCollider } from "./Entities/MapCollider";
+import { Portal } from "./Entities/Portal";
 
 export class Level {
 	public readonly levelTemplate: LevelTemplate;
@@ -19,6 +20,7 @@ export class Level {
 	public group!: string;
 	public groupIndex!: number;
 	public spawners: PlayerSpawner[] = [];
+	public portals = new Map<string, [Portal | undefined, Portal | undefined]>();
 
 	public room: Room;
 	public shouldRestart: boolean = false;
@@ -50,7 +52,37 @@ export class Level {
 			} else {
 				this.staticEntities.push(e);
 			}
+
+			if (e.type == "Portal") {
+				let tuple: [Portal | undefined, Portal | undefined] | undefined = this.portals.get(
+					e.customFields.PortalGroup.value!,
+				);
+
+				if (tuple == undefined) {
+					tuple = [undefined, undefined];
+				}
+
+				if (!tuple?.[0]) {
+					tuple[0] = e as Portal;
+				} else if (!tuple?.[1]) {
+					tuple[1] = e as Portal;
+				} else {
+					const message = `Too many portals of group: "${e.customFields.PortalGroup.value}". Max 2.`;
+					LOG.error(message);
+					throw new Error(message);
+				}
+
+				this.portals.set(e.customFields.PortalGroup.value!, tuple);
+			}
 		});
+
+		for (const [group, tuple] of this.portals) {
+			if (!tuple[0] || !tuple[1]) {
+				const message = `Not enouth portals in group "${group}". 1/2.`;
+				LOG.error(message);
+				throw new Error(message);
+			}
+		}
 
 		for (let i = this.entities.length - 1; i >= 0; i--) {
 			const entity: Entity = this.entities[i];

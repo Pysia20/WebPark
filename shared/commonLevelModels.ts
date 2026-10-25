@@ -129,6 +129,7 @@ export interface EntityCustomFieldsData {
 	Distance: CustomField<number>;
 	Cooldown: CustomField<number>;
 	Mass: CustomField<number>;
+	PortalGroup: CustomField<string>;
 }
 
 export type EntityCustomFieldTypeMap = {
@@ -141,6 +142,7 @@ export type EntityCustomFieldTypeMap = {
 	Distance: number;
 	Cooldown: number;
 	Mass: number;
+	PortalGroup: string;
 };
 
 export type EntityCustomField = keyof EntityCustomFieldsData;
@@ -187,6 +189,10 @@ export const DummyEntityCustomFields: EntityCustomFieldsData = {
 		doesExist: false,
 		value: undefined,
 	},
+	PortalGroup: {
+		doesExist: false,
+		value: undefined,
+	},
 } as const;
 
 export interface EntityFieldInstance {
@@ -216,4 +222,5 @@ export type EntityType =
 	| "Spike"
 	| "PlayerSpawner"
 	| "MovingPlatform"
-	| "Laser";
+	| "Laser"
+	| "Portal";

@@ -1,6 +1,12 @@
 import { Namespace } from "socket.io";
 import { Player } from "./Player";
-import { PlayerInputs, ServerData, Vector2, ServerEntityData } from "@shared/commonModels";
+import {
+	PlayerInputs,
+	ServerData,
+	Vector2,
+	ServerEntityData,
+	SomethingBrokeData,
+} from "@shared/commonModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { MAP_LOADER } from "./LevelLoader";
 import { LOG } from "../Logger";
@@ -94,36 +100,52 @@ export class Room {
 	public startGameLoop(io: Namespace) {
 		this.io = io;
 
-		this.level.reloadLevel();
-		this.gameLoop = setInterval(
-			async () => {
-				this.level.physicsUpdate();
+		try {
+			this.level.reloadLevel();
+			this.gameLoop = setInterval(
+				async () => {
+					this.level.physicsUpdate();
 
-				const roomData: ServerData = {
-					playerData: {},
-					entityData: [],
-				};
-
-				this.players.forEach((player: Player, id: number) => {
-					const pos = player.pos;
-					roomData.playerData[id] = {
-						nick: player.nick,
-						pos: pos,
-						velocity: player.velocity,
-						isInsideDoor: player.isInsideDoor,
+					const roomData: ServerData = {
+						playerData: {},
+						entityData: [],
 					};
-				});
 
-				this.level.entities.forEach((entity: Entity) => {
-					const data: ServerEntityData = entity.getData();
+					this.players.forEach((player: Player, id: number) => {
+						const pos = player.pos;
+						roomData.playerData[id] = {
+							nick: player.nick,
+							pos: pos,
+							velocity: player.velocity,
+							isInsideDoor: player.isInsideDoor,
+						};
+					});
 
-					roomData.entityData[entity.id] = data;
-				});
+					this.level.entities.forEach((entity: Entity) => {
+						const data: ServerEntityData = entity.getData();
 
-				io.to(this.id).emit("tick", roomData);
-			},
-			(1 / this.TICKRATE) * 1000,
-		);
+						roomData.entityData[entity.id] = data;
+					});
+
+					io.to(this.id).emit("tick", roomData);
+				},
+				(1 / this.TICKRATE) * 1000,
+			);
+		} catch (e: any) {
+			if (e instanceof Error) {
+				io.to(this.id).emit("somethingBroke", {
+					name: "Error",
+					eventName: "Gameloop",
+					message: e.message,
+				} as SomethingBrokeData);
+			} else {
+				io.to(this.id).emit("somethingBroke", {
+					name: "Error",
+					eventName: "Gameloop",
+					message: "Unknown error, check server console.",
+				} as SomethingBrokeData);
+			}
+		}
 	}
 
 	public changeLevel(level: Level | undefined) {

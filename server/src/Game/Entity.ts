@@ -1,20 +1,10 @@
-import {
-	DummyEntityCustomFields,
-	EntityCustomFieldsData,
-	EntityType,
-} from "@shared/commonLevelModels";
+import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
 import { ServerEntityData, Vector2 } from "@shared/commonModels";
 import { Level } from "../Game/Level";
 import { RequiredField } from "../Global";
 import { LOG } from "../Logger";
-import {
-	COLLISION_MARGIN_Y,
-	GROUND_DETECTON_OFFSET,
-	HORIZONTAL_BIAS,
-} from "@shared/commonVariables";
-import { overwrite } from "zod";
+import { COLLISION_MARGIN_Y, GROUND_DETECTON_OFFSET } from "@shared/commonVariables";
 import CONFIG from "../../config.json";
-import { aborted } from "node:util";
 
 export abstract class Entity {
 	public id: number = -1;
@@ -53,10 +43,10 @@ export abstract class Entity {
 				newCustomFields[field.name].doesExist = false;
 				if (field.isRequired) {
 					LOG.error(
-						`${this.type} doesn't have an '${field.name}' custom field or it's value is invalid. (${this.pos.x}, ${this.pos.y})`,
+						`${this.type} doesn't have an '${field.name}' custom field or it's value is invalid. (${field.value}) (${this.pos.x}, ${this.pos.y})`,
 					);
 					throw Error(
-						`${this.type} doesn't have an '${field.name}' custom field or it's value is invalid. (${this.pos.x}, ${this.pos.y})`,
+						`${this.type} doesn't have an '${field.name}' custom field or it's value is invalid. (${field.value}) (${this.pos.x}, ${this.pos.y})`,
 					);
 				}
 

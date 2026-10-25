@@ -18,6 +18,7 @@ import { Laser } from "./Laser";
 import { Entity } from "../Entity";
 import { Player } from "../Player";
 import { MapCollider } from "./MapCollider";
+import { Portal } from "./Portal";
 
 type EntityConstructor = new (pos: any, size: any, customFields: any) => Entity;
 
@@ -42,6 +43,7 @@ export class EntityBuilder {
 		Laser: Laser,
 		Player: Player,
 		MapCollider: MapCollider,
+		Portal: Portal,
 	};
 
 	constructor(type: EntityType) {

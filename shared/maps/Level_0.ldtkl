@@ -454,6 +454,44 @@
 					"fieldInstances": [],
 					"__worldX": 512,
 					"__worldY": -512
+				},
+				{
+					"__identifier": "Portal",
+					"__grid": [10,2],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#331043",
+					"iid": "60872790-bde0-11f1-b35e-3f745caee0cc",
+					"width": 64,
+					"height": 64,
+					"defUid": 48,
+					"px": [640,192],
+					"fieldInstances": [{ "__identifier": "PortalGroup", "__type": "String", "__value": "John", "__tile": null, "defUid": 49, "realEditorValues": [{
+						"id": "V_String",
+						"params": ["John"]
+					}] }],
+					"__worldX": 640,
+					"__worldY": -512
+				},
+				{
+					"__identifier": "Portal",
+					"__grid": [11,10],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#331043",
+					"iid": "af4f54d0-bde0-11f1-b35e-bfa0973db299",
+					"width": 64,
+					"height": 64,
+					"defUid": 48,
+					"px": [704,704],
+					"fieldInstances": [{ "__identifier": "PortalGroup", "__type": "String", "__value": "John", "__tile": null, "defUid": 49, "realEditorValues": [{
+						"id": "V_String",
+						"params": ["John"]
+					}] }],
+					"__worldX": 704,
+					"__worldY": 0
 				}
 			]
 		},

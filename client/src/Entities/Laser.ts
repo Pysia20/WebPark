@@ -1,8 +1,9 @@
 import { Container, Graphics } from "pixi.js";
 import { Ent } from "./Ent";
-import { ServerEntityData, Vector2 } from "@shared/commonModels";
+import { Vector2 } from "@shared/commonModels";
 import { ENTITY_VISUAL_CONFIG } from "@shared/commonVariables";
 import { ServerLaserEntityData } from "@shared/commonEntityData";
+import {pulseer} from "../Shaders";
 
 export class LaserEnt extends Ent {
     wave: Graphics
@@ -39,6 +40,8 @@ export class LaserEnt extends Ent {
         this.glow.position.set(data.pos.x + (data.visualSize.x / 2), data.pos.y + (ENTITY_VISUAL_CONFIG.LASER.WIDTH / 2))
         this.baseUp.position.set(data.pos.x, data.pos.y)
         this.baseDown.position.set(data.pos.x, data.pos.y)
+
+        this.glow.filters = [pulseer]
 
         this.drawBase()
     }

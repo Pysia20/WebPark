@@ -9,6 +9,7 @@ import { CameraController } from "./Camera";
 import { leveler } from "./Leveler";
 import { pageSetup } from "./Weber";
 import { hud } from "./Hud";
+import {pulseer} from "./Shaders";
 const app = new PIXI.Application()
 await app.init({
     width: 1280,
@@ -54,6 +55,8 @@ setInterval(() => {
 leveler.renderLevel()
 hud.fadeIn(app)
 app.ticker.add((time) => {
+    pulseer.resources.timeUniforms.uniforms.uTime += 0.05 * time.deltaTime;
+
     const serverData = getServerData()
     if (serverData) {
         coordinator.update_players(serverData.playerData, time.deltaTime)

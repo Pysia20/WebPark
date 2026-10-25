@@ -6,6 +6,7 @@ import { LaserEnt } from "./Entities/Laser";
 import { JohnEnt } from "./Entities/JohnEnt";
 import {BoorEnt} from "./Entities/Boor";
 import {ButtonEnt} from "./Entities/Button";
+import {PortalEnt} from "./Entities/Portal";
 
 class levelManager {
 	levels!: Map<string, LevelData>
@@ -108,6 +109,9 @@ class levelManager {
 						break
 					case "Button":
 						newEnt = new ButtonEnt(entData as ServerButtonData, sprite)
+						break
+					case "Portal":
+						newEnt = new PortalEnt(entData)
 						break
 					default:
 						newEnt = new JohnEnt(entData, sprite)

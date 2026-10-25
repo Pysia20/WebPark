@@ -34,28 +34,29 @@ export class Level {
 		this.group = this.levelTemplate.group;
 		this.groupIndex = this.levelTemplate.groupIndex;
 
+		this.portals.clear();
 		this.dynamicEntities = [];
 		this.staticEntities = [];
 		this.allEntities = [];
 		this.entities = [];
 		this.spawners = [];
-		this.levelTemplate.entities.forEach((e) => {
-			const clone: Entity = e.clone();
+		this.levelTemplate.entities.forEach((originalEntity) => {
+			const clone: Entity = originalEntity.clone();
 			clone.id = this.entities.length;
 			clone.setLevel(this);
 			this.entities.push(clone);
-			if (e.customFields.ActivationGroup.doesExist) {
-				this.activationStates.set(e.customFields.ActivationGroup.value!, 0);
+			if (clone.customFields.ActivationGroup.doesExist) {
+				this.activationStates.set(clone.customFields.ActivationGroup.value!, 0);
 			}
-			if (e.isDynamic) {
-				this.dynamicEntities.push(e);
+			if (clone.isDynamic) {
+				this.dynamicEntities.push(clone);
 			} else {
-				this.staticEntities.push(e);
+				this.staticEntities.push(clone);
 			}
 
-			if (e.type == "Portal") {
+			if (clone.type == "Portal") {
 				let tuple: [Portal | undefined, Portal | undefined] | undefined = this.portals.get(
-					e.customFields.PortalGroup.value!,
+					clone.customFields.PortalGroup.value!,
 				);
 
 				if (tuple == undefined) {
@@ -63,16 +64,16 @@ export class Level {
 				}
 
 				if (!tuple?.[0]) {
-					tuple[0] = e as Portal;
+					tuple[0] = clone as Portal;
 				} else if (!tuple?.[1]) {
-					tuple[1] = e as Portal;
+					tuple[1] = clone as Portal;
 				} else {
-					const message = `Too many portals of group: "${e.customFields.PortalGroup.value}". Max 2.`;
+					const message = `Too many portals of group: "${clone.customFields.PortalGroup.value}". Max 2.`;
 					LOG.error(message);
 					throw new Error(message);
 				}
 
-				this.portals.set(e.customFields.PortalGroup.value!, tuple);
+				this.portals.set(clone.customFields.PortalGroup.value!, tuple);
 			}
 		});
 

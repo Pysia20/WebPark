@@ -1,4 +1,4 @@
-import { Vector2 } from "@shared/commonModels";
+import { ServerEntityData, Vector2 } from "@shared/commonModels";
 import { Level } from "../Level";
 import { JohnEntity } from "./JohnEntity";
 import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
@@ -6,7 +6,6 @@ import { PLAYER_CONFIG, PUSHABLE_CONFIG } from "@shared/commonVariables";
 import { clamp, RequiredField } from "../../Global";
 import { Player } from "../Player";
 import CONFIG from "../../../config.json";
-import { MapCollider } from "./MapCollider";
 import { Entity } from "../Entity";
 
 //TODO Add colision with other entities
@@ -23,8 +22,10 @@ export class Pushable extends Entity {
 		];
 	}
 
+	private originalPosition: Vector2;
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields, "Pushable");
+		this.originalPosition = { ...pos };
 
 		this.isDynamic = true;
 	}
@@ -74,7 +75,16 @@ export class Pushable extends Entity {
 
 		this.isGrounded = false;
 	}
+
+	public override getData() {
+		return {
+			pos: this.pos,
+			visualSize: this.size,
+			type: this.type,
+		} as ServerEntityData;
+	}
+
 	public override clone() {
-		return new Pushable({ ...this.pos }, { ...this.size }, { ...this.customFields });
+		return new Pushable({ ...this.originalPosition }, { ...this.size }, { ...this.customFields });
 	}
 }

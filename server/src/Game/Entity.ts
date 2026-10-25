@@ -184,6 +184,13 @@ export abstract class Entity {
 	public static handleDynamicCollision(a: Entity, b: Entity) {
 		if (a == b) return;
 
+		if (a.type == "Pushable") {
+			console.log(a.pos);
+		}
+		if (b.type == "Pushable") {
+			console.log(b.pos);
+		}
+
 		const { collidesX, collidesY } = Entity.isColliding(a, b);
 		if (!collidesX || !collidesY) return;
 

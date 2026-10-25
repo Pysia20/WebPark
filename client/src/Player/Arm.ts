@@ -1,6 +1,5 @@
 import {Graphics} from "pixi.js";
 import {Vector2} from "@shared/commonModels";
-import {PLAYER_CONFIG, PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
 import {Directions} from "./PlayerEnums";
 
 //can't rly test this rn
@@ -23,6 +22,7 @@ export class Arm {
 
     updateArm(shoul: Vector2, velocity: Vector2, deltaTime: number, isPushing: boolean) {
         this.shoulPos = shoul
+        this.arm.clear()
 
         if (!isPushing) this.isReaching = false
 
@@ -36,6 +36,8 @@ export class Arm {
 
         if (this.isReaching) {
             this.touchProgress += 0.3 * deltaTime
+            const offset = (velocity.x > 0) ? this.ARM_LENGTH : -this.ARM_LENGTH
+            this.touchTarget = {x: this.shoulPos.x + offset, y: this.shoulPos.y}
 
             if (this.touchProgress >= 1.0) {
                 this.touchProgress = 1.0
@@ -43,14 +45,13 @@ export class Arm {
             } else {
                 this.handPos.x = this.shoulPos.x + (this.touchTarget.x - this.shoulPos.x) * this.touchProgress
             }
+
+            this.arm.moveTo(this.shoulPos.x, this.shoulPos.y).lineTo(this.handPos.x, this.handPos.y).stroke({
+                color: "#000000",
+                width: 4,
+                cap: "round",
+                join: "miter"
+            });
         }
-
-        this.arm.clear().moveTo(this.shoulPos.x, this.shoulPos.y).lineTo(this.handPos.x, this.handPos.y).stroke({
-            color: "#000000",
-            width: 4,
-            cap: "round",
-            join: "miter"
-        });
     }
-
 }

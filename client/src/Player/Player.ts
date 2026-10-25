@@ -7,6 +7,8 @@ import {Leg} from "./Leg";
 import {Torso} from "./Torso";
 import {Eye} from "./Eye";
 import {Arm} from "./Arm";
+import {Directions} from "./PlayerEnums";
+import {getCurrentInputs} from "../Inputs";
 //TODO: SHARE AND SYNC WHERE PLAYER IS LOOKING
 export class Player {
     id: number
@@ -44,8 +46,8 @@ export class Player {
     addToWorld(world: Container) {
         world.addChild(this.legs[0].leg)
         world.addChild(this.legs[1].leg)
-    //    world.addChild(this.arms[0].arm)
-    //    world.addChild(this.arms[1].arm)
+        world.addChild(this.arms[0].arm)
+        world.addChild(this.arms[1].arm)
         world.addChild(this.torso.sprite)
         world.addChild(this.eyes[0].eye)
         world.addChild(this.eyes[1].eye)
@@ -62,7 +64,7 @@ export class Player {
         this.updateNick()
         this.updateLegs()
         this.updateEyes()
-        //    this.updateArms()
+        this.updateArms()
 
         this.prevVelocity = this.velocity
     }
@@ -108,13 +110,30 @@ export class Player {
         this.eyes[1].updateEye(eyeRight, this.velocity, this.deltaT, rand)
     }
 
-  //  updateArms() {
-  //      const arm1 = {x: this.pos.x + PLAYER_CONFIG.WIDTH, y: this.pos.y + (PLAYER_CONFIG.HEIGHT / 2) - 4}
-  //      const arm2 = {x: this.pos.x + PLAYER_CONFIG.WIDTH, y: this.pos.y + (PLAYER_CONFIG.HEIGHT / 2) + 4}
-//
-  //      this.arms[0].updateArm(arm1, this.velocity, this.deltaT, true)
-  //      this.arms[1].updateArm(arm2, this.velocity, this.deltaT, true)
- //  }
+    updateArms() {
+        const arm1 = {x: this.pos.x, y: this.pos.y}
+        const arm2 = {x: this.pos.x, y: this.pos.y}
+
+        const direction = (this.velocity.x > 0) ? Directions.Right : Directions.Left
+
+        if (direction == Directions.Left) {
+            arm1.y += (PLAYER_CONFIG.HEIGHT / 2) + 4
+            arm2.y += (PLAYER_CONFIG.HEIGHT / 2) - 4
+        } else {
+            arm1.x += PLAYER_CONFIG.WIDTH
+            arm1.y += (PLAYER_CONFIG.HEIGHT / 2) - 4
+            arm2.x += PLAYER_CONFIG.WIDTH
+            arm2.y += (PLAYER_CONFIG.HEIGHT / 2) + 4
+        }
+
+        let should = false
+        if (getCurrentInputs().left || getCurrentInputs().right) {
+            should = true
+        }
+
+        this.arms[0].updateArm(arm1, this.velocity, this.deltaT, should)
+        this.arms[1].updateArm(arm2, this.velocity, this.deltaT, should)
+    }
 
     checkInAir() {
         if (this.velocity.y != 0) {
@@ -131,8 +150,8 @@ export class Player {
         world.removeChild(this.legs[1].leg)
         world.removeChild(this.eyes[0].eye)
         world.removeChild(this.eyes[1].eye)
-    //      world.removeChild(this.arms[0].arm)
-    //      world.removeChild(this.arms[1].arm)
+        world.removeChild(this.arms[0].arm)
+        world.removeChild(this.arms[1].arm)
     }
 
     updateData(velocity: Vector2, deltaTime: number) {
@@ -153,8 +172,8 @@ export class Player {
             this.eyes[1].eye.alpha = 0
             this.legs[0].leg.alpha = 0
             this.legs[1].leg.alpha = 0
-     //        this.arms[0].arm.alpha = 0
-     //        this.arms[1].arm.alpha = 0
+            this.arms[0].arm.alpha = 0
+            this.arms[1].arm.alpha = 0
             this.nick.alpha = 0
         } else {
             this.torso.sprite.alpha = 1
@@ -162,8 +181,8 @@ export class Player {
             this.eyes[1].eye.alpha = 1
             this.legs[0].leg.alpha = 1
             this.legs[1].leg.alpha = 1
-      //       this.arms[0].arm.alpha = 1
-      //       this.arms[1].arm.alpha = 1
+            this.arms[0].arm.alpha = 1
+            this.arms[1].arm.alpha = 1
             this.nick.alpha = 1
         }
     }

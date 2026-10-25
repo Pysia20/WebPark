@@ -111,5 +111,11 @@ export const ENTITY_VISUAL_CONFIG = {
         AMPLITUDE_UNDAMP_SPEED: 0.08,
         OPACITY_UNDAMP_SPEED: 0.08,
         JITTER_UNDAMP_SPEED: 0.32
+    },
+
+    BOOR: {
+        CLOSE_RATIO: 0.15,
+        MIN_OPACITY: 0.05,
+        LARP: 0.3
     }
 }

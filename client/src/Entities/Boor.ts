@@ -1,6 +1,7 @@
 import { Sprite } from "pixi.js";
 import { Ent } from "./Ent";
 import { ServerButtonDoorData } from "@shared/commonEntityData";
+import {ENTITY_VISUAL_CONFIG} from "@shared/commonVariables";
 
 export class BoorEnt extends Ent {
     sprite: Sprite
@@ -20,15 +21,15 @@ export class BoorEnt extends Ent {
     }
 
     update(data: ServerButtonDoorData, deltaT: number) {
-        if (data.isOpen && this.opacity > 0.05) {
-            this.opacity += (0 - this.opacity) * 0.3
-            this.currentWidth += ((data.visualSize.x / 6) - this.currentWidth) * 0.3
+        if (data.isOpen && this.opacity > ENTITY_VISUAL_CONFIG.BOOR.MIN_OPACITY) {
+            this.opacity += (0 - this.opacity) * ENTITY_VISUAL_CONFIG.BOOR.LARP
+            this.currentWidth += ((data.visualSize.x * ENTITY_VISUAL_CONFIG.BOOR.CLOSE_RATIO) - this.currentWidth) * ENTITY_VISUAL_CONFIG.BOOR.LARP
         } else if (!data.isOpen) {
-            this.opacity += (1 - this.opacity) * 0.3
-            this.currentWidth += (data.visualSize.x - this.currentWidth) * 0.3
+            this.opacity += (1 - this.opacity) * ENTITY_VISUAL_CONFIG.BOOR.LARP
+            this.currentWidth += (data.visualSize.x - this.currentWidth) * ENTITY_VISUAL_CONFIG.BOOR.LARP
         } else {
-            this.opacity = 0.05
-            this.currentWidth = data.visualSize.x / 6
+            this.opacity = ENTITY_VISUAL_CONFIG.BOOR.MIN_OPACITY
+            this.currentWidth = data.visualSize.x * ENTITY_VISUAL_CONFIG.BOOR.CLOSE_RATIO
         }
 
         this.sprite.alpha = this.opacity

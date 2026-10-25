@@ -1,11 +1,11 @@
 import { GridTile, LayerInstance, LevelData } from "@shared/commonLevelModels"
 import { Container, Rectangle, Sprite, Texture } from "pixi.js"
 import {AnyEntityData, ServerButtonData, ServerButtonDoorData} from "@shared/commonEntityData";
-
-interface entity {
-	data: AnyEntityData
-	sprite: Sprite
-}
+import { Ent } from "./Entities/Ent";
+import { LaserEnt } from "./Entities/Laser";
+import { JohnEnt } from "./Entities/JohnEnt";
+import {BoorEnt} from "./Entities/Boor";
+import {ButtonEnt} from "./Entities/Button";
 
 class levelManager {
 	levels!: Map<string, LevelData>
@@ -14,7 +14,7 @@ class levelManager {
 	spriteSheet!: Texture
 	tileTextures: Map<number, Texture> = new Map()
 	entTextures: Map<string, Texture> = new Map()
-	ents: Record<number, entity> = {}
+	ents: Record<number, Ent> = {}
 	renderedTiles: Sprite[] = []
 
 	init(world: Container, spriteSheet: Texture, levels: Map<string, LevelData>, entTextures: Map<string, Texture>) {
@@ -59,7 +59,7 @@ class levelManager {
 			this.world.removeChild(tile)
 		}
 		for (const [id, ent] of Object.entries(this.ents)) {
-			this.world.removeChild(ent.sprite)
+			ent.beGone(this.world)
 		}
 		this.ents = {}
 
@@ -91,39 +91,33 @@ class levelManager {
 		}
 	}
 
-	updateEnts(ents: Record<number, AnyEntityData>) {
+	updateEnts(ents: Record<number, AnyEntityData>, deltaT: number) {
 		for (const [entId, entData] of Object.entries(ents)) {
 			if (entId in this.ents) {
-				this.ents[Number(entId)].data = entData
-				this.renderEnt(Number(entId))
+				this.ents[Number(entId)].update(entData, deltaT)
 			} else {
-				this.ents[Number(entId)] = {data: entData} as entity
-				this.renderEnt(Number(entId))
+				let newEnt: Ent
+				const sprite: Sprite = this.checkEntTexture(entData.type)
+
+				switch (entData.type) {
+					case "Laser":
+						newEnt = new LaserEnt(entData)
+						break
+					case "ButtonDoor":
+						newEnt = new BoorEnt(entData as ServerButtonDoorData, sprite)
+						break
+					case "Button":
+						newEnt = new ButtonEnt(entData as ServerButtonData, sprite)
+						break
+					default:
+						newEnt = new JohnEnt(entData, sprite)
+						break
+				}
+				newEnt.update(entData, deltaT)
+				newEnt.spawnIn(this.world)
+
+				this.ents[Number(entId)] = newEnt
 			}
-		}
-	}
-
-	renderEnt(entId: number) {
-		const ent = this.ents[entId]
-		if (!ent.sprite) {
-			ent.sprite = this.checkEntTexture(ent.data.type)
-			this.world.addChild(ent.sprite)
-		}
-
-		ent.sprite.position.set(ent.data.pos.x, ent.data.pos.y)
-		ent.sprite.setSize(ent.data.visualSize.x, ent.data.visualSize.y)
-
-		switch (ent.data.type) {
-			case "ButtonDoor":
-				const doorData = ent.data as ServerButtonDoorData
-				ent.sprite.alpha = doorData.isOpen ? 0.1 : 1
-				break
-			case "Button":
-				const buttonData = ent.data as ServerButtonData
-				ent.sprite.alpha = buttonData.isPressed ? 0.5 : 1
-				break
-			default:
-				break
 		}
 	}
 }

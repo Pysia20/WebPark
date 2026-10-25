@@ -9,7 +9,6 @@ import { CameraController } from "./Camera";
 import { leveler } from "./Leveler";
 import { pageSetup } from "./Weber";
 import { hud } from "./Hud";
-//TODO: LARP EVERYTHING RAAAAAAAAAAAAAAAAAAAAAAAAAAAA (player and ents)
 const app = new PIXI.Application()
 await app.init({
     width: 1280,
@@ -59,7 +58,7 @@ app.ticker.add((time) => {
     if (serverData) {
         coordinator.update_players(serverData.playerData, time.deltaTime)
         camera.update_cam(serverData)
-        leveler.updateEnts(serverData.entityData)
+        leveler.updateEnts(serverData.entityData, time.deltaTime)
     }
     coordinator.update_positions()
 })

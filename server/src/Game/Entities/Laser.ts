@@ -7,7 +7,7 @@ import { RequiredField } from "../../Global";
 import { Player } from "../Player";
 import e from "cors";
 import { Entity } from "../Entity";
-import { ServerButtonDoorData } from "@shared/commonEntityData";
+import { ServerButtonDoorData, ServerLaserEntityData } from "@shared/commonEntityData";
 
 //! DO NOT IMPORT!!!
 //? IT IS A TEMPLATE FOR CREATING NEW ENTITY TYPES
@@ -85,12 +85,12 @@ export class Laser extends Entity {
 		return new Laser({ ...this.pos }, { ...this.size }, { ...this.customFields });
 	}
 
-	public override getData(): ServerButtonDoorData {
+	public override getData(): ServerLaserEntityData {
 		return {
 			pos: this.pos,
 			visualSize: this.size,
 			type: this.type,
-			isOpen: this.isActivated,
+			isActive: this.isActivated,
 		};
 	}
 }

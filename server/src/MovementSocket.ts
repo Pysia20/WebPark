@@ -8,7 +8,7 @@ import {
 	RegisterUserDataZod,
 	SomethingBrokeData,
 } from "@shared/commonModels";
-import { forceGC, games } from "./Global";
+import { games } from "./Global";
 import { InputsZod, SocketData, SocketDataZod } from "./Models";
 import { Room } from "./Game/Room";
 import { Player } from "./Game/Player";
@@ -239,7 +239,6 @@ export function register(io: Server) {
 				room.stopGameLoop();
 				games.delete(socket.data.roomID!);
 				LOG.info(`Room ${socket.data.roomID!} has been deleted.`);
-				forceGC();
 			}
 		});
 	});

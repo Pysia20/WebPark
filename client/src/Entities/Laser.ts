@@ -1,6 +1,6 @@
 import { Container, Graphics } from "pixi.js";
 import { Ent } from "./Ent";
-import {ServerEntityData, Vector2} from "@shared/commonModels";
+import { ServerEntityData, Vector2 } from "@shared/commonModels";
 import { ENTITY_VISUAL_CONFIG } from "@shared/commonVariables";
 
 export class LaserEnt extends Ent {
@@ -80,16 +80,6 @@ export class LaserEnt extends Ent {
         end.y = this.data.visualSize.y
 
         this.baseDown.poly([start.x, start.y, wall.x , wall.y, spike.x, spike.y, wall2.x, wall2.y, end.x, end.y]).fill({color: ENTITY_VISUAL_CONFIG.LASER.BASE_COLOR})
-
-        /*
-        this.base.moveTo(0, 0)
-        this.base.lineTo(this.data.visualSize.x, 0)
-        this.base.stroke({color: ENTITY_VISUAL_CONFIG.LASER.BASE_COLOR, width: ENTITY_VISUAL_CONFIG.LASER.BASE_WIDTH, cap: "round"})
-
-        this.base.moveTo(0, this.data.visualSize.y)
-        this.base.lineTo(this.data.visualSize.x, this.data.visualSize.y)
-        this.base.stroke({color: ENTITY_VISUAL_CONFIG.LASER.BASE_COLOR, width: ENTITY_VISUAL_CONFIG.LASER.BASE_WIDTH, cap: "round"})
-         */
     }
 
     override beGone(world: Container) {

@@ -1,6 +1,6 @@
 import { Sprite } from "pixi.js";
 import { Ent } from "./Ent";
-import {ServerButtonDoorData} from "@shared/commonEntityData";
+import { ServerButtonDoorData } from "@shared/commonEntityData";
 
 export class BoorEnt extends Ent {
     sprite: Sprite

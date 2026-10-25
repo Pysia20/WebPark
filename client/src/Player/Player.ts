@@ -6,6 +6,7 @@ import {PLAYER_CONFIG, PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
 import {Leg} from "./Leg";
 import {Torso} from "./Torso";
 import {Eye} from "./Eye";
+import {Arm} from "./Arm";
 //TODO: SHARE AND SYNC WHERE PLAYER IS LOOKING
 export class Player {
     id: number
@@ -25,6 +26,7 @@ export class Player {
     legs: Leg[]
     torso: Torso
     eyes: Eye[]
+    arms: Arm[]
 
     LERP_SPEED: number = PLAYER_VISUAL_CONFIG.PLAYER_LERP
 
@@ -36,11 +38,14 @@ export class Player {
         this.torso = new Torso(textures.torso, color)
         this.eyes = [new Eye(isMe), new Eye(isMe)]
         this.legs = [new Leg(), new Leg()]
+        this.arms = [new Arm(), new Arm()]
     }
 
     addToWorld(world: Container) {
         world.addChild(this.legs[0].leg)
         world.addChild(this.legs[1].leg)
+    //    world.addChild(this.arms[0].arm)
+    //    world.addChild(this.arms[1].arm)
         world.addChild(this.torso.sprite)
         world.addChild(this.eyes[0].eye)
         world.addChild(this.eyes[1].eye)
@@ -57,6 +62,7 @@ export class Player {
         this.updateNick()
         this.updateLegs()
         this.updateEyes()
+        //    this.updateArms()
 
         this.prevVelocity = this.velocity
     }
@@ -102,6 +108,14 @@ export class Player {
         this.eyes[1].updateEye(eyeRight, this.velocity, this.deltaT, rand)
     }
 
+  //  updateArms() {
+  //      const arm1 = {x: this.pos.x + PLAYER_CONFIG.WIDTH, y: this.pos.y + (PLAYER_CONFIG.HEIGHT / 2) - 4}
+  //      const arm2 = {x: this.pos.x + PLAYER_CONFIG.WIDTH, y: this.pos.y + (PLAYER_CONFIG.HEIGHT / 2) + 4}
+//
+  //      this.arms[0].updateArm(arm1, this.velocity, this.deltaT, true)
+  //      this.arms[1].updateArm(arm2, this.velocity, this.deltaT, true)
+ //  }
+
     checkInAir() {
         if (this.velocity.y != 0) {
             this.inAir = true
@@ -117,6 +131,8 @@ export class Player {
         world.removeChild(this.legs[1].leg)
         world.removeChild(this.eyes[0].eye)
         world.removeChild(this.eyes[1].eye)
+    //      world.removeChild(this.arms[0].arm)
+    //      world.removeChild(this.arms[1].arm)
     }
 
     updateData(velocity: Vector2, deltaTime: number) {
@@ -137,6 +153,8 @@ export class Player {
             this.eyes[1].eye.alpha = 0
             this.legs[0].leg.alpha = 0
             this.legs[1].leg.alpha = 0
+     //        this.arms[0].arm.alpha = 0
+     //        this.arms[1].arm.alpha = 0
             this.nick.alpha = 0
         } else {
             this.torso.sprite.alpha = 1
@@ -144,6 +162,8 @@ export class Player {
             this.eyes[1].eye.alpha = 1
             this.legs[0].leg.alpha = 1
             this.legs[1].leg.alpha = 1
+      //       this.arms[0].arm.alpha = 1
+      //       this.arms[1].arm.alpha = 1
             this.nick.alpha = 1
         }
     }

@@ -1,7 +1,7 @@
 import { Container, Graphics } from "pixi.js";
 import { Ent } from "./Ent";
 import { ServerEntityData, Vector2 } from "@shared/commonModels";
-import { ENTITY_VISUAL_CONFIG } from "@shared/commonVariables";
+import {ENTITY_VISUAL_CONFIG, PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
 import {getCurrentInputs} from "../Inputs";
 
 export class LaserEnt extends Ent {
@@ -99,13 +99,13 @@ export class LaserEnt extends Ent {
 
     damp(isActive: boolean) {
         if (!isActive && this.currentAmplitude > 0) {
-            this.currentAmplitude += (0 - this.currentAmplitude) * 0.04
-            this.alphaOffset += (1 - this.alphaOffset) * 0.04 / 2
-            this.randOffset += (ENTITY_VISUAL_CONFIG.LASER.JITTER - this.randOffset) * 0.04 * 4
+            this.currentAmplitude += (0 - this.currentAmplitude) * ENTITY_VISUAL_CONFIG.LASER.AMPLITUDE_DAMP_SPEED
+            this.alphaOffset += (1 - this.alphaOffset) * ENTITY_VISUAL_CONFIG.LASER.OPACITY_DAMP_SPEED
+            this.randOffset += (ENTITY_VISUAL_CONFIG.LASER.JITTER - this.randOffset) * ENTITY_VISUAL_CONFIG.LASER.JITTER_DAMP_SPEED
         } else if (this.currentAmplitude < ENTITY_VISUAL_CONFIG.LASER.AMPLITUDE) {
-            this.currentAmplitude += (ENTITY_VISUAL_CONFIG.LASER.AMPLITUDE - this.currentAmplitude) * 0.08
-            this.alphaOffset += (0 - this.alphaOffset) * 0.08
-            this.randOffset += (1 - this.randOffset) * 0.08 * 4
+            this.currentAmplitude += (ENTITY_VISUAL_CONFIG.LASER.AMPLITUDE - this.currentAmplitude) * ENTITY_VISUAL_CONFIG.LASER.AMPLITUDE_UNDAMP_SPEED
+            this.alphaOffset += (0 - this.alphaOffset) * ENTITY_VISUAL_CONFIG.LASER.OPACITY_UNDAMP_SPEED
+            this.randOffset += (1 - this.randOffset) * ENTITY_VISUAL_CONFIG.LASER.JITTER_UNDAMP_SPEED
         } else {
             this.currentAmplitude = ENTITY_VISUAL_CONFIG.LASER.AMPLITUDE
             this.alphaOffset = 0

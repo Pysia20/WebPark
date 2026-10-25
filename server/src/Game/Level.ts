@@ -161,5 +161,7 @@ export class Level {
 			this.shouldRestart = false;
 			this.reloadLevel();
 		}
+
+		this.allEntities.forEach((e) => e.endTick());
 	}
 }

@@ -18,6 +18,7 @@
 	},
 	"scripts": {
 		"start": "tsx src/index.ts",
-		"dev": "tsx --watch src/index.ts"
+		"dev": "tsx --watch src/index.ts",
+		"runProfile": "node --expose-gc --inspect --import tsx --watch src/index.ts"
 	}
 }

@@ -1,5 +1,7 @@
 import { EntityCustomField } from "@shared/commonLevelModels";
 import { Room } from "./Game/Room";
+import v8 from "node:v8";
+import vm from "node:vm";
 
 export const games: Map<string, Room> = new Map<string, Room>();
 
@@ -47,3 +49,21 @@ export interface RequiredField {
 	isMissing: (v: any) => boolean;
 	isRequired: boolean;
 }
+
+// Create the tracker
+export const garbageRegistry = new FinalizationRegistry((instanceId: string) => {
+	console.log(`\n🗑️ [${instanceId}] was successfully DELETED from memory!`);
+});
+
+//? Garbage collection help
+
+// v8.setFlagsFromString("--expose_gc");
+// const gc = vm.runInNewContext("gc");
+
+// // Helper to trigger Garbage Collection
+// export function forceGC() {
+// 	if (typeof gc === "function") gc();
+// 	else console.warn("Run with --expose-gc flag!");
+// }
+
+// garbageRegistry.register(this, id);

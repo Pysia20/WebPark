@@ -17,6 +17,7 @@ import { PlayerSpawner } from "./Entities/PlayerSpawner";
 import { io } from "socket.io-client";
 import { MapCollider } from "./Entities/MapCollider";
 import { Entity } from "./Entity";
+import { garbageRegistry } from "../Global";
 
 export class Room {
 	public readonly TICKRATE: number = CONFIG.TICKRATE; // Per second
@@ -24,7 +25,7 @@ export class Room {
 
 	private id: string;
 	public players: Map<number, Player> = new Map<number, Player>();
-	public level!: Level;
+	public level: Level;
 	private gameLoop: NodeJS.Timeout | undefined;
 
 	private io: Namespace | undefined;
@@ -104,6 +105,8 @@ export class Room {
 			this.level.reloadLevel();
 			this.gameLoop = setInterval(
 				async () => {
+					if (this.players.size <= 0) return;
+
 					this.level.physicsUpdate();
 
 					const roomData: ServerData = {
@@ -150,6 +153,8 @@ export class Room {
 	}
 
 	public changeLevel(level: Level | undefined) {
+		if (this.players.size <= 0) return;
+
 		this.io?.to(this.id).emit("changeLevel", level?.getID());
 		LOG.info(`Room ${this.id} changes level to ${level ? level.getID() : "/GROUP FINNISHED/"}`);
 

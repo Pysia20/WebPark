@@ -8,11 +8,13 @@ import {
 	RegisterUserDataZod,
 	SomethingBrokeData,
 } from "@shared/commonModels";
-import { games } from "./Global";
+import { forceGC, games } from "./Global";
 import { InputsZod, SocketData, SocketDataZod } from "./Models";
 import { Room } from "./Game/Room";
 import { Player } from "./Game/Player";
 import { LOG } from "./Logger";
+
+import v8 from "v8";
 
 type PlayerSocket = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, SocketData>;
 
@@ -223,6 +225,8 @@ export function register(io: Server) {
 		socket.on("disconnect", (e) => {
 			LOG.info(`SOCKET | User (${socket.id}) disconnected.`);
 
+			const room = games.get(socket.data.roomID!);
+
 			socket
 				.to(socket.data.roomID!)
 				.emit("log", `User: ${socket.data.userNick} left the room. Bye!`);
@@ -230,6 +234,13 @@ export function register(io: Server) {
 			games.get(socket.data.roomID!)?.removePlayer(socket.data.userID!);
 
 			socket.to(socket.data.roomID!).emit("playerLeft", socket.data.userID);
+
+			if (room?.getPlayers().size == 0) {
+				room.stopGameLoop();
+				games.delete(socket.data.roomID!);
+				LOG.info(`Room ${socket.data.roomID!} has been deleted.`);
+				forceGC();
+			}
 		});
 	});
 }

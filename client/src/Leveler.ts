@@ -1,6 +1,6 @@
 import { GridTile, LayerInstance, LevelData } from "@shared/commonLevelModels"
 import { Container, Rectangle, Sprite, Texture } from "pixi.js"
-import {AnyEntityData, ServerButtonData, ServerButtonDoorData} from "@shared/commonEntityData";
+import {AnyEntityData, ServerButtonData, ServerButtonDoorData, ServerLaserEntityData} from "@shared/commonEntityData";
 import { Ent } from "./Entities/Ent";
 import { LaserEnt } from "./Entities/Laser";
 import { JohnEnt } from "./Entities/JohnEnt";
@@ -101,7 +101,7 @@ class levelManager {
 
 				switch (entData.type) {
 					case "Laser":
-						newEnt = new LaserEnt(entData)
+						newEnt = new LaserEnt(entData as ServerLaserEntityData)
 						break
 					case "ButtonDoor":
 						newEnt = new BoorEnt(entData as ServerButtonDoorData, sprite)

@@ -1,8 +1,8 @@
 import { Player } from "./Player/Player";
-import {PlayerJoinedData, ServerData, ServerPlayerData} from "@shared/commonModels"
+import { PlayerJoinedData, ServerData, ServerPlayerData } from "@shared/commonModels"
 import { Container, Text as PixiText } from "pixi.js";
 import { PlayerTextures } from "./Assets";
-import {PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
+import { PLAYER_VISUAL_CONFIG } from "@shared/commonVariables";
 
 class Coordinator {
     players: Map<number, Player> = new Map

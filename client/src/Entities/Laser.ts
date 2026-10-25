@@ -2,6 +2,7 @@ import { Container, Graphics } from "pixi.js";
 import { Ent } from "./Ent";
 import { ServerEntityData, Vector2 } from "@shared/commonModels";
 import { ENTITY_VISUAL_CONFIG } from "@shared/commonVariables";
+import { ServerLaserEntityData } from "@shared/commonEntityData";
 
 export class LaserEnt extends Ent {
     wave: Graphics
@@ -19,9 +20,9 @@ export class LaserEnt extends Ent {
 
     test: boolean = true
 
-    data: ServerEntityData
+    data: ServerLaserEntityData
 
-    constructor(data: ServerEntityData) {
+    constructor(data: ServerLaserEntityData) {
         const wave = new Graphics()
         super(wave)
         this.baseUp = new Graphics()
@@ -43,17 +44,13 @@ export class LaserEnt extends Ent {
     }
 
     //TODO: animate turning on and off once I get that info
-    update(data: ServerEntityData, deltaT: number) {
+    update(data: ServerLaserEntityData, deltaT: number) {
         this.offset += ENTITY_VISUAL_CONFIG.LASER.OFFSET * deltaT
 
         this.wave.clear()
         this.glow.clear()
 
-        //if (getCurrentInputs().jump) {
-        //    this.test = !this.test
-        //}
-
-        this.damp(this.test)
+        this.damp(data.isActive)
 
         for (let i = 0; i <= this.length; i += this.step) {
             const rand  = (Math.random() * ENTITY_VISUAL_CONFIG.LASER.JITTER) - this.halfJitter

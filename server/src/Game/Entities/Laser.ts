@@ -79,6 +79,8 @@ export class Laser extends Entity {
 			this.shouldKill = false;
 			l.shouldRestart = true;
 		}
+
+		this.shouldKill = false;
 	}
 
 	public override clone() {

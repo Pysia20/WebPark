@@ -346,36 +346,6 @@
 				},
 				{
 					"__identifier": "MovingPlatform",
-					"__grid": [1,4],
-					"__pivot": [0,1],
-					"__tags": [],
-					"__tile": null,
-					"__smartColor": "#580067",
-					"iid": "033dca90-bde0-11f1-88ae-797d384f9b90",
-					"width": 192,
-					"height": 64,
-					"defUid": 29,
-					"px": [64,320],
-					"fieldInstances": [
-						{ "__identifier": "Direction", "__type": "LocalEnum.Direction", "__value": "Right", "__tile": null, "defUid": 31, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["Right"]
-						}] },
-						{ "__identifier": "Speed", "__type": "Int", "__value": 4, "__tile": null, "defUid": 32, "realEditorValues": [{ "id": "V_Int", "params": [4] }] },
-						{ "__identifier": "Distance", "__type": "Int", "__value": 3, "__tile": null, "defUid": 33, "realEditorValues": [{ "id": "V_Int", "params": [3] }] },
-						{ "__identifier": "Cooldown", "__type": "Int", "__value": 30, "__tile": null, "defUid": 34, "realEditorValues": [] },
-						{ "__identifier": "ActivationGroup", "__type": "String", "__value": null, "__tile": null, "defUid": 39, "realEditorValues": [] },
-						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 40, "realEditorValues": [] },
-						{ "__identifier": "StaysOn", "__type": "Bool", "__value": true, "__tile": null, "defUid": 41, "realEditorValues": [{
-							"id": "V_Bool",
-							"params": [ true ]
-						}] }
-					],
-					"__worldX": 64,
-					"__worldY": -384
-				},
-				{
-					"__identifier": "MovingPlatform",
 					"__grid": [13,12],
 					"__pivot": [0,1],
 					"__tags": [],
@@ -399,7 +369,10 @@
 							"params": ["3"]
 						}] },
 						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 40, "realEditorValues": [] },
-						{ "__identifier": "StaysOn", "__type": "Bool", "__value": false, "__tile": null, "defUid": 41, "realEditorValues": [] }
+						{ "__identifier": "StaysOn", "__type": "Bool", "__value": false, "__tile": null, "defUid": 41, "realEditorValues": [{
+							"id": "V_Bool",
+							"params": [ false ]
+						}] }
 					],
 					"__worldX": 832,
 					"__worldY": 128
@@ -600,8 +573,8 @@
 			"visible": true,
 			"optionalRules": [],
 			"intGridCsv": [
-				0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-				0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+				0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+				0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 				0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,
 				0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 				0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,

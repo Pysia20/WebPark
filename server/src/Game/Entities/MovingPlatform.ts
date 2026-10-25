@@ -17,7 +17,7 @@ export class MovingPlatform extends Entity {
 	public startPos: Vector2;
 	public endPos: Vector2;
 	public timer: number = 0;
-	public reversed: boolean = false;
+	public reversed: boolean = true;
 	public readonly speed: number;
 	public shouldRun: boolean = false;
 
@@ -90,7 +90,7 @@ export class MovingPlatform extends Entity {
 		else if (customFields.Direction.value == "Left")
 			this.endPos.x -= this.customFields.Distance.value! * WORLD_CONFIG.CELL_SIZE;
 		else if (customFields.Direction.value == "Up")
-			this.endPos.x -= this.customFields.Distance.value! * WORLD_CONFIG.CELL_SIZE;
+			this.endPos.y -= this.customFields.Distance.value! * WORLD_CONFIG.CELL_SIZE;
 		else if (customFields.Direction.value == "Down")
 			this.endPos.y += this.customFields.Distance.value! * WORLD_CONFIG.CELL_SIZE;
 	}
@@ -105,22 +105,25 @@ export class MovingPlatform extends Entity {
 
 			const activaitonCount = l.activationStates.get(group!);
 
-			if (activaitonCount! >= count! != this.isActivated) {
+			const currentState = activaitonCount! >= count!;
+
+			if (currentState != this.isActivated) {
 				this.changedThisTick = true;
 			}
 
 			if (this.changedThisTick) {
-				if (activaitonCount! >= count!) {
+				if (currentState) {
 					this.isActivated = true;
-				} else {
-					this.isActivated = false;
-				}
+					this.reversed = !this.reversed;
 
-				if (this.isActivated) {
 					this.timer = this.customFields.Cooldown.value!;
-
-					this.changedThisTick = false;
+				} else {
+					if (!this.customFields.StaysOn.value) {
+						this.isActivated = false;
+					}
 				}
+
+				this.changedThisTick = false;
 			}
 		}
 
@@ -128,6 +131,7 @@ export class MovingPlatform extends Entity {
 
 		if (this.timer < this.customFields.Cooldown.value!) {
 			this.timer++;
+			console.log(this.timer);
 			if (this.timer >= this.customFields.Cooldown.value!) {
 				this.reversed = !this.reversed;
 			}
@@ -141,18 +145,18 @@ export class MovingPlatform extends Entity {
 		if (currentDirection == "Left") this.pos.x -= this.speed;
 		else if (currentDirection == "Right") this.pos.x += this.speed;
 		else if (currentDirection == "Up") this.pos.y -= this.speed;
-		else if (currentDirection == "Down") this.pos.y -= this.speed;
+		else if (currentDirection == "Down") this.pos.y += this.speed;
 
 		if (this.startPos.x < this.endPos.x) {
 			this.pos.x = clamp(this.pos.x, this.startPos.x, this.endPos.x);
 		} else {
-			this.pos.x = clamp(this.pos.x, this.startPos.x, this.endPos.x);
+			this.pos.x = clamp(this.pos.x, this.endPos.x, this.startPos.x);
 		}
 
 		if (this.startPos.y < this.endPos.y) {
 			this.pos.y = clamp(this.pos.y, this.startPos.y, this.endPos.y);
 		} else {
-			this.pos.y = clamp(this.pos.y, this.startPos.y, this.endPos.y);
+			this.pos.y = clamp(this.pos.y, this.endPos.y, this.startPos.y);
 		}
 
 		if (!this.reversed) {

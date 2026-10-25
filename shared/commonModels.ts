@@ -36,6 +36,7 @@ export interface ServerPlayerData {
 	pos: Vector2;
 	velocity: Vector2;
 	isInsideDoor: boolean;
+	isPushing: boolean;
 }
 
 // What the client sends to the backend

@@ -92,6 +92,7 @@ export class Player extends Entity {
 		);
 
 		this.isGrounded = false;
+		this.isPushing = false;
 	}
 
 	/**  1 - right | -1 - left */

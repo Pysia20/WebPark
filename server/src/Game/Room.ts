@@ -118,6 +118,7 @@ export class Room {
 							pos: pos,
 							velocity: player.velocity,
 							isInsideDoor: player.isInsideDoor,
+							isPushing: player.isPushing,
 						};
 					});
 

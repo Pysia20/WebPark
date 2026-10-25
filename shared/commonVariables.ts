@@ -80,6 +80,10 @@ export const PLAYER_VISUAL_CONFIG = {
 };
 
 export const ENTITY_VISUAL_CONFIG = {
+	JOHN: {
+		LERP: 0.3
+	},
+
 	LASER: {
 		AMPLITUDE: 25, //~30 == one block (64px)
 		FREQUENCY: 0.25,
@@ -98,6 +102,5 @@ export const ENTITY_VISUAL_CONFIG = {
 		GLOW_COLOR: "#ff0000",
 		GLOW_OPACITY: 0.4,
 		GLOW_WIDTH: 12,
-
 	}
 }

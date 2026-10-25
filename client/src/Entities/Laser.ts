@@ -37,6 +37,7 @@ export class LaserEnt extends Ent {
         this.drawBase()
     }
 
+    //TODO: animate turning on and off once I get that info
     update(data: ServerEntityData, deltaT: number) {
         this.offset += ENTITY_VISUAL_CONFIG.LASER.OFFSET * deltaT
 

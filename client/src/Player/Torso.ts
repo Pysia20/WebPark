@@ -5,6 +5,8 @@ import {Vector2} from "@shared/commonModels";
 export class Torso {
     color: string
     sprite: Sprite
+    lean: number = 0
+    sign: number = 1
 
     constructor(texture: Texture, color: string) {
         this.color = color
@@ -16,18 +18,16 @@ export class Torso {
 
     updateTorso(pos: Vector2, velocity: Vector2, isPushing: boolean) {
         this.sprite.position.set(pos.x + (PLAYER_CONFIG.WIDTH / 2), pos.y + (PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.TORSO_HEIGHT_RATIO))
+        if (velocity.x != 0) this.sign = Math.sign(velocity.x)
 
-        let lean: number
         if (isPushing) {
-            lean = 0.2
+            this.lean += ((this.sign * 0.2) - this.lean) * 0.3
         } else {
             const ratio = Math.abs(velocity.x / (PLAYER_CONFIG.MAX_HORIZONTAL_SPEED * PLAYER_VISUAL_CONFIG.TORSO_LEAN));
-            lean = (ratio ** PLAYER_VISUAL_CONFIG.TORSO_LEAN)
+            this.lean += ((this.sign * (ratio ** PLAYER_VISUAL_CONFIG.TORSO_LEAN)) - this.lean) * 0.3
         }
 
-
-        this.sprite.rotation = Math.sign(velocity.x) * lean;
-
+        this.sprite.rotation = this.lean;
 
         //not rly usefull rn but if we ever add the face drawing it will be
         const baseScaleX = Math.abs(this.sprite.scale.x)

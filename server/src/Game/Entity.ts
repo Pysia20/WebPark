@@ -85,9 +85,10 @@ export abstract class Entity {
 		const yA = this.pos.y;
 		const { x: widthA, y: heightA } = this.size;
 
-		const xB = other.pos.x;
+		const xB = other.pos.x + COLLISION_MARGIN_X / 2;
 		const yB = other.pos.y + GROUND_DETECTON_OFFSET;
-		const { x: widthB, y: heightB } = other.size;
+		const widthB = other.size.x;
+		const heightB = other.size.y - COLLISION_MARGIN_X / 2;
 
 		const isCollidingX = xB < xA + widthA && xA < xB + widthB;
 		const isCollidingY = yB < yA + heightA && yA < yB + heightB;

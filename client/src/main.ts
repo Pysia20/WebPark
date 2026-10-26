@@ -55,7 +55,7 @@ setInterval(() => {
 leveler.renderLevel()
 hud.fadeIn(app)
 app.ticker.add((time) => {
-    pulseer.resources.timeUniforms.uniforms.uTime += 0.05 * time.deltaTime;
+    pulseer.resources.timeUniforms.uniforms.uTime += 0.05 * time.deltaTime
 
     const serverData = getServerData()
     if (serverData) {

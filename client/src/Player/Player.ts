@@ -8,7 +8,6 @@ import { Torso } from "./Torso";
 import { Eye } from "./Eye";
 import { Arm } from "./Arm";
 import { Directions } from "./PlayerEnums";
-import { getCurrentInputs } from "../Inputs";
 
 export class Player {
     id: number

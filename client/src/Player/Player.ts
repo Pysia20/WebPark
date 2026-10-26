@@ -23,6 +23,7 @@ export class Player {
     prevVelocity: Vector2 = {x: 0, y: 0}
 
     inAir: boolean = false
+    isPushing: boolean = false
     deltaT: number = 0
 
     legs: Leg[]
@@ -41,6 +42,7 @@ export class Player {
         this.eyes = [new Eye(isMe), new Eye(isMe)]
         this.legs = [new Leg(), new Leg()]
         this.arms = [new Arm(), new Arm()]
+        this.arms[1].arm.zIndex = 999
     }
 
     addToWorld(world: Container) {
@@ -64,7 +66,7 @@ export class Player {
         this.updateNick()
         this.updateLegs()
         this.updateEyes()
-    //    this.updateArms() for now
+        this.updateArms()
 
         this.prevVelocity = this.velocity
     }
@@ -77,7 +79,7 @@ export class Player {
     }
 
     updateTorso() {
-        this.torso.updateTorso(this.pos, this.velocity)
+        this.torso.updateTorso(this.pos, this.velocity, this.isPushing)
     }
 
     updateLegs() {
@@ -106,8 +108,8 @@ export class Player {
 
         const rand = Math.floor(Math.random() * PLAYER_VISUAL_CONFIG.BLINK_INTERVAL_RANDOM)
 
-        this.eyes[0].updateEye(eyeLeft, this.velocity, this.deltaT, rand)
-        this.eyes[1].updateEye(eyeRight, this.velocity, this.deltaT, rand)
+        this.eyes[0].updateEye(eyeLeft, this.velocity, this.deltaT, rand, this.isPushing)
+        this.eyes[1].updateEye(eyeRight, this.velocity, this.deltaT, rand, this.isPushing)
     }
 
     updateArms() {
@@ -126,13 +128,8 @@ export class Player {
             arm2.y += (PLAYER_CONFIG.HEIGHT / 2) + 4
         }
 
-        let should = false
-        if (getCurrentInputs().left || getCurrentInputs().right) {
-            should = true
-        }
-
-        this.arms[0].updateArm(arm1, this.velocity, this.deltaT, should)
-        this.arms[1].updateArm(arm2, this.velocity, this.deltaT, should)
+        this.arms[0].updateArm(arm1, this.velocity, this.deltaT, this.isPushing)
+        this.arms[1].updateArm(arm2, this.velocity, this.deltaT, this.isPushing)
     }
 
     checkInAir() {
@@ -154,9 +151,10 @@ export class Player {
         world.removeChild(this.arms[1].arm)
     }
 
-    updateData(velocity: Vector2, deltaTime: number) {
+    updateData(velocity: Vector2, deltaTime: number, isPushing: boolean) {
         this.deltaT = deltaTime
         this.velocity = velocity
+        this.isPushing = isPushing
     }
 
     checkIfJumped() {

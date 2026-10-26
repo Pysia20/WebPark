@@ -20,7 +20,8 @@ export class Eye {
     length: number = PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH
     highestWidth: number = 0
     lowestLength: number = 0
-    currentMaxLength = PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH
+    currentMaxLength: number = PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH
+    pushSquintLerp: number = 0.35
 
     LERP_SPEED: number = PLAYER_VISUAL_CONFIG.EYE_LERP
 
@@ -29,8 +30,8 @@ export class Eye {
         this.isMe = isMe
     }
 
-    updateEye(pos: Vector2, velocity: Vector2, deltaT: number, rand: number) {
-        this.updateSquint(velocity)
+    updateEye(pos: Vector2, velocity: Vector2, deltaT: number, rand: number, isPushing: boolean) {
+        this.updateSquint(velocity, isPushing)
         this.updateBlink(pos, deltaT, rand)
         this.updatePos(pos, velocity)
         if (velocity.x == 0 && velocity.y == 0 && this.isMe) this.lookAtMouse()
@@ -56,10 +57,15 @@ export class Eye {
         }
     }
 
-    updateSquint(velocity: Vector2) {
-        const absVelocity: Vector2 = {x: Math.abs(velocity.x), y: Math.abs(velocity.y)}
-        const squint = (absVelocity.y > PLAYER_CONFIG.MAX_HORIZONTAL_SPEED) ? (PLAYER_CONFIG.MAX_HORIZONTAL_SPEED / PLAYER_VISUAL_CONFIG.EYE_SQUINT) : Math.max(absVelocity.x / PLAYER_VISUAL_CONFIG.EYE_SQUINT, absVelocity.y / PLAYER_VISUAL_CONFIG.EYE_SQUINT)
-        this.currentMaxLength += ((PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH - squint) - this.currentMaxLength) * this.LERP_SPEED
+    updateSquint(velocity: Vector2, isPushing: boolean) {
+        if (isPushing) {
+            this.currentMaxLength += ((PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH * 0.4) - this.currentMaxLength) * this.pushSquintLerp
+            this.pushSquintLerp += (0.025 - this.pushSquintLerp) * this.LERP_SPEED
+        } else {
+            const absVelocity: Vector2 = {x: Math.abs(velocity.x), y: Math.abs(velocity.y)}
+            const squint = (absVelocity.y > PLAYER_CONFIG.MAX_HORIZONTAL_SPEED) ? (PLAYER_CONFIG.MAX_HORIZONTAL_SPEED / PLAYER_VISUAL_CONFIG.EYE_SQUINT) : Math.max(absVelocity.x / PLAYER_VISUAL_CONFIG.EYE_SQUINT, absVelocity.y / PLAYER_VISUAL_CONFIG.EYE_SQUINT)
+            this.currentMaxLength += ((PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH - squint) - this.currentMaxLength) * this.LERP_SPEED
+        }
     }
 
     updateBlink(pos: Vector2, deltaT: number, rand: number) {

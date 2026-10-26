@@ -130,6 +130,8 @@ export interface EntityCustomFieldsData {
 	Cooldown: CustomField<number>;
 	Mass: CustomField<number>;
 	PortalGroup: CustomField<string>;
+	ActivationGroups: CustomField<string[]>;
+	ActivatedByDefault: CustomField<Boolean>;
 }
 
 export type EntityCustomFieldTypeMap = {
@@ -143,6 +145,8 @@ export type EntityCustomFieldTypeMap = {
 	Cooldown: number;
 	Mass: number;
 	PortalGroup: string;
+	ActivationGroups: string[];
+	ActivatedByDefault: Boolean;
 };
 
 export type EntityCustomField = keyof EntityCustomFieldsData;
@@ -193,6 +197,14 @@ export const DummyEntityCustomFields: EntityCustomFieldsData = {
 		doesExist: false,
 		value: undefined,
 	},
+	ActivationGroups: {
+		doesExist: false,
+		value: undefined,
+	},
+	ActivatedByDefault: {
+		doesExist: false,
+		value: undefined,
+	},
 } as const;
 
 export interface EntityFieldInstance {
@@ -223,4 +235,5 @@ export type EntityType =
 	| "PlayerSpawner"
 	| "MovingPlatform"
 	| "Laser"
-	| "Portal";
+	| "Portal"
+	| "SwitchButton";

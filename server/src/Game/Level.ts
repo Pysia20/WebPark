@@ -103,6 +103,8 @@ export class Level {
 		this.staticEntities = [...this.staticEntities, ...this.getColliders()];
 
 		this.dynamicEntities = [...this.dynamicEntities, ...this.room.getPlayers().values()];
+
+		this.allEntities.forEach((e) => e.init());
 	}
 
 	public getColliders(): MapCollider[] {

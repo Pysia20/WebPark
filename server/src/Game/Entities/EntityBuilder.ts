@@ -19,6 +19,7 @@ import { Entity } from "../Entity";
 import { Player } from "../Player";
 import { MapCollider } from "./MapCollider";
 import { Portal } from "./Portal";
+import { SwitchButton } from "./SwitchButton";
 
 type EntityConstructor = new (pos: any, size: any, customFields: any) => Entity;
 
@@ -44,6 +45,7 @@ export class EntityBuilder {
 		Player: Player,
 		MapCollider: MapCollider,
 		Portal: Portal,
+		SwitchButton: SwitchButton,
 	};
 
 	constructor(type: EntityType) {

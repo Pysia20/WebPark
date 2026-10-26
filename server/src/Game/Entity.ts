@@ -34,6 +34,8 @@ export abstract class Entity {
 		this.customFields = this.validateCustomFields(customFields);
 	}
 
+	public init() {}
+
 	public setLevel(level: Level) {
 		this.level = level;
 	}
@@ -86,9 +88,9 @@ export abstract class Entity {
 		const { x: widthA, y: heightA } = this.size;
 
 		const xB = other.pos.x + COLLISION_MARGIN_X / 2;
-		const yB = other.pos.y + GROUND_DETECTON_OFFSET;
-		const widthB = other.size.x;
-		const heightB = other.size.y - COLLISION_MARGIN_X / 2;
+		const yB = other.pos.y + COLLISION_MARGIN_Y / 2 + GROUND_DETECTON_OFFSET;
+		const widthB = other.size.x - COLLISION_MARGIN_X / 2;
+		const heightB = other.size.y - COLLISION_MARGIN_Y / 2;
 
 		const isCollidingX = xB < xA + widthA && xA < xB + widthB;
 		const isCollidingY = yB < yA + heightA && yA < yB + heightB;

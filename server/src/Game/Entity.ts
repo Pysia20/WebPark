@@ -237,9 +237,12 @@ export abstract class Entity {
 				b.pos.x += overlap.x / 2;
 			}
 
-			if (a.velocity.x > b.velocity.x) {
+			const aVelocityX = Math.abs(a.velocity.x);
+			const bVelocityX = Math.abs(b.velocity.x);
+
+			if (aVelocityX > bVelocityX) {
 				a.isPushing = true;
-			} else if (b.velocity.x > a.velocity.x) {
+			} else if (aVelocityX < bVelocityX) {
 				b.isPushing = true;
 			} else {
 				a.isPushing = true;

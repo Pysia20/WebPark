@@ -79,7 +79,7 @@ export class Player {
     }
 
     updateTorso() {
-        this.torso.updateTorso(this.pos, this.velocity)
+        this.torso.updateTorso(this.pos, this.velocity, this.isPushing)
     }
 
     updateLegs() {

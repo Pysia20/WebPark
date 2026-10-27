@@ -588,7 +588,7 @@
 				},
 				{
 					"__identifier": "Cannon",
-					"__grid": [5,2],
+					"__grid": [5,3],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": null,
@@ -597,7 +597,7 @@
 					"width": 64,
 					"height": 64,
 					"defUid": 54,
-					"px": [320,192],
+					"px": [320,256],
 					"fieldInstances": [
 						{ "__identifier": "Direction", "__type": "LocalEnum.Direction", "__value": "Right", "__tile": null, "defUid": 55, "realEditorValues": [{
 							"id": "V_String",
@@ -607,7 +607,7 @@
 						{ "__identifier": "Cooldown", "__type": "Int", "__value": 60, "__tile": null, "defUid": 61, "realEditorValues": [{ "id": "V_Int", "params": [60] }] }
 					],
 					"__worldX": 320,
-					"__worldY": -512
+					"__worldY": -448
 				}
 			]
 		},

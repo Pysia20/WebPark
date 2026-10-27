@@ -61,7 +61,9 @@ export function register(io: Server) {
 
 			if (room.getPlayers().get(data.userID)) {
 				socket.to(data.roomID).emit("log", `<li>${data.userNick} re-joined the room </li>`);
-				LOG.info(`User: ${data.userNick} (${data.userID}) re-joined the room (${data.roomID})`);
+				LOG.info(
+					`User: ${data.userNick} (${data.userID}) re-joined the room (${data.roomID})`,
+				);
 			} else {
 				const player: Player = new Player(data.userID, data.userNick);
 				player.color = data.color;
@@ -79,7 +81,7 @@ export function register(io: Server) {
 				?.getPlayers()
 				.forEach((player, id) => {
 					const data: PlayerJoinedData = {
-						playerID: player.id,
+						playerID: player.playerID,
 						nick: player.nick,
 						color: player.color,
 						level: room.level.getID(),

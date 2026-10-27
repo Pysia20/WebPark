@@ -32,19 +32,19 @@ export class CannonProjectile extends Entity {
 		super(pos, size, customFields, "CannonProjectile");
 		this.isDynamic = true;
 
+		garbageRegistry.register(this, "Projectile " + this.id);
+
 		this.velocity = { x: 0, y: 0 };
 	}
 
 	// Types of entities that the projectile can collide and not get destroyed.
-	private allowedTypes: EntityType[] = ["Portal", "Player", "PlayerSpawner"];
+	private allowedTypes: EntityType[] = ["Portal", "Player", "PlayerSpawner", "Cannon"];
 
 	public override handleBehaviour(l: Level) {
 		if (this.pos.x < -DESPAWN_BUFFER || this.pos.x > this.level?.width! + DESPAWN_BUFFER) {
-			LOG.error("IMPLEMENT THIS FUCKING DESPAWNING JOHN");
 			this.level?.removeEntity(this);
 		}
 		if (this.pos.y < -DESPAWN_BUFFER || this.pos.y > this.level?.height! + DESPAWN_BUFFER) {
-			LOG.error("IMPLEMENT THIS FUCKING DESPAWNING JOHN");
 			this.level?.removeEntity(this);
 		}
 
@@ -75,7 +75,6 @@ export class CannonProjectile extends Entity {
 	protected override onAnyCollision(other: Entity) {
 		if (other instanceof Player) {
 			this.level!.shouldRestart = true;
-			// console.log(other.type);
 		} else if (!this.allowedTypes.includes(other.type)) {
 			this.level?.removeEntity(this);
 		}

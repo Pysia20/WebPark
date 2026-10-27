@@ -42,7 +42,7 @@ export class Room {
 	}
 
 	public addPlayer(p: Player) {
-		this.players.set(p.id, p);
+		this.players.set(p.playerID, p);
 	}
 
 	/**It adds 1 to the nextUserID after it returns it!!! */
@@ -112,7 +112,7 @@ export class Room {
 
 					const roomData: ServerData = {
 						playerData: {},
-						entityData: [],
+						entityData: {},
 					};
 
 					this.players.forEach((player: Player, id: number) => {
@@ -127,10 +127,16 @@ export class Room {
 					});
 
 					this.level.entities.forEach((entity: Entity) => {
+						if (entity.type == "Player") return;
+
 						const data: ServerEntityData = entity.getData();
 
 						roomData.entityData[entity.id] = data;
 					});
+
+					// console.log("=============");
+					// console.log(roomData);
+					// console.log("=============");
 
 					io.to(this.id).emit("tick", roomData);
 				},

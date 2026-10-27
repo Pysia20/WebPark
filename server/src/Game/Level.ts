@@ -31,6 +31,16 @@ export class Level {
 		this.room = room;
 	}
 
+	public addEntity(e: Entity) {
+		e.level = this;
+		e.id = this.nextEntityID;
+		this.nextEntityID++;
+		e.setLevel(this);
+		this.entities.push(e);
+	}
+
+	public removeEntity(e: Entity) {}
+
 	public reloadLevel() {
 		this.group = this.levelTemplate.group;
 		this.groupIndex = this.levelTemplate.groupIndex;
@@ -38,11 +48,11 @@ export class Level {
 		this.portals.clear();
 		this.entities = [];
 		this.spawners = [];
+
 		this.levelTemplate.entities.forEach((originalEntity) => {
 			const clone: Entity = originalEntity.clone();
-			clone.id = this.entities.length;
-			clone.setLevel(this);
-			this.entities.push(clone);
+			this.addEntity(clone);
+
 			if (clone.customFields.ActivationGroup.doesExist) {
 				this.activationStates.set(clone.customFields.ActivationGroup.value!, 0);
 			}
@@ -87,11 +97,11 @@ export class Level {
 
 		this.room.respawnPlayers(this);
 
-		this.entities = [
-			...this.entities,
-			...this.room.getPlayers().values(),
-			...this.getColliders(),
-		];
+		this.room.players.forEach((p) => {
+			this.addEntity(p);
+		});
+
+		this.entities = [...this.entities, ...this.getColliders()];
 
 		this.entities.forEach((e) => e.init());
 	}
@@ -109,14 +119,6 @@ export class Level {
 			e.endTick();
 		});
 	}
-
-	public addEntity(e: Entity) {
-		e.level = this;
-		e.id = this.entities.length;
-		this.entities.push(e);
-	}
-
-	public removeEntity(e: Entity) {}
 
 	public physicsUpdate() {
 		// WHAT SHOULD BE HAPPENING

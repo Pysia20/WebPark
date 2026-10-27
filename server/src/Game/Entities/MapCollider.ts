@@ -7,6 +7,12 @@ export class MapCollider extends Entity {
 		super(pos, size, customFields, "MapCollider");
 	}
 
+	public override onAnyCollision(other: Entity) {
+		if (other.type == "CannonProjectile") {
+			other.level?.removeEntity(other);
+		}
+	}
+
 	public override clone() {
 		return new MapCollider(
 			{ ...this.pos },

@@ -9,6 +9,7 @@ import {
 	GROUND_DETECTON_OFFSET,
 } from "@shared/commonVariables";
 import CONFIG from "../../config.json";
+import { CannonProjectile } from "./Entities/CannonProjectile";
 
 export abstract class Entity {
 	public id: number = -1;
@@ -284,6 +285,13 @@ export abstract class Entity {
 					a.velocity.y = 0;
 				}
 			}
+		}
+
+		if (a.type == "CannonProjectile") {
+			a.level?.removeEntity(a);
+		}
+		if (b.type == "CannonProjectile") {
+			a.level?.removeEntity(a);
 		}
 	}
 

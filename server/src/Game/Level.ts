@@ -39,7 +39,13 @@ export class Level {
 		this.entities.push(e);
 	}
 
-	public removeEntity(e: Entity) {}
+	public removeEntity(e: Entity) {
+		for (let i = 0; i < this.entities.length; i++) {
+			if (this.entities[i].id == e.id) {
+				this.entities.splice(i, 1);
+			}
+		}
+	}
 
 	public reloadLevel() {
 		this.group = this.levelTemplate.group;
@@ -107,7 +113,7 @@ export class Level {
 	}
 
 	public getColliders(): MapCollider[] {
-		return this.levelTemplate.colliders;
+		return [...this.levelTemplate.colliders];
 	}
 
 	public getID(): string {

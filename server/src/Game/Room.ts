@@ -127,7 +127,7 @@ export class Room {
 					});
 
 					this.level.entities.forEach((entity: Entity) => {
-						if (entity.type == "Player") return;
+						if (entity.type == "Player" || entity.type == "MapCollider") return;
 
 						const data: ServerEntityData = entity.getData();
 

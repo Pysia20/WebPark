@@ -30,20 +30,16 @@ export class CannonProjectile extends Entity {
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields, "CannonProjectile");
-		this.isDynamic = true;
-
-		garbageRegistry.register(this, "Projectile " + this.id);
-
-		this.velocity = { x: 0, y: 0 };
+		this.isDynamic = false;
 	}
 
 	// Types of entities that the projectile can collide and not get destroyed.
 	private allowedTypes: EntityType[] = ["Portal", "Player", "PlayerSpawner", "Cannon"];
 
 	public override handleBehaviour(l: Level) {
-		if (this.pos.x < -DESPAWN_BUFFER || this.pos.x > this.level?.width! + DESPAWN_BUFFER) {
-			this.level?.removeEntity(this);
-		}
+		// if (this.pos.x < -DESPAWN_BUFFER || this.pos.x > this.level?.width! + DESPAWN_BUFFER) {
+		// 	this.level?.removeEntity(this);
+		// }
 		if (this.pos.y < -DESPAWN_BUFFER || this.pos.y > this.level?.height! + DESPAWN_BUFFER) {
 			this.level?.removeEntity(this);
 		}

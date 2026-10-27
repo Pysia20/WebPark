@@ -68,7 +68,7 @@ export class CannonProjectile extends Entity {
 	protected override onDownCollision(overlap: number, other: Entity) {}
 	protected override onUpTouching(other: Entity) {}
 
-	protected override onAnyCollision(other: Entity) {
+	public override onAnyCollision(other: Entity) {
 		if (other instanceof Player) {
 			this.level!.shouldRestart = true;
 		} else if (!this.allowedTypes.includes(other.type)) {

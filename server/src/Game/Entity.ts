@@ -186,7 +186,7 @@ export abstract class Entity {
 		}
 	}
 
-	protected onAnyCollision(other: Entity) {}
+	public onAnyCollision(other: Entity) {}
 
 	protected onUpTouching(other: Entity): void {
 		if (other.velocity.y > 0) {

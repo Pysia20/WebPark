@@ -34,7 +34,7 @@ export class Portal extends Entity {
 
 	protected override onUpTouching(other: Entity) {}
 
-	protected override onAnyCollision(other: Entity) {
+	public override onAnyCollision(other: Entity) {
 		this.touchingThisTick.push(other);
 		if (this.inPortal.includes(other)) {
 			return;

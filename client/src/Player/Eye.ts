@@ -23,7 +23,7 @@ export class Eye {
     highestWidth: number = 0
     lowestLength: number = 0
     currentMaxLength: number = PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH
-    pushSquintLerp: number = 0.35
+    pushSquintLerp: number = PLAYER_VISUAL_CONFIG.EYE_PUSH_SQUINT_LERP_MAX
 
     LERP_SPEED: number = PLAYER_VISUAL_CONFIG.EYE_LERP
 
@@ -61,16 +61,17 @@ export class Eye {
 
     updateSquintAndPush(velocity: Vector2, isPushing: boolean) {
         if (isPushing) {
-            this.currentMaxLength = lerpIt(this.currentMaxLength, (PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH * 0.4), this.pushSquintLerp)
-            this.pushSquintLerp = lerpIt(this.pushSquintLerp, 0.025, this.LERP_SPEED)
+            this.currentMaxLength = lerpIt(this.currentMaxLength, (PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH * PLAYER_VISUAL_CONFIG.EYE_PUSH_SQUINT), this.pushSquintLerp)
+            this.pushSquintLerp = lerpIt(this.pushSquintLerp, PLAYER_VISUAL_CONFIG.EYE_PUSH_SQUINT_LERP_MIN, this.LERP_SPEED)
 
-            this.pushOffset.x = Math.sign(velocity.x) * (PLAYER_CONFIG.WIDTH * 0.1)
-            this.pushOffset.y =  PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.TORSO_HEIGHT_RATIO * 0.05
+            this.pushOffset.x = Math.sign(velocity.x) * (PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.EYE_PUSH_OFFSET_X)
+            this.pushOffset.y =  PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.TORSO_HEIGHT_RATIO * PLAYER_VISUAL_CONFIG.EYE_PUSH_OFFSET_Y
         } else {
             const absVelocity: Vector2 = {x: Math.abs(velocity.x), y: Math.abs(velocity.y)}
             const squint = (absVelocity.y > PLAYER_CONFIG.MAX_HORIZONTAL_SPEED) ? (PLAYER_CONFIG.MAX_HORIZONTAL_SPEED / PLAYER_VISUAL_CONFIG.EYE_SQUINT) : Math.max(absVelocity.x / PLAYER_VISUAL_CONFIG.EYE_SQUINT, absVelocity.y / PLAYER_VISUAL_CONFIG.EYE_SQUINT)
             this.currentMaxLength = lerpIt(this.currentMaxLength, (PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH - squint), this.LERP_SPEED)
 
+            this.pushSquintLerp = PLAYER_VISUAL_CONFIG.EYE_PUSH_SQUINT_LERP_MAX
             this.pushOffset.x = 0
             this.pushOffset.y = 0
         }

@@ -9,6 +9,8 @@ export class Torso {
     lean: number = 0
     sign: number = 1
 
+    LERP_SPEED: number = PLAYER_VISUAL_CONFIG.TORSO_LERP
+
     constructor(texture: Texture, color: string) {
         this.color = color
         this.sprite = new Sprite(texture)
@@ -16,16 +18,15 @@ export class Torso {
         this.sprite.setSize(PLAYER_CONFIG.WIDTH, PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.TORSO_HEIGHT_RATIO)
         this.sprite.anchor.set(0.5, 1.0)
     }
-    //TODO: REMOVE MAGIC NUMS
     updateTorso(pos: Vector2, velocity: Vector2, isPushing: boolean) {
         this.sprite.position.set(pos.x + (PLAYER_CONFIG.WIDTH / 2), pos.y + (PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.TORSO_HEIGHT_RATIO))
         if (velocity.x != 0) this.sign = Math.sign(velocity.x)
 
         if (isPushing) {
-            this.lean = lerpIt(this.lean, (this.sign * 0.2), 0.3)
+            this.lean = lerpIt(this.lean, (this.sign * PLAYER_VISUAL_CONFIG.TORSO_PUSH_LEAN_RATIO), this.LERP_SPEED)
         } else {
             const ratio = Math.abs(velocity.x / (PLAYER_CONFIG.MAX_HORIZONTAL_SPEED * PLAYER_VISUAL_CONFIG.TORSO_LEAN))
-            this.lean = lerpIt(this.lean, (this.sign * (ratio ** PLAYER_VISUAL_CONFIG.TORSO_LEAN)), 0.3)
+            this.lean = lerpIt(this.lean, (this.sign * (ratio ** PLAYER_VISUAL_CONFIG.TORSO_LEAN)), this.LERP_SPEED)
         }
 
         this.sprite.rotation = this.lean;

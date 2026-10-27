@@ -9,6 +9,7 @@ import {
 	GROUND_DETECTON_OFFSET,
 } from "@shared/commonVariables";
 import CONFIG from "../../config.json";
+import { CannonProjectile } from "./Entities/CannonProjectile";
 
 export abstract class Entity {
 	public id: number = -1;
@@ -237,9 +238,12 @@ export abstract class Entity {
 				b.pos.x += overlap.x / 2;
 			}
 
-			if (a.velocity.x > b.velocity.x) {
+			const aVelocityX = Math.abs(a.velocity.x);
+			const bVelocityX = Math.abs(b.velocity.x);
+
+			if (aVelocityX > bVelocityX) {
 				a.isPushing = true;
-			} else if (b.velocity.x > a.velocity.x) {
+			} else if (aVelocityX < bVelocityX) {
 				b.isPushing = true;
 			} else {
 				a.isPushing = true;
@@ -281,6 +285,13 @@ export abstract class Entity {
 					a.velocity.y = 0;
 				}
 			}
+		}
+
+		if (a.type == "CannonProjectile") {
+			a.level?.removeEntity(a);
+		}
+		if (b.type == "CannonProjectile") {
+			a.level?.removeEntity(a);
 		}
 	}
 

@@ -6,28 +6,45 @@ import { LOG } from "../Logger";
 import { Entity } from "./Entity";
 import { MapCollider } from "./Entities/MapCollider";
 import { Portal } from "./Entities/Portal";
+import { forceGC } from "../Global";
 
 export class Level {
 	public readonly levelTemplate: LevelTemplate;
 	public readonly activationStates: Map<string, number> = new Map<string, number>();
 
-	private width: number = -1;
-	private height: number = -1;
+	public width: number = -1;
+	public height: number = -1;
 	public entities: Entity[] = [];
-	public allEntities: Entity[] = [];
-	public dynamicEntities: Entity[] = [];
-	public staticEntities: Entity[] = [];
 	public group!: string;
 	public groupIndex!: number;
 	public spawners: PlayerSpawner[] = [];
 	public portals = new Map<string, [Portal | undefined, Portal | undefined]>();
+	public nextEntityID = 0;
 
 	public room: Room;
 	public shouldRestart: boolean = false;
 
 	constructor(template: LevelTemplate, room: Room) {
 		this.levelTemplate = template;
+		this.width = this.levelTemplate.width;
+		this.height = this.levelTemplate.height;
 		this.room = room;
+	}
+
+	public addEntity(e: Entity) {
+		e.level = this;
+		e.id = this.nextEntityID;
+		this.nextEntityID++;
+		e.setLevel(this);
+		this.entities.push(e);
+	}
+
+	public removeEntity(e: Entity) {
+		for (let i = 0; i < this.entities.length; i++) {
+			if (this.entities[i].id == e.id) {
+				this.entities.splice(i, 1);
+			}
+		}
 	}
 
 	public reloadLevel() {
@@ -35,23 +52,15 @@ export class Level {
 		this.groupIndex = this.levelTemplate.groupIndex;
 
 		this.portals.clear();
-		this.dynamicEntities = [];
-		this.staticEntities = [];
-		this.allEntities = [];
 		this.entities = [];
 		this.spawners = [];
+
 		this.levelTemplate.entities.forEach((originalEntity) => {
 			const clone: Entity = originalEntity.clone();
-			clone.id = this.entities.length;
-			clone.setLevel(this);
-			this.entities.push(clone);
+			this.addEntity(clone);
+
 			if (clone.customFields.ActivationGroup.doesExist) {
 				this.activationStates.set(clone.customFields.ActivationGroup.value!, 0);
-			}
-			if (clone.isDynamic) {
-				this.dynamicEntities.push(clone);
-			} else {
-				this.staticEntities.push(clone);
 			}
 
 			if (clone.type == "Portal") {
@@ -94,21 +103,17 @@ export class Level {
 
 		this.room.respawnPlayers(this);
 
-		this.allEntities = [
-			...this.entities,
-			...this.room.getPlayers().values(),
-			...this.getColliders(),
-		];
+		this.room.players.forEach((p) => {
+			this.addEntity(p);
+		});
 
-		this.staticEntities = [...this.staticEntities, ...this.getColliders()];
+		this.entities = [...this.entities, ...this.getColliders()];
 
-		this.dynamicEntities = [...this.dynamicEntities, ...this.room.getPlayers().values()];
-
-		this.allEntities.forEach((e) => e.init());
+		this.entities.forEach((e) => e.init());
 	}
 
 	public getColliders(): MapCollider[] {
-		return this.levelTemplate.colliders;
+		return [...this.levelTemplate.colliders];
 	}
 
 	public getID(): string {
@@ -124,32 +129,38 @@ export class Level {
 	public physicsUpdate() {
 		// WHAT SHOULD BE HAPPENING
 		// 1. CALCULATE FORCES
-		this.allEntities.forEach((e) => e.calculateVelocities());
+		this.entities.forEach((e) => e.calculateVelocities());
 		// 2. Move Axis 1
-		this.allEntities.forEach((e) => e.moveXAxis());
+		this.entities.forEach((e) => e.moveXAxis());
 
 		// 3. Collisions for Axis 1
-		this.allEntities.forEach((e) => {
-			this.allEntities.forEach((other) => {
+		this.entities.forEach((e) => {
+			this.entities.forEach((other) => {
 				if (other == e) return;
 				e.calculateCollisionsX(other);
 			});
 		});
 
 		// 4. Move Axis 2
-		this.allEntities.forEach((e) => e.moveYAxis());
+		this.entities.forEach((e) => e.moveYAxis());
 		// 5. Collisions for Axis 2
-		this.allEntities.forEach((e) => {
-			this.allEntities.forEach((other) => {
+		this.entities.forEach((e) => {
+			this.entities.forEach((other) => {
 				if (other == e) return;
 				e.calculateCollisionsY(other);
 			});
 		});
 
-		for (let i = 0; i < this.dynamicEntities.length; i++) {
-			for (let j = i + 1; j < this.dynamicEntities.length; j++) {
-				const a = this.dynamicEntities[i];
-				const b = this.dynamicEntities[j];
+		const dynamicEntities: Entity[] = [];
+
+		this.entities.forEach((e) => {
+			if (e.isDynamic) dynamicEntities.push(e);
+		});
+
+		for (let i = 0; i < dynamicEntities.length; i++) {
+			for (let j = i + 1; j < dynamicEntities.length; j++) {
+				const a = dynamicEntities[i];
+				const b = dynamicEntities[j];
 
 				Entity.handleDynamicCollision(a, b);
 			}
@@ -157,13 +168,15 @@ export class Level {
 
 		// 6. Other behaviour
 
-		this.allEntities.forEach((e) => e.handleBehaviour(this));
+		this.entities.forEach((e) => e.handleBehaviour(this));
 
 		if (this.shouldRestart) {
 			this.shouldRestart = false;
 			this.reloadLevel();
 		}
 
-		this.allEntities.forEach((e) => e.endTick());
+		this.entities.forEach((e) => e.endTick());
+
+		this.room.sendLevelReloaded();
 	}
 }

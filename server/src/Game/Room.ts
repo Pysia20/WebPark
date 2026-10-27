@@ -18,6 +18,7 @@ import { io } from "socket.io-client";
 import { MapCollider } from "./Entities/MapCollider";
 import { Entity } from "./Entity";
 import { garbageRegistry } from "../Global";
+import { CannonProjectile } from "./Entities/CannonProjectile";
 
 export class Room {
 	public readonly TICKRATE: number = CONFIG.TICKRATE; // Per second
@@ -41,7 +42,7 @@ export class Room {
 	}
 
 	public addPlayer(p: Player) {
-		this.players.set(p.id, p);
+		this.players.set(p.playerID, p);
 	}
 
 	/**It adds 1 to the nextUserID after it returns it!!! */
@@ -111,7 +112,7 @@ export class Room {
 
 					const roomData: ServerData = {
 						playerData: {},
-						entityData: [],
+						entityData: {},
 					};
 
 					this.players.forEach((player: Player, id: number) => {
@@ -126,10 +127,16 @@ export class Room {
 					});
 
 					this.level.entities.forEach((entity: Entity) => {
+						if (entity.type == "Player" || entity.type == "MapCollider") return;
+
 						const data: ServerEntityData = entity.getData();
 
 						roomData.entityData[entity.id] = data;
 					});
+
+					// console.log("=============");
+					// console.log(roomData);
+					// console.log("=============");
 
 					io.to(this.id).emit("tick", roomData);
 				},
@@ -163,6 +170,10 @@ export class Room {
 			this.level = level;
 			this.level.reloadLevel();
 		}
+	}
+
+	public sendLevelReloaded() {
+		this.io?.to(this.id).emit("levelReloaded");
 	}
 
 	public stopGameLoop() {

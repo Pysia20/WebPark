@@ -9,8 +9,8 @@ import { Level } from "./Level";
 import CONFIG from "../../config.json";
 
 export class Player extends Entity {
-	public id: number;
 	public nick: string;
+	public playerID: number;
 	public pos: Vector2 = { x: 0, y: 0 };
 	public color: string = "";
 	public roomID: string | undefined;
@@ -23,7 +23,7 @@ export class Player extends Entity {
 		jump: false,
 	};
 
-	constructor(id: number, nick: string) {
+	constructor(playerID: number, nick: string) {
 		super(
 			{ x: 0, y: 0 },
 			{ x: PLAYER_CONFIG.WIDTH, y: PLAYER_CONFIG.HEIGHT },
@@ -31,9 +31,8 @@ export class Player extends Entity {
 			"Player",
 		);
 
-		this.id = id;
+		this.playerID = playerID;
 		this.nick = nick;
-
 		this.isDynamic = true;
 	}
 

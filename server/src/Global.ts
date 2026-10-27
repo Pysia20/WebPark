@@ -57,13 +57,13 @@ export const garbageRegistry = new FinalizationRegistry((instanceId: string) => 
 
 //? Garbage collection help
 
-// v8.setFlagsFromString("--expose_gc");
-// const gc = vm.runInNewContext("gc");
+v8.setFlagsFromString("--expose_gc");
+const gc = vm.runInNewContext("gc");
 
-// // Helper to trigger Garbage Collection
-// export function forceGC() {
-// 	if (typeof gc === "function") gc();
-// 	else console.warn("Run with --expose-gc flag!");
-// }
+// Helper to trigger Garbage Collection
+export function forceGC() {
+	if (typeof gc === "function") gc();
+	else console.warn("Run with --expose-gc flag!");
+}
 
 // garbageRegistry.register(this, id);

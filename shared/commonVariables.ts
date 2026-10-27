@@ -18,6 +18,7 @@ export const GROUND_DETECTON_OFFSET = 1;
 export const COLLISION_MARGIN_Y = 2;
 export const COLLISION_MARGIN_X = COLLISION_MARGIN_Y;
 export const HORIZONTAL_BIAS = 1.5;
+export const DESPAWN_BUFFER = 300;
 
 export const ROOM_CONFIG = {
 	MAX_PLAYERS: 8,

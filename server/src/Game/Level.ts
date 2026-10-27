@@ -54,6 +54,7 @@ export class Level {
 		this.portals.clear();
 		this.entities = [];
 		this.spawners = [];
+		this.nextEntityID = 0;
 
 		this.levelTemplate.entities.forEach((originalEntity) => {
 			const clone: Entity = originalEntity.clone();

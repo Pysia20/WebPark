@@ -1,7 +1,6 @@
 import {Graphics} from "pixi.js";
 import {Vector2} from "@shared/commonModels";
 
-//can't rly test this rn
 export class Arm {
     arm: Graphics = new Graphics()
 

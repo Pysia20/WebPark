@@ -1,6 +1,5 @@
 import {Graphics} from "pixi.js";
 import {Vector2} from "@shared/commonModels";
-import {Directions} from "./PlayerEnums";
 
 //can't rly test this rn
 export class Arm {
@@ -22,6 +21,7 @@ export class Arm {
 
     updateArm(shoul: Vector2, velocity: Vector2, deltaTime: number, isPushing: boolean) {
         this.shoulPos = shoul
+
         this.arm.clear()
 
         if (!isPushing) this.isReaching = false
@@ -35,8 +35,8 @@ export class Arm {
         }
 
         if (this.isReaching) {
-            this.touchProgress += 0.3 * deltaTime
-            const offset = (velocity.x > 0) ? this.ARM_LENGTH : -this.ARM_LENGTH
+            this.touchProgress += 0.1 * deltaTime
+            const offset = (velocity.x > 0) ? this.ARM_LENGTH * 0.9 : -this.ARM_LENGTH * 0.9
             this.touchTarget = {x: this.shoulPos.x + offset, y: this.shoulPos.y}
 
             if (this.touchProgress >= 1.0) {
@@ -46,12 +46,27 @@ export class Arm {
                 this.handPos.x = this.shoulPos.x + (this.touchTarget.x - this.shoulPos.x) * this.touchProgress
             }
 
-            this.arm.moveTo(this.shoulPos.x, this.shoulPos.y).lineTo(this.handPos.x, this.handPos.y).stroke({
-                color: "#000000",
-                width: 4,
-                cap: "round",
-                join: "miter"
-            });
+            this.invertTheKinematics()
+
+            this.arm.moveTo(this.shoulPos.x, this.shoulPos.y).lineTo(this.lbowPos.x, this.lbowPos.y).lineTo(this.handPos.x, this.handPos.y).stroke({color: "#000000", width: 4, cap: "round", join: "miter"});
+        }
+    }
+
+    invertTheKinematics() {
+        const straightDistance = Math.sqrt(((this.handPos.x - this.shoulPos.x) ** 2) + ((this.handPos.y - this.shoulPos.y) ** 2))
+        if (straightDistance >= this.ARM_LENGTH) {
+            this.lbowPos.x = (this.shoulPos.x + this.handPos.x) / 2
+            this.lbowPos.y = (this.shoulPos.y + this.handPos.y) / 2
+        } else {
+            //Brain hurtsss, also yes AI helped with the math (sorry I didn't reinvent inverse kinematics)
+            const scaryMath = ((this.ARM_LENGTH / 2) + (straightDistance ** 2) - (this.ARM_LENGTH / 2)) / (2 * (this.ARM_LENGTH / 2) * straightDistance)
+            const clampedMath = Math.min(1, Math.max(-1, scaryMath))
+            const angle = Math.acos(clampedMath)
+
+            const baseAngle = Math.atan2(this.handPos.y - this.shoulPos.y, this.handPos.x - this.shoulPos.x)
+            const kneeAngle = baseAngle + angle
+            this.lbowPos.x = this.shoulPos.x + Math.cos(kneeAngle) * (this.ARM_LENGTH / 2)
+            this.lbowPos.y = this.shoulPos.y + Math.sin(kneeAngle) * (this.ARM_LENGTH / 2)
         }
     }
 }

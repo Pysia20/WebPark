@@ -119,10 +119,8 @@ export class Eye {
             targetOffsetX = PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.EYE_LOOK_OFFSET_RATIO
         }
 
-        if (velocity.x != 0) {
-            const target: Vector2 = {x: targetOffsetX, y: 0}
-            lerpTheyThem(this.lookOffset, target, this.LERP_SPEED)
-        }
+        const target: Vector2 = {x: targetOffsetX, y: 0}
+        lerpTheyThem(this.lookOffset, target, this.LERP_SPEED)
     }
 
     lookAtMouse() {

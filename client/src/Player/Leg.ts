@@ -2,7 +2,7 @@ import {Vector2} from "@shared/commonModels";
 import {Graphics} from "pixi.js";
 import {PLAYER_CONFIG, PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
 import {Directions} from "./PlayerEnums";
-import {lerpIt, lerpTheyThem} from "../favoriteChild";
+import {lerpIt, lerpTheyThem} from "../FavoriteChild";
 
 export class Leg {
     leg: Graphics = new Graphics()

@@ -10,7 +10,7 @@ import { leveler } from "./Leveler";
 import { pageSetup } from "./Weber";
 import { hud } from "./Hud";
 import {pulseer, updateShaders} from "./Shaders";
-import {updateLerp} from "./favoriteChild";
+import {updateLerp} from "./FavoriteChild";
 const app = new PIXI.Application()
 await app.init({
     width: 1280,

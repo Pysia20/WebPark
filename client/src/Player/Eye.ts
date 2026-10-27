@@ -1,17 +1,18 @@
 import {Graphics} from "pixi.js";
 import {Vector2} from "@shared/commonModels";
 import {PLAYER_CONFIG, PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
-import {Directions, States} from "./PlayerEnums";
+import { States } from "./PlayerEnums";
 import {getCurrentMousePos, isClicking} from "../Inputs";
 import {lerpIt, lerpTheyThem} from "../FavoriteChild";
+
 export class Eye {
     eye: Graphics = new Graphics()
     isMe: boolean
 
-    direction: Directions = Directions.None
     pos: Vector2 = {x: 0, y: 0}
     target: Vector2 = {x: 0, y: 0}
-    lookOffset: Vector2 = {x: 0, y:0}
+    lookOffset: Vector2 = {x: 0, y: 0}
+    pushOffset: Vector2 = {x: 0, y: 0}
 
     isBlinking: boolean = false
     blinkTimer: number = PLAYER_VISUAL_CONFIG.BLINK_INTERVAL_BASE
@@ -32,15 +33,15 @@ export class Eye {
     }
 
     updateEye(pos: Vector2, velocity: Vector2, deltaT: number, rand: number, isPushing: boolean) {
-        this.updateSquint(velocity, isPushing)
+        this.updateSquintAndPush(velocity, isPushing)
         this.updateBlink(pos, deltaT, rand)
         this.updatePos(pos, velocity)
         if (velocity.x == 0 && velocity.y == 0 && this.isMe) this.lookAtMouse()
 
-        const baseX = this.pos.x + this.lookOffset.x;
-        const baseY = this.pos.y + this.lookOffset.y;
-        const targetX = this.target.x + this.lookOffset.x;
-        const targetY = this.target.y + this.lookOffset.y;
+        const baseX = this.pos.x + this.lookOffset.x + this.pushOffset.x
+        const baseY = this.pos.y + this.lookOffset.y + this.pushOffset.y
+        const targetX = this.target.x + this.lookOffset.x + this.pushOffset.x
+        const targetY = this.target.y + this.lookOffset.y + this.pushOffset.y
         if (this.isBlinking && this.length < this.currentMaxLength / 2) {
             const width = ((this.width - this.highestWidth) - this.highestWidth) * -1
             const length = ((this.length - this.lowestLength) - this.lowestLength) * -1
@@ -58,14 +59,20 @@ export class Eye {
         }
     }
 
-    updateSquint(velocity: Vector2, isPushing: boolean) {
+    updateSquintAndPush(velocity: Vector2, isPushing: boolean) {
         if (isPushing) {
             this.currentMaxLength = lerpIt(this.currentMaxLength, (PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH * 0.4), this.pushSquintLerp)
             this.pushSquintLerp = lerpIt(this.pushSquintLerp, 0.025, this.LERP_SPEED)
+
+            this.pushOffset.x = Math.sign(velocity.x) * (PLAYER_CONFIG.WIDTH * 0.1)
+            this.pushOffset.y =  PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.TORSO_HEIGHT_RATIO * 0.05
         } else {
             const absVelocity: Vector2 = {x: Math.abs(velocity.x), y: Math.abs(velocity.y)}
             const squint = (absVelocity.y > PLAYER_CONFIG.MAX_HORIZONTAL_SPEED) ? (PLAYER_CONFIG.MAX_HORIZONTAL_SPEED / PLAYER_VISUAL_CONFIG.EYE_SQUINT) : Math.max(absVelocity.x / PLAYER_VISUAL_CONFIG.EYE_SQUINT, absVelocity.y / PLAYER_VISUAL_CONFIG.EYE_SQUINT)
-            this.currentMaxLength = lerpIt(this.currentMaxLength, (PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH - squint), this.LERP_SPEED) //dear WebStorm... WHY are you flagging the second comma here as an spelling mistake???????? nvm I'm stupid
+            this.currentMaxLength = lerpIt(this.currentMaxLength, (PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH - squint), this.LERP_SPEED)
+
+            this.pushOffset.x = 0
+            this.pushOffset.y = 0
         }
     }
 
@@ -125,8 +132,13 @@ export class Eye {
 
     lookAtMouse() {
         const mousePos = getCurrentMousePos()
+        let target: Vector2 = {x: 0, y: 0}
+
+        if (isClicking()) {
+            this.blinkTimer = 1
+        }
+
         if (mousePos.x == 0 && mousePos.y == 0) {
-            const target: Vector2 = {x: 0, y: 0}
             lerpTheyThem(this.lookOffset, target, this.LERP_SPEED)
             return;
         }
@@ -136,14 +148,9 @@ export class Eye {
 
         const angle = Math.atan2(mousePos.y - centerY, mousePos.x - centerX)
 
-        const targetX = Math.cos(angle) * PLAYER_VISUAL_CONFIG.EYE_X_LOOK
-        const targetY = Math.sin(angle) * PLAYER_VISUAL_CONFIG.EYE_Y_LOOK
+        target.x = Math.cos(angle) * PLAYER_VISUAL_CONFIG.EYE_X_LOOK
+        target.y = Math.sin(angle) * PLAYER_VISUAL_CONFIG.EYE_Y_LOOK
 
-        this.lookOffset.x = lerpIt(this.lookOffset.x, targetX, this.LERP_SPEED)
-        this.lookOffset.y = lerpIt(this.lookOffset.y, targetY, this.LERP_SPEED)
-
-        if (isClicking()) {
-            this.blinkTimer = 1
-        }
+        lerpTheyThem(this.lookOffset, target, this.LERP_SPEED)
     }
 }

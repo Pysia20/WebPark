@@ -8,7 +8,7 @@ import { Torso } from "./Torso";
 import { Eye } from "./Eye";
 import { Arm } from "./Arm";
 import { Directions } from "./PlayerEnums";
-import {lerpIt, lerpTheyThem} from "../favoriteChild";
+import {lerpIt, lerpTheyThem} from "../FavoriteChild";
 
 export class Player {
     id: number

@@ -1,7 +1,7 @@
 import {Sprite, Texture} from "pixi.js";
 import {PLAYER_CONFIG, PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
 import {Vector2} from "@shared/commonModels";
-import {lerpIt} from "../favoriteChild";
+import {lerpIt} from "../FavoriteChild";
 
 export class Torso {
     color: string

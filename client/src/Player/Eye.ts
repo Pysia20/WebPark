@@ -3,7 +3,7 @@ import {Vector2} from "@shared/commonModels";
 import {PLAYER_CONFIG, PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
 import {Directions, States} from "./PlayerEnums";
 import {getCurrentMousePos, isClicking} from "../Inputs";
-import {lerpIt} from "../favoriteChild";
+import {lerpIt} from "../FavoriteChild";
 export class Eye {
     eye: Graphics = new Graphics()
     isMe: boolean

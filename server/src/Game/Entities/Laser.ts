@@ -53,7 +53,7 @@ export class Laser extends Entity {
 	private shouldKill: boolean = false;
 	private isActivated: boolean = true;
 
-	protected onAnyCollision() {
+	public override onAnyCollision() {
 		this.shouldKill = true;
 	}
 

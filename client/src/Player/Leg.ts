@@ -2,6 +2,7 @@ import {Vector2} from "@shared/commonModels";
 import {Graphics} from "pixi.js";
 import {PLAYER_CONFIG, PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
 import {Directions} from "./PlayerEnums";
+import {lerpIt, lerpTheyThem} from "../favoriteChild";
 
 export class Leg {
     leg: Graphics = new Graphics()
@@ -105,8 +106,12 @@ export class Leg {
 
         this.stepTarget.x = this.hipPos.x
         this.stepTarget.y = this.hipPos.y + hipOffset
-        this.footPos.x += (this.stepTarget.x - this.footPos.x) * (this.LERP_SPEED / 2)
-        this.footPos.y = (this.footPos.y > this.hipPos.y + hipOffset) ? this.footPos.y + (this.stepTarget.y - this.footPos.y) * this.LERP_SPEED : this.hipPos.y + hipOffset
+        if (this.footPos.y > this.hipPos.y + hipOffset) {
+            lerpTheyThem(this.footPos, this.stepTarget, this.LERP_SPEED)
+        } else {
+            this.footPos.x = lerpIt(this.footPos.x, this.stepTarget.x, (this.LERP_SPEED / 2))
+            this.footPos.y = this.hipPos.y + hipOffset
+        }
 
         this.isStepping = false
         this.stepProgress = 1.0

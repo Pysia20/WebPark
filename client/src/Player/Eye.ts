@@ -3,6 +3,7 @@ import {Vector2} from "@shared/commonModels";
 import {PLAYER_CONFIG, PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
 import {Directions, States} from "./PlayerEnums";
 import {getCurrentMousePos, isClicking} from "../Inputs";
+import {lerpIt} from "../favoriteChild";
 export class Eye {
     eye: Graphics = new Graphics()
     isMe: boolean
@@ -59,12 +60,12 @@ export class Eye {
 
     updateSquint(velocity: Vector2, isPushing: boolean) {
         if (isPushing) {
-            this.currentMaxLength += ((PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH * 0.4) - this.currentMaxLength) * this.pushSquintLerp
-            this.pushSquintLerp += (0.025 - this.pushSquintLerp) * this.LERP_SPEED
+            this.currentMaxLength = lerpIt(this.currentMaxLength, (PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH * 0.4), this.pushSquintLerp)
+            this.pushSquintLerp = lerpIt(this.pushSquintLerp, 0.025, this.LERP_SPEED)
         } else {
             const absVelocity: Vector2 = {x: Math.abs(velocity.x), y: Math.abs(velocity.y)}
             const squint = (absVelocity.y > PLAYER_CONFIG.MAX_HORIZONTAL_SPEED) ? (PLAYER_CONFIG.MAX_HORIZONTAL_SPEED / PLAYER_VISUAL_CONFIG.EYE_SQUINT) : Math.max(absVelocity.x / PLAYER_VISUAL_CONFIG.EYE_SQUINT, absVelocity.y / PLAYER_VISUAL_CONFIG.EYE_SQUINT)
-            this.currentMaxLength += ((PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH - squint) - this.currentMaxLength) * this.LERP_SPEED
+            this.currentMaxLength = lerpIt(this.currentMaxLength, (PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH - squint), this.LERP_SPEED) //dear WebStorm... WHY are you flagging the second comma here as an spelling mistake???????? nvm I'm stupid
         }
     }
 
@@ -119,7 +120,7 @@ export class Eye {
 
         const distX = Math.abs(this.target.x - this.pos.x)
         if (distX > PLAYER_VISUAL_CONFIG.EYE_SNAP_THRESHOLD) {
-            this.pos.x += (this.target.x - this.pos.x) * this.LERP_SPEED
+            this.pos.x = lerpIt(this.pos.x, this.target.x, this.LERP_SPEED)
             this.target.x = this.pos.x
         } else {
             this.pos.x = this.target.x
@@ -133,8 +134,8 @@ export class Eye {
     lookAtMouse() {
         const mousePos = getCurrentMousePos()
         if (mousePos.x == 0 && mousePos.y == 0) {
-            this.lookOffset.x += (0 - this.lookOffset.x) * this.LERP_SPEED
-            this.lookOffset.y += (0 - this.lookOffset.y) * this.LERP_SPEED
+            this.lookOffset.x = lerpIt(this.lookOffset.x, 0, this.LERP_SPEED)
+            this.lookOffset.y = lerpIt(this.lookOffset.y, 0, this.LERP_SPEED)
             return;
         }
 
@@ -146,8 +147,8 @@ export class Eye {
         const targetX = Math.cos(angle) * PLAYER_VISUAL_CONFIG.EYE_X_LOOK
         const targetY = Math.sin(angle) * PLAYER_VISUAL_CONFIG.EYE_Y_LOOK
 
-        this.lookOffset.x += (targetX - this.lookOffset.x) * this.LERP_SPEED
-        this.lookOffset.y += (targetY - this.lookOffset.y) * this.LERP_SPEED
+        this.lookOffset.x = lerpIt(this.lookOffset.x, targetX, this.LERP_SPEED)
+        this.lookOffset.y = lerpIt(this.lookOffset.y, targetY, this.LERP_SPEED)
 
         if (isClicking()) {
             this.blinkTimer = 1

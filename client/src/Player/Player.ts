@@ -8,6 +8,7 @@ import { Torso } from "./Torso";
 import { Eye } from "./Eye";
 import { Arm } from "./Arm";
 import { Directions } from "./PlayerEnums";
+import {lerpIt, lerpTheyThem} from "../favoriteChild";
 
 export class Player {
     id: number
@@ -59,8 +60,7 @@ export class Player {
         this.checkIfJumped()
         this.checkInAir()
 
-        this.pos.x += (this.targetPos.x - this.pos.x) * this.LERP_SPEED
-        this.pos.y += (this.targetPos.y - this.pos.y) * this.LERP_SPEED
+        lerpTheyThem(this.pos, this.targetPos, this.LERP_SPEED)
         this.updateTorso()
         this.updateNick()
         this.updateLegs()

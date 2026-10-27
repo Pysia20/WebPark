@@ -65,3 +65,8 @@ export const spinner = Filter.from({
         }
     }
 });
+
+
+export function updateShaders(deltaT: number) {
+    pulseer.resources.timeUniforms.uniforms.uTime += 0.05 * deltaT
+}

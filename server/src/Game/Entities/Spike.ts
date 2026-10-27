@@ -26,7 +26,7 @@ export class Spike extends Entity {
 		super(pos, size, customFields, "Spike");
 	}
 
-	protected override onAnyCollision(other: Entity) {
+	public override onAnyCollision(other: Entity) {
 		this.shouldKill = true;
 	}
 

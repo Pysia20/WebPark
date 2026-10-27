@@ -28,6 +28,7 @@ export const pulseer = Filter.from({
     }
 });
 
+//why are shader so hard aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 export const spinner = Filter.from({
     gl: {
         vertex: defaultFilterVert,

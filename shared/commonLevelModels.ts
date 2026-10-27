@@ -236,4 +236,6 @@ export type EntityType =
 	| "MovingPlatform"
 	| "Laser"
 	| "Portal"
-	| "SwitchButton";
+	| "SwitchButton"
+	| "Cannon"
+	| "CannonProjectile";

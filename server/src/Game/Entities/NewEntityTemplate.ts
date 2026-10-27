@@ -1,6 +1,7 @@
 import { Vector2 } from "@shared/commonModels";
 import { Entity } from "../Entity";
 import { EntityCustomFieldsData } from "@shared/commonLevelModels";
+import { RequiredField } from "../../Global";
 
 //! DO NOT IMPORT!!!
 //? IT IS A TEMPLATE FOR CREATING NEW ENTITY TYPES
@@ -10,6 +11,10 @@ import { EntityCustomFieldsData } from "@shared/commonLevelModels";
 //TODO Add to the TYPE_MAP in the EntityBuilder
 
 export class ENTITY_NAME extends Entity {
+	public override getUsedFields(): RequiredField[] {
+		return [];
+	}
+
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields, "JohnEntity");
 	}

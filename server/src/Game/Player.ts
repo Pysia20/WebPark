@@ -11,6 +11,7 @@ import CONFIG from "../../config.json";
 export class Player extends Entity {
 	public id: number;
 	public nick: string;
+	public playerID: number;
 	public pos: Vector2 = { x: 0, y: 0 };
 	public color: string = "";
 	public roomID: string | undefined;

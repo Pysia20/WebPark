@@ -18,6 +18,7 @@ import { io } from "socket.io-client";
 import { MapCollider } from "./Entities/MapCollider";
 import { Entity } from "./Entity";
 import { garbageRegistry } from "../Global";
+import { CannonProjectile } from "./Entities/CannonProjectile";
 
 export class Room {
 	public readonly TICKRATE: number = CONFIG.TICKRATE; // Per second
@@ -163,6 +164,10 @@ export class Room {
 			this.level = level;
 			this.level.reloadLevel();
 		}
+	}
+
+	public sendLevelReloaded() {
+		this.io?.to(this.id).emit("levelReloaded");
 	}
 
 	public stopGameLoop() {

@@ -1,7 +1,7 @@
 import { ServerEntityData, Vector2 } from "@shared/commonModels";
 import { Player } from "../Player";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
-import { isColliding, RequiredField } from "../../Global";
+import { RequiredField } from "../../Global";
 import { LOG } from "../../Logger";
 import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
 import { EntityBuilder } from "./EntityBuilder";

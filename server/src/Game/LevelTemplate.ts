@@ -18,8 +18,8 @@ import { Entity } from "./Entity";
 
 export class LevelTemplate {
 	public readonly id: string; // its name
-	private width: number = -1;
-	private height: number = -1;
+	public width: number = -1;
+	public height: number = -1;
 	private readonly intGrid: number[][];
 	public readonly colliders: MapCollider[];
 	public readonly entities: Entity[] = [];

@@ -44,7 +44,7 @@ export class Portal extends Entity {
 		const otherPortal: Portal = tuple[0] == this ? tuple[1]! : tuple[0]!;
 
 		const playerNewPos = { ...otherPortal.pos };
-		playerNewPos.y -= Math.abs(PLAYER_CONFIG.HEIGHT - this.size.y);
+		playerNewPos.y -= Math.abs(other.size.y - this.size.y);
 		other.pos = { ...playerNewPos };
 		otherPortal.onEntityTeleported(other);
 	}

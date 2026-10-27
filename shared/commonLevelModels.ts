@@ -132,6 +132,7 @@ export interface EntityCustomFieldsData {
 	PortalGroup: CustomField<string>;
 	ActivationGroups: CustomField<string[]>;
 	ActivatedByDefault: CustomField<Boolean>;
+	BouncePower: CustomField<number>;
 }
 
 export type EntityCustomFieldTypeMap = {
@@ -147,6 +148,7 @@ export type EntityCustomFieldTypeMap = {
 	PortalGroup: string;
 	ActivationGroups: string[];
 	ActivatedByDefault: Boolean;
+	BouncePower: number;
 };
 
 export type EntityCustomField = keyof EntityCustomFieldsData;
@@ -205,6 +207,10 @@ export const DummyEntityCustomFields: EntityCustomFieldsData = {
 		doesExist: false,
 		value: undefined,
 	},
+	BouncePower: {
+		doesExist: false,
+		value: undefined,
+	},
 } as const;
 
 export interface EntityFieldInstance {
@@ -238,4 +244,5 @@ export type EntityType =
 	| "Portal"
 	| "SwitchButton"
 	| "Cannon"
-	| "CannonProjectile";
+	| "CannonProjectile"
+	| "BouncePad";

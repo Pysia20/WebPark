@@ -608,6 +608,22 @@
 					],
 					"__worldX": 192,
 					"__worldY": -448
+				},
+				{
+					"__identifier": "BouncePad",
+					"__grid": [7,7],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#4C52E8",
+					"iid": "6db2ec40-bde0-11f1-92d0-7be040428bd1",
+					"width": 64,
+					"height": 16,
+					"defUid": 64,
+					"px": [448,512],
+					"fieldInstances": [{ "__identifier": "BouncePower", "__type": "Int", "__value": 500, "__tile": null, "defUid": 65, "realEditorValues": [{ "id": "V_Int", "params": [500] }] }],
+					"__worldX": 448,
+					"__worldY": -192
 				}
 			]
 		},

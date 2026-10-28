@@ -109,6 +109,8 @@ export class Level {
 		this.entities = [...this.entities, ...this.getColliders()];
 
 		this.entities.forEach((e) => e.init());
+
+		this.room.sendLevelReloaded();
 	}
 
 	public getColliders(): MapCollider[] {
@@ -175,7 +177,5 @@ export class Level {
 		}
 
 		this.entities.forEach((e) => e.endTick());
-
-		this.room.sendLevelReloaded();
 	}
 }

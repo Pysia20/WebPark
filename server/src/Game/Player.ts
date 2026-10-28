@@ -1,9 +1,10 @@
 import { PlayerInputs, Vector2 } from "@shared/commonModels";
 import { Entity } from "./Entity";
-import { PLAYER_CONFIG } from "@shared/commonVariables";
+import { COLLISION_MARGIN_Y, PLAYER_CONFIG } from "@shared/commonVariables";
 import { DummyEntityCustomFields } from "@shared/commonLevelModels";
 import { LOG } from "../Logger";
 import { clamp } from "../Global";
+import { BoorEnt } from "../../../client/src/Entities/Boor";
 
 export class Player extends Entity {
 	public nick: string;
@@ -14,6 +15,7 @@ export class Player extends Entity {
 	public isReady: boolean = false;
 	public isInsideDoor: boolean = false;
 	public jumpBuffered: boolean = false;
+	public lastGroundedFrameTime: number = -1;
 
 	public lastInputs: PlayerInputs = {
 		right: false,
@@ -34,21 +36,13 @@ export class Player extends Entity {
 		this.isDynamic = true;
 	}
 
-	protected override onRightCollision(overlap: number, other: Entity) {
-		// super.onRightCollision(overlap, other);
-	}
+	protected override onRightCollision(overlap: number, other: Entity) {}
 
-	protected override onLeftCollision(overlap: number, other: Entity) {
-		// super.onLeftCollision(overlap, other);
-	}
+	protected override onLeftCollision(overlap: number, other: Entity) {}
 
-	protected override onUpCollision(overlap: number, other: Entity) {
-		// super.onUpCollision(overlap, other);
-	}
+	protected override onUpCollision(overlap: number, other: Entity) {}
 
-	protected override onDownCollision(overlap: number, other: Entity) {
-		// super.onDownCollision(overlap, other);
-	}
+	protected override onDownCollision(overlap: number, other: Entity) {}
 
 	public checkJumpBuffering(other: Entity) {
 		if (!this.lastInputs.jump || this.isGrounded || this.velocity.y <= 0) return;
@@ -62,6 +56,10 @@ export class Player extends Entity {
 		const { collidesX, collidesY } = Entity.isColliding({ pos, size }, other);
 
 		if (collidesX && collidesY) this.jumpBuffered = true;
+	}
+
+	private checkCoyoteFrame(): boolean {
+		return new Date().getTime() - this.lastGroundedFrameTime <= PLAYER_CONFIG.COYOTE_TIME;
 	}
 
 	public override calculateVelocities() {
@@ -84,7 +82,10 @@ export class Player extends Entity {
 			if (this.lastInputs.left) {
 				this.velocity.x -= PLAYER_CONFIG.ACCELERATION;
 			}
-			if ((this.lastInputs.jump || this.jumpBuffered) && this.isGrounded) {
+			if (
+				(this.lastInputs.jump || this.jumpBuffered) &&
+				(this.isGrounded || this.checkCoyoteFrame())
+			) {
 				this.velocity.y = -PLAYER_CONFIG.JUMP_FORCE;
 				this.isGrounded = false;
 				this.jumpBuffered = false;
@@ -128,6 +129,15 @@ export class Player extends Entity {
 		});
 
 		return theList;
+	}
+
+	public override setGrounded() {
+		this.isGrounded = true;
+		this.lastGroundedFrameTime = new Date().getTime();
+	}
+
+	public endTick() {
+		super.endTick();
 	}
 
 	public clone() {

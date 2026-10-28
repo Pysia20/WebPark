@@ -7,9 +7,10 @@ export const PLAYER_CONFIG = {
 	JUMP_FORCE: 300,
 	HEIGHT: 74,
 	WIDTH: 64,
-	JUMP_BUFFER_TIME: 0.1, // 120ms
+	JUMP_BUFFER_TIME: 0.1, // 100ms = 0.1s
+	COYOTE_TIME: 120, //ms
 	// GROUND_DETECTON_OFFSET: 1,
-};
+} as const;
 
 export const WORLD_CONFIG = {
 	CELL_SIZE: 64,
@@ -84,7 +85,6 @@ export const PLAYER_VISUAL_CONFIG = {
 	ARM_OFFSET: 0.9,
 	ARM_Y_OFFSET: 4,
 
-
 	// Nick stuff
 	NICK_OFFSET: 0.5,
 	NICK_COLOR: "#ffffff",
@@ -95,7 +95,7 @@ export const PLAYER_VISUAL_CONFIG = {
 	PLAYER_LERP: 0.3,
 	EYE_LERP: 0.25,
 	LEG_LERP: 0.3,
-	TORSO_LERP: 0.3
+	TORSO_LERP: 0.3,
 };
 
 export const ENTITY_VISUAL_CONFIG = {

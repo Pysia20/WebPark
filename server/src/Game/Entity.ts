@@ -123,9 +123,6 @@ export abstract class Entity {
 
 			this.onAnyCollision(other);
 		}
-		if (!this.isPassable && other instanceof Player) {
-			other.checkJumpBuffering(this);
-		}
 	}
 
 	public calculateCollisionsY(other: Entity) {
@@ -151,6 +148,13 @@ export abstract class Entity {
 		} else if (this.checkGrounded(other)) {
 			this.onUpTouching(other);
 		}
+		if (!this.isPassable && other instanceof Player) {
+			other.checkJumpBuffering(this);
+		}
+	}
+
+	public setGrounded() {
+		this.isGrounded = true;
 	}
 
 	public calculateVelocities() {
@@ -180,7 +184,7 @@ export abstract class Entity {
 		if (other.velocity.y > 0) {
 			other.velocity.y = 0;
 		}
-		other.isGrounded = true;
+		other.setGrounded();
 	}
 
 	protected onDownCollision(overlap: number, other: Entity) {
@@ -196,7 +200,7 @@ export abstract class Entity {
 		if (other.velocity.y > 0) {
 			other.velocity.y = 0;
 		}
-		other.isGrounded = true;
+		other.setGrounded();
 	}
 
 	// DYNAMIC COLLISIONS

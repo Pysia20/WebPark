@@ -1,8 +1,9 @@
 export enum Directions {
-    None = -1,
-    Left,
-    Right
+    None = 0,
+    Left = -1,
+    Right = 1
 }
+//TODO: rethink directions
 
 export enum States {
     Down = -1,

@@ -1,7 +1,7 @@
 import {Graphics} from "pixi.js";
 import {Vector2} from "@shared/commonModels";
 import {PLAYER_CONFIG, PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
-import { States } from "./PlayerEnums";
+import {Directions, States} from "./PlayerEnums";
 import {getCurrentMousePos, isClicking} from "../Inputs";
 import {lerpIt, lerpTheyThem} from "../FavoriteChild";
 
@@ -32,10 +32,10 @@ export class Eye {
         this.isMe = isMe
     }
 
-    updateEye(pos: Vector2, velocity: Vector2, deltaT: number, rand: number, isPushing: boolean) {
-        this.updateSquintAndPush(velocity, isPushing)
+    updateEye(pos: Vector2, velocity: Vector2, deltaT: number, rand: number, isPushing: boolean, direction: Directions) {
+        this.updateSquintAndPush(velocity, isPushing, direction)
         this.updateBlink(pos, deltaT, rand)
-        this.updatePos(pos, velocity)
+        this.updatePos(pos, velocity, direction)
         if (velocity.x == 0 && velocity.y == 0 && this.isMe) this.lookAtMouse()
 
         const baseX = this.pos.x + this.lookOffset.x + this.pushOffset.x
@@ -59,12 +59,12 @@ export class Eye {
         }
     }
 
-    updateSquintAndPush(velocity: Vector2, isPushing: boolean) {
+    updateSquintAndPush(velocity: Vector2, isPushing: boolean, direction: Directions) {
         if (isPushing) {
             this.currentMaxLength = lerpIt(this.currentMaxLength, (PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH * PLAYER_VISUAL_CONFIG.EYE_PUSH_SQUINT), this.pushSquintLerp)
             this.pushSquintLerp = lerpIt(this.pushSquintLerp, PLAYER_VISUAL_CONFIG.EYE_PUSH_SQUINT_LERP_MIN, this.LERP_SPEED)
 
-            this.pushOffset.x = Math.sign(velocity.x) * (PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.EYE_PUSH_OFFSET_X)
+            this.pushOffset.x = direction * (PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.EYE_PUSH_OFFSET_X)
             this.pushOffset.y =  PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.TORSO_HEIGHT_RATIO * PLAYER_VISUAL_CONFIG.EYE_PUSH_OFFSET_Y
         } else {
             const absVelocity: Vector2 = {x: Math.abs(velocity.x), y: Math.abs(velocity.y)}
@@ -114,16 +114,19 @@ export class Eye {
         }
     }
 
-    updatePos(pos: Vector2, velocity: Vector2) {
+    updatePos(pos: Vector2, velocity: Vector2, direction: Directions) {
         this.pos.x = pos.x
         this.pos.y = pos.y
         this.target.x = this.pos.x
         this.target.y = this.pos.y + this.length
 
         let targetOffsetX = 0
-        if (velocity.x < 0) {
+        if (velocity.x == 0) {
+            targetOffsetX = 0
+            console.log("test")
+        } else if (direction == Directions.Left) {
             targetOffsetX = -PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.EYE_LOOK_OFFSET_RATIO
-        } else if (velocity.x > 0) {
+        } else if (direction == Directions.Right) {
             targetOffsetX = PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.EYE_LOOK_OFFSET_RATIO
         }
 

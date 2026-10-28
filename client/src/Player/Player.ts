@@ -109,17 +109,15 @@ export class Player {
 
         const rand = Math.floor(Math.random() * PLAYER_VISUAL_CONFIG.BLINK_INTERVAL_RANDOM)
 
-        this.eyes[0].updateEye(eyeLeft, this.velocity, this.deltaT, rand, this.isPushing)
-        this.eyes[1].updateEye(eyeRight, this.velocity, this.deltaT, rand, this.isPushing)
+        this.eyes[0].updateEye(eyeLeft, this.velocity, this.deltaT, rand, this.isPushing, this.direction)
+        this.eyes[1].updateEye(eyeRight, this.velocity, this.deltaT, rand, this.isPushing, this.direction)
     }
 
     updateArms() {
         const arm1 = {x: this.pos.x, y: this.pos.y}
         const arm2 = {x: this.pos.x, y: this.pos.y}
 
-        const direction = (this.velocity.x > 0) ? Directions.Right : Directions.Left
-
-        if (direction == Directions.Left) {
+        if (this.direction == Directions.Left) {
             arm1.y += (PLAYER_CONFIG.HEIGHT / 2) + PLAYER_VISUAL_CONFIG.ARM_Y_OFFSET
             arm2.y += (PLAYER_CONFIG.HEIGHT / 2) - PLAYER_VISUAL_CONFIG.ARM_Y_OFFSET
         } else {

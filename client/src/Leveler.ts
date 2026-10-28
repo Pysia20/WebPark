@@ -55,14 +55,7 @@ class levelManager {
 	}
 
 	loadLevel(level: string | undefined) {
-		let tile: Sprite | undefined
-		while (tile = this.renderedTiles.pop()) {
-			this.world.removeChild(tile)
-		}
-		for (const [id, ent] of Object.entries(this.ents)) {
-			ent.beGone(this.world)
-		}
-		this.ents = {}
+		this.clearLevel()
 
 		if (level == undefined) {
 			console.log("NO MORE LEVELS!")
@@ -90,6 +83,22 @@ class levelManager {
 				this.renderedTiles.push(sprite)
 			}
 		}
+	}
+
+	reload() {
+		this.clearLevel()
+		this.renderLevel()
+	}
+
+	clearLevel() {
+		let tile: Sprite | undefined
+		while (tile = this.renderedTiles.pop()) {
+			this.world.removeChild(tile)
+		}
+		for (const [id, ent] of Object.entries(this.ents)) {
+			ent.beGone(this.world)
+		}
+		this.ents = {}
 	}
 
 	updateEnts(ents: Record<number, AnyEntityData>, deltaT: number) {

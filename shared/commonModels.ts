@@ -32,12 +32,14 @@ export interface ServerEntityData {
 	visualSize: Vector2;
 }
 
-export interface ServerPlayerData { //JHON ADD CURSOR POS HERE IG <<<<<<<======================================================================================================
+export interface ServerPlayerData {
+	//JHON ADD CURSOR POS HERE IG <<<<<<<======================================================================================================
 	nick: string;
 	pos: Vector2;
 	velocity: Vector2;
 	isInsideDoor: boolean;
 	isPushing: boolean;
+	cursorPos: Vector2;
 }
 
 // What the client sends to the backend

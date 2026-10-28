@@ -21,6 +21,7 @@ export class Player extends Entity {
 		right: false,
 		left: false,
 		jump: false,
+		cursorPos: { x: -1, y: -1 },
 	};
 
 	constructor(playerID: number, nick: string) {

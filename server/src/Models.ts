@@ -13,6 +13,10 @@ export const InputsZod = z
 		left: z.boolean(),
 		right: z.boolean(),
 		jump: z.boolean(),
+		cursorPos: z.object({
+			x: z.number(),
+			y: z.number(),
+		}),
 	})
 	.strict();
 

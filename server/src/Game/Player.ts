@@ -4,9 +4,6 @@ import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { DummyEntityCustomFields } from "@shared/commonLevelModels";
 import { LOG } from "../Logger";
 import { clamp } from "../Global";
-import { Level } from "./Level";
-
-import CONFIG from "../../config.json";
 
 export class Player extends Entity {
 	public nick: string;

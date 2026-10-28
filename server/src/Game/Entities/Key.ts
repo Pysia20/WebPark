@@ -1,10 +1,5 @@
 import { Vector2 } from "@shared/commonModels";
-import { Level } from "../Level";
 import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
-import { PLAYER_CONFIG } from "@shared/commonVariables";
-import { isColliding } from "../../Global";
-import { Player } from "../Player";
-import { MapCollider } from "./MapCollider";
 import { Entity } from "../Entity";
 
 //! DO NOT IMPORT!!!

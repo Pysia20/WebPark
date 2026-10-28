@@ -1,11 +1,7 @@
 import { Vector2 } from "@shared/commonModels";
 import { Level } from "../Level";
-import { JohnEntity } from "./JohnEntity";
-import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
-import { PLAYER_CONFIG } from "@shared/commonVariables";
+import { EntityCustomFieldsData } from "@shared/commonLevelModels";
 import { RequiredField } from "../../Global";
-import { Player } from "../Player";
-import { LOG } from "../../Logger";
 import { Entity } from "../Entity";
 
 export class Spike extends Entity {

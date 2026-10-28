@@ -2,8 +2,6 @@ import { Vector2 } from "@shared/commonModels";
 import { Entity } from "../Entity";
 import { EntityCustomFieldsData } from "@shared/commonLevelModels";
 import { RequiredField } from "../../Global";
-import { Player } from "../Player";
-import { PLAYER_CONFIG } from "@shared/commonVariables";
 
 export class Portal extends Entity {
 	public override getUsedFields(): RequiredField[] {

@@ -3,22 +3,16 @@ import { Player } from "./Player";
 import {
 	PlayerInputs,
 	ServerData,
-	Vector2,
 	ServerEntityData,
 	SomethingBrokeData,
 } from "@shared/commonModels";
 import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { MAP_LOADER } from "./LevelLoader";
 import { LOG } from "../Logger";
-import { JohnEntity } from "./Entities/JohnEntity";
 import { Level } from "./Level";
 import CONFIG from "../../config.json";
 import { PlayerSpawner } from "./Entities/PlayerSpawner";
-import { io } from "socket.io-client";
-import { MapCollider } from "./Entities/MapCollider";
 import { Entity } from "./Entity";
-import { garbageRegistry } from "../Global";
-import { CannonProjectile } from "./Entities/CannonProjectile";
 
 export class Room {
 	public readonly TICKRATE: number = CONFIG.TICKRATE; // Per second

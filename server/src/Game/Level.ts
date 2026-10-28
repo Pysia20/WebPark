@@ -1,12 +1,10 @@
 import { LevelTemplate } from "./LevelTemplate";
-import { JohnEntity } from "./Entities/JohnEntity";
 import { Room } from "./Room";
 import { PlayerSpawner } from "./Entities/PlayerSpawner";
 import { LOG } from "../Logger";
 import { Entity } from "./Entity";
 import { MapCollider } from "./Entities/MapCollider";
 import { Portal } from "./Entities/Portal";
-import { forceGC } from "../Global";
 
 export class Level {
 	public readonly levelTemplate: LevelTemplate;

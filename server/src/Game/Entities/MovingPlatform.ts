@@ -8,7 +8,6 @@ import {
 } from "@shared/commonLevelModels";
 import { WORLD_CONFIG } from "@shared/commonVariables";
 import { clamp, RequiredField } from "../../Global";
-import { LOG } from "../../Logger";
 import { Entity } from "../Entity";
 
 export class MovingPlatform extends Entity {
@@ -131,7 +130,6 @@ export class MovingPlatform extends Entity {
 
 		if (this.timer < this.customFields.Cooldown.value!) {
 			this.timer++;
-			console.log(this.timer);
 			if (this.timer >= this.customFields.Cooldown.value!) {
 				this.reversed = !this.reversed;
 			}

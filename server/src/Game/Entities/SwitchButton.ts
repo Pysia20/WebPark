@@ -4,7 +4,6 @@ import { EntityCustomFieldsData } from "@shared/commonLevelModels";
 import { RequiredField } from "../../Global";
 import { Level } from "../Level";
 import { ServerButtonData } from "@shared/commonEntityData";
-import { leveler } from "../../../../client/src/Leveler";
 
 export class SwitchButton extends Entity {
 	public override getUsedFields(): RequiredField[] {

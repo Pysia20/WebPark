@@ -1,7 +1,6 @@
 import { DefaultEventsMap, Server, Socket } from "socket.io";
 
 import {
-	ClientData,
 	PlayerInputs,
 	PlayerJoinedData,
 	RegisterUserData,

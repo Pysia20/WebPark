@@ -5,6 +5,7 @@ import { LevelData } from "@shared/commonLevelModels";
 import { LOG } from "../Logger";
 import { Level } from "./Level";
 import { Room } from "./Room";
+
 class LevelLoader {
 	private loadedLevels: Map<string, LevelTemplate[]> = new Map();
 

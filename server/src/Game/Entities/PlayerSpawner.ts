@@ -1,7 +1,5 @@
 import { Vector2 } from "@shared/commonModels";
-import { Level } from "../Level";
-import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
-import { Player } from "../Player";
+import { EntityCustomFieldsData } from "@shared/commonLevelModels";
 import { Entity } from "../Entity";
 
 //! DO NOT IMPORT!!!

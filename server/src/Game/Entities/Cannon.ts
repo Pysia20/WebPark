@@ -3,7 +3,6 @@ import { Entity } from "../Entity";
 import { DummyEntityCustomFields, EntityCustomFieldsData } from "@shared/commonLevelModels";
 import { RequiredField } from "../../Global";
 import { CannonProjectile } from "./CannonProjectile";
-import { TimePrecision } from "zod";
 
 export class Cannon extends Entity {
 	public override getUsedFields(): RequiredField[] {

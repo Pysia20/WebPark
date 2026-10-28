@@ -1,10 +1,8 @@
 import { ServerEntityData, Vector2 } from "@shared/commonModels";
 import { Level } from "../Level";
-import { JohnEntity } from "./JohnEntity";
-import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
-import { PLAYER_CONFIG, PUSHABLE_CONFIG } from "@shared/commonVariables";
+import { EntityCustomFieldsData } from "@shared/commonLevelModels";
+import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { clamp, RequiredField } from "../../Global";
-import { Player } from "../Player";
 import CONFIG from "../../../config.json";
 import { Entity } from "../Entity";
 
@@ -30,14 +28,7 @@ export class Pushable extends Entity {
 		this.isDynamic = true;
 	}
 
-	protected override onRightCollision(overlap: number, other: Entity) {
-		//TODO
-		// if (other instanceof Player) {
-		// 	const playersPushing = other.getPlayersBehind(-1, [...this.level!.room.players.values()]);
-		// 	let playersCount = 1 + playersPushing.length; // This + others
-		// 	console.log(playersCount);
-		// }
-	}
+	protected override onRightCollision(overlap: number, other: Entity) {}
 
 	protected override onLeftCollision(overlap: number, other: Entity) {}
 
@@ -85,6 +76,10 @@ export class Pushable extends Entity {
 	}
 
 	public override clone() {
-		return new Pushable({ ...this.originalPosition }, { ...this.size }, { ...this.customFields });
+		return new Pushable(
+			{ ...this.originalPosition },
+			{ ...this.size },
+			{ ...this.customFields },
+		);
 	}
 }

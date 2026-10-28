@@ -9,7 +9,6 @@ import {
 	GROUND_DETECTON_OFFSET,
 } from "@shared/commonVariables";
 import CONFIG from "../../config.json";
-import { CannonProjectile } from "./Entities/CannonProjectile";
 import { Player } from "./Player";
 
 export abstract class Entity {

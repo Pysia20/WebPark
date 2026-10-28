@@ -8,10 +8,6 @@ export class MapCollider extends Entity {
 	}
 
 	public override onAnyCollision(other: Entity) {
-		// if (other.type == "CannonProjectile") {
-		// 	other.level?.removeEntity(other);
-		// }
-
 		other.onAnyCollision(this);
 	}
 

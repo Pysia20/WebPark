@@ -1,13 +1,9 @@
 import { Vector2 } from "@shared/commonModels";
 import { Entity } from "../Entity";
 import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
-import { garbageRegistry, RequiredField } from "../../Global";
+import { RequiredField } from "../../Global";
 import { DESPAWN_BUFFER } from "@shared/commonVariables";
-import { LOG } from "../../Logger";
-import { Cannon } from "./Cannon";
 import { Level } from "../Level";
-import CONFIG from "../../../config.json";
-import { Ent } from "../../../../client/src/Entities/Ent";
 import { Player } from "../Player";
 
 export class CannonProjectile extends Entity {

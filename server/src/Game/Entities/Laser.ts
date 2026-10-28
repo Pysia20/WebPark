@@ -1,13 +1,9 @@
 import { Vector2 } from "@shared/commonModels";
 import { Level } from "../Level";
-import { JohnEntity } from "./JohnEntity";
-import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
-import { PLAYER_CONFIG } from "@shared/commonVariables";
+import { EntityCustomFieldsData } from "@shared/commonLevelModels";
 import { RequiredField } from "../../Global";
-import { Player } from "../Player";
-import e from "cors";
 import { Entity } from "../Entity";
-import { ServerButtonDoorData, ServerLaserEntityData } from "@shared/commonEntityData";
+import { ServerLaserEntityData } from "@shared/commonEntityData";
 
 //! DO NOT IMPORT!!!
 //? IT IS A TEMPLATE FOR CREATING NEW ENTITY TYPES

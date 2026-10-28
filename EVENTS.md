@@ -36,6 +36,9 @@
 - playerLeft
    - sends the name of user that left
    - Type: number
+- levelReloaded
+   - sends nothing, it is just an infromation for frontend to also reaload the scene
+   - Type: None
 
 ### HTTP Endpoints
 

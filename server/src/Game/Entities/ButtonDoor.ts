@@ -1,6 +1,5 @@
 import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
 import { Vector2 } from "@shared/commonModels";
-import { LOG } from "../../Logger";
 import { Level } from "../Level";
 import { ServerButtonDoorData } from "@shared/commonEntityData";
 import { Entity } from "../Entity";

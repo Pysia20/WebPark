@@ -1,12 +1,7 @@
-import { ServerEntityData, Vector2 } from "@shared/commonModels";
-import { Player } from "../Player";
-import { PLAYER_CONFIG } from "@shared/commonVariables";
+import { Vector2 } from "@shared/commonModels";
+
 import { RequiredField } from "../../Global";
-import { LOG } from "../../Logger";
 import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
-import { EntityBuilder } from "./EntityBuilder";
-import { Level } from "../Level";
-import { MapCollider } from "./MapCollider";
 import { Entity } from "../Entity";
 
 export class JohnEntity extends Entity {

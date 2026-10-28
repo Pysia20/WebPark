@@ -60,6 +60,10 @@ socket.on("changeLevel", (newLevel: string | undefined) => {
     leveler.loadLevel(newLevel)
 })
 
+socket.on("levelReloaded", () => {
+    leveler.reload()
+})
+
 
 export function startNetworking() {
     socket.connect()

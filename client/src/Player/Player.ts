@@ -8,7 +8,7 @@ import { Torso } from "./Torso";
 import { Eye } from "./Eye";
 import { Arm } from "./Arm";
 import { Directions } from "./PlayerEnums";
-import {lerpIt, lerpTheyThem} from "../FavoriteChild";
+import { lerpTheyThem } from "../FavoriteChild";
 
 export class Player {
     id: number
@@ -118,13 +118,13 @@ export class Player {
         const direction = (this.velocity.x > 0) ? Directions.Right : Directions.Left
 
         if (direction == Directions.Left) {
-            arm1.y += (PLAYER_CONFIG.HEIGHT / 2) + 4
-            arm2.y += (PLAYER_CONFIG.HEIGHT / 2) - 4
+            arm1.y += (PLAYER_CONFIG.HEIGHT / 2) + PLAYER_VISUAL_CONFIG.ARM_Y_OFFSET
+            arm2.y += (PLAYER_CONFIG.HEIGHT / 2) - PLAYER_VISUAL_CONFIG.ARM_Y_OFFSET
         } else {
             arm1.x += PLAYER_CONFIG.WIDTH
-            arm1.y += (PLAYER_CONFIG.HEIGHT / 2) - 4
+            arm1.y += (PLAYER_CONFIG.HEIGHT / 2) - PLAYER_VISUAL_CONFIG.ARM_Y_OFFSET
             arm2.x += PLAYER_CONFIG.WIDTH
-            arm2.y += (PLAYER_CONFIG.HEIGHT / 2) + 4
+            arm2.y += (PLAYER_CONFIG.HEIGHT / 2) + PLAYER_VISUAL_CONFIG.ARM_Y_OFFSET
         }
 
         this.arms[0].updateArm(arm1, this.velocity, this.deltaT, this.isPushing)

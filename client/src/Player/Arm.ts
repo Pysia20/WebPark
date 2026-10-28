@@ -1,5 +1,6 @@
 import {Graphics} from "pixi.js";
 import {Vector2} from "@shared/commonModels";
+import {PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
 
 export class Arm {
     arm: Graphics = new Graphics()
@@ -12,7 +13,7 @@ export class Arm {
     touchProgress: number = 1.0
     isReaching: boolean = false
 
-    ARM_LENGTH: number = 20
+    ARM_LENGTH: number = PLAYER_VISUAL_CONFIG.ARM_LENGTH
 
     constructor() {
         this.arm.position.set(0, 0)
@@ -34,8 +35,8 @@ export class Arm {
         }
 
         if (this.isReaching) {
-            this.touchProgress += 0.1 * deltaTime
-            const offset = (velocity.x > 0) ? this.ARM_LENGTH * 0.9 : -this.ARM_LENGTH * 0.9
+            this.touchProgress += PLAYER_VISUAL_CONFIG.TOUCH_SPEED * deltaTime
+            const offset = (velocity.x > 0) ? this.ARM_LENGTH * PLAYER_VISUAL_CONFIG.ARM_OFFSET : -this.ARM_LENGTH * PLAYER_VISUAL_CONFIG.ARM_OFFSET
             this.touchTarget = {x: this.shoulPos.x + offset, y: this.shoulPos.y}
 
             if (this.touchProgress >= 1.0) {
@@ -47,7 +48,7 @@ export class Arm {
 
             this.invertTheKinematics()
 
-            this.arm.moveTo(this.shoulPos.x, this.shoulPos.y).lineTo(this.lbowPos.x, this.lbowPos.y).lineTo(this.handPos.x, this.handPos.y).stroke({color: "#000000", width: 4, cap: "round", join: "miter"});
+            this.arm.moveTo(this.shoulPos.x, this.shoulPos.y).lineTo(this.lbowPos.x, this.lbowPos.y).lineTo(this.handPos.x, this.handPos.y).stroke({color: "#000000", width: PLAYER_VISUAL_CONFIG.ARM_WIDTH, cap: "round", join: "miter"});
         }
     }
 

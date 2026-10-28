@@ -21,4 +21,3 @@ export function lerpTheyThem(theThing: Vector2, lerpTarget: Vector2, lerpSpeed: 
 }
 
 // though the problem with eyes was coursed bc no larping but ig not? TODO: EYE SURGERY
-// WEBSTORM THERE IS NOTHING WRONG WITH THIS FILE WHAT ARE YOU ONNNNNNNNNNNNNN

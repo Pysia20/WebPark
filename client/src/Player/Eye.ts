@@ -35,7 +35,7 @@ export class Eye {
     updateEye(pos: Vector2, velocity: Vector2, deltaT: number, rand: number, isPushing: boolean, direction: Directions) {
         this.updateSquintAndPush(velocity, isPushing, direction)
         this.updateBlink(pos, deltaT, rand)
-        this.updatePos(pos, velocity, direction)
+        this.updatePos(pos, velocity, isPushing, direction)
         if (velocity.x == 0 && velocity.y == 0 && this.isMe) this.lookAtMouse()
 
         const baseX = this.pos.x + this.lookOffset.x + this.pushOffset.x
@@ -114,20 +114,18 @@ export class Eye {
         }
     }
 
-    updatePos(pos: Vector2, velocity: Vector2, direction: Directions) {
+    updatePos(pos: Vector2, velocity: Vector2, isPushing: boolean, direction: Directions) {
         this.pos.x = pos.x
         this.pos.y = pos.y
         this.target.x = this.pos.x
         this.target.y = this.pos.y + this.length
 
         let targetOffsetX = 0
-        if (velocity.x == 0) {
+        if (velocity.x == 0 && !isPushing) {
             targetOffsetX = 0
             console.log("test")
-        } else if (direction == Directions.Left) {
-            targetOffsetX = -PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.EYE_LOOK_OFFSET_RATIO
-        } else if (direction == Directions.Right) {
-            targetOffsetX = PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.EYE_LOOK_OFFSET_RATIO
+        } else {
+            targetOffsetX = direction * PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.EYE_LOOK_OFFSET_RATIO
         }
 
         const target: Vector2 = {x: targetOffsetX, y: 0}

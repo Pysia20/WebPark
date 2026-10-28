@@ -26,11 +26,10 @@ export class Leg {
         this.leg.position.set(0, 0)
     }
 
-    updateLeg(hip: Vector2, otherLeg: Leg, velocity: Vector2, ground: number, deltaTime: number) {
+    updateLeg(hip: Vector2, otherLeg: Leg, velocity: Vector2, ground: number, direction: Directions, deltaTime: number) {
         const distance = Math.abs(hip.x - this.footPos.x)
         this.hipPos = hip
-
-        this.updateDirection(velocity)
+        this.direction = direction
 
         if (this.prevGround != ground) {
             this.footPos.y = ground
@@ -74,12 +73,6 @@ export class Leg {
         });
     }
 
-    updateDirection(velocity: Vector2) {
-        if (velocity.x != 0) {
-            this.direction = (velocity.x > 0) ? Directions.Right : Directions.Left
-        }
-    }
-
     invertTheKinematics() {
         const straightDistance = Math.sqrt(((this.footPos.x - this.hipPos.x) ** 2) + ((this.footPos.y - this.hipPos.y) ** 2))
         if (straightDistance >= this.LEG_LENGTH) {
@@ -101,8 +94,6 @@ export class Leg {
     curlUp(hip: Vector2, velocity: Vector2) {
         this.hipPos = hip
         const hipOffset = (this.LEG_LENGTH / 2)
-
-        this.updateDirection(velocity)
 
         this.stepTarget.x = this.hipPos.x
         this.stepTarget.y = this.hipPos.y + hipOffset

@@ -1,7 +1,8 @@
 import {Graphics} from "pixi.js";
 import {Vector2} from "@shared/commonModels";
 import {PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
-
+import {Directions} from "./PlayerEnums";
+//TODO: WHY IS THE ARM REVERSING WHEN NOT MOVING
 export class Arm {
     arm: Graphics = new Graphics()
 
@@ -10,6 +11,7 @@ export class Arm {
     lbowPos: Vector2 = {x: 0, y: 0}
     shoulPos: Vector2 = {x: 0, y: 0}
 
+    direction: Directions = Directions.Right
     touchProgress: number = 1.0
     isReaching: boolean = false
 
@@ -19,8 +21,9 @@ export class Arm {
         this.arm.position.set(0, 0)
     }
 
-    updateArm(shoul: Vector2, velocity: Vector2, deltaTime: number, isPushing: boolean) {
+    updateArm(shoul: Vector2, velocity: Vector2, deltaTime: number, isPushing: boolean, direction: Directions) {
         this.shoulPos = shoul
+        this.direction = direction
 
         this.arm.clear()
 
@@ -64,9 +67,9 @@ export class Arm {
             const angle = Math.acos(clampedMath)
 
             const baseAngle = Math.atan2(this.handPos.y - this.shoulPos.y, this.handPos.x - this.shoulPos.x)
-            const kneeAngle = baseAngle + angle
-            this.lbowPos.x = this.shoulPos.x + Math.cos(kneeAngle) * (this.ARM_LENGTH / 2)
-            this.lbowPos.y = this.shoulPos.y + Math.sin(kneeAngle) * (this.ARM_LENGTH / 2)
+            const lbowAngle = (this.direction == Directions.Right) ? baseAngle + angle : baseAngle - angle
+            this.lbowPos.x = this.shoulPos.x + Math.cos(lbowAngle) * (this.ARM_LENGTH / 2)
+            this.lbowPos.y = this.shoulPos.y + Math.sin(lbowAngle) * (this.ARM_LENGTH / 2)
         }
     }
 }

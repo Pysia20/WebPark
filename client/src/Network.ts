@@ -62,6 +62,7 @@ socket.on("changeLevel", (newLevel: string | undefined) => {
 
 socket.on("levelReloaded", () => {
     leveler.reload()
+    console.log("reload")
 })
 
 

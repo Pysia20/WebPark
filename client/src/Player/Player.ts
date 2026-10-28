@@ -22,6 +22,7 @@ export class Player {
     velocity: Vector2 = {x: 0, y: 0}
     prevVelocity: Vector2 = {x: 0, y: 0}
 
+    direction: Directions = Directions.Right
     inAir: boolean = false
     isPushing: boolean = false
     deltaT: number = 0
@@ -59,6 +60,7 @@ export class Player {
     updatePos() {
         this.checkIfJumped()
         this.checkInAir()
+        this.updateDirection()
 
         lerpTheyThem(this.pos, this.targetPos, this.LERP_SPEED)
         this.updateTorso()
@@ -90,8 +92,8 @@ export class Player {
             const hipRight = {x: this.pos.x + (PLAYER_CONFIG.WIDTH - legOffsetX), y: this.pos.y + legOffsetY}
 
             const ground = this.pos.y + PLAYER_CONFIG.HEIGHT
-            this.legs[0].updateLeg(hipLeft, this.legs[1], this.velocity, ground, this.deltaT)
-            this.legs[1].updateLeg(hipRight, this.legs[0], this.velocity, ground, this.deltaT)
+            this.legs[0].updateLeg(hipLeft, this.legs[1], this.velocity, ground, this.direction, this.deltaT)
+            this.legs[1].updateLeg(hipRight, this.legs[0], this.velocity, ground, this.direction, this.deltaT)
         } else {
             this.legs[0].curlUp({x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY}, this.velocity)
             this.legs[1].curlUp({x: this.pos.x + (PLAYER_CONFIG.WIDTH - legOffsetX), y: this.pos.y + legOffsetY}, this.velocity)
@@ -127,8 +129,8 @@ export class Player {
             arm2.y += (PLAYER_CONFIG.HEIGHT / 2) + PLAYER_VISUAL_CONFIG.ARM_Y_OFFSET
         }
 
-        this.arms[0].updateArm(arm1, this.velocity, this.deltaT, this.isPushing)
-        this.arms[1].updateArm(arm2, this.velocity, this.deltaT, this.isPushing)
+        this.arms[0].updateArm(arm1, this.velocity, this.deltaT, this.isPushing, this.direction)
+        this.arms[1].updateArm(arm2, this.velocity, this.deltaT, this.isPushing, this.direction)
     }
 
     checkInAir() {
@@ -159,6 +161,13 @@ export class Player {
     checkIfJumped() {
         if (this.velocity.y < 0 && this.prevVelocity.y == 0) {
             playJump()
+        }
+    }
+
+    updateDirection() {
+        if (this.velocity.x != 0) {
+            this.direction = (this.velocity.x > 0) ? Directions.Right : Directions.Left
+            console.log(this.direction)
         }
     }
 

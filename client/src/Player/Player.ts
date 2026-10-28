@@ -95,8 +95,8 @@ export class Player {
             this.legs[0].updateLeg(hipLeft, this.legs[1], this.velocity, ground, this.direction, this.deltaT)
             this.legs[1].updateLeg(hipRight, this.legs[0], this.velocity, ground, this.direction, this.deltaT)
         } else {
-            this.legs[0].curlUp({x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY}, this.velocity)
-            this.legs[1].curlUp({x: this.pos.x + (PLAYER_CONFIG.WIDTH - legOffsetX), y: this.pos.y + legOffsetY}, this.velocity)
+            this.legs[0].curlUp({x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY}, this.velocity , this.direction)
+            this.legs[1].curlUp({x: this.pos.x + (PLAYER_CONFIG.WIDTH - legOffsetX), y: this.pos.y + legOffsetY}, this.velocity, this.direction)
         }
     }
 

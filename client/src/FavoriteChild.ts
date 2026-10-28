@@ -19,5 +19,3 @@ export function lerpTheyThem(theThing: Vector2, lerpTarget: Vector2, lerpSpeed: 
     theThing.x += (lerpTarget.x - theThing.x) * adjustedSpeed
     theThing.y += (lerpTarget.y - theThing.y) * adjustedSpeed
 }
-
-// though the problem with eyes was coursed bc no larping but ig not? TODO: EYE SURGERY

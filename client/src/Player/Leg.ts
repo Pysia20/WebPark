@@ -21,6 +21,7 @@ export class Leg {
 
     LERP_SPEED: number = PLAYER_VISUAL_CONFIG.LEG_LERP
     LEG_LENGTH: number = PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.LEG_LENGTH_RATIO
+    DRAG: number = PLAYER_VISUAL_CONFIG.LEG_DRAG
 
     constructor() {
         this.leg.position.set(0, 0)
@@ -91,12 +92,15 @@ export class Leg {
         }
     }
 
-    curlUp(hip: Vector2, velocity: Vector2) {
+    curlUp(hip: Vector2, velocity: Vector2, direction: Directions) {
         this.hipPos = hip
+        this.direction = direction
         const hipOffset = (this.LEG_LENGTH / 2)
+        const dragOffset = velocity.x * this.DRAG
 
-        this.stepTarget.x = this.hipPos.x
+        this.stepTarget.x = this.hipPos.x - dragOffset
         this.stepTarget.y = this.hipPos.y + hipOffset
+
         if (this.footPos.y > this.hipPos.y + hipOffset) {
             lerpTheyThem(this.footPos, this.stepTarget, this.LERP_SPEED)
         } else {

@@ -12,6 +12,11 @@ export const PLAYER_CONFIG = {
 	// GROUND_DETECTON_OFFSET: 1,
 } as const;
 
+export const CANNON_CONFIG = {
+	PROEJCTILE_WIDTH: 48,
+	PROJECTILE_HEIGHT: 32,
+};
+
 export const WORLD_CONFIG = {
 	CELL_SIZE: 64,
 };

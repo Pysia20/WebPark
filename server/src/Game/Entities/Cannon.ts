@@ -3,6 +3,8 @@ import { Entity } from "../Entity";
 import { DummyEntityCustomFields, EntityCustomFieldsData } from "@shared/commonLevelModels";
 import { RequiredField } from "../../Global";
 import { CannonProjectile } from "./CannonProjectile";
+import { CANNON_CONFIG } from "@shared/commonVariables";
+import he from "zod/v4/locales/he.cjs";
 
 export class Cannon extends Entity {
 	public override getUsedFields(): RequiredField[] {
@@ -41,9 +43,21 @@ export class Cannon extends Entity {
 			doesExist: true,
 			value: this.customFields.Direction.value!,
 		};
+		const projectilePos = { ...this.pos };
+
+		let width = CANNON_CONFIG.PROEJCTILE_WIDTH;
+		let height = CANNON_CONFIG.PROJECTILE_HEIGHT;
+
+		if (["Down", "Up"].includes(this.customFields.Direction.value!)) {
+			[width, height] = [height, width];
+		}
+
+		projectilePos.x += (this.size.x - width) / 2;
+		projectilePos.y += (this.size.y - height) / 2;
+
 		const projectile = new CannonProjectile(
-			{ ...this.pos },
-			{ x: 64, y: 64 },
+			projectilePos,
+			{ x: width, y: height },
 			{ ...projectileCustomFields },
 		);
 

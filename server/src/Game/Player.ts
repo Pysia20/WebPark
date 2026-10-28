@@ -17,7 +17,17 @@ export class Player extends Entity {
 	public jumpBuffered: boolean = false;
 	public lastGroundedFrameTime: number = -1;
 
-	public lastInputs: PlayerInputs = {
+	public oldInputs: PlayerInputs = {
+		right: false,
+		left: false,
+		jump: false,
+		cursorPos: { x: -1, y: -1 },
+	};
+
+	public jumpHeldSinceTakeoff: boolean = false;
+	public jumpFrames: number = 0;
+
+	public currentInputs: PlayerInputs = {
 		right: false,
 		left: false,
 		jump: false,
@@ -37,6 +47,11 @@ export class Player extends Entity {
 		this.isDynamic = true;
 	}
 
+	public setInputs(newInputs: PlayerInputs) {
+		this.oldInputs = this.currentInputs;
+		this.currentInputs = newInputs;
+	}
+
 	protected override onRightCollision(overlap: number, other: Entity) {}
 
 	protected override onLeftCollision(overlap: number, other: Entity) {}
@@ -46,7 +61,7 @@ export class Player extends Entity {
 	protected override onDownCollision(overlap: number, other: Entity) {}
 
 	public checkJumpBuffering(other: Entity) {
-		if (!this.lastInputs.jump || this.isGrounded || this.velocity.y <= 0) return;
+		if (!this.currentInputs.jump || this.isGrounded || this.velocity.y <= 0) return;
 
 		const jumpBufferDistance = Math.abs(this.velocity.y) * PLAYER_CONFIG.JUMP_BUFFER_TIME;
 
@@ -77,19 +92,46 @@ export class Player extends Entity {
 		}
 
 		if (!this.isInsideDoor) {
-			if (this.lastInputs.right) {
+			if (this.currentInputs.right) {
 				this.velocity.x += PLAYER_CONFIG.ACCELERATION;
 			}
-			if (this.lastInputs.left) {
+			if (this.currentInputs.left) {
 				this.velocity.x -= PLAYER_CONFIG.ACCELERATION;
 			}
-			if (
-				(this.lastInputs.jump || this.jumpBuffered) &&
-				(this.isGrounded || this.checkCoyoteFrame())
-			) {
+			// Jump when:
+			// Space / Buffer + Grounded / Coyote Frame
+			// Space hold for max of JUMP_FRAMES_MAX.
+
+			const initialJumpCondition =
+				(this.currentInputs.jump || this.jumpBuffered) &&
+				(this.isGrounded || this.checkCoyoteFrame());
+
+			if (initialJumpCondition) {
 				this.velocity.y = -PLAYER_CONFIG.JUMP_FORCE;
 				this.isGrounded = false;
 				this.jumpBuffered = false;
+				this.jumpHeldSinceTakeoff = true;
+			}
+
+			const holdingJumpCondition =
+				this.currentInputs.jump &&
+				this.oldInputs.jump &&
+				this.jumpHeldSinceTakeoff &&
+				this.jumpFrames <= PLAYER_CONFIG.JUMP_FRAMES_MAX;
+
+			// console.log(`
+			// 	CURRENT: ${this.currentInputs.jump}
+			// 	OLD: ${this.oldInputs.jump}
+			// 	SIENCE: ${this.jumpHeldSinceTakeoff}
+			// 	FRAMES: ${this.jumpFrames}
+			// 	`);
+
+			if (holdingJumpCondition) {
+				this.velocity.y = -PLAYER_CONFIG.JUMP_FORCE;
+				this.jumpFrames++;
+			} else {
+				this.jumpHeldSinceTakeoff = false;
+				this.jumpFrames = 0;
 			}
 		}
 
@@ -122,7 +164,7 @@ export class Player extends Entity {
 				Math.abs(p.pos.y - this.pos.y) <= maxYDiffrence;
 
 			const isPlayerGoingTowards =
-				(direction == 1 && p.lastInputs.right) || (direction == -1 && p.lastInputs.left);
+				(direction == 1 && p.currentInputs.right) || (direction == -1 && p.currentInputs.left);
 
 			if (isBehind && isPlayerGoingTowards) {
 				theList.push(p);
@@ -139,6 +181,7 @@ export class Player extends Entity {
 
 	public endTick() {
 		super.endTick();
+		this.oldInputs = { ...this.currentInputs };
 	}
 
 	public clone() {

@@ -117,7 +117,7 @@ export class Room {
 							velocity: player.velocity,
 							isInsideDoor: player.isInsideDoor,
 							isPushing: player.isPushing,
-							cursorPos: player.lastInputs.cursorPos,
+							cursorPos: player.currentInputs.cursorPos,
 						};
 					});
 
@@ -181,7 +181,7 @@ export class Room {
 			return;
 		}
 
-		player.lastInputs = inputs;
+		player.setInputs(inputs);
 	}
 
 	public getPlayers() {

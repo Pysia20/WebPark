@@ -2,7 +2,7 @@ import {Graphics} from "pixi.js";
 import {Vector2} from "@shared/commonModels";
 import {PLAYER_VISUAL_CONFIG} from "@shared/commonVariables";
 import {Directions} from "./PlayerEnums";
-//TODO: WHY IS THE ARM REVERSING WHEN NOT MOVING
+
 export class Arm {
     arm: Graphics = new Graphics()
 

@@ -467,10 +467,15 @@
 					"height": 64,
 					"defUid": 48,
 					"px": [640,192],
-					"fieldInstances": [{ "__identifier": "PortalGroup", "__type": "String", "__value": "John", "__tile": null, "defUid": 49, "realEditorValues": [{
-						"id": "V_String",
-						"params": ["John"]
-					}] }],
+					"fieldInstances": [
+						{ "__identifier": "PortalGroup", "__type": "String", "__value": "John", "__tile": null, "defUid": 49, "realEditorValues": [{
+							"id": "V_String",
+							"params": ["John"]
+						}] },
+						{ "__identifier": "ActivationGroup", "__type": "String", "__value": null, "__tile": null, "defUid": 66, "realEditorValues": [null] },
+						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 67, "realEditorValues": [] },
+						{ "__identifier": "StaysOn", "__type": "Bool", "__value": false, "__tile": null, "defUid": 68, "realEditorValues": [] }
+					],
 					"__worldX": 640,
 					"__worldY": -512
 				},
@@ -486,10 +491,21 @@
 					"height": 64,
 					"defUid": 48,
 					"px": [704,448],
-					"fieldInstances": [{ "__identifier": "PortalGroup", "__type": "String", "__value": "John", "__tile": null, "defUid": 49, "realEditorValues": [{
-						"id": "V_String",
-						"params": ["John"]
-					}] }],
+					"fieldInstances": [
+						{ "__identifier": "PortalGroup", "__type": "String", "__value": "John", "__tile": null, "defUid": 49, "realEditorValues": [{
+							"id": "V_String",
+							"params": ["John"]
+						}] },
+						{ "__identifier": "ActivationGroup", "__type": "String", "__value": "6", "__tile": null, "defUid": 66, "realEditorValues": [{
+							"id": "V_String",
+							"params": ["6"]
+						}] },
+						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 67, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+						{ "__identifier": "StaysOn", "__type": "Bool", "__value": true, "__tile": null, "defUid": 68, "realEditorValues": [{
+							"id": "V_Bool",
+							"params": [ true ]
+						}] }
+					],
 					"__worldX": 704,
 					"__worldY": -256
 				},

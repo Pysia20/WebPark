@@ -134,9 +134,9 @@ export class Room {
 						roomData.entityData[entity.id] = data;
 					});
 
-					console.log("=============");
-					console.log(roomData);
-					console.log("=============");
+					// console.log("=============");
+					// console.log(roomData);
+					// console.log("=============");
 
 					io.to(this.id).emit("tick", roomData);
 				},

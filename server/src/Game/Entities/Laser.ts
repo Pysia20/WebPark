@@ -48,6 +48,7 @@ export class Laser extends Entity {
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields, "Laser");
+		this.isPassable = true;
 	}
 
 	private shouldKill: boolean = false;

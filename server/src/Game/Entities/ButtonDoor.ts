@@ -7,8 +7,6 @@ import { Entity } from "../Entity";
 import { RequiredField } from "../../Global";
 
 export class ButtonDoor extends Entity {
-	public isPassable: boolean = false;
-
 	public override getUsedFields(): RequiredField[] {
 		return [
 			{

@@ -16,6 +16,7 @@ export class Player extends Entity {
 	public roomID: string | undefined;
 	public isReady: boolean = false;
 	public isInsideDoor: boolean = false;
+	public jumpBuffered: boolean = false;
 
 	public lastInputs: PlayerInputs = {
 		right: false,
@@ -52,6 +53,20 @@ export class Player extends Entity {
 		// super.onDownCollision(overlap, other);
 	}
 
+	public checkJumpBuffering(other: Entity) {
+		if (!this.lastInputs.jump || this.isGrounded || this.velocity.y <= 0) return;
+
+		const jumpBufferDistance = Math.abs(this.velocity.y) * PLAYER_CONFIG.JUMP_BUFFER_TIME;
+
+		const pos = { ...this.pos };
+		pos.y += jumpBufferDistance;
+		const size = { ...this.size };
+
+		const { collidesX, collidesY } = Entity.isColliding({ pos, size }, other);
+
+		if (collidesX && collidesY) this.jumpBuffered = true;
+	}
+
 	public override calculateVelocities() {
 		if (this.velocity.x > PLAYER_CONFIG.DRAG) {
 			this.velocity.x -= PLAYER_CONFIG.DRAG;
@@ -72,9 +87,10 @@ export class Player extends Entity {
 			if (this.lastInputs.left) {
 				this.velocity.x -= PLAYER_CONFIG.ACCELERATION;
 			}
-			if (this.lastInputs.jump && this.isGrounded) {
+			if ((this.lastInputs.jump || this.jumpBuffered) && this.isGrounded) {
 				this.velocity.y = -PLAYER_CONFIG.JUMP_FORCE;
 				this.isGrounded = false;
+				this.jumpBuffered = false;
 			}
 		}
 

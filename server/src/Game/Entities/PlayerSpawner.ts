@@ -14,6 +14,7 @@ import { Entity } from "../Entity";
 export class PlayerSpawner extends Entity {
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields, "PlayerSpawner");
+		this.isPassable = true;
 	}
 
 	protected onRightCollision(overlap: number, other: Entity) {}

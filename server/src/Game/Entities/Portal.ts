@@ -22,6 +22,7 @@ export class Portal extends Entity {
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields, "Portal");
+		this.isPassable = true;
 	}
 
 	protected override onRightCollision(overlap: number, other: Entity) {}

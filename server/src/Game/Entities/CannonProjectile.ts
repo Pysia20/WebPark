@@ -31,6 +31,7 @@ export class CannonProjectile extends Entity {
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields, "CannonProjectile");
 		this.isDynamic = false;
+		this.isPassable = true;
 	}
 
 	// Types of entities that the projectile can collide and not get destroyed.

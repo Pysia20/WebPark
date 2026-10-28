@@ -10,6 +10,7 @@ export class Door extends Entity {
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields, "Door");
+		this.isPassable = true;
 	}
 
 	public override clone(): Door {

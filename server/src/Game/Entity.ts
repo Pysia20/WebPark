@@ -10,6 +10,7 @@ import {
 } from "@shared/commonVariables";
 import CONFIG from "../../config.json";
 import { CannonProjectile } from "./Entities/CannonProjectile";
+import { Player } from "./Player";
 
 export abstract class Entity {
 	public id: number = -1;
@@ -19,6 +20,7 @@ export abstract class Entity {
 	public isDynamic: boolean = false;
 	public velocityStack: Vector2[] = [];
 	public isPushing: boolean = false;
+	public isPassable: boolean = false;
 
 	public getUsedFields(): RequiredField[] {
 		return [];
@@ -121,6 +123,9 @@ export abstract class Entity {
 			}
 
 			this.onAnyCollision(other);
+		}
+		if (!this.isPassable && other instanceof Player) {
+			other.checkJumpBuffering(this);
 		}
 	}
 

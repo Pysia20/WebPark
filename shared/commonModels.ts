@@ -17,6 +17,7 @@ export interface PlayerInputs {
 	left: boolean;
 	right: boolean;
 	jump: boolean;
+	cursorPos: Vector2;
 }
 
 // What the backend sends to the client
@@ -31,7 +32,7 @@ export interface ServerEntityData {
 	visualSize: Vector2;
 }
 
-export interface ServerPlayerData {
+export interface ServerPlayerData { //JHON ADD CURSOR POS HERE IG <<<<<<<======================================================================================================
 	nick: string;
 	pos: Vector2;
 	velocity: Vector2;

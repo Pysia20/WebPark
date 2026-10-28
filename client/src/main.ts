@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js'
 
-import {createMouseListiner, getCurrentInputs} from "./Inputs"
+import { createMouseListiner, getCurrentInputs } from "./Inputs"
 import { emitInputs, getServerData, startNetworking } from "./Network";
 import { coordinator } from "./Coordinator";
 import { PlayerInputs, Vector2 } from "@shared/commonModels"
@@ -9,8 +9,8 @@ import { CameraController } from "./Camera";
 import { leveler } from "./Leveler";
 import { pageSetup } from "./Weber";
 import { hud } from "./Hud";
-import {pulseer, updateShaders} from "./Shaders";
-import {updateLerp} from "./FavoriteChild";
+import { updateShaders } from "./Shaders";
+import { updateLerp } from "./FavoriteChild";
 const app = new PIXI.Application()
 await app.init({
     width: 1280,
@@ -43,7 +43,7 @@ const camera = new CameraController(worldContainer, app.screen, map_size)
 
 startNetworking()
 
-let previousSent: PlayerInputs = {left: false, jump: false, right: false}
+let previousSent: PlayerInputs = {left: false, jump: false, right: false, cursorPos: {x: 0, y: 0}}
 let dataToSend: PlayerInputs = getCurrentInputs()
 setInterval(() => {
     dataToSend = getCurrentInputs()

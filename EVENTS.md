@@ -15,7 +15,7 @@
    - Type: number
    - Callback: None
 - playerInputs:
-   - Description: sends what buttons player is pressing
+   - Description: sends what buttons player is pressing and cursor position
    - Type: PlayerInputs
    - Callback: None
 

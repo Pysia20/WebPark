@@ -123,7 +123,6 @@ export class Eye {
         let targetOffsetX = 0
         if (velocity.x == 0 && !isPushing) {
             targetOffsetX = 0
-            console.log("test")
         } else {
             targetOffsetX = direction * PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.EYE_LOOK_OFFSET_RATIO
         }

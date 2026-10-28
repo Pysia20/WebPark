@@ -32,14 +32,14 @@ export class Arm {
         if (isPushing && !this.isReaching) {
             this.isReaching = true
             this.touchProgress = 0
-            const offset = (velocity.x > 0) ? this.ARM_LENGTH : -this.ARM_LENGTH
+            const offset = this.direction * this.ARM_LENGTH
             this.touchTarget = {x: this.shoulPos.x + offset, y: this.shoulPos.y}
             this.handPos.y = this.touchTarget.y
         }
 
         if (this.isReaching) {
             this.touchProgress += PLAYER_VISUAL_CONFIG.TOUCH_SPEED * deltaTime
-            const offset = (velocity.x > 0) ? this.ARM_LENGTH * PLAYER_VISUAL_CONFIG.ARM_OFFSET : -this.ARM_LENGTH * PLAYER_VISUAL_CONFIG.ARM_OFFSET
+            const offset = this.direction * this.ARM_LENGTH * PLAYER_VISUAL_CONFIG.ARM_OFFSET
             this.touchTarget = {x: this.shoulPos.x + offset, y: this.shoulPos.y}
 
             if (this.touchProgress >= 1.0) {
@@ -67,7 +67,7 @@ export class Arm {
             const angle = Math.acos(clampedMath)
 
             const baseAngle = Math.atan2(this.handPos.y - this.shoulPos.y, this.handPos.x - this.shoulPos.x)
-            const lbowAngle = (this.direction == Directions.Right) ? baseAngle + angle : baseAngle - angle
+            const lbowAngle = baseAngle + angle * this.direction
             this.lbowPos.x = this.shoulPos.x + Math.cos(lbowAngle) * (this.ARM_LENGTH / 2)
             this.lbowPos.y = this.shoulPos.y + Math.sin(lbowAngle) * (this.ARM_LENGTH / 2)
         }

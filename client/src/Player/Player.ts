@@ -165,7 +165,6 @@ export class Player {
     updateDirection() {
         if (this.velocity.x != 0) {
             this.direction = (this.velocity.x > 0) ? Directions.Right : Directions.Left
-            console.log(this.direction)
         }
     }
 

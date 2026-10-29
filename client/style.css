@@ -15,15 +15,20 @@ html, body {
     background-color: #ffffff;
 
     font-family: sans-serif;
+
+    display: grid;
+    place-items: center;
 }
 
 canvas {
     display: block;
+    grid-area: 1 / 1;
 
     width: 100% !important;
     height: 100% !important;
 
-    object-fit: contain;
+    max-width: calc(100vh * (16 / 9));
+    max-height: calc(100vw * (9 / 16));
 }
 
 .container {
@@ -33,6 +38,10 @@ canvas {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.container, canvas {
+    grid-area: 1 / 1;
 }
 
 main {

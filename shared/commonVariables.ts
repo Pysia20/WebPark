@@ -22,6 +22,11 @@ export const WORLD_CONFIG = {
 	CELL_SIZE: 64,
 };
 
+export const CLIENT_CONFIG = {
+	UPDATE_RATE: 30, // How often client sends inputs data to server, (20)=20 times a second, (30)=30 times a second etc
+	MOUSE_MARGIN: 5 // How many pixels the mouse has to move from the previous pos for it to be broadcasted
+}
+
 export const GROUND_DETECTON_OFFSET = 1;
 export const COLLISION_MARGIN_Y = 2;
 export const COLLISION_MARGIN_X = COLLISION_MARGIN_Y;
@@ -44,7 +49,7 @@ export const PUSHABLE_CONFIG = {
 VISUAL		VISUAL		VISUAL		VISUAL
 ==========================================
  */
-
+// TODO: split these and add comments bc I allready fogor what some of them do :c
 export const PLAYER_VISUAL_CONFIG = {
 	// Torso Stuff
 	TORSO_HEIGHT_RATIO: 0.9,

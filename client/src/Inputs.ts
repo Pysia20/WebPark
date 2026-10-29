@@ -1,6 +1,7 @@
 import {PlayerInputs, Vector2} from "@shared/commonModels"
 import {Application, Container} from "pixi.js";
 import {emitInputs} from "./Network";
+import {CLIENT_CONFIG} from "@shared/commonVariables";
 
 let Inputs = new Set<string>
 let mousePos: Vector2 = {x: 0, y: 0}
@@ -65,9 +66,14 @@ let previousSent: PlayerInputs = {right: false, left: false, jump: false, cursor
 export function startSendingInputs() {
     setInterval(() => {
         const dataToSend = getCurrentInputs()
-        if (previousSent.right !== dataToSend.right || previousSent.jump !== dataToSend.jump || previousSent.left !== dataToSend.left || previousSent.cursorPos.x !== dataToSend.cursorPos.x || previousSent.cursorPos.y != dataToSend.cursorPos.y) {  //I'm nosure I like this anymore TODO: decide
+
+        const mouseMoved = Math.abs(previousSent.cursorPos.x - dataToSend.cursorPos.x) > CLIENT_CONFIG.MOUSE_MARGIN || Math.abs(previousSent.cursorPos.y - dataToSend.cursorPos.y) > CLIENT_CONFIG.MOUSE_MARGIN
+        const keysPressed = (previousSent.right !== dataToSend.right) || (previousSent.jump !== dataToSend.jump) || (previousSent.left !== dataToSend.left)
+
+        if (mouseMoved || keysPressed) {
             emitInputs(dataToSend)
             previousSent = { ...dataToSend, cursorPos: { ...dataToSend.cursorPos}}
+            console.log("sent")
         }
-    }, (1000 / 30)) //(1000/20)=20 times a second, (1000/30)=0 times a second etc
+    }, (1000 / CLIENT_CONFIG.UPDATE_RATE))
 }

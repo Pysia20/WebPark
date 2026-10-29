@@ -51,8 +51,6 @@ socket.on("somethingBroke", (whatBroke: SomethingBrokeData) => {
 
 socket.on("tick", (newServerData: ServerData) => {
     serverData = newServerData
-    if (serverData.playerData[0].cursorPos != {x: 0, y:0} as Vector2) console.log(serverData.playerData[0].cursorPos)
-
 })
 
 socket.on("playerJoined", (data: PlayerJoinedData[]) => {

@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js'
-
-import { createMouseListiner, getCurrentInputs } from "./Inputs"
+import { createMouseListiner, getCurrentInputs, startSendingInputs } from "./Inputs"
 import { emitInputs, getServerData, startNetworking } from "./Network";
 import { coordinator } from "./Coordinator";
 import { PlayerInputs, Vector2 } from "@shared/commonModels"
@@ -43,15 +42,7 @@ const camera = new CameraController(worldContainer, app.screen, map_size)
 
 startNetworking()
 
-let previousSent: PlayerInputs = {left: false, jump: false, right: false, cursorPos: {x: 0, y: 0}}
-let dataToSend: PlayerInputs = getCurrentInputs()
-setInterval(() => {
-    dataToSend = getCurrentInputs()
-    if (previousSent.right !== dataToSend.right || previousSent.jump !== dataToSend.jump || previousSent.left !== dataToSend.left || previousSent.cursorPos !== dataToSend.cursorPos) {
-        emitInputs(dataToSend)
-        previousSent = dataToSend
-    }
-}, (1000 / 30)) //(1000/20)=20 times a second, (1000/30)=0 times a second etc
+startSendingInputs()
 
 leveler.renderLevel()
 hud.fadeIn(app)

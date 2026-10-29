@@ -1,5 +1,6 @@
 import {PlayerInputs, Vector2} from "@shared/commonModels"
 import {Application, Container} from "pixi.js";
+import {emitInputs} from "./Network";
 
 let Inputs = new Set<string>
 let mousePos: Vector2 = {x: 0, y: 0}
@@ -58,4 +59,15 @@ export function getCurrentMousePos() {
 
 export function isClicking() {
     return clicking
+}
+
+let previousSent: PlayerInputs = {right: false, left: false, jump: false, cursorPos: {x: 0, y: 0}}
+export function startSendingInputs() {
+    setInterval(() => {
+        const dataToSend = getCurrentInputs()
+        if (previousSent.right !== dataToSend.right || previousSent.jump !== dataToSend.jump || previousSent.left !== dataToSend.left || previousSent.cursorPos.x !== dataToSend.cursorPos.x || previousSent.cursorPos.y != dataToSend.cursorPos.y) {  //I'm nosure I like this anymore TODO: decide
+            emitInputs(dataToSend)
+            previousSent = { ...dataToSend, cursorPos: { ...dataToSend.cursorPos}}
+        }
+    }, (1000 / 30)) //(1000/20)=20 times a second, (1000/30)=0 times a second etc
 }

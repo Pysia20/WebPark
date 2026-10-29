@@ -186,10 +186,6 @@ export abstract class Entity {
 		other.pos.y -= overlap;
 		if (other.velocity.y > 0) {
 			other.velocity.y = 0;
-
-			if (other.type == "Pushable") {
-				console.log("IOIOIOI: " + other.velocity.y);
-			}
 		}
 		other.setGrounded();
 	}
@@ -260,10 +256,15 @@ export abstract class Entity {
 				b.isPushing = true;
 			}
 
-			const relativeVelocityX = (a.velocity.x - b.velocity.x) / 2;
+			const relativeVelocityX = ((a.velocity.x - b.velocity.x) * 4) / 5;
 
-			a.velocityStack.push({ x: -relativeVelocityX, y: 0 });
-			b.velocityStack.push({ x: relativeVelocityX, y: 0 });
+			// Average seems better, try with other players
+			const avergageSign = Math.sign(a.velocity.x * b.velocity.x);
+			const averageVelocity =
+				((Math.abs(a.velocity.x) + Math.abs(b.velocity.y)) / 2) * avergageSign;
+
+			a.velocityStack.push({ x: -averageVelocity, y: 0 });
+			b.velocityStack.push({ x: averageVelocity, y: 0 });
 		} else {
 			if (diff.y > 0) {
 				if (a.isGrounded) {

@@ -20,8 +20,8 @@ export const ROOM_CONFIG = {
 
 export const CLIENT_CONFIG = {
 	UPDATE_RATE: 30, // How often client sends inputs data to server, (20)=20 times a second, (30)=30 times a second etc
-	MOUSE_MARGIN: 5 // How many pixels the mouse has to move from the previous pos for it to be broadcasted
-}
+	MOUSE_MARGIN: 5, // How many pixels the mouse has to move from the previous pos for it to be broadcasted
+};
 
 export const PLAYER_CONFIG = {
 	ACCELERATION: 40,
@@ -41,14 +41,14 @@ export const PLAYER_CONFIG = {
 export const CANNON_CONFIG = {
 	PROEJCTILE_WIDTH: 48,
 	PROJECTILE_HEIGHT: 32,
-};
+} as const;
 
 export const PUSHABLE_CONFIG = {
-	DRAG: 45, // Player drag * 3 (I have no idea why but it works)
-	GRAVITY: 15,
+	DRAG: 15,
+	GRAVITY: 34,
 	MAX_HORIZONTAL_SPEED: 150,
 	MAX_VERTICAL_SPEED: 500,
-};
+} as const;
 
 /*
 ==========================================
@@ -64,7 +64,7 @@ export const PLAYER_VISUAL_CONFIG = {
 		LEAN: 3,
 		PUSH_LEAN_RATIO: 0.2,
 
-		LERP: 0.3
+		LERP: 0.3,
 	},
 
 	LEG: {
@@ -83,7 +83,7 @@ export const PLAYER_VISUAL_CONFIG = {
 		HIP_X_OFFSET_RATIO: 0.25,
 		HIP_TUCK: 2,
 
-		LERP: 0.3
+		LERP: 0.3,
 	},
 
 	EYE: {
@@ -108,7 +108,7 @@ export const PLAYER_VISUAL_CONFIG = {
 		BLINK_SPEED: 2.5,
 		BLINK_WIDTH_SPEED: 0.5,
 
-		LERP: 0.25
+		LERP: 0.25,
 	},
 
 	ARM: {
@@ -116,15 +116,15 @@ export const PLAYER_VISUAL_CONFIG = {
 		LENGTH: 20,
 		OFFSET: 0.9,
 		Y_OFFSET: 4,
-		TOUCH_SPEED: 0.1
+		TOUCH_SPEED: 0.1,
 	},
 
 	NICK: {
 		COLOR: "#ffffff",
 		ME_COLOR: "#FFD700",
 		FONT_SIZE: 12,
-		OFFSET: 0.5
-	}
+		OFFSET: 0.5,
+	},
 } as const;
 
 export const ENTITY_VISUAL_CONFIG = {

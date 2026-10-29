@@ -114,7 +114,7 @@
 				},
 				{
 					"__identifier": "Pushable",
-					"__grid": [13,1],
+					"__grid": [11,2],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": null,
@@ -123,10 +123,10 @@
 					"width": 64,
 					"height": 64,
 					"defUid": 24,
-					"px": [832,128],
-					"fieldInstances": [{ "__identifier": "Mass", "__type": "Int", "__value": 1, "__tile": null, "defUid": 47, "realEditorValues": [] }],
-					"__worldX": 832,
-					"__worldY": -576
+					"px": [704,192],
+					"fieldInstances": [{ "__identifier": "Mass", "__type": "Int", "__value": 1, "__tile": null, "defUid": 47, "realEditorValues": [{ "id": "V_Int", "params": [1] }] }],
+					"__worldX": 704,
+					"__worldY": -512
 				},
 				{
 					"__identifier": "PlayerSpawner",
@@ -673,6 +673,22 @@
 					],
 					"__worldX": 1024,
 					"__worldY": -128
+				},
+				{
+					"__identifier": "Pushable",
+					"__grid": [11,6],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#7C7C7C",
+					"iid": "eae94ce0-bde0-11f1-804d-83d559bea3de",
+					"width": 64,
+					"height": 64,
+					"defUid": 24,
+					"px": [704,448],
+					"fieldInstances": [{ "__identifier": "Mass", "__type": "Int", "__value": 2, "__tile": null, "defUid": 47, "realEditorValues": [{ "id": "V_Int", "params": [2] }] }],
+					"__worldX": 704,
+					"__worldY": -256
 				}
 			]
 		},

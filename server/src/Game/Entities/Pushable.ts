@@ -5,6 +5,7 @@ import { PLAYER_CONFIG, PUSHABLE_CONFIG } from "@shared/commonVariables";
 import { clamp, RequiredField } from "../../Global";
 import CONFIG from "../../../config.json";
 import { Entity } from "../Entity";
+import { Player } from "../Player";
 
 //TODO Add colision with other entities
 
@@ -28,13 +29,41 @@ export class Pushable extends Entity {
 		this.isDynamic = true;
 	}
 
-	protected override onRightCollision(overlap: number, other: Entity) {}
+	protected override onRightCollision(overlap: number, other: Entity) {
+		// console.log("RIght");
 
-	protected override onLeftCollision(overlap: number, other: Entity) {}
+		if (other instanceof Player) {
+			const len = other.getPlayersBehind(1, [...this.level!.room.players.values()]).length;
 
-	protected override onUpCollision(overlap: number, other: Entity) {}
+			this.isDynamic = len >= this.customFields.Mass.value!;
+		}
 
-	protected override onDownCollision(overlap: number, other: Entity) {}
+		if (!this.isDynamic) {
+			super.onRightCollision(overlap, other);
+		}
+	}
+
+	protected override onLeftCollision(overlap: number, other: Entity) {
+		// console.log("LEft");
+
+		if (other instanceof Player) {
+			const len = other.getPlayersBehind(-1, [...this.level!.room.players.values()]).length;
+
+			this.isDynamic = len >= this.customFields.Mass.value!;
+		}
+
+		if (!this.isDynamic) {
+			super.onLeftCollision(overlap, other);
+		}
+	}
+
+	protected override onUpCollision(overlap: number, other: Entity) {
+		if (!this.isDynamic) super.onUpCollision(overlap, other);
+	}
+
+	protected override onDownCollision(overlap: number, other: Entity) {
+		if (!this.isDynamic) super.onDownCollision(overlap, other);
+	}
 
 	public override calculateVelocities() {
 		if (this.velocity.x > PUSHABLE_CONFIG.DRAG) {

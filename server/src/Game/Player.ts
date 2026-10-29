@@ -154,12 +154,25 @@ export class Player extends Entity {
 	public getPlayersBehind(direction: 1 | -1, players: Player[]) {
 		let theList: Player[] = [];
 
-		const maxXDiffrence = direction * (PLAYER_CONFIG.WIDTH + 5);
+		const maxXDiffrence = PLAYER_CONFIG.WIDTH + 5;
 		const maxYDiffrence = PLAYER_CONFIG.HEIGHT;
 
+		// Problem 1:
+		// Players: [P] <- [1] <- [2] <- [3]
+		// 1 and 2 work ok,
+		// 2 and 3 dont, 3 compares itself to 1 not 2
+
+		// Problem 2:
+		//
+
 		players.forEach((p) => {
+			const correctSide =
+				(direction == 1 && p.pos.x >= this.pos.x) ||
+				(direction == -1 && p.pos.x <= this.pos.x);
+
 			const isBehind =
 				Math.abs(p.pos.x - this.pos.x) <= maxXDiffrence &&
+				correctSide &&
 				Math.abs(p.pos.y - this.pos.y) <= maxYDiffrence;
 
 			const isPlayerGoingTowards =

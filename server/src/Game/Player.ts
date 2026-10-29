@@ -151,7 +151,7 @@ export class Player extends Entity {
 	}
 
 	/**  1 - right | -1 - left */
-	public getPlayersBehind(direction: 1 | -1, players: Player[]) {
+	public _getPlayersBehind(direction: 1 | -1, players: Player[]) {
 		let theList: Player[] = [];
 
 		const maxXDiffrence = PLAYER_CONFIG.WIDTH + 5;
@@ -161,9 +161,6 @@ export class Player extends Entity {
 		// Players: [P] <- [1] <- [2] <- [3]
 		// 1 and 2 work ok,
 		// 2 and 3 dont, 3 compares itself to 1 not 2
-
-		// Problem 2:
-		//
 
 		players.forEach((p) => {
 			const correctSide =
@@ -182,6 +179,48 @@ export class Player extends Entity {
 				theList.push(p);
 			}
 		});
+
+		return theList;
+	}
+
+	/*
+	Finds the first player that is behind
+	Passes all the players except this and itself
+	(There cant be more than 1 behind i guess.)
+	Then the one behind, checks again for its behinds
+	*/
+
+	public getPlayersBehind(direction: 1 | -1, players: Player[]): Player[] {
+		let theList: Player[] = [this];
+
+		const maxXDiffrence = PLAYER_CONFIG.WIDTH + 5;
+		const maxYDiffrence = PLAYER_CONFIG.HEIGHT;
+
+		for (let i = 0; i < theList.length; i++) {
+			const currentInList = theList[i];
+			for (let j = 0; i < players.length; i++) {
+				const player = players[j];
+				if (theList.includes(player)) continue;
+				if (currentInList == player) continue;
+
+				const correctSide =
+					(direction == 1 && player.pos.x >= currentInList.pos.x) ||
+					(direction == -1 && player.pos.x <= currentInList.pos.x);
+
+				const isBehind =
+					Math.abs(player.pos.x - currentInList.pos.x) <= maxXDiffrence &&
+					correctSide &&
+					Math.abs(player.pos.y - currentInList.pos.y) <= maxYDiffrence;
+
+				const isPlayerGoingTowards =
+					(direction == 1 && player.currentInputs.right) ||
+					(direction == -1 && player.currentInputs.left);
+
+				if (isBehind && isPlayerGoingTowards) {
+					theList.push(player);
+				}
+			}
+		}
 
 		return theList;
 	}

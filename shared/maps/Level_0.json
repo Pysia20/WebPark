@@ -646,7 +646,18 @@
 					"height": 16,
 					"defUid": 64,
 					"px": [448,512],
-					"fieldInstances": [{ "__identifier": "BouncePower", "__type": "Int", "__value": 500, "__tile": null, "defUid": 65, "realEditorValues": [{ "id": "V_Int", "params": [500] }] }],
+					"fieldInstances": [
+						{ "__identifier": "BouncePower", "__type": "Int", "__value": 500, "__tile": null, "defUid": 65, "realEditorValues": [{ "id": "V_Int", "params": [500] }] },
+						{ "__identifier": "ActivationGroup", "__type": "String", "__value": "6", "__tile": null, "defUid": 72, "realEditorValues": [{
+							"id": "V_String",
+							"params": ["6"]
+						}] },
+						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 73, "realEditorValues": [] },
+						{ "__identifier": "StaysOn", "__type": "Bool", "__value": true, "__tile": null, "defUid": 74, "realEditorValues": [{
+							"id": "V_Bool",
+							"params": [ true ]
+						}] }
+					],
 					"__worldX": 448,
 					"__worldY": -192
 				},

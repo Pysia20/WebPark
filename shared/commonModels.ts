@@ -6,13 +6,6 @@ export type Vector2 = { x: number; y: number };
 export type Vector3 = { x: number; y: number; z: number };
 export type Vector4 = { x: number; y: number; z: number; w: number };
 
-export type CollisionCheckResult = {
-	overlapX: number;
-	overlapY: number;
-	diffX: number;
-	diffY: number;
-};
-
 export interface PlayerInputs {
 	left: boolean;
 	right: boolean;
@@ -20,16 +13,13 @@ export interface PlayerInputs {
 	cursorPos: Vector2;
 }
 
-// What the backend sends to the client
+export interface ClientData {
+	inputs: PlayerInputs;
+}
+
 export interface ServerData {
 	playerData: Record<number, ServerPlayerData>;
 	entityData: Record<number, AnyEntityData>;
-}
-
-export interface ServerEntityData {
-	type: EntityType;
-	pos: Vector2;
-	visualSize: Vector2;
 }
 
 export interface ServerPlayerData {
@@ -41,18 +31,25 @@ export interface ServerPlayerData {
 	cursorPos: Vector2;
 }
 
-// What the client sends to the backend
-export interface ClientData {
-	inputs: PlayerInputs;
+export interface ServerEntityData {
+	type: EntityType;
+	pos: Vector2;
+	visualSize: Vector2;
 }
 
-// Server -> Client when player joins a room (Server sends an array of that)
 export interface PlayerJoinedData {
 	playerID: number;
 	nick: string;
 	color: string;
 	level: string;
 }
+
+export type CollisionCheckResult = { // <=========================== I don't think this should be here ngl ====================================
+	overlapX: number;
+	overlapY: number;
+	diffX: number;
+	diffY: number;
+};
 
 //###############################################################
 // DEJMI TEGO NIE MUSISZ IMPORTOWAC NIGDZIE | IMPORTUJ TO NIZEJ

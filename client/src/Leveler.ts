@@ -133,9 +133,10 @@ class levelManager {
 			}
 		}
 
-		if (Object.keys(ents) != Object.keys(this.ents)) {
-			for (const entsKey in this.ents) {
-				if (!Object.keys(ents).includes(entsKey)) this.ents[entsKey].beGone(this.world)
+		for (const entId in this.ents) {
+			if (!(entId in ents)) {
+				this.ents[entId].beGone(this.world)
+				delete this.ents[entId]
 			}
 		}
 	}

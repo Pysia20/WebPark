@@ -21,6 +21,7 @@ export class Player {
     targetPos: Vector2 = {x: 0.0, y: 0.0}
     velocity: Vector2 = {x: 0, y: 0}
     prevVelocity: Vector2 = {x: 0, y: 0}
+    cursorPos: Vector2 = {x: 0, y: 0}
 
     direction: Directions = Directions.Right
     inAir: boolean = false
@@ -109,8 +110,8 @@ export class Player {
 
         const rand = Math.floor(Math.random() * PLAYER_VISUAL_CONFIG.BLINK_INTERVAL_RANDOM)
 
-        this.eyes[0].updateEye(eyeLeft, this.velocity, this.deltaT, rand, this.isPushing, this.direction)
-        this.eyes[1].updateEye(eyeRight, this.velocity, this.deltaT, rand, this.isPushing, this.direction)
+        this.eyes[0].updateEye(eyeLeft, this.velocity, this.cursorPos, this.deltaT, rand, this.isPushing, this.direction)
+        this.eyes[1].updateEye(eyeRight, this.velocity, this.cursorPos, this.deltaT, rand, this.isPushing, this.direction)
     }
 
     updateArms() {
@@ -150,10 +151,11 @@ export class Player {
         world.removeChild(this.arms[1].arm)
     }
 
-    updateData(velocity: Vector2, deltaTime: number, isPushing: boolean) {
-        this.deltaT = deltaTime
+    updateData(velocity: Vector2, cursorPos: Vector2, isPushing: boolean, deltaTime: number) {
         this.velocity = velocity
+        this.cursorPos = cursorPos
         this.isPushing = isPushing
+        this.deltaT = deltaTime
     }
 
     checkIfJumped() {

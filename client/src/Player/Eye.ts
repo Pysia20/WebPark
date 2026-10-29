@@ -32,11 +32,11 @@ export class Eye {
         this.isMe = isMe
     }
 
-    updateEye(pos: Vector2, velocity: Vector2, deltaT: number, rand: number, isPushing: boolean, direction: Directions) {
+    updateEye(pos: Vector2, velocity: Vector2, cursorPos: Vector2, deltaT: number, rand: number, isPushing: boolean, direction: Directions) {
         this.updateSquintAndPush(velocity, isPushing, direction)
         this.updateBlink(pos, deltaT, rand)
         this.updatePos(pos, velocity, isPushing, direction)
-        if (velocity.x == 0 && velocity.y == 0 && this.isMe) this.lookAtMouse()
+        if (velocity.x == 0 && velocity.y == 0) this.lookAtMouse(cursorPos)
 
         const baseX = this.pos.x + this.lookOffset.x + this.pushOffset.x
         const baseY = this.pos.y + this.lookOffset.y + this.pushOffset.y
@@ -131,13 +131,14 @@ export class Eye {
         lerpTheyThem(this.lookOffset, target, this.LERP_SPEED)
     }
 
-    lookAtMouse() {
-        const mousePos = getCurrentMousePos()
+    lookAtMouse(cursorPos: Vector2) {
+        const mousePos = (this.isMe) ? getCurrentMousePos() : cursorPos
         let target: Vector2 = {x: 0, y: 0}
-
-        if (isClicking()) {
+        if (isClicking() && this.isMe) {
             this.blinkTimer = 1
         }
+
+     //   console.log(this.isMe + ": " + cursorPos.x +"  "+cursorPos.y)
 
         if (mousePos.x == 0 && mousePos.y == 0) {
             lerpTheyThem(this.lookOffset, target, this.LERP_SPEED)

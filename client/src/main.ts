@@ -47,7 +47,7 @@ let previousSent: PlayerInputs = {left: false, jump: false, right: false, cursor
 let dataToSend: PlayerInputs = getCurrentInputs()
 setInterval(() => {
     dataToSend = getCurrentInputs()
-    if (previousSent.right !== dataToSend.right || previousSent.jump !== dataToSend.jump || previousSent.left !== dataToSend.left) {
+    if (previousSent.right !== dataToSend.right || previousSent.jump !== dataToSend.jump || previousSent.left !== dataToSend.left || previousSent.cursorPos !== dataToSend.cursorPos) {
         emitInputs(dataToSend)
         previousSent = dataToSend
     }

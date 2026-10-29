@@ -1,5 +1,13 @@
 import { io } from "socket.io-client"
-import { ServerData, PlayerInputs, RegisterUserData, PlayerJoinedData, ServerEntityData, SomethingBrokeData } from "@shared/commonModels"
+import {
+    ServerData,
+    PlayerInputs,
+    RegisterUserData,
+    PlayerJoinedData,
+    ServerEntityData,
+    SomethingBrokeData,
+    Vector2
+} from "@shared/commonModels" //WEBSTORM IS TRYING TO FORCE THIS FORMATING EVERY COMMIT SO SURE BRO IDC ANYMORE
 import { coordinator } from "./Coordinator";
 import { hud } from "./Hud";
 import { leveler } from "./Leveler";
@@ -43,6 +51,7 @@ socket.on("somethingBroke", (whatBroke: SomethingBrokeData) => {
 
 socket.on("tick", (newServerData: ServerData) => {
     serverData = newServerData
+    if (serverData.playerData[0].cursorPos != {x: 0, y:0} as Vector2) console.log(serverData.playerData[0].cursorPos)
 
 })
 

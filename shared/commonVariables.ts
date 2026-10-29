@@ -49,7 +49,7 @@ export const PUSHABLE_CONFIG = {
 VISUAL		VISUAL		VISUAL		VISUAL
 ==========================================
  */
-// TODO: split these and add comments bc I allready fogor what some of them do :c
+
 export const PLAYER_VISUAL_CONFIG = {
 	LERP: 0.3,
 
@@ -114,10 +114,10 @@ export const PLAYER_VISUAL_CONFIG = {
 	},
 
 	NICK: {
-		NICK_COLOR: "#ffffff",
-		NICK_ME_COLOR: "#FFD700",
-		NICK_FONT_SIZE: 12,
-		NICK_OFFSET: 0.5
+		COLOR: "#ffffff",
+		ME_COLOR: "#FFD700",
+		FONT_SIZE: 12,
+		OFFSET: 0.5
 	}
 };
 

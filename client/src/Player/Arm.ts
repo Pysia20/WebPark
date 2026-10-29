@@ -15,7 +15,7 @@ export class Arm {
     touchProgress: number = 1.0
     isReaching: boolean = false
 
-    ARM_LENGTH: number = PLAYER_VISUAL_CONFIG.ARM_LENGTH
+    ARM_LENGTH: number = PLAYER_VISUAL_CONFIG.ARM.LENGTH
 
     constructor() {
         this.arm.position.set(0, 0)
@@ -38,8 +38,8 @@ export class Arm {
         }
 
         if (this.isReaching) {
-            this.touchProgress += PLAYER_VISUAL_CONFIG.TOUCH_SPEED * deltaTime
-            const offset = this.direction * this.ARM_LENGTH * PLAYER_VISUAL_CONFIG.ARM_OFFSET
+            this.touchProgress += PLAYER_VISUAL_CONFIG.ARM.TOUCH_SPEED * deltaTime
+            const offset = this.direction * this.ARM_LENGTH * PLAYER_VISUAL_CONFIG.ARM.OFFSET
             this.touchTarget = {x: this.shoulPos.x + offset, y: this.shoulPos.y}
 
             if (this.touchProgress >= 1.0) {
@@ -51,7 +51,7 @@ export class Arm {
 
             this.invertTheKinematics()
 
-            this.arm.moveTo(this.shoulPos.x, this.shoulPos.y).lineTo(this.lbowPos.x, this.lbowPos.y).lineTo(this.handPos.x, this.handPos.y).stroke({color: "#000000", width: PLAYER_VISUAL_CONFIG.ARM_WIDTH, cap: "round", join: "miter"});
+            this.arm.moveTo(this.shoulPos.x, this.shoulPos.y).lineTo(this.lbowPos.x, this.lbowPos.y).lineTo(this.handPos.x, this.handPos.y).stroke({color: "#000000", width: PLAYER_VISUAL_CONFIG.ARM.WIDTH, cap: "round", join: "miter"});
         }
     }
 

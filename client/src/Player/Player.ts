@@ -33,7 +33,7 @@ export class Player {
     eyes: Eye[]
     arms: Arm[]
 
-    LERP_SPEED: number = PLAYER_VISUAL_CONFIG.PLAYER_LERP
+    LERP_SPEED: number = PLAYER_VISUAL_CONFIG.LERP
 
     constructor(id: number, color: string, nick: PixiText, textures: PlayerTextures, isMe: boolean) {
         this.id = id
@@ -75,7 +75,7 @@ export class Player {
 
     updateNick() {
         this.nick.position.set(
-            this.pos.x + PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.NICK_OFFSET,
+            this.pos.x + PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.NICK.OFFSET,
             this.pos.y
         )
     }
@@ -85,8 +85,8 @@ export class Player {
     }
 
     updateLegs() {
-        const legOffsetX = PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.HIP_X_OFFSET_RATIO
-        const legOffsetY = PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.HIP_Y_OFFSET_RATIO
+        const legOffsetX = PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.LEG.HIP_X_OFFSET_RATIO
+        const legOffsetY = PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.LEG.HIP_Y_OFFSET_RATIO
 
         if (!this.inAir) {
             const hipLeft = {x: this.pos.x + legOffsetX, y: this.pos.y + legOffsetY};
@@ -102,13 +102,13 @@ export class Player {
     }
 
     updateEyes() {
-        const eyeOffsetX = PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.EYE_X_OFFSET_RATIO
-        const eyeOffsetY = PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.EYE_Y_OFFSET_RATIO
+        const eyeOffsetX = PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.EYE.X_OFFSET_RATIO
+        const eyeOffsetY = PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.EYE.Y_OFFSET_RATIO
 
         const eyeLeft = {x: this.pos.x + eyeOffsetX, y: this.pos.y + eyeOffsetY}
         const eyeRight = {x: this.pos.x + (PLAYER_CONFIG.WIDTH - eyeOffsetX), y: this.pos.y + eyeOffsetY}
 
-        const rand = Math.floor(Math.random() * PLAYER_VISUAL_CONFIG.BLINK_INTERVAL_RANDOM)
+        const rand = Math.floor(Math.random() * PLAYER_VISUAL_CONFIG.EYE.BLINK_INTERVAL_RANDOM)
 
         this.eyes[0].updateEye(eyeLeft, this.velocity, this.cursorPos, this.deltaT, rand, this.isPushing, this.direction)
         this.eyes[1].updateEye(eyeRight, this.velocity, this.cursorPos, this.deltaT, rand, this.isPushing, this.direction)
@@ -119,13 +119,13 @@ export class Player {
         const arm2 = {x: this.pos.x, y: this.pos.y}
 
         if (this.direction == Directions.Left) {
-            arm1.y += (PLAYER_CONFIG.HEIGHT / 2) + PLAYER_VISUAL_CONFIG.ARM_Y_OFFSET
-            arm2.y += (PLAYER_CONFIG.HEIGHT / 2) - PLAYER_VISUAL_CONFIG.ARM_Y_OFFSET
+            arm1.y += (PLAYER_CONFIG.HEIGHT / 2) + PLAYER_VISUAL_CONFIG.ARM.Y_OFFSET
+            arm2.y += (PLAYER_CONFIG.HEIGHT / 2) - PLAYER_VISUAL_CONFIG.ARM.Y_OFFSET
         } else {
             arm1.x += PLAYER_CONFIG.WIDTH
-            arm1.y += (PLAYER_CONFIG.HEIGHT / 2) - PLAYER_VISUAL_CONFIG.ARM_Y_OFFSET
+            arm1.y += (PLAYER_CONFIG.HEIGHT / 2) - PLAYER_VISUAL_CONFIG.ARM.Y_OFFSET
             arm2.x += PLAYER_CONFIG.WIDTH
-            arm2.y += (PLAYER_CONFIG.HEIGHT / 2) + PLAYER_VISUAL_CONFIG.ARM_Y_OFFSET
+            arm2.y += (PLAYER_CONFIG.HEIGHT / 2) + PLAYER_VISUAL_CONFIG.ARM.Y_OFFSET
         }
 
         this.arms[0].updateArm(arm1, this.velocity, this.deltaT, this.isPushing, this.direction)

@@ -15,17 +15,17 @@ export class Eye {
     pushOffset: Vector2 = {x: 0, y: 0}
 
     isBlinking: boolean = false
-    blinkTimer: number = PLAYER_VISUAL_CONFIG.BLINK_INTERVAL_BASE
+    blinkTimer: number = PLAYER_VISUAL_CONFIG.EYE.BLINK_INTERVAL_BASE
     blinkState: States = States.Down
 
-    width: number = PLAYER_VISUAL_CONFIG.EYE_STROKE_WIDTH
-    length: number = PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH
+    width: number = PLAYER_VISUAL_CONFIG.EYE.STROKE_WIDTH
+    length: number = PLAYER_VISUAL_CONFIG.EYE.MAX_LENGTH
     highestWidth: number = 0
     lowestLength: number = 0
-    currentMaxLength: number = PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH
-    pushSquintLerp: number = PLAYER_VISUAL_CONFIG.EYE_PUSH_SQUINT_LERP_MAX
+    currentMaxLength: number = PLAYER_VISUAL_CONFIG.EYE.MAX_LENGTH
+    pushSquintLerp: number = PLAYER_VISUAL_CONFIG.EYE.PUSH_SQUINT_LERP_MAX
 
-    LERP_SPEED: number = PLAYER_VISUAL_CONFIG.EYE_LERP
+    LERP_SPEED: number = PLAYER_VISUAL_CONFIG.EYE.LERP
 
     constructor(isMe: boolean) {
         this.eye.position.set(0, 0)
@@ -61,17 +61,17 @@ export class Eye {
 
     updateSquintAndPush(velocity: Vector2, isPushing: boolean, direction: Directions) {
         if (isPushing) {
-            this.currentMaxLength = lerpIt(this.currentMaxLength, (PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH * PLAYER_VISUAL_CONFIG.EYE_PUSH_SQUINT), this.pushSquintLerp)
-            this.pushSquintLerp = lerpIt(this.pushSquintLerp, PLAYER_VISUAL_CONFIG.EYE_PUSH_SQUINT_LERP_MIN, this.LERP_SPEED)
+            this.currentMaxLength = lerpIt(this.currentMaxLength, (PLAYER_VISUAL_CONFIG.EYE.MAX_LENGTH * PLAYER_VISUAL_CONFIG.EYE.PUSH_SQUINT), this.pushSquintLerp)
+            this.pushSquintLerp = lerpIt(this.pushSquintLerp, PLAYER_VISUAL_CONFIG.EYE.PUSH_SQUINT_LERP_MIN, this.LERP_SPEED)
 
-            this.pushOffset.x = direction * (PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.EYE_PUSH_OFFSET_X)
-            this.pushOffset.y =  PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.TORSO_HEIGHT_RATIO * PLAYER_VISUAL_CONFIG.EYE_PUSH_OFFSET_Y
+            this.pushOffset.x = direction * (PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.EYE.PUSH_OFFSET_X)
+            this.pushOffset.y =  PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.TORSO.HEIGHT_RATIO * PLAYER_VISUAL_CONFIG.EYE.PUSH_OFFSET_Y
         } else {
             const absVelocity: Vector2 = {x: Math.abs(velocity.x), y: Math.abs(velocity.y)}
-            const squint = (absVelocity.y > PLAYER_CONFIG.MAX_HORIZONTAL_SPEED) ? (PLAYER_CONFIG.MAX_HORIZONTAL_SPEED / PLAYER_VISUAL_CONFIG.EYE_SQUINT) : Math.max(absVelocity.x / PLAYER_VISUAL_CONFIG.EYE_SQUINT, absVelocity.y / PLAYER_VISUAL_CONFIG.EYE_SQUINT)
-            this.currentMaxLength = lerpIt(this.currentMaxLength, (PLAYER_VISUAL_CONFIG.EYE_MAX_LENGTH - squint), this.LERP_SPEED)
+            const squint = (absVelocity.y > PLAYER_CONFIG.MAX_HORIZONTAL_SPEED) ? (PLAYER_CONFIG.MAX_HORIZONTAL_SPEED / PLAYER_VISUAL_CONFIG.EYE.SQUINT) : Math.max(absVelocity.x / PLAYER_VISUAL_CONFIG.EYE.SQUINT, absVelocity.y / PLAYER_VISUAL_CONFIG.EYE.SQUINT)
+            this.currentMaxLength = lerpIt(this.currentMaxLength, (PLAYER_VISUAL_CONFIG.EYE.MAX_LENGTH - squint), this.LERP_SPEED)
 
-            this.pushSquintLerp = PLAYER_VISUAL_CONFIG.EYE_PUSH_SQUINT_LERP_MAX
+            this.pushSquintLerp = PLAYER_VISUAL_CONFIG.EYE.PUSH_SQUINT_LERP_MAX
             this.pushOffset.x = 0
             this.pushOffset.y = 0
         }
@@ -81,15 +81,15 @@ export class Eye {
         if (this.blinkTimer <= 0 && !this.isBlinking) {
             this.blinkState = States.Down
             this.isBlinking = true
-            this.blinkTimer = PLAYER_VISUAL_CONFIG.BLINK_INTERVAL_BASE + rand
+            this.blinkTimer = PLAYER_VISUAL_CONFIG.EYE.BLINK_INTERVAL_BASE + rand
         } else {
             this.blinkTimer -= deltaT
         }
 
         if (this.isBlinking) {
             if (this.length > 0.0 && this.blinkState == States.Down) {
-                this.length -= PLAYER_VISUAL_CONFIG.BLINK_SPEED * deltaT
-                this.width += PLAYER_VISUAL_CONFIG.BLINK_WIDTH_SPEED * deltaT
+                this.length -= PLAYER_VISUAL_CONFIG.EYE.BLINK_SPEED * deltaT
+                this.width += PLAYER_VISUAL_CONFIG.EYE.BLINK_WIDTH_SPEED * deltaT
                 pos.y = pos.y + ((this.currentMaxLength - this.length) / 2)
             } else {
                 this.blinkState = States.Up
@@ -101,13 +101,13 @@ export class Eye {
             }
 
             if (this.length < this.currentMaxLength && this.blinkState == States.Up) {
-                this.length += PLAYER_VISUAL_CONFIG.BLINK_SPEED * deltaT
-                this.width -= PLAYER_VISUAL_CONFIG.BLINK_WIDTH_SPEED * deltaT
+                this.length += PLAYER_VISUAL_CONFIG.EYE.BLINK_SPEED * deltaT
+                this.width -= PLAYER_VISUAL_CONFIG.EYE.BLINK_WIDTH_SPEED * deltaT
                 pos.y = pos.y + ((this.currentMaxLength - this.length) / 2)
             } else if (this.length >= this.currentMaxLength) {
                 this.length = this.currentMaxLength
                 this.isBlinking = false
-                this.width = PLAYER_VISUAL_CONFIG.EYE_STROKE_WIDTH
+                this.width = PLAYER_VISUAL_CONFIG.EYE.STROKE_WIDTH
             }
         } else {
             this.length = this.currentMaxLength
@@ -124,7 +124,7 @@ export class Eye {
         if (velocity.x == 0 && !isPushing) {
             targetOffsetX = 0
         } else {
-            targetOffsetX = direction * PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.EYE_LOOK_OFFSET_RATIO
+            targetOffsetX = direction * PLAYER_CONFIG.WIDTH * PLAYER_VISUAL_CONFIG.EYE.LOOK_OFFSET_RATIO
         }
 
         const target: Vector2 = {x: targetOffsetX, y: 0}
@@ -150,8 +150,8 @@ export class Eye {
 
         const angle = Math.atan2(mousePos.y - centerY, mousePos.x - centerX)
 
-        target.x = Math.cos(angle) * PLAYER_VISUAL_CONFIG.EYE_X_LOOK
-        target.y = Math.sin(angle) * PLAYER_VISUAL_CONFIG.EYE_Y_LOOK
+        target.x = Math.cos(angle) * PLAYER_VISUAL_CONFIG.EYE.X_LOOK
+        target.y = Math.sin(angle) * PLAYER_VISUAL_CONFIG.EYE.Y_LOOK
 
         lerpTheyThem(this.lookOffset, target, this.LERP_SPEED)
     }

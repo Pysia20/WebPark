@@ -1,3 +1,28 @@
+/*
+==========================================
+NERD		NERD		NERD		NERD
+==========================================
+ */
+
+export const GROUND_DETECTON_OFFSET = 1;
+export const COLLISION_MARGIN_Y = 2;
+export const COLLISION_MARGIN_X = COLLISION_MARGIN_Y;
+export const HORIZONTAL_BIAS = 1.5;
+export const DESPAWN_BUFFER = 300;
+
+export const WORLD_CONFIG = {
+	CELL_SIZE: 64,
+};
+
+export const ROOM_CONFIG = {
+	MAX_PLAYERS: 8,
+};
+
+export const CLIENT_CONFIG = {
+	UPDATE_RATE: 30, // How often client sends inputs data to server, (20)=20 times a second, (30)=30 times a second etc
+	MOUSE_MARGIN: 5 // How many pixels the mouse has to move from the previous pos for it to be broadcasted
+}
+
 export const PLAYER_CONFIG = {
 	ACCELERATION: 40,
 	MAX_HORIZONTAL_SPEED: 150,
@@ -16,25 +41,6 @@ export const PLAYER_CONFIG = {
 export const CANNON_CONFIG = {
 	PROEJCTILE_WIDTH: 48,
 	PROJECTILE_HEIGHT: 32,
-};
-
-export const WORLD_CONFIG = {
-	CELL_SIZE: 64,
-};
-
-export const CLIENT_CONFIG = {
-	UPDATE_RATE: 30, // How often client sends inputs data to server, (20)=20 times a second, (30)=30 times a second etc
-	MOUSE_MARGIN: 5 // How many pixels the mouse has to move from the previous pos for it to be broadcasted
-}
-
-export const GROUND_DETECTON_OFFSET = 1;
-export const COLLISION_MARGIN_Y = 2;
-export const COLLISION_MARGIN_X = COLLISION_MARGIN_Y;
-export const HORIZONTAL_BIAS = 1.5;
-export const DESPAWN_BUFFER = 300;
-
-export const ROOM_CONFIG = {
-	MAX_PLAYERS: 8,
 };
 
 export const PUSHABLE_CONFIG = {
@@ -119,7 +125,7 @@ export const PLAYER_VISUAL_CONFIG = {
 		FONT_SIZE: 12,
 		OFFSET: 0.5
 	}
-};
+} as const;
 
 export const ENTITY_VISUAL_CONFIG = {
 	JOHN: {
@@ -158,4 +164,4 @@ export const ENTITY_VISUAL_CONFIG = {
 		MIN_OPACITY: 0.05,
 		LARP: 0.3,
 	},
-};
+} as const;

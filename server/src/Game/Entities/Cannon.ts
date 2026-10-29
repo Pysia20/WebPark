@@ -1,6 +1,10 @@
 import { Vector2 } from "@shared/commonModels";
 import { Entity } from "../Entity";
-import { DummyEntityCustomFields, EntityCustomFieldsData } from "@shared/commonLevelModels";
+import {
+	CustomField,
+	DummyEntityCustomFields,
+	EntityCustomFieldsData,
+} from "@shared/commonLevelModels";
 import { RequiredField } from "../../Global";
 import { CannonProjectile } from "./CannonProjectile";
 import { CANNON_CONFIG } from "@shared/commonVariables";
@@ -27,13 +31,40 @@ export class Cannon extends Entity {
 				isMissing: (v) => !v || v <= 0,
 				isRequired: true,
 			},
+			{
+				name: "ActivationGroup",
+				value: this.customFields.ActivationGroup.value,
+				isMissing: (v) => !v || v == "",
+				isRequired: false,
+			},
+			{
+				name: "ActivationCount",
+				value: this.customFields.ActivationCount.value,
+				isMissing: (v) => !v || v <= 0,
+				isRequired: false,
+			},
+			{
+				name: "StaysOn",
+				value: this.customFields.StaysOn.value,
+				isMissing: (v) => v == null,
+				isRequired: false,
+			},
 		];
 	}
 
 	private timer: number = 0;
 
+	private activationGroup: CustomField<string>;
+	private activationCount: CustomField<number>;
+	private staysOn: CustomField<boolean>;
+	public isActive: boolean = true;
+
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields, "Cannon");
+
+		this.activationGroup = this.customFields.ActivationGroup;
+		this.activationCount = this.customFields.ActivationCount;
+		this.staysOn = this.customFields.StaysOn;
 	}
 
 	private shoot() {
@@ -86,6 +117,20 @@ export class Cannon extends Entity {
 	}
 
 	public handleBehaviour() {
+		if (this.activationGroup.doesExist && this.activationCount.doesExist) {
+			const currentState =
+				this.level?.activationStates.get(this.activationGroup.value!)! <
+				this.activationCount.value!;
+
+			if (!currentState) {
+				this.isActive = false;
+			} else if (!this.isActive && !this.staysOn.value!) {
+				this.isActive = true;
+			}
+		}
+
+		if (!this.isActive) return;
+
 		this.timer++;
 		if (this.timer >= this.customFields.Cooldown.value!) {
 			this.timer = 0;

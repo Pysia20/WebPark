@@ -456,60 +456,6 @@
 					"__worldY": -512
 				},
 				{
-					"__identifier": "Portal",
-					"__grid": [10,2],
-					"__pivot": [0,1],
-					"__tags": [],
-					"__tile": null,
-					"__smartColor": "#331043",
-					"iid": "60872790-bde0-11f1-b35e-3f745caee0cc",
-					"width": 64,
-					"height": 64,
-					"defUid": 48,
-					"px": [640,192],
-					"fieldInstances": [
-						{ "__identifier": "PortalGroup", "__type": "String", "__value": "John", "__tile": null, "defUid": 49, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["John"]
-						}] },
-						{ "__identifier": "ActivationGroup", "__type": "String", "__value": null, "__tile": null, "defUid": 66, "realEditorValues": [null] },
-						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 67, "realEditorValues": [] },
-						{ "__identifier": "StaysOn", "__type": "Bool", "__value": false, "__tile": null, "defUid": 68, "realEditorValues": [] }
-					],
-					"__worldX": 640,
-					"__worldY": -512
-				},
-				{
-					"__identifier": "Portal",
-					"__grid": [11,6],
-					"__pivot": [0,1],
-					"__tags": [],
-					"__tile": null,
-					"__smartColor": "#331043",
-					"iid": "85eea7e0-bde0-11f1-b35e-298c9a142413",
-					"width": 64,
-					"height": 64,
-					"defUid": 48,
-					"px": [704,448],
-					"fieldInstances": [
-						{ "__identifier": "PortalGroup", "__type": "String", "__value": "John", "__tile": null, "defUid": 49, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["John"]
-						}] },
-						{ "__identifier": "ActivationGroup", "__type": "String", "__value": "6", "__tile": null, "defUid": 66, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["6"]
-						}] },
-						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 67, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
-						{ "__identifier": "StaysOn", "__type": "Bool", "__value": true, "__tile": null, "defUid": 68, "realEditorValues": [{
-							"id": "V_Bool",
-							"params": [ true ]
-						}] }
-					],
-					"__worldX": 704,
-					"__worldY": -256
-				},
-				{
 					"__identifier": "SwitchButton",
 					"__grid": [11,10],
 					"__pivot": [0,1],
@@ -620,7 +566,16 @@
 							"params": ["Right"]
 						}] },
 						{ "__identifier": "Speed", "__type": "Int", "__value": 5, "__tile": null, "defUid": 56, "realEditorValues": [{ "id": "V_Int", "params": [5] }] },
-						{ "__identifier": "Cooldown", "__type": "Int", "__value": 60, "__tile": null, "defUid": 61, "realEditorValues": [{ "id": "V_Int", "params": [60] }] }
+						{ "__identifier": "Cooldown", "__type": "Int", "__value": 60, "__tile": null, "defUid": 61, "realEditorValues": [{ "id": "V_Int", "params": [60] }] },
+						{ "__identifier": "ActivationGroup", "__type": "String", "__value": "Cannon", "__tile": null, "defUid": 69, "realEditorValues": [{
+							"id": "V_String",
+							"params": ["Cannon"]
+						}] },
+						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 70, "realEditorValues": [] },
+						{ "__identifier": "StaysOn", "__type": "Bool", "__value": true, "__tile": null, "defUid": 71, "realEditorValues": [{
+							"id": "V_Bool",
+							"params": [ true ]
+						}] }
 					],
 					"__worldX": 192,
 					"__worldY": -448
@@ -637,9 +592,87 @@
 					"height": 16,
 					"defUid": 64,
 					"px": [448,512],
-					"fieldInstances": [{ "__identifier": "BouncePower", "__type": "Int", "__value": 500, "__tile": null, "defUid": 65, "realEditorValues": [{ "id": "V_Int", "params": [500] }] }],
+					"fieldInstances": [
+						{ "__identifier": "BouncePower", "__type": "Int", "__value": 500, "__tile": null, "defUid": 65, "realEditorValues": [{ "id": "V_Int", "params": [500] }] },
+						{ "__identifier": "ActivationGroup", "__type": "String", "__value": "6", "__tile": null, "defUid": 72, "realEditorValues": [{
+							"id": "V_String",
+							"params": ["6"]
+						}] },
+						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 73, "realEditorValues": [] },
+						{ "__identifier": "StaysOn", "__type": "Bool", "__value": true, "__tile": null, "defUid": 74, "realEditorValues": [{
+							"id": "V_Bool",
+							"params": [ true ]
+						}] }
+					],
 					"__worldX": 448,
 					"__worldY": -192
+				},
+				{
+					"__identifier": "Button",
+					"__grid": [5,5],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#FFA1A1",
+					"iid": "5b89cdf0-bde0-11f1-94b8-2709f7f36695",
+					"width": 64,
+					"height": 32,
+					"defUid": 8,
+					"px": [320,384],
+					"fieldInstances": [{ "__identifier": "ActivationGroup", "__type": "String", "__value": "Cannon", "__tile": null, "defUid": 18, "realEditorValues": [{
+						"id": "V_String",
+						"params": ["Cannon"]
+					}] }],
+					"__worldX": 320,
+					"__worldY": -320
+				},
+				{
+					"__identifier": "Portal",
+					"__grid": [0,11],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#331043",
+					"iid": "860c7490-bde0-11f1-94b8-87bfe6cfa303",
+					"width": 64,
+					"height": 64,
+					"defUid": 48,
+					"px": [0,768],
+					"fieldInstances": [
+						{ "__identifier": "PortalGroup", "__type": "String", "__value": "P1", "__tile": null, "defUid": 49, "realEditorValues": [{
+							"id": "V_String",
+							"params": ["P1"]
+						}] },
+						{ "__identifier": "ActivationGroup", "__type": "String", "__value": null, "__tile": null, "defUid": 66, "realEditorValues": [] },
+						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 67, "realEditorValues": [] },
+						{ "__identifier": "StaysOn", "__type": "Bool", "__value": false, "__tile": null, "defUid": 68, "realEditorValues": [] }
+					],
+					"__worldX": 0,
+					"__worldY": 64
+				},
+				{
+					"__identifier": "Portal",
+					"__grid": [16,8],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#331043",
+					"iid": "bd1692e0-bde0-11f1-94b8-ef17dc75372b",
+					"width": 64,
+					"height": 64,
+					"defUid": 48,
+					"px": [1024,576],
+					"fieldInstances": [
+						{ "__identifier": "PortalGroup", "__type": "String", "__value": "P1", "__tile": null, "defUid": 49, "realEditorValues": [{
+							"id": "V_String",
+							"params": ["P1"]
+						}] },
+						{ "__identifier": "ActivationGroup", "__type": "String", "__value": null, "__tile": null, "defUid": 66, "realEditorValues": [] },
+						{ "__identifier": "ActivationCount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 67, "realEditorValues": [] },
+						{ "__identifier": "StaysOn", "__type": "Bool", "__value": false, "__tile": null, "defUid": 68, "realEditorValues": [] }
+					],
+					"__worldX": 1024,
+					"__worldY": -128
 				}
 			]
 		},

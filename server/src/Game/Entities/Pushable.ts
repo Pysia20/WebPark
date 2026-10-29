@@ -36,7 +36,7 @@ export class Pushable extends Entity {
 
 	protected override onDownCollision(overlap: number, other: Entity) {}
 
-	public override handleBehaviour(l: Level) {
+	public override calculateVelocities() {
 		if (this.velocity.x > PUSHABLE_CONFIG.DRAG) {
 			this.velocity.x -= PUSHABLE_CONFIG.DRAG;
 		} else if (this.velocity.x < -PUSHABLE_CONFIG.DRAG) {
@@ -60,9 +60,6 @@ export class Pushable extends Entity {
 			-PUSHABLE_CONFIG.MAX_HORIZONTAL_SPEED,
 			PUSHABLE_CONFIG.MAX_HORIZONTAL_SPEED,
 		);
-
-		this.pos.x += this.velocity.x * (1 / CONFIG.TICKRATE);
-		this.pos.y += this.velocity.y * (1 / CONFIG.TICKRATE);
 
 		this.isGrounded = false;
 	}

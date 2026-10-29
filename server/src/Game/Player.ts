@@ -1,10 +1,9 @@
 import { PlayerInputs, Vector2 } from "@shared/commonModels";
 import { Entity } from "./Entity";
-import { COLLISION_MARGIN_Y, PLAYER_CONFIG } from "@shared/commonVariables";
+import { PLAYER_CONFIG } from "@shared/commonVariables";
 import { DummyEntityCustomFields } from "@shared/commonLevelModels";
 import { LOG } from "../Logger";
 import { clamp } from "../Global";
-import { BoorEnt } from "../../../client/src/Entities/Boor";
 
 export class Player extends Entity {
 	public nick: string;

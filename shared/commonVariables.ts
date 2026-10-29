@@ -33,7 +33,7 @@ export const ROOM_CONFIG = {
 };
 
 export const PUSHABLE_CONFIG = {
-	DRAG: 10,
+	DRAG: 45, // Player drag * 3 (I have no idea why but it works)
 	GRAVITY: 15,
 	MAX_HORIZONTAL_SPEED: 150,
 	MAX_VERTICAL_SPEED: 500,

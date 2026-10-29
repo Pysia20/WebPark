@@ -107,6 +107,7 @@ export abstract class Entity {
 		newSize.y -= COLLISION_MARGIN_Y / 2;
 
 		const { collidesX, collidesY } = Entity.isColliding(this, { pos: newPos, size: newSize });
+
 		if (collidesX && collidesY) {
 			const centerA = this.pos.x + this.size.x / 2;
 			const centerB = other.pos.x + other.size.x / 2;
@@ -130,7 +131,9 @@ export abstract class Entity {
 		newPos.x += COLLISION_MARGIN_X / 2;
 		const newSize = { ...other.size };
 		newSize.x -= COLLISION_MARGIN_X / 2;
+
 		const { collidesX, collidesY } = Entity.isColliding(this, { pos: newPos, size: newSize });
+
 		if (collidesX && collidesY) {
 			const centerA = this.pos.y + this.size.y / 2;
 			const centerB = other.pos.y + other.size.y / 2;
@@ -183,6 +186,10 @@ export abstract class Entity {
 		other.pos.y -= overlap;
 		if (other.velocity.y > 0) {
 			other.velocity.y = 0;
+
+			if (other.type == "Pushable") {
+				console.log("IOIOIOI: " + other.velocity.y);
+			}
 		}
 		other.setGrounded();
 	}
@@ -230,11 +237,6 @@ export abstract class Entity {
 			y: (a.size.y + b.size.y) / 2 - Math.abs(diff.y),
 		};
 
-		const relativeVelocity: Vector2 = {
-			x: a.velocity.x - b.velocity.x,
-			y: a.velocity.y - b.velocity.y,
-		};
-
 		if (overlap.x < overlap.y) {
 			if (diff.x > 0) {
 				// Pushing out to the right
@@ -258,13 +260,10 @@ export abstract class Entity {
 				b.isPushing = true;
 			}
 
-			const averageVelocity: Vector2 = {
-				x: (a.velocity.x + b.velocity.x) / 2,
-				y: 0,
-			};
+			const relativeVelocityX = (a.velocity.x - b.velocity.x) / 2;
 
-			a.velocityStack.push(averageVelocity);
-			b.velocityStack.push(averageVelocity);
+			a.velocityStack.push({ x: -relativeVelocityX, y: 0 });
+			b.velocityStack.push({ x: relativeVelocityX, y: 0 });
 		} else {
 			if (diff.y > 0) {
 				if (a.isGrounded) {
@@ -314,6 +313,11 @@ export abstract class Entity {
 	public handleBehaviour(level: Level) {}
 
 	public endTick() {
+		this.velocityStack.forEach((v) => {
+			this.velocity.x += v.x;
+			this.velocity.y += v.y;
+		});
+
 		this.velocityStack = [];
 	}
 

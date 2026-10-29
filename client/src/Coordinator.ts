@@ -20,8 +20,8 @@ class Coordinator {
             if (!this.players.has(data.playerID)) {
                 const YOUid = Number(sessionStorage.getItem("userID")!)
                 const isMe = (YOUid == data.playerID)
-                const nickColor: string = isMe ? PLAYER_VISUAL_CONFIG.NICK_ME_COLOR : PLAYER_VISUAL_CONFIG.NICK_COLOR
-                const nick: PixiText = new PixiText({text: data.nick, style: {fill: nickColor, fontSize: PLAYER_VISUAL_CONFIG.NICK_FONT_SIZE}, resolution: 2})
+                const nickColor: string = isMe ? PLAYER_VISUAL_CONFIG.NICK.ME_COLOR : PLAYER_VISUAL_CONFIG.NICK.COLOR
+                const nick: PixiText = new PixiText({text: data.nick, style: {fill: nickColor, fontSize: PLAYER_VISUAL_CONFIG.NICK.FONT_SIZE}, resolution: 2})
                 nick.anchor.set(0.5,1)
 
                 const newPlayer = new Player(data.playerID, data.color, nick, this.playerTextures, isMe);

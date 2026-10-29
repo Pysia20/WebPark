@@ -138,8 +138,6 @@ export class Eye {
             this.blinkTimer = 1
         }
 
-     //   console.log(this.isMe + ": " + cursorPos.x +"  "+cursorPos.y)
-
         if (mousePos.x == 0 && mousePos.y == 0) {
             lerpTheyThem(this.lookOffset, target, this.LERP_SPEED)
             return;

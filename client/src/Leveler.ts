@@ -132,6 +132,12 @@ class levelManager {
 				this.ents[Number(entId)] = newEnt
 			}
 		}
+
+		if (Object.keys(ents) != Object.keys(this.ents)) {
+			for (const entsKey in this.ents) {
+				if (!Object.keys(ents).includes(entsKey)) this.ents[entsKey].beGone(this.world)
+			}
+		}
 	}
 }
 

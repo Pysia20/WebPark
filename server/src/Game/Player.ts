@@ -193,30 +193,44 @@ export class Player extends Entity {
 	public getPlayersBehind(direction: 1 | -1, players: Player[]): Player[] {
 		let theList: Player[] = [this];
 
+		if (
+			(direction == 1 && !this.currentInputs.right) ||
+			(direction == -1 && !this.currentInputs.left)
+		) {
+			return [];
+		}
 		const maxXDiffrence = PLAYER_CONFIG.WIDTH + 5;
-		const maxYDiffrence = PLAYER_CONFIG.HEIGHT;
+		const maxYDiffrence = PLAYER_CONFIG.HEIGHT / 4;
 
 		for (let i = 0; i < theList.length; i++) {
 			const currentInList = theList[i];
-			for (let j = 0; i < players.length; i++) {
+			for (let j = 0; j < players.length; j++) {
 				const player = players[j];
+
 				if (theList.includes(player)) continue;
 				if (currentInList == player) continue;
 
 				const correctSide =
-					(direction == 1 && player.pos.x >= currentInList.pos.x) ||
-					(direction == -1 && player.pos.x <= currentInList.pos.x);
+					(direction == -1 && player.pos.x >= currentInList.pos.x) ||
+					(direction == 1 && player.pos.x <= currentInList.pos.x);
 
 				const isBehind =
 					Math.abs(player.pos.x - currentInList.pos.x) <= maxXDiffrence &&
-					correctSide &&
 					Math.abs(player.pos.y - currentInList.pos.y) <= maxYDiffrence;
 
 				const isPlayerGoingTowards =
 					(direction == 1 && player.currentInputs.right) ||
 					(direction == -1 && player.currentInputs.left);
 
-				if (isBehind && isPlayerGoingTowards) {
+				// if (player.nick != "John") {
+				// 	console.log(`side: ${correctSide}`); // this
+				// 	console.log(`behind: ${isBehind}`); // this
+				// 	console.log(`going: ${isPlayerGoingTowards}`);
+				// 	console.log(`Going right ${direction == 1 && player.currentInputs.right}`);
+				// 	console.log(`Going ;eft ${direction == -1 && player.currentInputs.left}`);
+				// }
+
+				if (isBehind && isPlayerGoingTowards && correctSide) {
 					theList.push(player);
 				}
 			}

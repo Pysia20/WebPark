@@ -124,7 +124,7 @@
 					"height": 64,
 					"defUid": 24,
 					"px": [704,192],
-					"fieldInstances": [{ "__identifier": "Mass", "__type": "Int", "__value": 1, "__tile": null, "defUid": 47, "realEditorValues": [{ "id": "V_Int", "params": [1] }] }],
+					"fieldInstances": [{ "__identifier": "Mass", "__type": "Int", "__value": 2, "__tile": null, "defUid": 47, "realEditorValues": [{ "id": "V_Int", "params": [2] }] }],
 					"__worldX": 704,
 					"__worldY": -512
 				},

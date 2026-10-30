@@ -127,10 +127,13 @@ export class Level {
 		});
 	}
 
+	private staticCollisionsCheck() {}
+
 	public physicsUpdate() {
 		// WHAT SHOULD BE HAPPENING
 		// 1. CALCULATE FORCES
 		this.entities.forEach((e) => e.calculateVelocities());
+
 		// 2. Move Axis 1
 		this.entities.forEach((e) => e.moveXAxis());
 
@@ -166,6 +169,20 @@ export class Level {
 				Entity.handleDynamicCollision(a, b);
 			}
 		}
+
+		this.entities.forEach((e) => {
+			this.entities.forEach((other) => {
+				if (other == e) return;
+				e.calculateCollisionsX(other);
+			});
+		});
+
+		this.entities.forEach((e) => {
+			this.entities.forEach((other) => {
+				if (other == e) return;
+				e.calculateCollisionsY(other);
+			});
+		});
 
 		// 6. Other behaviour
 

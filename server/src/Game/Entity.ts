@@ -256,12 +256,12 @@ export abstract class Entity {
 				b.isPushing = true;
 			}
 
-			const relativeVelocityX = ((a.velocity.x - b.velocity.x) * 4) / 5;
+			const relativeVelocityX = ((a.velocity.x - b.velocity.x) * 2) / 5;
 
 			// Average seems better, try with other players
 			const avergageSign = Math.sign(a.velocity.x * b.velocity.x);
 			const averageVelocity =
-				((Math.abs(a.velocity.x) + Math.abs(b.velocity.y)) / 2) * avergageSign;
+				((Math.abs(a.velocity.x) + Math.abs(b.velocity.y)) / 4) * avergageSign;
 
 			a.velocityStack.push({ x: -averageVelocity, y: 0 });
 			b.velocityStack.push({ x: averageVelocity, y: 0 });

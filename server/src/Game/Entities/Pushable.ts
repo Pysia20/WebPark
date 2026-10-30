@@ -31,7 +31,6 @@ export class Pushable extends Entity {
 
 	protected override onRightCollision(overlap: number, other: Entity) {
 		// console.log("RIght");
-
 		if (other instanceof Player) {
 			const len = other.getPlayersBehind(1, [...this.level!.room.players.values()]).length;
 
@@ -50,6 +49,8 @@ export class Pushable extends Entity {
 			const len = other.getPlayersBehind(-1, [...this.level!.room.players.values()]).length;
 
 			this.isDynamic = len >= this.customFields.Mass.value!;
+
+			// console.log(len);
 		}
 
 		if (!this.isDynamic) {

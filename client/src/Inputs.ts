@@ -73,7 +73,6 @@ export function startSendingInputs() {
         if (mouseMoved || keysPressed) {
             emitInputs(dataToSend)
             previousSent = { ...dataToSend, cursorPos: { ...dataToSend.cursorPos}}
-            console.log("sent")
         }
     }, (1000 / CLIENT_CONFIG.UPDATE_RATE))
 }

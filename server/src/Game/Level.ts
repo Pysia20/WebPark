@@ -127,8 +127,6 @@ export class Level {
 		});
 	}
 
-	private staticCollisionsCheck() {}
-
 	public physicsUpdate() {
 		// WHAT SHOULD BE HAPPENING
 		// 1. CALCULATE FORCES

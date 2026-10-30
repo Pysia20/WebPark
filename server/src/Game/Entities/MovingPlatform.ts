@@ -6,9 +6,10 @@ import {
 	EntityCustomFieldsData,
 	EntityType,
 } from "@shared/commonLevelModels";
-import { WORLD_CONFIG } from "@shared/commonVariables";
+import { PLAYER_CONFIG, WORLD_CONFIG } from "@shared/commonVariables";
 import { clamp, RequiredField } from "../../Global";
 import { Entity } from "../Entity";
+import CONFIG from "../../../config.json";
 
 export class MovingPlatform extends Entity {
 	public override type: EntityType = "MovingPlatform";
@@ -69,6 +70,7 @@ export class MovingPlatform extends Entity {
 
 	private isActivated: boolean = true;
 	private changedThisTick: boolean = false;
+	private thingsStanding: Entity[] = [];
 
 	constructor(pos: Vector2, size: Vector2, customFields: EntityCustomFieldsData) {
 		super(pos, size, customFields, "MovingPlatform");
@@ -92,6 +94,16 @@ export class MovingPlatform extends Entity {
 			this.endPos.y -= this.customFields.Distance.value! * WORLD_CONFIG.CELL_SIZE;
 		else if (customFields.Direction.value == "Down")
 			this.endPos.y += this.customFields.Distance.value! * WORLD_CONFIG.CELL_SIZE;
+	}
+
+	protected override onUpCollision(overlap: number, other: Entity) {
+		super.onUpCollision(overlap, other);
+
+		if (!this.thingsStanding.includes(other)) this.thingsStanding.push(other);
+	}
+
+	protected override onUpTouching(other: Entity) {
+		if (!this.thingsStanding.includes(other)) this.thingsStanding.push(other);
 	}
 
 	public override handleBehaviour(l: Level) {
@@ -140,6 +152,13 @@ export class MovingPlatform extends Entity {
 			? DirectionOppositeMap[this.customFields.Direction.value!]
 			: this.customFields.Direction.value!;
 
+		this.thingsStanding.forEach((e) => {
+			if (currentDirection == "Left") e.pos.x -= this.speed;
+			else if (currentDirection == "Right") e.pos.x += this.speed;
+			else if (currentDirection == "Up") e.pos.y -= this.speed;
+			else if (currentDirection == "Down") e.pos.y += this.speed;
+		});
+
 		if (currentDirection == "Left") this.pos.x -= this.speed;
 		else if (currentDirection == "Right") this.pos.x += this.speed;
 		else if (currentDirection == "Up") this.pos.y -= this.speed;
@@ -166,6 +185,8 @@ export class MovingPlatform extends Entity {
 				this.timer = 0;
 			}
 		}
+
+		this.thingsStanding = [];
 	}
 
 	public override clone() {

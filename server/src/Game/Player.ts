@@ -199,8 +199,11 @@ export class Player extends Entity {
 		) {
 			return [];
 		}
+
+		this.isPushing = true;
+
 		const maxXDiffrence = PLAYER_CONFIG.WIDTH + 5;
-		const maxYDiffrence = PLAYER_CONFIG.HEIGHT / 4;
+		const maxYDiffrence = PLAYER_CONFIG.HEIGHT / 2;
 
 		for (let i = 0; i < theList.length; i++) {
 			const currentInList = theList[i];
@@ -232,6 +235,8 @@ export class Player extends Entity {
 
 				if (isBehind && isPlayerGoingTowards && correctSide) {
 					theList.push(player);
+
+					player.isPushing = true;
 				}
 			}
 		}

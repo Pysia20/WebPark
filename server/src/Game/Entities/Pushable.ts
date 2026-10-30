@@ -35,10 +35,9 @@ export class Pushable extends Entity {
 			const len = other.getPlayersBehind(1, [...this.level!.room.players.values()]).length;
 
 			this.isDynamic = len >= this.customFields.Mass.value!;
-		}
-
-		if (!this.isDynamic) {
-			super.onRightCollision(overlap, other);
+			if (!this.isDynamic) {
+				super.onRightCollision(overlap, other);
+			}
 		}
 	}
 
@@ -51,19 +50,18 @@ export class Pushable extends Entity {
 			this.isDynamic = len >= this.customFields.Mass.value!;
 
 			// console.log(len);
-		}
-
-		if (!this.isDynamic) {
-			super.onLeftCollision(overlap, other);
+			if (!this.isDynamic) {
+				super.onLeftCollision(overlap, other);
+			}
 		}
 	}
 
 	protected override onUpCollision(overlap: number, other: Entity) {
-		if (!this.isDynamic) super.onUpCollision(overlap, other);
+		if (!this.isDynamic && other instanceof Player) super.onUpCollision(overlap, other);
 	}
 
 	protected override onDownCollision(overlap: number, other: Entity) {
-		if (!this.isDynamic) super.onDownCollision(overlap, other);
+		if (!this.isDynamic && other instanceof Player) super.onDownCollision(overlap, other);
 	}
 
 	public override calculateVelocities() {

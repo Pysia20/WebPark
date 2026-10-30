@@ -206,6 +206,20 @@ export abstract class Entity {
 		other.setGrounded();
 	}
 
+	private static checkPushing(a: Entity, b: Entity) {
+		const aVelocityX = Math.abs(a.velocity.x);
+		const bVelocityX = Math.abs(b.velocity.x);
+
+		if (aVelocityX > bVelocityX) {
+			a.isPushing = true;
+		} else if (aVelocityX < bVelocityX) {
+			b.isPushing = true;
+		} else {
+			a.isPushing = true;
+			b.isPushing = true;
+		}
+	}
+
 	// DYNAMIC COLLISIONS
 	public static handleDynamicCollision(a: Entity, b: Entity) {
 		if (a == b) return;
@@ -238,22 +252,12 @@ export abstract class Entity {
 				// Pushing out to the right
 				a.pos.x += overlap.x / 2;
 				b.pos.x -= overlap.x / 2;
+				Entity.checkPushing(a, b);
 			} else {
 				// Pushing out to the left
 				a.pos.x -= overlap.x / 2;
 				b.pos.x += overlap.x / 2;
-			}
-
-			const aVelocityX = Math.abs(a.velocity.x);
-			const bVelocityX = Math.abs(b.velocity.x);
-
-			if (aVelocityX > bVelocityX) {
-				a.isPushing = true;
-			} else if (aVelocityX < bVelocityX) {
-				b.isPushing = true;
-			} else {
-				a.isPushing = true;
-				b.isPushing = true;
+				Entity.checkPushing(a, b);
 			}
 
 			const relativeVelocityX = ((a.velocity.x - b.velocity.x) * 2) / 5;

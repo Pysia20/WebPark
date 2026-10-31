@@ -4,6 +4,7 @@ import { EntityCustomFieldsData } from "@shared/commonLevelModels";
 import { RequiredField } from "../../Global";
 import { Entity } from "../Entity";
 import { ServerLaserEntityData } from "@shared/commonEntityData";
+import { Player } from "../Player";
 
 //! DO NOT IMPORT!!!
 //? IT IS A TEMPLATE FOR CREATING NEW ENTITY TYPES
@@ -50,8 +51,10 @@ export class Laser extends Entity {
 	private shouldKill: boolean = false;
 	private isActivated: boolean = true;
 
-	public override onAnyCollision() {
-		this.shouldKill = true;
+	public override onAnyCollision(other: Entity) {
+		if (other instanceof Player) {
+			this.shouldKill = true;
+		}
 	}
 
 	protected override onRightCollision(overlap: number, other: Entity) {}

@@ -245,4 +245,5 @@ export type EntityType =
 	| "SwitchButton"
 	| "Cannon"
 	| "CannonProjectile"
-	| "BouncePad";
+	| "BouncePad"
+	| "WeepingAngel";

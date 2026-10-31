@@ -23,6 +23,7 @@ import { SwitchButton } from "./SwitchButton";
 import { Cannon } from "./Cannon";
 import { CannonProjectile } from "./CannonProjectile";
 import { BouncePad } from "./BouncePad";
+import { WeepingAngel } from "./WeepingAngel";
 
 type EntityConstructor = new (pos: any, size: any, customFields: any) => Entity;
 
@@ -52,6 +53,7 @@ export class EntityBuilder {
 		Cannon: Cannon,
 		CannonProjectile: CannonProjectile,
 		BouncePad: BouncePad,
+		WeepingAngel: WeepingAngel,
 	};
 
 	constructor(type: EntityType) {

@@ -597,22 +597,6 @@
 					"__worldY": -128
 				},
 				{
-					"__identifier": "Pushable",
-					"__grid": [11,6],
-					"__pivot": [0,1],
-					"__tags": [],
-					"__tile": null,
-					"__smartColor": "#7C7C7C",
-					"iid": "eae94ce0-bde0-11f1-804d-83d559bea3de",
-					"width": 64,
-					"height": 64,
-					"defUid": 24,
-					"px": [704,448],
-					"fieldInstances": [{ "__identifier": "Mass", "__type": "Int", "__value": 2, "__tile": null, "defUid": 47, "realEditorValues": [{ "id": "V_Int", "params": [2] }] }],
-					"__worldX": 704,
-					"__worldY": -256
-				},
-				{
 					"__identifier": "MovingPlatform",
 					"__grid": [5,4],
 					"__pivot": [0,1],
@@ -638,6 +622,22 @@
 					],
 					"__worldX": 320,
 					"__worldY": -384
+				},
+				{
+					"__identifier": "WeepingAngel",
+					"__grid": [13,6],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#606060",
+					"iid": "9b583060-bde0-11f1-b3e6-8194ebf182c3",
+					"width": 64,
+					"height": 64,
+					"defUid": 75,
+					"px": [832,448],
+					"fieldInstances": [{ "__identifier": "Speed", "__type": "Int", "__value": 2, "__tile": null, "defUid": 76, "realEditorValues": [{ "id": "V_Int", "params": [2] }] }],
+					"__worldX": 832,
+					"__worldY": -256
 				}
 			]
 		},

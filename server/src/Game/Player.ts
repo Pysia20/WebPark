@@ -59,6 +59,8 @@ export class Player extends Entity {
 
 	protected override onDownCollision(overlap: number, other: Entity) {}
 
+	protected override onUpTouching(other: Entity) {}
+
 	public checkJumpBuffering(other: Entity) {
 		if (!this.currentInputs.jump || this.isGrounded || this.velocity.y <= 0) return;
 

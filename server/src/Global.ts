@@ -2,6 +2,7 @@ import { EntityCustomField } from "@shared/commonLevelModels";
 import { Room } from "./Game/Room";
 import v8 from "node:v8";
 import vm from "node:vm";
+import { Vector2 } from "@shared/commonModels";
 
 export const games: Map<string, Room> = new Map<string, Room>();
 
@@ -67,3 +68,10 @@ export function forceGC() {
 }
 
 // garbageRegistry.register(this, id);
+
+export function getDistance(a: Vector2, b: Vector2) {
+	const xDiff = Math.abs(a.x - b.x);
+	const yDiff = Math.abs(a.y - b.y);
+
+	return Math.sqrt(xDiff ** 2 + yDiff ** 2);
+}

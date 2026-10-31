@@ -15,6 +15,7 @@ import { LOG } from "../../Logger";
 export class WeepingAngel extends Entity {
 	private target: Player | null = null;
 	private readonly speed: number;
+	public isWatched: boolean = false;
 
 	public override getUsedFields(): RequiredField[] {
 		return [
@@ -43,7 +44,16 @@ export class WeepingAngel extends Entity {
 
 	protected override onUpTouching(other: Entity) {}
 
+	private isCursorOver(cursorPos: Vector2) {
+		const overX = this.pos.x <= cursorPos.x && cursorPos.x <= this.pos.x + this.size.x;
+		const overY = this.pos.y <= cursorPos.y && cursorPos.y <= this.pos.y + this.size.y;
+
+		return overX && overY;
+	}
+
 	public handleBehaviour() {
+		this.isWatched = false;
+
 		const players = [...this.level!.room.players.values()];
 
 		let closestDistance = Infinity;
@@ -56,6 +66,10 @@ export class WeepingAngel extends Entity {
 				closestDistance = distance;
 				closestPlayer = p;
 			}
+
+			if (this.isCursorOver(p.currentInputs.cursorPos)) {
+				this.isWatched = true;
+			}
 		});
 
 		if (!closestPlayer) {
@@ -63,6 +77,8 @@ export class WeepingAngel extends Entity {
 			return;
 		}
 		this.target = closestPlayer;
+
+		if (this.isWatched) return;
 
 		const v: Vector2 = { x: this.target.pos.x - this.pos.x, y: this.target.pos.y - this.pos.y };
 		const magnitude = Math.sqrt(v.x ** 2 + v.y ** 2);

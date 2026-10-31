@@ -1,6 +1,7 @@
 import { Vector2 } from "@shared/commonModels";
+import { Level } from "./Level";
 
-// Code heavly inspired by Sebastians League A* Pathfinding tutorial
+// Code heavly inspired by Sebastians Lague A* Pathfinding tutorial
 // https://www.youtube.com/watch?v=mZfyt03LDH4&list=PLFt_AvWsXl0cq5Umv3pMC9SPnKjfp9eGW&index=4
 
 export class Node {
@@ -30,31 +31,55 @@ export class Node {
 
 export class Grid {
 	public grid: Node[][] = [];
-	private start: Vector2 | undefined;
-	private end: Vector2 | undefined;
 	public path: Node[] = [];
 
-	public genrateRandomGrid(x: number, y: number, start: Vector2, end: Vector2) {
-		this.grid = [];
+	public generateGridOfLevel(level: Level) {
+		const width = level.width;
+		const height = level.height;
 
-		this.start = { ...start };
-		this.end = { ...end };
+		for (let i = 0; i < height; i++) {
+			this.grid.push([]);
+			for (let j = 0; j < width; j++) {
+				let node = new Node(j, i, false);
+				this.grid[i][j] = node;
+			}
+		}
+
+		level.entities.forEach((e) => {
+			const entityWidth = Math.round(e.size.x / 64);
+			const entityHeight = Math.round(e.size.y / 64);
+
+			for (let i = 0; i < entityHeight; i++) {
+				for (let j = 0; j < entityWidth; j++) {
+					const entityX = Math.floor(e.pos.x / 64);
+					const entityY = Math.floor(e.pos.y / 64);
+
+					const entityNode = this.grid[entityY + i][entityX + j];
+
+					entityNode.isWall = e.isPassable;
+					entityNode.type = "Wall";
+
+					if (e.type == "WeepingAngel") {
+						entityNode.type = "Start";
+					}
+					if (e.type == "Player") {
+						entityNode.type = "End";
+					}
+				}
+			}
+		});
+
+		this.print();
+	}
+
+	public genrateRandomGrid(x: number, y: number) {
+		this.grid = [];
 
 		for (let i = 0; i < y; i++) {
 			this.grid.push([]);
 			for (let j = 0; j < x; j++) {
 				let isWall = Boolean(Math.round(Math.random() - 0.15));
 				let node = new Node(j, i, isWall);
-
-				if (j == start.x && i == start.y) {
-					node.isWall = false;
-					node.type = "Start";
-				}
-
-				if (j == end.x && i == end.y) {
-					node.isWall = false;
-					node.type = "End";
-				}
 
 				this.grid[i][j] = node;
 			}
@@ -97,9 +122,14 @@ export class Grid {
 		return neighbours;
 	}
 
-	public pathFind() {
-		const startNode = this.grid[this.start!.y][this.start!.x];
-		const endNode = this.grid[this.end!.y][this.end!.x];
+	public pathFind(start: Vector2, end: Vector2) {
+		const startNode = this.grid[start.y][start.x];
+		const endNode = this.grid[end.y][end.x];
+
+		startNode.type = "Start";
+		startNode.isWall = false;
+		endNode.type = "End";
+		endNode.isWall = false;
 
 		const openSet: Node[] = []; // To be processed
 		const closedSet: Node[] = []; // Already processed

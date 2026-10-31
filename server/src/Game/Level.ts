@@ -5,6 +5,7 @@ import { LOG } from "../Logger";
 import { Entity } from "./Entity";
 import { MapCollider } from "./Entities/MapCollider";
 import { Portal } from "./Entities/Portal";
+import { Grid } from "./Pathfinding";
 
 export class Level {
 	public readonly levelTemplate: LevelTemplate;
@@ -111,6 +112,13 @@ export class Level {
 		this.entities.forEach((e) => e.init());
 
 		this.room.sendLevelReloaded();
+
+		console.log(this.getID());
+		if (this.getID() == "Level_0") {
+			const grid = new Grid();
+
+			grid.generateGridOfLevel(this);
+		}
 	}
 
 	public getColliders(): MapCollider[] {

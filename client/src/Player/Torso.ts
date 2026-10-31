@@ -18,6 +18,7 @@ export class Torso {
         this.sprite.setSize(PLAYER_CONFIG.WIDTH, PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.TORSO.HEIGHT_RATIO)
         this.sprite.anchor.set(0.5, 1.0)
     }
+
     updateTorso(pos: Vector2, velocity: Vector2, isPushing: boolean) {
         this.sprite.position.set(pos.x + (PLAYER_CONFIG.WIDTH / 2), pos.y + (PLAYER_CONFIG.HEIGHT * PLAYER_VISUAL_CONFIG.TORSO.HEIGHT_RATIO))
         if (velocity.x != 0) this.sign = Math.sign(velocity.x)

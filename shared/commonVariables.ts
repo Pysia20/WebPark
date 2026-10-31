@@ -57,11 +57,15 @@ VISUAL		VISUAL		VISUAL		VISUAL
  */
 
 export const PLAYER_VISUAL_CONFIG = {
+	/** Default lerp */
 	LERP: 0.3,
 
 	TORSO: {
+		/** Torso height % relative to the whole player */
 		HEIGHT_RATIO: 0.9,
+		/** How strongly can te torso lean */
 		LEAN: 3,
+		/** ow strong can the torso lean while pushing */
 		PUSH_LEAN_RATIO: 0.2,
 
 		LERP: 0.3,
@@ -69,14 +73,19 @@ export const PLAYER_VISUAL_CONFIG = {
 
 	LEG: {
 		STROKE_WIDTH: 3,
+		/** Leg length relative tp total player height */
 		LENGTH_RATIO: 0.125,
 		MAX_STRETCH: 24,
+		/** Leg lift amount relative to total player height  */
 		LIFT_RATIO: 0.095,
+		/**  how much do the legs lag behind*/
 		DRAG: 0.01,
 
 		STEP: 16,
 		STEP_SPEED: 0.15,
+		/** Min step position, so the leg doesn't step behind the hip */
 		STEP_MIN_OFFSET_RATIO: 0.08,
+		/** ow much the leg is nudged if it will be placed behind the hip */
 		STEP_NUDGE_RATIO: 0.09,
 
 		HIP_Y_OFFSET_RATIO: 0.9,
@@ -91,10 +100,12 @@ export const PLAYER_VISUAL_CONFIG = {
 		STROKE_WIDTH: 5,
 		Y_OFFSET_RATIO: 0.2,
 		X_OFFSET_RATIO: 0.25,
-		SNAP_THRESHOLD: 3,
 		SQUINT: 40,
+		/** Eye offset while moving */
 		LOOK_OFFSET_RATIO: 0.1,
+		/** Eye offset while not moving */
 		X_LOOK: 1.8,
+		/** Eye offset while not moving */
 		Y_LOOK: 1.6,
 
 		PUSH_SQUINT_LERP_MAX: 0.35,
@@ -133,10 +144,12 @@ export const ENTITY_VISUAL_CONFIG = {
 	},
 
 	LASER: {
-		AMPLITUDE: 25, //~30 == one block (64px)
+        /** ~30 == one block (64px) */
+		AMPLITUDE: 25,
 		FREQUENCY: 0.25,
 		OFFSET: 0.5,
-		STEP: 28, //kind of like quality? length / STEP
+		/** kind of like quality? length / STEP */
+		STEP: 28,
 		JITTER: 30,
 		WIDTH: 4,
 		COLOR: "#ff0000",

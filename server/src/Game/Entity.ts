@@ -20,6 +20,7 @@ export abstract class Entity {
 	public velocityStack: Vector2[] = [];
 	public isPushing: boolean = false;
 	public isPassable: boolean = false;
+	public isPhantom: boolean = false;
 
 	public getUsedFields(): RequiredField[] {
 		return [];
@@ -173,37 +174,47 @@ export abstract class Entity {
 	}
 
 	protected onRightCollision(overlap: number, other: Entity) {
-		other.pos.x -= overlap;
-		other.velocity.x = 0;
+		if (!other.isPhantom) {
+			other.pos.x -= overlap;
+			other.velocity.x = 0;
+		}
 	}
 
 	protected onLeftCollision(overlap: number, other: Entity) {
-		other.pos.x += overlap;
-		other.velocity.x = 0;
+		if (!other.isPhantom) {
+			other.pos.x += overlap;
+			other.velocity.x = 0;
+		}
 	}
 
 	protected onUpCollision(overlap: number, other: Entity) {
-		other.pos.y -= overlap;
-		if (other.velocity.y > 0) {
-			other.velocity.y = 0;
+		if (!other.isPhantom) {
+			other.pos.y -= overlap;
+			if (other.velocity.y > 0) {
+				other.velocity.y = 0;
+			}
+			other.setGrounded();
 		}
-		other.setGrounded();
 	}
 
 	protected onDownCollision(overlap: number, other: Entity) {
-		other.pos.y += overlap;
-		if (other.velocity.y < 0) {
-			other.velocity.y = 0;
+		if (!other.isPhantom) {
+			other.pos.y += overlap;
+			if (other.velocity.y < 0) {
+				other.velocity.y = 0;
+			}
 		}
 	}
 
 	public onAnyCollision(other: Entity) {}
 
 	protected onUpTouching(other: Entity): void {
-		if (other.velocity.y > 0) {
-			other.velocity.y = 0;
+		if (!other.isPhantom) {
+			if (other.velocity.y > 0) {
+				other.velocity.y = 0;
+			}
+			other.setGrounded();
 		}
-		other.setGrounded();
 	}
 
 	private static checkPushing(a: Entity, b: Entity) {

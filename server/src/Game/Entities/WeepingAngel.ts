@@ -4,6 +4,7 @@ import { EntityCustomFieldsData } from "@shared/commonLevelModels";
 import { getDistance, RequiredField } from "../../Global";
 import { Player } from "../Player";
 import { LOG } from "../../Logger";
+import { PLAYER_CONFIG } from "@shared/commonVariables";
 
 //! DO NOT IMPORT!!!
 //? IT IS A TEMPLATE FOR CREATING NEW ENTITY TYPES
@@ -32,6 +33,7 @@ export class WeepingAngel extends Entity {
 		super(pos, size, customFields, "WeepingAngel");
 
 		this.speed = customFields.Speed.value!;
+		this.isPhantom = true;
 	}
 
 	protected override onRightCollision(overlap: number, other: Entity) {}
@@ -51,8 +53,19 @@ export class WeepingAngel extends Entity {
 		return overX && overY;
 	}
 
-	public handleBehaviour() {
+	public override handleBehaviour() {
+		const players = [...this.level!.room.players.values()];
 		this.isWatched = false;
+
+		players.forEach((p) => {
+			if (this.isCursorOver(p.currentInputs.cursorPos)) {
+				this.isWatched = true;
+			}
+		});
+	}
+
+	public override endTick() {
+		if (this.isWatched) return;
 
 		const players = [...this.level!.room.players.values()];
 
@@ -62,13 +75,9 @@ export class WeepingAngel extends Entity {
 		players.forEach((p) => {
 			const distance = getDistance(p.pos, this.pos);
 
-			if (closestDistance > distance) {
+			if (closestDistance > distance && !p.isInsideDoor) {
 				closestDistance = distance;
 				closestPlayer = p;
-			}
-
-			if (this.isCursorOver(p.currentInputs.cursorPos)) {
-				this.isWatched = true;
 			}
 		});
 
@@ -78,9 +87,21 @@ export class WeepingAngel extends Entity {
 		}
 		this.target = closestPlayer;
 
-		if (this.isWatched) return;
+		const thisPos: Vector2 = { ...this.pos };
+		thisPos.x = Math.round(thisPos.x / 64);
+		thisPos.y = Math.round(thisPos.y / 64);
 
-		const v: Vector2 = { x: this.target.pos.x - this.pos.x, y: this.target.pos.y - this.pos.y };
+		const otherPos: Vector2 = { ...this.target.pos };
+		otherPos.x = Math.round(otherPos.x / 64);
+		otherPos.y = Math.round((otherPos.y + (PLAYER_CONFIG.HEIGHT - 64)) / 64);
+
+		const path = this.level?.grid.pathFind(thisPos, otherPos);
+
+		if (path?.length == 0 || !path) return;
+
+		const target: Vector2 = { x: path![0].x * 64, y: path![0].y * 64 };
+
+		const v: Vector2 = { x: target.x - this.pos.x, y: target.y - this.pos.y };
 		const magnitude = Math.sqrt(v.x ** 2 + v.y ** 2);
 		const normalizedV: Vector2 = { x: v.x / magnitude, y: v.y / magnitude };
 
@@ -91,6 +112,12 @@ export class WeepingAngel extends Entity {
 
 		this.pos.x += movementVector.x;
 		this.pos.y += movementVector.y;
+	}
+
+	public override onAnyCollision(other: Entity) {
+		if (other instanceof Player) {
+			this.level!.shouldRestart = true;
+		}
 	}
 
 	public clone() {

@@ -19,6 +19,7 @@ export class Level {
 	public spawners: PlayerSpawner[] = [];
 	public portals = new Map<string, [Portal | undefined, Portal | undefined]>();
 	public nextEntityID = 0;
+	public grid: Grid = new Grid();
 
 	public room: Room;
 	public shouldRestart: boolean = false;
@@ -112,13 +113,6 @@ export class Level {
 		this.entities.forEach((e) => e.init());
 
 		this.room.sendLevelReloaded();
-
-		console.log(this.getID());
-		if (this.getID() == "Level_0") {
-			const grid = new Grid();
-
-			grid.generateGridOfLevel(this);
-		}
 	}
 
 	public getColliders(): MapCollider[] {
@@ -198,6 +192,8 @@ export class Level {
 			this.shouldRestart = false;
 			this.reloadLevel();
 		}
+
+		this.grid.generateGridOfLevel(this);
 
 		this.entities.forEach((e) => e.endTick());
 	}

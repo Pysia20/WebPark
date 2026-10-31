@@ -7,11 +7,11 @@ import { Level } from "./Level";
 export class Node {
 	public g: number = 0; // Distance from start
 	public h: number = 0; // Distance from end
-	public type: "Start" | "End" | "Wall" | undefined;
-	public parent: Node | undefined;
+	public type: "Start" | "End" | "Wall" | undefined; // Purely visual when printing the grid, doesn't impact anything
+	public parent: Node | undefined; // If is a part of path, the preceding element
 	public isInPath: boolean = false;
 
-	public readonly f = () => this.g + this.h;
+	public readonly f = () => this.g + this.h; // Suom of distances
 
 	constructor(
 		public readonly x: number,
@@ -34,6 +34,8 @@ export class Grid {
 	public path: Node[] = [];
 
 	public generateGridOfLevel(level: Level) {
+		this.grid = [];
+
 		const width = level.width;
 		const height = level.height;
 
@@ -45,9 +47,14 @@ export class Grid {
 			}
 		}
 
+		// It would be possible to make it higher resolution, but im not sure if it would be efficient enough
+		// I mean it could be optimized
+
 		level.entities.forEach((e) => {
 			const entityWidth = Math.round(e.size.x / 64);
-			const entityHeight = Math.round(e.size.y / 64);
+			let entityHeight = Math.round(e.size.y / 64);
+
+			if (e.type == "Player") entityHeight = 1;
 
 			for (let i = 0; i < entityHeight; i++) {
 				for (let j = 0; j < entityWidth; j++) {
@@ -56,20 +63,20 @@ export class Grid {
 
 					const entityNode = this.grid[entityY + i][entityX + j];
 
-					entityNode.isWall = e.isPassable;
-					entityNode.type = "Wall";
+					entityNode.isWall = !e.isPassable;
+					if (entityNode.isWall) {
+						entityNode.type = "Wall";
+					}
 
-					if (e.type == "WeepingAngel") {
-						entityNode.type = "Start";
-					}
-					if (e.type == "Player") {
-						entityNode.type = "End";
-					}
+					// if (e.type == "WeepingAngel") {
+					// 	entityNode.type = "Start";
+					// }
+					// if (e.type == "Player") {
+					// 	entityNode.type = "End";
+					// }
 				}
 			}
 		});
-
-		this.print();
 	}
 
 	public genrateRandomGrid(x: number, y: number) {
@@ -152,7 +159,7 @@ export class Grid {
 
 			if (currentNode == endNode) {
 				this.path = this.retrace(startNode, endNode);
-				return;
+				return this.path;
 			}
 
 			this.getNeighbours(currentNode).forEach((n) => {

@@ -2,7 +2,7 @@
 
 # Web Park
 
-<img src="GitHub/EpicCapture.png" alt="the guy" width="550">
+<img src="GitHub/EpicCapture.png" alt="the guy" width="650">
 
 ### An online multiplayer co-op game inspired by pico park
 

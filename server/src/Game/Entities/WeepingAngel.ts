@@ -98,8 +98,8 @@ export class WeepingAngel extends Entity {
 		this.target = closestPlayer;
 
 		const thisPos: Vector2 = { ...this.pos };
-		thisPos.x = Math.round((thisPos.x + 30) / 64);
-		thisPos.y = Math.round((thisPos.y + 30) / 64);
+		thisPos.x = Math.round(thisPos.x / 64);
+		thisPos.y = Math.round(thisPos.y / 64);
 
 		const otherPos: Vector2 = { ...this.target.pos };
 		otherPos.x = Math.floor(otherPos.x / 64);

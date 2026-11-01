@@ -114,7 +114,7 @@
 				},
 				{
 					"__identifier": "Pushable",
-					"__grid": [11,6],
+					"__grid": [10,10],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": null,
@@ -123,10 +123,10 @@
 					"width": 64,
 					"height": 64,
 					"defUid": 24,
-					"px": [704,448],
+					"px": [640,704],
 					"fieldInstances": [{ "__identifier": "Mass", "__type": "Int", "__value": 2, "__tile": null, "defUid": 47, "realEditorValues": [{ "id": "V_Int", "params": [2] }] }],
-					"__worldX": 704,
-					"__worldY": -512
+					"__worldX": 640,
+					"__worldY": -256
 				},
 				{
 					"__identifier": "PlayerSpawner",
@@ -531,7 +531,7 @@
 				},
 				{
 					"__identifier": "Button",
-					"__grid": [13,6],
+					"__grid": [11,10],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": null,
@@ -540,13 +540,13 @@
 					"width": 64,
 					"height": 32,
 					"defUid": 8,
-					"px": [832,448],
+					"px": [704,704],
 					"fieldInstances": [{ "__identifier": "ActivationGroup", "__type": "String", "__value": "buegfrh", "__tile": null, "defUid": 18, "realEditorValues": [{
 						"id": "V_String",
 						"params": ["buegfrh"]
 					}] }],
-					"__worldX": 832,
-					"__worldY": -512
+					"__worldX": 704,
+					"__worldY": -256
 				},
 				{
 					"__identifier": "Portal",
@@ -625,7 +625,7 @@
 				},
 				{
 					"__identifier": "WeepingAngel",
-					"__grid": [13,10],
+					"__grid": [11,9],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": null,
@@ -634,10 +634,10 @@
 					"width": 64,
 					"height": 64,
 					"defUid": 75,
-					"px": [832,704],
+					"px": [704,640],
 					"fieldInstances": [{ "__identifier": "Speed", "__type": "Int", "__value": 2, "__tile": null, "defUid": 76, "realEditorValues": [{ "id": "V_Int", "params": [2] }] }],
-					"__worldX": 832,
-					"__worldY": -256
+					"__worldX": 704,
+					"__worldY": -320
 				}
 			]
 		},

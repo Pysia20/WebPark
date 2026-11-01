@@ -52,14 +52,14 @@ export class Grid {
 
 		level.entities.forEach((e) => {
 			const entityWidth = Math.round(e.size.x / 64);
-			let entityHeight = Math.round(e.size.y / 64);
+			let entityHeight = Math.round((e.size.y + 1) / 64);
 
 			if (e.type == "Player") entityHeight = 1;
 
 			for (let i = 0; i < entityHeight; i++) {
 				for (let j = 0; j < entityWidth; j++) {
 					const entityX = Math.round(e.pos.x / 64);
-					const entityY = Math.round(e.pos.y / 64);
+					const entityY = Math.round((e.pos.y - 1) / 64);
 
 					const entityNode = this.grid[entityY + i][entityX + j];
 

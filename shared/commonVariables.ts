@@ -59,6 +59,19 @@ VISUAL		VISUAL		VISUAL		VISUAL
 ==========================================
  */
 
+// basic-bit-32x
+const PALLETE = {
+	RED: "#D76C6C",
+	ORANGE: "#F49461",
+	YELLOW: "#FFDD7E",
+	GREEN: "#87BF72",
+	BLUE: "#6A94B1",
+	VIOLET: "#73577E",
+	WHITE: "#FFFCF1",
+	GRAY: "#BEBEB4",
+	BLACK: "#3E3E3E"
+} as const;
+
 export const CAMERA_CONFIG = {
 	LERP: 0.3,
 	/** Extra cam space */
@@ -146,8 +159,8 @@ export const PLAYER_VISUAL_CONFIG = {
 	},
 
 	NICK: {
-		COLOR: "#ffffff",
-		ME_COLOR: "#FFD700",
+		COLOR: PALLETE.WHITE,
+		ME_COLOR: PALLETE.YELLOW,
 		FONT_SIZE: 12,
 		OFFSET: 0.5,
 	},
@@ -167,16 +180,16 @@ export const ENTITY_VISUAL_CONFIG = {
 		STEP: 28,
 		JITTER: 30,
 		WIDTH: 4,
-		COLOR: "#ff0000",
-		OPACITY: 0.8,
+		COLOR: PALLETE.RED,
+		OPACITY: 0.95,
 
-		BASE_COLOR: "#d90000",
+		BASE_COLOR: PALLETE.BLACK,
 		BASE_START_OFFSET: 1, //X
 		BASE_WALL_OFFSET: 5, //Y
 		BASE_SPIKE_OFFSET: 10, //Y
 
-		GLOW_COLOR: "#ff0000",
-		GLOW_OPACITY: 0.4,
+		GLOW_COLOR: PALLETE.RED,
+		GLOW_OPACITY: 0.6,
 		GLOW_WIDTH: 12,
 
 		AMPLITUDE_DAMP_SPEED: 0.08,

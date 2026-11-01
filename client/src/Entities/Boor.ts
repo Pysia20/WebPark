@@ -23,7 +23,7 @@ export class BoorEnt extends Ent {
 
     update(data: ServerButtonDoorData, deltaT: number) {
         if (data.isOpen && this.opacity > ENTITY_VISUAL_CONFIG.BOOR.MIN_OPACITY) {
-            this.opacity = lerpIt(this.opacity, 0.5, ENTITY_VISUAL_CONFIG.BOOR.LARP)
+            this.opacity = lerpIt(this.opacity, 1.0, ENTITY_VISUAL_CONFIG.BOOR.LARP)
             this.currentHeight = lerpIt(this.currentHeight, (data.visualSize.y * ENTITY_VISUAL_CONFIG.BOOR.CLOSE_RATIO), ENTITY_VISUAL_CONFIG.BOOR.LARP)
         } else if (!data.isOpen) {
             this.opacity = lerpIt(this.opacity, 1, ENTITY_VISUAL_CONFIG.BOOR.LARP)

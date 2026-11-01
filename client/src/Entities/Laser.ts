@@ -41,7 +41,7 @@ export class LaserEnt extends Ent {
         this.baseUp.position.set(data.pos.x, data.pos.y)
         this.baseDown.position.set(data.pos.x, data.pos.y)
 
-        this.glow.filters = [pulseer]
+     //   this.glow.filters = [pulseer] TODO: WHY BROKEN
 
         this.drawBase()
     }

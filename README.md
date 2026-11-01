@@ -2,7 +2,7 @@
 
 # Web Park
 
-<img src="GitHub/EpicCapture.png" alt="the guy" width="750">
+<img src="GitHub/EpicCapture.png" alt="the guy" width="550">
 
 ### An online multiplayer co-op game inspired by pico park
 
@@ -19,10 +19,10 @@ $\color{gray} \text{now ~~mostly~~ without pico park sprites! revolutionary stuf
 ## Current features
 
 - Lobby system with joining using a code, data check, waiting for everyone to ready up, and lobby info display
-- Custom player colors _(currently no longer broken)_, custom names
+- Player customization
 - Basic sound effects
 - Game synchronization
-- Movement and Physics ~~that are currently mid-rewrite hell~~
+- Movement and Physics ~~that are always mid-rewrite hell~~
 - Procedurally animated players! Eyes, legs, torso, pretty much everything!
 - _Less_ basic main menu
 - Basic and not-so basic Entities (Buttons, Doors, Moving Platforms, Procedurall Lasers, _everyone's favorite JohnEntity_ and more) with many options
@@ -70,6 +70,8 @@ Frontend :
 - Socket.io Client for communicating with the server
 - Howler.js for audio
 - WebStorm for coding _(also the thing you are reading right now)_
+- Figma for assets and Design
+- Lospec for pallets (currently using [BASIC BIT by RABBITKNG](https://lospec.com/palette-list/basic-bit))
 
 Backend:
 

@@ -12,7 +12,6 @@ export class Player extends Entity {
 	public color: string = "";
 	public roomID: string | undefined;
 	public isReady: boolean = false;
-	public isInsideDoor: boolean = false;
 	public jumpBuffered: boolean = false;
 	public lastGroundedFrameTime: number = -1;
 
@@ -80,6 +79,11 @@ export class Player extends Entity {
 	}
 
 	public override calculateVelocities() {
+		if (this.isInsideDoor) {
+			this.velocity = { x: 0, y: 0 };
+			return;
+		}
+
 		if (this.velocity.x > PLAYER_CONFIG.DRAG) {
 			this.velocity.x -= PLAYER_CONFIG.DRAG;
 		} else if (this.velocity.x < -PLAYER_CONFIG.DRAG) {

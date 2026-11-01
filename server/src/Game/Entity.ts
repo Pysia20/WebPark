@@ -22,6 +22,7 @@ export abstract class Entity {
 	public isPushing: boolean = false;
 	public isPassable: boolean = false;
 	public isPhantom: boolean = false;
+	public isInsideDoor: boolean = false;
 
 	public getUsedFields(): RequiredField[] {
 		return [];
@@ -103,6 +104,8 @@ export abstract class Entity {
 	}
 
 	public calculateCollisionsX(other: Entity) {
+		if (other.isInsideDoor) return;
+
 		const newPos = { ...other.pos };
 		newPos.y += COLLISION_MARGIN_Y / 2;
 		const newSize = { ...other.size };
@@ -129,6 +132,8 @@ export abstract class Entity {
 	}
 
 	public calculateCollisionsY(other: Entity) {
+		if (other.isInsideDoor) return;
+
 		const newPos = { ...other.pos };
 		newPos.x += COLLISION_MARGIN_X / 2;
 		const newSize = { ...other.size };
@@ -288,6 +293,8 @@ export abstract class Entity {
 	// DYNAMIC COLLISIONS
 	public static handleDynamicCollision(a: Entity, b: Entity) {
 		if (a == b) return;
+		if (a.isInsideDoor) return;
+		if (b.isInsideDoor) return;
 
 		const { collidesX, collidesY } = Entity.isColliding(a, b);
 		if (!collidesX || !collidesY) return;

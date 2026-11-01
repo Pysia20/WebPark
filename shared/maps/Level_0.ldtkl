@@ -146,7 +146,7 @@
 				},
 				{
 					"__identifier": "Door",
-					"__grid": [29,17],
+					"__grid": [16,8],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": null,
@@ -155,10 +155,10 @@
 					"width": 64,
 					"height": 128,
 					"defUid": 10,
-					"px": [1856,1152],
+					"px": [1024,576],
 					"fieldInstances": [],
-					"__worldX": 1856,
-					"__worldY": 192
+					"__worldX": 1024,
+					"__worldY": -384
 				},
 				{
 					"__identifier": "ButtonDoor",

@@ -113,6 +113,8 @@ export class Level {
 		this.entities.forEach((e) => e.init());
 
 		this.room.sendLevelReloaded();
+
+		this.grid.generateGridOfLevel(this);
 	}
 
 	public getColliders(): MapCollider[] {

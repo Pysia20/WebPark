@@ -37,7 +37,10 @@
    - sends the name of user that left
    - Type: number
 - levelReloaded
-   - sends nothing, it is just an infromation for frontend to also reaload the scene
+   - sends nothing, it is just an infromation for frontend to also reload the scene
+   - Type: None
+- levelGroupFinnished
+   - sends nothing, it is just an infromation for frontend that it should show the level selection again
    - Type: None
 
 ### HTTP Endpoints

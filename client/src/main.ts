@@ -1,12 +1,12 @@
 import * as PIXI from 'pixi.js'
-import { createMouseListiner, getCurrentInputs, startSendingInputs } from "./Inputs"
-import { emitInputs, getServerData, startNetworking } from "./Network";
+import { createMouseListiner, startSendingInputs } from "./Inputs"
+import { getServerData, onConnect, startNetworking } from "./Network";
 import { coordinator } from "./Coordinator";
-import { PlayerInputs, Vector2 } from "@shared/commonModels"
+import { Vector2 } from "@shared/commonModels"
 import { loadAssets } from "./Assets";
 import { CameraController } from "./Camera";
 import { leveler } from "./Leveler";
-import { pageSetup } from "./Weber";
+import { finishLoad, pageSetup } from "./Weber";
 import { hud } from "./Hud";
 import { updateShaders } from "./Shaders";
 import { updateLerp } from "./FavoriteChild";
@@ -40,6 +40,7 @@ leveler.init(worldContainer, assets.mapAssets.spritesheet, assets.mapAssets.leve
 const map_size: Vector2 = {x: leveler.mapData.pxWid, y: leveler.mapData.pxHei}
 const camera = new CameraController(worldContainer, app.screen, map_size)
 
+onConnect(finishLoad)
 startNetworking()
 
 startSendingInputs()

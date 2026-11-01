@@ -4,9 +4,7 @@ import {
     PlayerInputs,
     RegisterUserData,
     PlayerJoinedData,
-    ServerEntityData,
     SomethingBrokeData,
-    Vector2
 } from "@shared/commonModels" //WEBSTORM IS TRYING TO FORCE THIS FORMATING EVERY COMMIT SO SURE BRO IDC ANYMORE
 import { coordinator } from "./Coordinator";
 import { hud } from "./Hud";
@@ -114,4 +112,14 @@ export function onReadyUpdate(func: (readys: number) => void) {
     socket.on("readyUpdate", (readys: number) => {
         func(readys)
     })
+}
+
+export function onConnect(func: () => void) {
+    if (socket.connected) {
+        func()
+    } else {
+        socket.once("connect", () => {
+            func()
+        })
+    }
 }

@@ -44,7 +44,6 @@ export async function loadAssets() {
 	mapLevels.set("Level_1", Level_1 as LevelData)
 	mapLevels.set("Level_2", Level_2 as LevelData)
 	const entTextures: Map<string, Texture> = new Map()
-	entTextures.set("Key", loadedAssets["sprites/keyPlaceholder.png"])
 	entTextures.set("Door", loadedAssets["sprites/Door.png"])
 	entTextures.set("Button", loadedAssets["sprites/Button.png"])
 	entTextures.set("JohnEntity", loadedAssets["sprites/JohnEntity.png"])

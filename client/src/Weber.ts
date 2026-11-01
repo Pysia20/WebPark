@@ -1,4 +1,4 @@
-import { emitReady, onGameStart, onPlayerJoin, onPlayerLeave, onReadyUpdate } from "./Network";
+import {emitReady, onGameStart, onPlayerJoin, onPlayerLeave, onReadyUpdate} from "./Network";
 import { Application } from "pixi.js";
 import { coordinator } from "./Coordinator";
 
@@ -34,4 +34,10 @@ export function pageSetup(app: Application) {
         readyButton.innerText = isReady ? "READY" : "NOT READY"
         emitReady(isReady)
     })
+}
+
+export function finishLoad() {
+    const loadingScreen = document.querySelector(".loading") as HTMLDivElement
+
+    loadingScreen.classList.add("hidden")
 }

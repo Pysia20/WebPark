@@ -19,8 +19,10 @@ export const ROOM_CONFIG = {
 };
 
 export const CLIENT_CONFIG = {
-	UPDATE_RATE: 30, // How often client sends inputs data to server, (20)=20 times a second, (30)=30 times a second etc
-	MOUSE_MARGIN: 5, // How many pixels the mouse has to move from the previous pos for it to be broadcasted
+	/** How often client sends inputs data to server, (20)=20 times a second, (30)=30 times a second etc */
+	UPDATE_RATE: 30,
+	/** How many pixels the mouse has to move from the previous pos for it to be broadcasted */
+	MOUSE_MARGIN: 5
 };
 
 export const PLAYER_CONFIG = {
@@ -55,6 +57,18 @@ export const PUSHABLE_CONFIG = {
 VISUAL		VISUAL		VISUAL		VISUAL
 ==========================================
  */
+
+export const CAMERA_CONFIG = {
+	LERP: 0.3,
+	/** Extra cam space */
+	SPACER: 30,
+	/** Extra X cam space relative to player width */
+	PLAYER_X_SPACER: 2,
+	/** Extra Y cam space relative to player height */
+	PLAYER_Y_SPACER: 4,
+	MIN_ZOOM: 0.6,
+	MAX_ZOOM: 1.5
+} as const;
 
 export const PLAYER_VISUAL_CONFIG = {
 	/** Default lerp */

@@ -58,12 +58,13 @@ export class Grid {
 
 			for (let i = 0; i < entityHeight; i++) {
 				for (let j = 0; j < entityWidth; j++) {
-					const entityX = Math.floor(e.pos.x / 64);
-					const entityY = Math.floor(e.pos.y / 64);
+					const entityX = Math.round(e.pos.x / 64);
+					const entityY = Math.round(e.pos.y / 64);
 
 					const entityNode = this.grid[entityY + i][entityX + j];
 
 					entityNode.isWall = !e.isPassable;
+					if (e.type == "Player" || e.type == "WeepingAngel") entityNode.isWall = false;
 					if (entityNode.isWall) {
 						entityNode.type = "Wall";
 					}
@@ -122,6 +123,11 @@ export class Grid {
 				if (xIndex < 0 || xIndex >= this.grid[0].length) continue;
 				if (this.grid[node.y][xIndex].isWall || this.grid[yIndex][node.x].isWall) continue;
 
+				if (i != 0 && j != 0) {
+					// Corner cutting fix
+					if (this.grid[yIndex][node.x].isWall || this.grid[node.y][xIndex].isWall) continue;
+				}
+
 				neighbours.push(this.grid[yIndex][xIndex]);
 			}
 		}
@@ -159,6 +165,7 @@ export class Grid {
 
 			if (currentNode == endNode) {
 				this.path = this.retrace(startNode, endNode);
+				this.print();
 				return this.path;
 			}
 

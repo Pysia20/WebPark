@@ -7,6 +7,9 @@ import { DefaultEventsMap, Server as SocketIOServer } from "socket.io";
 import Express from "express";
 import { Express as ExpressInterface, Request, Response } from "express";
 import CONFIG from "../../../config.json";
+import path from "path";
+import { fileURLToPath } from "url";
+import { register } from "./socket";
 
 export class DebugServer {
 	public static id: number = 0;
@@ -15,6 +18,12 @@ export class DebugServer {
 	private app: ExpressInterface;
 	private server: Server;
 	private io: SocketIOServer;
+
+	private __filename = fileURLToPath(import.meta.url);
+	private __dirname = path.dirname(this.__filename);
+
+	private PUBLIC_PATH = path.join(this.__dirname, "public");
+	private INDEX_PATH = path.join(this.__dirname, "index.html");
 
 	public registerGrid(roomID: string, grid: Grid, level: Level) {
 		this.grids[roomID] = grid;
@@ -25,7 +34,7 @@ export class DebugServer {
 	public unregisterGrid(roomID: string) {
 		delete this.grids[roomID];
 
-		LOG.debug(`${roomID} unregistered its pathfinder).`);
+		LOG.debug(`${roomID} unregistered its pathfinder.`);
 	}
 
 	constructor() {
@@ -51,7 +60,10 @@ export class DebugServer {
 			},
 		});
 
+		register(this.io);
+
 		this.app.use(Express.json());
+		this.app.use("/public", Express.static(this.PUBLIC_PATH));
 		this.setupRoutes();
 
 		this.server.listen(CONFIG.PATHFINDING_DEBUG_SERVER_PORT, () => {
@@ -66,7 +78,7 @@ export class DebugServer {
 	}
 
 	private home(req: Request, res: Response) {
-		res.status(200).json({ ...this.grids });
+		res.status(200).sendFile(this.INDEX_PATH);
 	}
 }
 

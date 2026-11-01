@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Pathfindier Debug</title>
+		<link rel="stylesheet" href="public/common.css" />
+		<link rel="stylesheet" href="public/index.css" />
+	</head>
+	<body>
+		<div class="container">
+			<nav>
+				<input id="search" class="search" placeholder="Search..." />
+			</nav>
+			<div class="games" id="games">
+				<template class="gameCard" id="cardTemplate">
+					<h3>ROOMID: TEST01</h3>
+					<p>LEVELID: TEST02</p>
+				</template>
+			</div>
+		</div>
+		<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+		<script src="public/index.js"></script>
+	</body>
+</html>

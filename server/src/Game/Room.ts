@@ -13,6 +13,7 @@ import { Level } from "./Level";
 import CONFIG from "../../config.json";
 import { PlayerSpawner } from "./Entities/PlayerSpawner";
 import { Entity } from "./Entity";
+import { PathfindingDebug } from "./PathfindingDebug";
 
 export class Room {
 	public readonly TICKRATE: number = CONFIG.TICKRATE; // Per second
@@ -29,6 +30,10 @@ export class Room {
 		this.id = id;
 
 		this.level = MAP_LOADER.GetLevel("Level_0", this);
+
+		if (PathfindingDebug) {
+			PathfindingDebug.registerGrid(this.id, this.level.grid, this.level);
+		}
 	}
 
 	public getID(): string | undefined {
@@ -97,7 +102,7 @@ export class Room {
 		this.io = io;
 
 		try {
-			this.level.reloadLevel();
+			this.level = this.level.reloadLevel();
 			this.gameLoop = setInterval(
 				async () => {
 					if (this.players.size <= 0) return;
@@ -139,12 +144,14 @@ export class Room {
 			);
 		} catch (e: any) {
 			if (e instanceof Error) {
+				LOG.error(e);
 				io.to(this.id).emit("somethingBroke", {
 					name: "Error",
 					eventName: "Gameloop",
 					message: e.message,
 				} as SomethingBrokeData);
 			} else {
+				LOG.error(e);
 				io.to(this.id).emit("somethingBroke", {
 					name: "Error",
 					eventName: "Gameloop",
@@ -164,6 +171,14 @@ export class Room {
 			LOG.info(`Instance of level ${this.level.getID()} was deleted in room ${this.id}`);
 			this.level = level;
 			this.level.reloadLevel();
+
+			if (PathfindingDebug) {
+				PathfindingDebug.unregisterGrid(this.id);
+			}
+
+			if (PathfindingDebug) {
+				PathfindingDebug.registerGrid(this.id, this.level.grid, this.level);
+			}
 		} else {
 			this.stopGameLoop();
 		}
@@ -174,6 +189,9 @@ export class Room {
 	}
 
 	public stopGameLoop() {
+		if (PathfindingDebug) {
+			PathfindingDebug.unregisterGrid(this.id);
+		}
 		this.gameLoop?.close();
 		this.io?.to(this.id).emit("levelGroupFinnished");
 	}

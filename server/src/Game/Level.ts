@@ -6,6 +6,7 @@ import { Entity } from "./Entity";
 import { MapCollider } from "./Entities/MapCollider";
 import { Portal } from "./Entities/Portal";
 import { Grid } from "./Pathfinding";
+import { PathfindingDebug } from "./PathfindingDebug";
 
 export class Level {
 	public readonly levelTemplate: LevelTemplate;
@@ -112,9 +113,11 @@ export class Level {
 
 		this.entities.forEach((e) => e.init());
 
+		this.grid.generateGridOfLevel(this);
+
 		this.room.sendLevelReloaded();
 
-		this.grid.generateGridOfLevel(this);
+		return this;
 	}
 
 	public getColliders(): MapCollider[] {

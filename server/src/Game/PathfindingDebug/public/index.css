@@ -1,0 +1,21 @@
+.games {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 2rem;
+	justify-content: space-evenly;
+
+	padding-inline: 2rem;
+}
+
+.gameCard {
+	background-color: var(--bg-top);
+
+	border: var(--contrast) 0.15rem solid;
+	border-radius: 0.5rem;
+
+	width: 10rem;
+
+	padding-inline: 1rem;
+	padding-block: 0.5rem;
+}

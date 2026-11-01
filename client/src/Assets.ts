@@ -21,15 +21,18 @@ export interface GameAssets {
 
 export async function loadAssets() {
 	const loadedAssets = await Assets.load([
-		"spritesheets/placeholderSpritesheet.png",
+		"spritesheets/Tiles.png",
 		"sprites/JohnEntity.png",
 		"sprites/Door.png",
+		"sprites/Cannon.png",
 		"sprites/Button.png",
 		"sprites/ButtonDoor.png",
+		"sprites/Bullet.png",
 		"sprites/MovingPlatform.png",
 		"sprites/PlayerSpawner.png",
 		"sprites/Pushable.png",
 		"sprites/Spike.png",
+		"sprites/Switch.png",
 		"sprites/torso.png"
 	]);
 
@@ -38,7 +41,7 @@ export async function loadAssets() {
 	const playerTextures: PlayerTextures = { torso: playerTorso }
 
 	//map assets
-	const mapSpritesheet: Texture = loadedAssets["spritesheets/placeholderSpritesheet.png"]
+	const mapSpritesheet: Texture = loadedAssets["spritesheets/Tiles.png"]
 	const mapLevels: Map<string, LevelData> = new Map()
 	mapLevels.set("Level_0", Level_0 as LevelData)
 	mapLevels.set("Level_1", Level_1 as LevelData)
@@ -54,6 +57,7 @@ export async function loadAssets() {
 	entTextures.set("PlayerSpawner", loadedAssets["sprites/PlayerSpawner.png"])
 	entTextures.set("Portal", Texture.EMPTY)
 	entTextures.set("Laser", Texture.EMPTY)
+	entTextures.set("SwitchButton", loadedAssets["sprites/Switch.png"])
 	const mapAssets: MapAssets = { spritesheet: mapSpritesheet, levels: mapLevels, entTextures: entTextures }
 
 	const assets: GameAssets = { playerTextures: playerTextures, mapAssets: mapAssets }

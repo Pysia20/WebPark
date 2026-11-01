@@ -11,7 +11,7 @@
 	"iid": "40c17d90-96d0-11f1-9c49-91e6bac7411f",
 	"jsonVersion": "1.5.3",
 	"appBuildId": 473703,
-	"nextUid": 212,
+	"nextUid": 213,
 	"identifierStyle": "Capitalize",
 	"toc": [],
 	"worldLayout": "Free",
@@ -3531,14 +3531,14 @@
 		{
 			"__cWid": 12,
 			"__cHei": 5,
-			"identifier": "AutoTiles",
+			"identifier": "Tiless",
 			"uid": 77,
-			"relPath": "../client/public/spritesheets/AutoLayer.png",
+			"relPath": "../client/public/spritesheets/Tiless.png",
 			"embedAtlas": null,
-			"pxWid": 768,
-			"pxHei": 320,
+			"pxWid": 878,
+			"pxHei": 360,
 			"tileGridSize": 64,
-			"spacing": 0,
+			"spacing": 10,
 			"padding": 0,
 			"tags": [],
 			"tagsSourceEnumUid": null,
@@ -3662,7 +3662,7 @@
 				{ "__identifier": "IndexInGroup", "__type": "Int", "__value": 0, "__tile": null, "defUid": 14, "realEditorValues": [] }
 			],
 			"layerInstances": null,
-			"__neighbours": [ { "levelIid": "e7714ff0-bde0-11f1-ac0f-4501a3e35def", "dir": "e" }, { "levelIid": "8f826480-bde0-11f1-bf83-03e56f3547e9", "dir": "s" } ]
+			"__neighbours": [ { "levelIid": "e7714ff0-bde0-11f1-ac0f-4501a3e35def", "dir": "e" }, { "levelIid": "e0c87f50-bde0-11f1-a206-f3c87080be5c", "dir": "w" }, { "levelIid": "8f826480-bde0-11f1-bf83-03e56f3547e9", "dir": "s" } ]
 		},
 		{
 			"identifier": "Level_1",
@@ -3695,9 +3695,9 @@
 		},
 		{
 			"identifier": "Level_2",
-			"iid": "2ab1b150-bde0-11f1-ac0f-eb7b16fc0c29",
-			"uid": 17,
-			"worldX": 2880,
+			"iid": "e0c87f50-bde0-11f1-a206-f3c87080be5c",
+			"uid": 212,
+			"worldX": -256,
 			"worldY": 0,
 			"worldDepth": 0,
 			"pxWid": 256,
@@ -3713,14 +3713,11 @@
 			"__bgPos": null,
 			"externalRelPath": "maps/Level_2.ldtkl",
 			"fieldInstances": [
-				{ "__identifier": "LevelGroup", "__type": "String", "__value": "Test", "__tile": null, "defUid": 13, "realEditorValues": [{
-					"id": "V_String",
-					"params": ["Test"]
-				}] },
+				{ "__identifier": "LevelGroup", "__type": "String", "__value": "Default", "__tile": null, "defUid": 13, "realEditorValues": [] },
 				{ "__identifier": "IndexInGroup", "__type": "Int", "__value": 0, "__tile": null, "defUid": 14, "realEditorValues": [] }
 			],
 			"layerInstances": null,
-			"__neighbours": []
+			"__neighbours": [ { "levelIid": "91c7fbb0-96d0-11f1-bc36-b5ce94e694ef", "dir": "e" }, { "levelIid": "8f826480-bde0-11f1-bf83-03e56f3547e9", "dir": "se" } ]
 		},
 		{
 			"identifier": "FourPlayers_1",
@@ -3749,7 +3746,7 @@
 				{ "__identifier": "IndexInGroup", "__type": "Int", "__value": 0, "__tile": null, "defUid": 14, "realEditorValues": [] }
 			],
 			"layerInstances": null,
-			"__neighbours": [ { "levelIid": "91c7fbb0-96d0-11f1-bc36-b5ce94e694ef", "dir": "n" }, { "levelIid": "e7714ff0-bde0-11f1-ac0f-4501a3e35def", "dir": "ne" } ]
+			"__neighbours": [ { "levelIid": "91c7fbb0-96d0-11f1-bc36-b5ce94e694ef", "dir": "n" }, { "levelIid": "e7714ff0-bde0-11f1-ac0f-4501a3e35def", "dir": "ne" }, { "levelIid": "e0c87f50-bde0-11f1-a206-f3c87080be5c", "dir": "nw" } ]
 		}
 	],
 	"worlds": [],

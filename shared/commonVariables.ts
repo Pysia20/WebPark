@@ -189,7 +189,7 @@ export const ENTITY_VISUAL_CONFIG = {
 
 	BOOR: {
 		CLOSE_RATIO: 0.15,
-		MIN_OPACITY: 0.05,
+		MIN_OPACITY: 0.5,
 		LARP: 0.3,
 	},
 } as const;

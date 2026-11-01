@@ -9,9 +9,9 @@
 		"url": "https://ldtk.io"
 	},
 	"identifier": "Level_2",
-	"iid": "2ab1b150-bde0-11f1-ac0f-eb7b16fc0c29",
-	"uid": 17,
-	"worldX": 2880,
+	"iid": "e0c87f50-bde0-11f1-a206-f3c87080be5c",
+	"uid": 212,
+	"worldX": -256,
 	"worldY": 0,
 	"worldDepth": 0,
 	"pxWid": 256,
@@ -27,10 +27,7 @@
 	"__bgPos": null,
 	"externalRelPath": null,
 	"fieldInstances": [
-		{ "__identifier": "LevelGroup", "__type": "String", "__value": "Test", "__tile": null, "defUid": 13, "realEditorValues": [{
-			"id": "V_String",
-			"params": ["Test"]
-		}] },
+		{ "__identifier": "LevelGroup", "__type": "String", "__value": "Default", "__tile": null, "defUid": 13, "realEditorValues": [] },
 		{ "__identifier": "IndexInGroup", "__type": "Int", "__value": 0, "__tile": null, "defUid": 14, "realEditorValues": [] }
 	],
 	"layerInstances": [
@@ -45,8 +42,8 @@
 			"__pxTotalOffsetY": 0,
 			"__tilesetDefUid": null,
 			"__tilesetRelPath": null,
-			"iid": "2ab1b151-bde0-11f1-ac0f-43832ed9f6b6",
-			"levelId": 17,
+			"iid": "e0c87f51-bde0-11f1-a206-2369275bdf78",
+			"levelId": 212,
 			"layerDefUid": 6,
 			"pxOffsetX": 0,
 			"pxOffsetY": 0,
@@ -54,7 +51,7 @@
 			"optionalRules": [],
 			"intGridCsv": [],
 			"autoLayerTiles": [],
-			"seed": 6526661,
+			"seed": 7327156,
 			"overrideTilesetUid": null,
 			"gridTiles": [],
 			"entityInstances": []
@@ -69,9 +66,9 @@
 			"__pxTotalOffsetX": 0,
 			"__pxTotalOffsetY": 0,
 			"__tilesetDefUid": 77,
-			"__tilesetRelPath": "../client/public/spritesheets/AutoLayer.png",
-			"iid": "2ab1b152-bde0-11f1-ac0f-1fa6872b9326",
-			"levelId": 17,
+			"__tilesetRelPath": "../client/public/spritesheets/Tiless.png",
+			"iid": "e0c87f52-bde0-11f1-a206-ddbb7f8b26d6",
+			"levelId": 212,
 			"layerDefUid": 4,
 			"pxOffsetX": 0,
 			"pxOffsetY": 0,
@@ -79,26 +76,9 @@
 			"optionalRules": [],
 			"intGridCsv": [],
 			"autoLayerTiles": [],
-			"seed": 1213533,
+			"seed": 4183584,
 			"overrideTilesetUid": null,
-			"gridTiles": [
-				{ "px": [0,0], "src": [64,0], "f": 0, "t": 1, "d": [0], "a": 1 },
-				{ "px": [64,0], "src": [64,0], "f": 0, "t": 1, "d": [1], "a": 1 },
-				{ "px": [128,0], "src": [64,0], "f": 0, "t": 1, "d": [2], "a": 1 },
-				{ "px": [192,0], "src": [64,0], "f": 0, "t": 1, "d": [3], "a": 1 },
-				{ "px": [0,64], "src": [192,0], "f": 0, "t": 3, "d": [4], "a": 1 },
-				{ "px": [64,64], "src": [0,0], "f": 0, "t": 0, "d": [5], "a": 1 },
-				{ "px": [128,64], "src": [0,0], "f": 0, "t": 0, "d": [6], "a": 1 },
-				{ "px": [192,64], "src": [192,0], "f": 0, "t": 3, "d": [7], "a": 1 },
-				{ "px": [0,128], "src": [192,0], "f": 0, "t": 3, "d": [8], "a": 1 },
-				{ "px": [64,128], "src": [0,0], "f": 0, "t": 0, "d": [9], "a": 1 },
-				{ "px": [128,128], "src": [0,0], "f": 0, "t": 0, "d": [10], "a": 1 },
-				{ "px": [192,128], "src": [192,0], "f": 0, "t": 3, "d": [11], "a": 1 },
-				{ "px": [0,192], "src": [128,0], "f": 0, "t": 2, "d": [12], "a": 1 },
-				{ "px": [64,192], "src": [128,0], "f": 0, "t": 2, "d": [13], "a": 1 },
-				{ "px": [128,192], "src": [128,0], "f": 0, "t": 2, "d": [14], "a": 1 },
-				{ "px": [192,192], "src": [128,0], "f": 0, "t": 2, "d": [15], "a": 1 }
-			],
+			"gridTiles": [],
 			"entityInstances": []
 		},
 		{
@@ -111,9 +91,9 @@
 			"__pxTotalOffsetX": 0,
 			"__pxTotalOffsetY": 0,
 			"__tilesetDefUid": 77,
-			"__tilesetRelPath": "../client/public/spritesheets/AutoLayer.png",
-			"iid": "81fb4602-bde0-11f1-8796-63ea01efd247",
-			"levelId": 17,
+			"__tilesetRelPath": "../client/public/spritesheets/Tiless.png",
+			"iid": "e0c8a660-bde0-11f1-a206-3fbea2f45f56",
+			"levelId": 212,
 			"layerDefUid": 139,
 			"pxOffsetX": 0,
 			"pxOffsetY": 0,
@@ -121,7 +101,7 @@
 			"optionalRules": [],
 			"intGridCsv": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 			"autoLayerTiles": [],
-			"seed": 3458813,
+			"seed": 3677877,
 			"overrideTilesetUid": null,
 			"gridTiles": [],
 			"entityInstances": []
@@ -137,8 +117,8 @@
 			"__pxTotalOffsetY": 0,
 			"__tilesetDefUid": null,
 			"__tilesetRelPath": null,
-			"iid": "2ab1b153-bde0-11f1-ac0f-6fed7d02c786",
-			"levelId": 17,
+			"iid": "e0c8a661-bde0-11f1-a206-ffdf025c19d9",
+			"levelId": 212,
 			"layerDefUid": 3,
 			"pxOffsetX": 0,
 			"pxOffsetY": 0,
@@ -146,11 +126,11 @@
 			"optionalRules": [],
 			"intGridCsv": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 			"autoLayerTiles": [],
-			"seed": 695408,
+			"seed": 2740079,
 			"overrideTilesetUid": null,
 			"gridTiles": [],
 			"entityInstances": []
 		}
 	],
-	"__neighbours": []
+	"__neighbours": [ { "levelIid": "91c7fbb0-96d0-11f1-bc36-b5ce94e694ef", "dir": "e" }, { "levelIid": "8f826480-bde0-11f1-bf83-03e56f3547e9", "dir": "se" } ]
 }

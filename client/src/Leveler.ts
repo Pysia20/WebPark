@@ -78,7 +78,9 @@ class levelManager {
 
 			for (const tile of tiles) {
 				const sprite = new Sprite(this.checkTileTexture(tile, layer))
-				sprite.position.set(tile.px[0], tile.px[1])
+				sprite.position.set(tile.px[0] - 0.5, tile.px[1] - 0.5)
+				sprite.width = layer.__gridSize + 1
+				sprite.height = layer.__gridSize + 1
 				this.world.addChild(sprite)
 				this.renderedTiles.push(sprite)
 			}

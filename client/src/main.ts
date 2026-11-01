@@ -10,13 +10,15 @@ import { finishLoad, pageSetup } from "./Weber";
 import { hud } from "./Hud";
 import { updateShaders } from "./Shaders";
 import { updateLerp } from "./FavoriteChild";
+
 const app = new PIXI.Application()
 await app.init({
     width: 1280,
     height: 720,
     resolution: window.devicePixelRatio || 1,
     autoDensity: true,
-    backgroundColor: 0x222222
+    antialias: true,
+    backgroundColor: "#6A94B1"
 })
 app.stage.eventMode = "static"
 app.stage.hitArea = app.screen

@@ -11,10 +11,15 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { register } from "./socket";
 
+interface GridData {
+	grid: Grid;
+	level: Level;
+}
+
 export class DebugServer {
 	public static id: number = 0;
 
-	private grids: Record<string, Grid> = {};
+	private grids: Map<string, GridData> = new Map();
 	private app: ExpressInterface;
 	private server: Server;
 	private io: SocketIOServer;
@@ -26,13 +31,13 @@ export class DebugServer {
 	private INDEX_PATH = path.join(this.__dirname, "index.html");
 
 	public registerGrid(roomID: string, grid: Grid, level: Level) {
-		this.grids[roomID] = grid;
+		this.grids.set(roomID, { grid, level });
 
 		LOG.debug(`${roomID} registered its pathfinder (${level.getID()}).`);
 	}
 
 	public unregisterGrid(roomID: string) {
-		delete this.grids[roomID];
+		this.grids.delete(roomID);
 
 		LOG.debug(`${roomID} unregistered its pathfinder.`);
 	}
@@ -75,8 +80,31 @@ export class DebugServer {
 
 	private setupRoutes() {
 		this.app.get("/", (req, res) => this.home(req, res));
+		this.app.get("/games", (req, res) => this.games(req, res));
+		this.app.get("/:id", (req, res) => this.game(req, res));
 	}
 
+	private games(req: Request, res: Response) {
+		const response: Record<string, any> = {};
+
+		this.grids.forEach((v, k) => {
+			response[k] = {
+				levelID: v.level.getID(),
+				players: v.level.room.players.size,
+			};
+		});
+
+		res.status(200).json(response);
+	}
+
+	//? /:id
+	private game(req: Request, res: Response) {
+		const { id } = req.params;
+
+		res.sendStatus(200);
+	}
+
+	//? /
 	private home(req: Request, res: Response) {
 		res.status(200).sendFile(this.INDEX_PATH);
 	}

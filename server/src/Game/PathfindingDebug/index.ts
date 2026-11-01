@@ -16,6 +16,22 @@ interface GridData {
 	level: Level;
 }
 
+interface GridInterface {
+	width: number;
+	height: number;
+	nodes: NodeInterface[][];
+}
+
+interface NodeInterface {
+	x: number;
+	y: number;
+	g: number;
+	h: number;
+	type: "Player" | "Wall" | "Entity" | "Angel"; // Only for drawing
+	isInPath: boolean;
+	isWall: boolean; // Inversed 'isPassable'
+}
+
 export class DebugServer {
 	public static id: number = 0;
 
@@ -29,6 +45,7 @@ export class DebugServer {
 
 	private PUBLIC_PATH = path.join(this.__dirname, "public");
 	private INDEX_PATH = path.join(this.__dirname, "index.html");
+	private GAME_SCREEN_PATH = path.join(this.__dirname, "game.html");
 
 	public registerGrid(roomID: string, grid: Grid, level: Level) {
 		this.grids.set(roomID, { grid, level });
@@ -81,7 +98,8 @@ export class DebugServer {
 	private setupRoutes() {
 		this.app.get("/", (req, res) => this.home(req, res));
 		this.app.get("/games", (req, res) => this.games(req, res));
-		this.app.get("/:id", (req, res) => this.game(req, res));
+		this.app.get("/:id", (req, res) => this.gameScreen(req, res));
+		this.app.get("/game/:id", (req, res) => this.game(req, res));
 	}
 
 	private games(req: Request, res: Response) {
@@ -99,9 +117,40 @@ export class DebugServer {
 
 	//? /:id
 	private game(req: Request, res: Response) {
-		const { id } = req.params;
+		const { id } = req.params as { id: string };
 
-		res.sendStatus(200);
+		const grid = this.grids.get(id)!.grid;
+
+		const response: GridInterface = {
+			width: grid.width,
+			height: grid.height,
+			nodes: [] as NodeInterface[][],
+		};
+
+		for (let y = 0; y < grid.grid.length; y++) {
+			response.nodes.push([]);
+			for (let x = 0; x < grid.grid[0].length; x++) {
+				const node = grid.grid[y][x];
+				const nodeInt: NodeInterface = {
+					x: node.x,
+					y: node.y,
+					g: node.g,
+					h: node.h,
+					type: node.type,
+					isInPath: node.isInPath,
+					isWall: node.isWall,
+				};
+
+				const array = response.nodes[y] as NodeInterface[];
+				array.push(nodeInt);
+			}
+		}
+
+		res.status(200).send(response);
+	}
+
+	private gameScreen(req: Request, res: Response) {
+		res.status(200).sendFile(this.GAME_SCREEN_PATH);
 	}
 
 	//? /

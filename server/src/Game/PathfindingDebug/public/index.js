@@ -1,8 +1,3 @@
-/** @type {import("socket.io-client").Socket} */
-const socket = io("/debug", {
-	path: "/socket",
-});
-
 const template = document.getElementById("cardTemplate");
 const gamesDiv = document.getElementById("games");
 

@@ -7,7 +7,8 @@ import { Level } from "./Level";
 export class Node {
 	public g: number = 0; // Distance from start
 	public h: number = 0; // Distance from end
-	public type: "Start" | "End" | "Wall" | undefined; // Purely visual when printing the grid, doesn't impact anything
+	public drawType: "Start" | "End" | "Wall" | undefined; // Purely visual when printing the grid, doesn't impact anything
+	public type: "Player" | "Wall" | "Entity" | "Angel" = "Wall";
 	public parent: Node | undefined; // If is a part of path, the preceding element
 	public isInPath: boolean = false;
 
@@ -18,30 +19,32 @@ export class Node {
 		public readonly y: number,
 		public isWall: boolean,
 	) {
-		if (isWall) this.type = "Wall";
+		if (isWall) this.drawType = "Wall";
 	}
 
 	public draw() {
-		if (this.type == undefined) return "[ ]";
-		if (this.type == "Wall") return "[=]";
-		if (this.type == "Start") return "[O]";
-		if (this.type == "End") return "[X]";
+		if (this.drawType == undefined) return "[ ]";
+		if (this.drawType == "Wall") return "[=]";
+		if (this.drawType == "Start") return "[O]";
+		if (this.drawType == "End") return "[X]";
 	}
 }
 
 export class Grid {
 	public grid: Node[][] = [];
 	public path: Node[] = [];
+	public width = 0;
+	public height = 0;
 
 	public generateGridOfLevel(level: Level) {
 		this.grid = [];
 
-		const width = level.width;
-		const height = level.height;
+		this.width = level.width;
+		this.height = level.height;
 
-		for (let i = 0; i < height; i++) {
+		for (let i = 0; i < this.height; i++) {
 			this.grid.push([]);
-			for (let j = 0; j < width; j++) {
+			for (let j = 0; j < this.width; j++) {
 				let node = new Node(j, i, false);
 				this.grid[i][j] = node;
 			}
@@ -65,16 +68,10 @@ export class Grid {
 
 					entityNode.isWall = !e.isPassable;
 					if (e.type == "Player" || e.type == "WeepingAngel") entityNode.isWall = false;
-					if (entityNode.isWall) {
-						entityNode.type = "Wall";
-					}
 
-					// if (e.type == "WeepingAngel") {
-					// 	entityNode.type = "Start";
-					// }
-					// if (e.type == "Player") {
-					// 	entityNode.type = "End";
-					// }
+					if (e.type == "WeepingAngel") entityNode.type = "Angel";
+					if (e.type == "Player") entityNode.type = "Player";
+					if (e.type == "MapCollider") entityNode.type = "Wall";
 				}
 			}
 		});
@@ -100,7 +97,7 @@ export class Grid {
 			for (let j = 0; j < this.grid[i].length; j++) {
 				const node = this.grid[i][j];
 
-				if (node.isInPath && node.type == undefined) {
+				if (node.isInPath && node.drawType == undefined) {
 					line += "[*]";
 				} else {
 					line += this.grid[i][j].draw();
@@ -139,9 +136,9 @@ export class Grid {
 		const startNode = this.grid[start.y][start.x];
 		const endNode = this.grid[end.y][end.x];
 
-		startNode.type = "Start";
+		startNode.drawType = "Start";
 		startNode.isWall = false;
-		endNode.type = "End";
+		endNode.drawType = "End";
 		endNode.isWall = false;
 
 		const openSet: Node[] = []; // To be processed

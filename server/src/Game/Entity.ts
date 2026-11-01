@@ -231,6 +231,25 @@ export abstract class Entity {
 		}
 	}
 
+	public canBePushed(v: Vector2) {
+		const entities = this.level!.entities;
+		const newPos = { ...this.pos };
+		newPos.x += v.x;
+		newPos.y += v.y;
+
+		for (let i = 0; i < entities.length; i++) {
+			const e = entities[i];
+
+			if (e.isDynamic || e.isPassable) continue;
+
+			const { collidesX, collidesY } = Entity.isColliding({ pos: newPos, size: this.size }, e);
+
+			if (collidesX && collidesY) return false;
+		}
+
+		return true;
+	}
+
 	// DYNAMIC COLLISIONS
 	public static handleDynamicCollision(a: Entity, b: Entity) {
 		if (a == b) return;
@@ -261,13 +280,35 @@ export abstract class Entity {
 		if (overlap.x < overlap.y) {
 			if (diff.x > 0) {
 				// Pushing out to the right
-				a.pos.x += overlap.x / 2;
-				b.pos.x -= overlap.x / 2;
+
+				const pushedA = a.canBePushed({ x: overlap.x / 2, y: 0 });
+				const pushedB = b.canBePushed({ x: -overlap.x / 2, y: 0 });
+
+				if (pushedA && pushedB) {
+					a.pos.x += overlap.x / 2;
+					b.pos.x -= overlap.x / 2;
+				} else if (pushedA) {
+					a.pos.x += overlap.x;
+				} else {
+					b.pos.x -= overlap.x;
+				}
+
 				Entity.checkPushing(a, b);
 			} else {
 				// Pushing out to the left
-				a.pos.x -= overlap.x / 2;
-				b.pos.x += overlap.x / 2;
+
+				const pushedA = a.canBePushed({ x: -overlap.x / 2, y: 0 });
+				const pushedB = b.canBePushed({ x: overlap.x / 2, y: 0 });
+
+				if (pushedA && pushedB) {
+					a.pos.x -= overlap.x / 2;
+					b.pos.x += overlap.x / 2;
+				} else if (pushedA) {
+					a.pos.x -= overlap.x;
+				} else {
+					b.pos.x += overlap.x;
+				}
+
 				Entity.checkPushing(a, b);
 			}
 

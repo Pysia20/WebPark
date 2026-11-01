@@ -6,6 +6,7 @@ import { LOG } from "../Logger";
 import {
 	COLLISION_MARGIN_X,
 	COLLISION_MARGIN_Y,
+	CORNER_CORRECTION,
 	GROUND_DETECTON_OFFSET,
 } from "@shared/commonVariables";
 import CONFIG from "../../config.json";
@@ -145,7 +146,9 @@ export abstract class Entity {
 				this.onUpCollision(overlap, other);
 			} else {
 				// Pushing out downwards
-				this.onDownCollision(overlap, other);
+				if (!other.cornerCorrection(this)) {
+					this.onDownCollision(overlap, other);
+				}
 			}
 
 			this.onAnyCollision(other);
@@ -215,6 +218,38 @@ export abstract class Entity {
 			}
 			other.setGrounded();
 		}
+	}
+
+	private cornerCorrection(other: Entity) {
+		if (this.velocity.y < 0) {
+			const x = this.pos.x;
+			const y = this.pos.y;
+			{
+				const { collidesX, collidesY } = Entity.isColliding(
+					{ pos: { x: x + CORNER_CORRECTION, y: y }, size: this.size },
+					other,
+				);
+
+				if (!(collidesX && collidesY)) {
+					const correction = other.pos.x + other.size.x - x;
+					this.pos.x += correction;
+					return true;
+				}
+			}
+			{
+				const { collidesX, collidesY } = Entity.isColliding(
+					{ pos: { x: x - CORNER_CORRECTION, y: y }, size: this.size },
+					other,
+				);
+
+				if (!(collidesX && collidesY)) {
+					const correction = other.pos.x - (x + this.size.x);
+					this.pos.x += correction;
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private static checkPushing(a: Entity, b: Entity) {

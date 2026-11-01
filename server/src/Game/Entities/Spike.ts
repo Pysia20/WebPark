@@ -23,7 +23,9 @@ export class Spike extends Entity {
 	}
 
 	public override onAnyCollision(other: Entity) {
-		this.shouldKill = true;
+		if (other.type == "Player") {
+			this.shouldKill = true;
+		}
 	}
 
 	public override handleBehaviour(l: Level) {

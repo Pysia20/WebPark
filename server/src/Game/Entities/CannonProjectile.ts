@@ -66,6 +66,7 @@ export class CannonProjectile extends Entity {
 	protected override onUpTouching(other: Entity) {}
 
 	public override onAnyCollision(other: Entity) {
+		if (other.isPhantom) return;
 		if (other instanceof Player) {
 			this.level!.shouldRestart = true;
 		} else if (!this.allowedTypes.includes(other.type)) {

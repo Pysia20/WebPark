@@ -6,6 +6,7 @@ import { LOG } from "../Logger";
 import {
 	COLLISION_MARGIN_X,
 	COLLISION_MARGIN_Y,
+	CORNER_CORRECTION,
 	GROUND_DETECTON_OFFSET,
 } from "@shared/commonVariables";
 import CONFIG from "../../config.json";
@@ -21,6 +22,7 @@ export abstract class Entity {
 	public isPushing: boolean = false;
 	public isPassable: boolean = false;
 	public isPhantom: boolean = false;
+	public isInsideDoor: boolean = false;
 
 	public getUsedFields(): RequiredField[] {
 		return [];
@@ -102,6 +104,8 @@ export abstract class Entity {
 	}
 
 	public calculateCollisionsX(other: Entity) {
+		if (other.isInsideDoor) return;
+
 		const newPos = { ...other.pos };
 		newPos.y += COLLISION_MARGIN_Y / 2;
 		const newSize = { ...other.size };
@@ -128,6 +132,8 @@ export abstract class Entity {
 	}
 
 	public calculateCollisionsY(other: Entity) {
+		if (other.isInsideDoor) return;
+
 		const newPos = { ...other.pos };
 		newPos.x += COLLISION_MARGIN_X / 2;
 		const newSize = { ...other.size };
@@ -145,7 +151,9 @@ export abstract class Entity {
 				this.onUpCollision(overlap, other);
 			} else {
 				// Pushing out downwards
-				this.onDownCollision(overlap, other);
+				if (!other.cornerCorrection(this)) {
+					this.onDownCollision(overlap, other);
+				}
 			}
 
 			this.onAnyCollision(other);
@@ -217,6 +225,38 @@ export abstract class Entity {
 		}
 	}
 
+	private cornerCorrection(other: Entity) {
+		if (this.velocity.y < 0) {
+			const x = this.pos.x;
+			const y = this.pos.y;
+			{
+				const { collidesX, collidesY } = Entity.isColliding(
+					{ pos: { x: x + CORNER_CORRECTION, y: y }, size: this.size },
+					other,
+				);
+
+				if (!(collidesX && collidesY)) {
+					const correction = other.pos.x + other.size.x - x;
+					this.pos.x += correction;
+					return true;
+				}
+			}
+			{
+				const { collidesX, collidesY } = Entity.isColliding(
+					{ pos: { x: x - CORNER_CORRECTION, y: y }, size: this.size },
+					other,
+				);
+
+				if (!(collidesX && collidesY)) {
+					const correction = other.pos.x - (x + this.size.x);
+					this.pos.x += correction;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	private static checkPushing(a: Entity, b: Entity) {
 		const aVelocityX = Math.abs(a.velocity.x);
 		const bVelocityX = Math.abs(b.velocity.x);
@@ -231,9 +271,30 @@ export abstract class Entity {
 		}
 	}
 
+	public canBePushed(v: Vector2) {
+		const entities = this.level!.entities;
+		const newPos = { ...this.pos };
+		newPos.x += v.x;
+		newPos.y += v.y;
+
+		for (let i = 0; i < entities.length; i++) {
+			const e = entities[i];
+
+			if (e.isDynamic || e.isPassable) continue;
+
+			const { collidesX, collidesY } = Entity.isColliding({ pos: newPos, size: this.size }, e);
+
+			if (collidesX && collidesY) return false;
+		}
+
+		return true;
+	}
+
 	// DYNAMIC COLLISIONS
 	public static handleDynamicCollision(a: Entity, b: Entity) {
 		if (a == b) return;
+		if (a.isInsideDoor) return;
+		if (b.isInsideDoor) return;
 
 		const { collidesX, collidesY } = Entity.isColliding(a, b);
 		if (!collidesX || !collidesY) return;
@@ -261,13 +322,35 @@ export abstract class Entity {
 		if (overlap.x < overlap.y) {
 			if (diff.x > 0) {
 				// Pushing out to the right
-				a.pos.x += overlap.x / 2;
-				b.pos.x -= overlap.x / 2;
+
+				const pushedA = a.canBePushed({ x: overlap.x / 2, y: 0 });
+				const pushedB = b.canBePushed({ x: -overlap.x / 2, y: 0 });
+
+				if (pushedA && pushedB) {
+					a.pos.x += overlap.x / 2;
+					b.pos.x -= overlap.x / 2;
+				} else if (pushedA) {
+					a.pos.x += overlap.x;
+				} else {
+					b.pos.x -= overlap.x;
+				}
+
 				Entity.checkPushing(a, b);
 			} else {
 				// Pushing out to the left
-				a.pos.x -= overlap.x / 2;
-				b.pos.x += overlap.x / 2;
+
+				const pushedA = a.canBePushed({ x: -overlap.x / 2, y: 0 });
+				const pushedB = b.canBePushed({ x: overlap.x / 2, y: 0 });
+
+				if (pushedA && pushedB) {
+					a.pos.x -= overlap.x / 2;
+					b.pos.x += overlap.x / 2;
+				} else if (pushedA) {
+					a.pos.x -= overlap.x;
+				} else {
+					b.pos.x += overlap.x;
+				}
+
 				Entity.checkPushing(a, b);
 			}
 

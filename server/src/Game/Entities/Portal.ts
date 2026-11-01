@@ -81,6 +81,8 @@ export class Portal extends Entity {
 	}
 
 	public override onAnyCollision(other: Entity) {
+		if (other.isPhantom) return;
+
 		if (!this.isActive) {
 			return;
 		}

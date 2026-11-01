@@ -68,6 +68,7 @@ export class BouncePad extends Entity {
 	}
 
 	public override onAnyCollision(other: Entity) {
+		if (other.isPassable) return;
 		if (this.isActive) {
 			other.velocity.y -= this.customFields.BouncePower.value!;
 		}

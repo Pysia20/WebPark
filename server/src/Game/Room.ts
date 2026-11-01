@@ -164,6 +164,8 @@ export class Room {
 			LOG.info(`Instance of level ${this.level.getID()} was deleted in room ${this.id}`);
 			this.level = level;
 			this.level.reloadLevel();
+		} else {
+			this.stopGameLoop();
 		}
 	}
 
@@ -173,6 +175,7 @@ export class Room {
 
 	public stopGameLoop() {
 		this.gameLoop?.close();
+		this.io?.to(this.id).emit("levelGroupFinnished");
 	}
 
 	public setInputsToPlayer(userID: number, inputs: PlayerInputs) {

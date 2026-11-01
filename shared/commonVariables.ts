@@ -9,6 +9,7 @@ export const COLLISION_MARGIN_Y = 2;
 export const COLLISION_MARGIN_X = COLLISION_MARGIN_Y;
 export const HORIZONTAL_BIAS = 1.5;
 export const DESPAWN_BUFFER = 300;
+export const CORNER_CORRECTION = 5;
 
 export const WORLD_CONFIG = {
 	CELL_SIZE: 64,
@@ -22,7 +23,7 @@ export const CLIENT_CONFIG = {
 	/** How often client sends inputs data to server, (20)=20 times a second, (30)=30 times a second etc */
 	UPDATE_RATE: 30,
 	/** How many pixels the mouse has to move from the previous pos for it to be broadcasted */
-	MOUSE_MARGIN: 5
+	MOUSE_MARGIN: 5,
 };
 
 export const PLAYER_CONFIG = {
@@ -67,7 +68,7 @@ export const CAMERA_CONFIG = {
 	/** Extra Y cam space relative to player height */
 	PLAYER_Y_SPACER: 4,
 	MIN_ZOOM: 0.6,
-	MAX_ZOOM: 1.5
+	MAX_ZOOM: 1.5,
 } as const;
 
 export const PLAYER_VISUAL_CONFIG = {
@@ -158,7 +159,7 @@ export const ENTITY_VISUAL_CONFIG = {
 	},
 
 	LASER: {
-        /** ~30 == one block (64px) */
+		/** ~30 == one block (64px) */
 		AMPLITUDE: 25,
 		FREQUENCY: 0.25,
 		OFFSET: 0.5,

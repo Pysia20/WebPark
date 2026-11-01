@@ -36,21 +36,31 @@ export class WeepingAngel extends Entity {
 		this.isPhantom = true;
 	}
 
-	protected override onRightCollision(overlap: number, other: Entity) {}
-
-	protected override onLeftCollision(overlap: number, other: Entity) {}
-
-	protected override onUpCollision(overlap: number, other: Entity) {}
-
-	protected override onDownCollision(overlap: number, other: Entity) {}
-
-	protected override onUpTouching(other: Entity) {}
-
 	private isCursorOver(cursorPos: Vector2) {
 		const overX = this.pos.x <= cursorPos.x && cursorPos.x <= this.pos.x + this.size.x;
 		const overY = this.pos.y <= cursorPos.y && cursorPos.y <= this.pos.y + this.size.y;
 
 		return overX && overY;
+	}
+
+	protected override onRightCollision(overlap: number, other: Entity) {
+		if (other instanceof Player) super.onRightCollision(overlap, other);
+	}
+
+	protected override onLeftCollision(overlap: number, other: Entity) {
+		if (other instanceof Player) super.onLeftCollision(overlap, other);
+	}
+
+	protected override onUpCollision(overlap: number, other: Entity) {
+		if (other instanceof Player) super.onUpCollision(overlap, other);
+	}
+
+	protected override onDownCollision(overlap: number, other: Entity) {
+		if (other instanceof Player) super.onDownCollision(overlap, other);
+	}
+
+	protected override onUpTouching(other: Entity) {
+		if (other instanceof Player) super.onUpTouching(other);
 	}
 
 	public override handleBehaviour() {
@@ -92,8 +102,8 @@ export class WeepingAngel extends Entity {
 		thisPos.y = Math.round(thisPos.y / 64);
 
 		const otherPos: Vector2 = { ...this.target.pos };
-		otherPos.x = Math.round(otherPos.x / 64);
-		otherPos.y = Math.round((otherPos.y + (PLAYER_CONFIG.HEIGHT - 64)) / 64);
+		otherPos.x = Math.floor(otherPos.x / 64);
+		otherPos.y = Math.floor((otherPos.y + (PLAYER_CONFIG.HEIGHT - 64)) / 64);
 
 		const path = this.level?.grid.pathFind(thisPos, otherPos);
 
@@ -115,7 +125,7 @@ export class WeepingAngel extends Entity {
 	}
 
 	public override onAnyCollision(other: Entity) {
-		if (other instanceof Player) {
+		if (other instanceof Player && !this.isWatched) {
 			this.level!.shouldRestart = true;
 		}
 	}

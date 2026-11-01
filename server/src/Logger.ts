@@ -31,3 +31,7 @@ const transport = (() => {
 })();
 
 export const LOG = pino(transport);
+
+if (config.PATHFINDING_DEBUG_SERVER) {
+	LOG.level = "debug";
+}

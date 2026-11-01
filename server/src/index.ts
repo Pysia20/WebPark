@@ -11,10 +11,11 @@ import { games, generateRoomCode } from "./Global";
 import config from "../config.json";
 import movement from "./MovementSocket";
 import { Room } from "./Game/Room";
-import { Player } from "./Game/Player";
-import { JoinRoomRequest, JoinRoomRequestZod, SocketData } from "./Models";
+import { SocketData } from "./Models";
 import { LOG } from "./Logger";
 import { ROOM_CONFIG } from "../../shared/commonVariables";
+
+import "./Game/PathfindingDebug/index";
 
 const app: ExpressInterface = Express();
 const server: Server = createServer(app);

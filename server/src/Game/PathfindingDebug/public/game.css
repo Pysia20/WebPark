@@ -1,0 +1,11 @@
+canvas {
+	background-color: var(--bg-top);
+	width: 90vw;
+	height: 100%;
+	margin-top: 2vw;
+}
+
+.container {
+	display: flex;
+	justify-content: center;
+}

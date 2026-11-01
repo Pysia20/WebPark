@@ -15,7 +15,7 @@ addEventListener("keydown", (e) => {
 addEventListener("keyup", (e) => Inputs.delete(e.code));
 
 window.addEventListener("blur", () => {
-	// Inputs.clear()
+	Inputs.clear()  //PLEASE UNCOMMENT THIS WHEN DONE TESTING BRO
 	mousePos.x = 0;
 	mousePos.y = 0;
 	clicking = false;

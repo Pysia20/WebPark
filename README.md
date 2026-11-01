@@ -8,7 +8,7 @@
 
 ### Currently, in early-ish development
 
-$\color{gray} \text{now ~~mostly~~ without pico park sprites! revolutionary stuff}$
+$\color{gray} \text{now \sout{mostly} without pico park sprites! revolutionary stuff}$
 
 ---
 

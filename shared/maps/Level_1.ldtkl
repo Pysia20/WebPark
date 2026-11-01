@@ -101,8 +101,8 @@
 			"__opacity": 1,
 			"__pxTotalOffsetX": 0,
 			"__pxTotalOffsetY": 0,
-			"__tilesetDefUid": 2,
-			"__tilesetRelPath": "placeholderSpritesheet.png",
+			"__tilesetDefUid": 77,
+			"__tilesetRelPath": "../client/public/spritesheets/AutoLayer.png",
 			"iid": "e7714ff2-bde0-11f1-ac0f-f3fc7970a721",
 			"levelId": 12,
 			"layerDefUid": 4,
@@ -139,6 +139,35 @@
 				{ "px": [512,512], "src": [0,0], "f": 0, "t": 0, "d": [88], "a": 1 },
 				{ "px": [576,512], "src": [0,0], "f": 0, "t": 0, "d": [89], "a": 1 }
 			],
+			"entityInstances": []
+		},
+		{
+			"__identifier": "AutoLayer",
+			"__type": "IntGrid",
+			"__cWid": 10,
+			"__cHei": 9,
+			"__gridSize": 64,
+			"__opacity": 1,
+			"__pxTotalOffsetX": 0,
+			"__pxTotalOffsetY": 0,
+			"__tilesetDefUid": 77,
+			"__tilesetRelPath": "../client/public/spritesheets/AutoLayer.png",
+			"iid": "81fb4601-bde0-11f1-8796-6d5d10939e82",
+			"levelId": 12,
+			"layerDefUid": 139,
+			"pxOffsetX": 0,
+			"pxOffsetY": 0,
+			"visible": true,
+			"optionalRules": [],
+			"intGridCsv": [
+				0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+				0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+				0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+			],
+			"autoLayerTiles": [],
+			"seed": 1496505,
+			"overrideTilesetUid": null,
+			"gridTiles": [],
 			"entityInstances": []
 		},
 		{

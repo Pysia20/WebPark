@@ -3531,9 +3531,9 @@
 		{
 			"__cWid": 12,
 			"__cHei": 5,
-			"identifier": "Tiless",
+			"identifier": "Tiles",
 			"uid": 77,
-			"relPath": "../client/public/spritesheets/Tiless.png",
+			"relPath": "../client/public/spritesheets/Tiles.png",
 			"embedAtlas": null,
 			"pxWid": 878,
 			"pxHei": 360,
@@ -3545,7 +3545,10 @@
 			"enumTags": [],
 			"customData": [],
 			"savedSelections": [],
-			"cachedPixelData": null
+			"cachedPixelData": {
+				"opaqueTiles": "111111111111111110111111111110111110111110111110111100000000",
+				"averageColors": "fd85fe86fd85fd85fd85fd85fe86fe86fe96fe96fe96fe96fe86fe96fe86fc85fd850000fe86fe86fe96fe96fe96fe96fd85fe86fd85fe96fd850000fe86fe86fe86fe86fe960000fe96fe96fd85fd85fd850000fe86fe86fe86fe86fe960000fe96fe96fd85fd8500000000000000000000000000000000"
+			}
 		}
 	], "enums": [{ "identifier": "Direction", "uid": 30, "values": [
 		{ "id": "Left", "tileRect": null, "color": 12470831 },

@@ -3,7 +3,7 @@ import { SocketData } from "../../Models";
 import { Level } from "../Level";
 import { Grid } from "../Pathfinding";
 import { Server, createServer, get } from "http";
-import { DefaultEventsMap, Server as SocketIOServer } from "socket.io";
+import { DefaultEventsMap, Namespace, Server as SocketIOServer } from "socket.io";
 import Express from "express";
 import { Express as ExpressInterface, Request, Response } from "express";
 import CONFIG from "../../../config.json";
@@ -27,7 +27,7 @@ interface NodeInterface {
 	y: number;
 	g: number;
 	h: number;
-	type: "Player" | "Wall" | "Entity" | "Angel"; // Only for drawing
+	type: "Player" | "Wall" | "Entity" | "Angel" | "Air"; // Only for drawing
 	isInPath: boolean;
 	isWall: boolean; // Inversed 'isPassable'
 }
@@ -39,6 +39,7 @@ export class DebugServer {
 	private app: ExpressInterface;
 	private server: Server;
 	private io: SocketIOServer;
+	private endpoint: Namespace;
 
 	private __filename = fileURLToPath(import.meta.url);
 	private __dirname = path.dirname(this.__filename);
@@ -57,6 +58,10 @@ export class DebugServer {
 		this.grids.delete(roomID);
 
 		LOG.debug(`${roomID} unregistered its pathfinder.`);
+	}
+
+	public notifyChange(roomID: string) {
+		this.endpoint.to(roomID).emit("changed", this.parseData(roomID));
 	}
 
 	constructor() {
@@ -82,7 +87,7 @@ export class DebugServer {
 			},
 		});
 
-		register(this.io);
+		this.endpoint = register(this.io);
 
 		this.app.use(Express.json());
 		this.app.use("/public", Express.static(this.PUBLIC_PATH));
@@ -95,30 +100,7 @@ export class DebugServer {
 		});
 	}
 
-	private setupRoutes() {
-		this.app.get("/", (req, res) => this.home(req, res));
-		this.app.get("/games", (req, res) => this.games(req, res));
-		this.app.get("/:id", (req, res) => this.gameScreen(req, res));
-		this.app.get("/game/:id", (req, res) => this.game(req, res));
-	}
-
-	private games(req: Request, res: Response) {
-		const response: Record<string, any> = {};
-
-		this.grids.forEach((v, k) => {
-			response[k] = {
-				levelID: v.level.getID(),
-				players: v.level.room.players.size,
-			};
-		});
-
-		res.status(200).json(response);
-	}
-
-	//? /:id
-	private game(req: Request, res: Response) {
-		const { id } = req.params as { id: string };
-
+	private parseData(id: string) {
 		const grid = this.grids.get(id)!.grid;
 
 		const response: GridInterface = {
@@ -146,7 +128,34 @@ export class DebugServer {
 			}
 		}
 
-		res.status(200).send(response);
+		return response;
+	}
+
+	private setupRoutes() {
+		this.app.get("/", (req, res) => this.home(req, res));
+		this.app.get("/games", (req, res) => this.games(req, res));
+		this.app.get("/:id", (req, res) => this.gameScreen(req, res));
+		this.app.get("/game/:id", (req, res) => this.game(req, res));
+	}
+
+	private games(req: Request, res: Response) {
+		const response: Record<string, any> = {};
+
+		this.grids.forEach((v, k) => {
+			response[k] = {
+				levelID: v.level.getID(),
+				players: v.level.room.players.size,
+			};
+		});
+
+		res.status(200).json(response);
+	}
+
+	//? /:id
+	private game(req: Request, res: Response) {
+		const { id } = req.params as { id: string };
+
+		res.status(200).send(this.parseData(id));
 	}
 
 	private gameScreen(req: Request, res: Response) {

@@ -1,5 +1,7 @@
 import { Vector2 } from "@shared/commonModels";
 import { Level } from "./Level";
+import { ENTITY_VISUAL_CONFIG } from "@shared/commonVariables";
+import { PathfindingDebug } from "./PathfindingDebug";
 
 // Code heavly inspired by Sebastians Lague A* Pathfinding tutorial
 // https://www.youtube.com/watch?v=mZfyt03LDH4&list=PLFt_AvWsXl0cq5Umv3pMC9SPnKjfp9eGW&index=4
@@ -8,7 +10,7 @@ export class Node {
 	public g: number = 0; // Distance from start
 	public h: number = 0; // Distance from end
 	public drawType: "Start" | "End" | "Wall" | undefined; // Purely visual when printing the grid, doesn't impact anything
-	public type: "Player" | "Wall" | "Entity" | "Angel" = "Wall";
+	public type: "Player" | "Wall" | "Entity" | "Angel" | "Air" = "Air";
 	public parent: Node | undefined; // If is a part of path, the preceding element
 	public isInPath: boolean = false;
 
@@ -35,12 +37,14 @@ export class Grid {
 	public path: Node[] = [];
 	public width = 0;
 	public height = 0;
+	private level: Level | undefined;
 
 	public generateGridOfLevel(level: Level) {
 		this.grid = [];
 
 		this.width = level.width;
 		this.height = level.height;
+		this.level = level;
 
 		for (let i = 0; i < this.height; i++) {
 			this.grid.push([]);
@@ -69,12 +73,18 @@ export class Grid {
 					entityNode.isWall = !e.isPassable;
 					if (e.type == "Player" || e.type == "WeepingAngel") entityNode.isWall = false;
 
+					entityNode.type = "Entity";
+
 					if (e.type == "WeepingAngel") entityNode.type = "Angel";
 					if (e.type == "Player") entityNode.type = "Player";
 					if (e.type == "MapCollider") entityNode.type = "Wall";
 				}
 			}
 		});
+
+		if (PathfindingDebug) {
+			PathfindingDebug.notifyChange(this.level?.room.getID()!);
+		}
 	}
 
 	public genrateRandomGrid(x: number, y: number) {
@@ -162,7 +172,9 @@ export class Grid {
 
 			if (currentNode == endNode) {
 				this.path = this.retrace(startNode, endNode);
-				this.print();
+				// this.print();
+
+				this.clearNodes();
 				return this.path;
 			}
 
@@ -181,6 +193,15 @@ export class Grid {
 				}
 			});
 		}
+	}
+
+	public clearNodes() {
+		this.grid.forEach((row) => {
+			row.forEach((n) => {
+				n.isInPath = false;
+				n.parent = undefined;
+			});
+		});
 	}
 
 	public retrace(start: Node, end: Node) {

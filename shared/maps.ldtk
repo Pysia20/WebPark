@@ -3545,10 +3545,7 @@
 			"enumTags": [],
 			"customData": [],
 			"savedSelections": [],
-			"cachedPixelData": {
-				"opaqueTiles": "111111111111111110111111111110111110111110111110111100000000",
-				"averageColors": "fd85fe86fd85fd85fd85fd85fe86fe86fe96fe96fe96fe96fe86fe96fe86fc85fd859888fe86fe86fe96fe96fe96fe96fd85fe86fd85fe96fd859888fe86fe86fe86fe86fe969888fe96fe96fd85fd85fd859888fe86fe86fe86fe86fe969888fe96fe96fd85fd8598889888988898889888988898889888"
-			}
+			"cachedPixelData": null
 		}
 	], "enums": [{ "identifier": "Direction", "uid": 30, "values": [
 		{ "id": "Left", "tileRect": null, "color": 12470831 },

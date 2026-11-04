@@ -34,7 +34,7 @@ export class Node {
 
 export class Grid {
 	public grid: Node[][] = [];
-	public path: Node[] = [];
+	public paths: Node[][] = [];
 	public width = 0;
 	public height = 0;
 	private level: Level | undefined;
@@ -85,6 +85,8 @@ export class Grid {
 		if (PathfindingDebug) {
 			PathfindingDebug.notifyChange(this.level?.room.getID()!);
 		}
+
+		this.paths = [];
 	}
 
 	public genrateRandomGrid(x: number, y: number) {
@@ -171,11 +173,11 @@ export class Grid {
 			closedSet.push(currentNode);
 
 			if (currentNode == endNode) {
-				this.path = this.retrace(startNode, endNode);
-				// this.print();
+				const path = this.retrace(startNode, endNode);
 
+				this.paths.push(path);
 				this.clearNodes();
-				return this.path;
+				return path;
 			}
 
 			this.getNeighbours(currentNode).forEach((n) => {

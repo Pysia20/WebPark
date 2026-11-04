@@ -10,6 +10,7 @@ import CONFIG from "../../../config.json";
 import path from "path";
 import { fileURLToPath } from "url";
 import { register } from "./socket";
+import { Vector2 } from "@shared/commonModels";
 
 interface GridData {
 	grid: Grid;
@@ -20,6 +21,7 @@ interface GridInterface {
 	width: number;
 	height: number;
 	nodes: NodeInterface[][];
+	paths: Vector2[][];
 }
 
 interface NodeInterface {
@@ -107,6 +109,7 @@ export class DebugServer {
 			width: grid.width,
 			height: grid.height,
 			nodes: [] as NodeInterface[][],
+			paths: [] as Vector2[][],
 		};
 
 		for (let y = 0; y < grid.grid.length; y++) {
@@ -127,6 +130,16 @@ export class DebugServer {
 				array.push(nodeInt);
 			}
 		}
+
+		grid.paths.forEach((path) => {
+			const nodes: Vector2[] = [];
+
+			path.forEach((n) => {
+				nodes.push({ x: n.x, y: n.y });
+			});
+
+			response.paths.push(nodes);
+		});
 
 		return response;
 	}

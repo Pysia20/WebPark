@@ -8,6 +8,13 @@ const socket = io("/debug", {
 	query: { roomID: roomID },
 });
 
+const pathColors = [
+	"rgb(200, 0, 0, 0.3)",
+	"rgb(0, 200, 0, 0.3)",
+	"rgb(0, 0, 200, 0.3)",
+	"rgb(100, 100, 0, 0.3)",
+];
+
 document.title = "RoomID: " + roomID;
 
 let data;
@@ -43,6 +50,21 @@ function draw() {
 			drawNode(n);
 		});
 	});
+
+	for (let i = 0; i < data.paths.length; i++) {
+		drawPath(data.paths[i]);
+	}
+}
+
+function drawPath(p, i) {
+	ctx.globalAlpha = 0.3;
+	const index = i % pathColors.length;
+	ctx.fillStyle = pathColors[index];
+
+	p.forEach((n) => {
+		ctx.fillRect(n.x, n.y, 1, 1);
+	});
+	ctx.globalAlpha = 1;
 }
 
 function drawNode(n) {

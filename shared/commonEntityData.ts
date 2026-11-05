@@ -17,3 +17,7 @@ export interface ServerButtonDoorData extends ServerEntityData {
 export interface ServerLaserEntityData extends ServerEntityData {
 	isActive: boolean;
 }
+
+export interface ServerPushableEntityData extends ServerEntityData {
+	mass: number;
+}

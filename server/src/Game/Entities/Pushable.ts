@@ -6,6 +6,7 @@ import { clamp, RequiredField } from "../../Global";
 import CONFIG from "../../../config.json";
 import { Entity } from "../Entity";
 import { Player } from "../Player";
+import { ServerPushableEntityData } from "@shared/commonEntityData";
 
 //TODO Add colision with other entities
 
@@ -97,7 +98,8 @@ export class Pushable extends Entity {
 			pos: this.pos,
 			visualSize: this.size,
 			type: this.type,
-		} as ServerEntityData;
+			mass: this.customFields.Mass.value,
+		} as ServerPushableEntityData;
 	}
 
 	public override clone() {

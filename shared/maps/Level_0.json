@@ -630,12 +630,12 @@
 					"__tags": [],
 					"__tile": null,
 					"__smartColor": "#606060",
-					"iid": "41a76a20-bde0-11f1-ae6f-c30df5ce7ad0",
+					"iid": "da13a1c0-bde0-11f1-aca7-8502d518f777",
 					"width": 64,
 					"height": 64,
 					"defUid": 75,
 					"px": [832,704],
-					"fieldInstances": [{ "__identifier": "Speed", "__type": "Int", "__value": 1, "__tile": null, "defUid": 76, "realEditorValues": [{ "id": "V_Int", "params": [1] }] }],
+					"fieldInstances": [{ "__identifier": "Speed", "__type": "Int", "__value": null, "__tile": null, "defUid": 76, "realEditorValues": [] }],
 					"__worldX": 832,
 					"__worldY": -256
 				}

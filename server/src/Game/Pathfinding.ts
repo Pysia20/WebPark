@@ -68,6 +68,9 @@ export class Grid {
 					const entityX = Math.round(e.pos.x / 64);
 					const entityY = Math.round((e.pos.y - 1) / 64);
 
+					if (entityX < 0 || entityY < 0) continue;
+					if (entityX + j >= this.width || entityY + i >= this.height) continue;
+
 					const entityNode = this.grid[entityY + i][entityX + j];
 
 					entityNode.isWall = !e.isPassable;
@@ -145,6 +148,11 @@ export class Grid {
 	}
 
 	public pathFind(start: Vector2, end: Vector2) {
+		if (start.x < 0 || start.x >= this.width) return;
+		if (start.y < 0 || start.y >= this.height) return;
+		if (end.x < 0 || end.x >= this.width) return;
+		if (end.y < 0 || end.y >= this.height) return;
+
 		const startNode = this.grid[start.y][start.x];
 		const endNode = this.grid[end.y][end.x];
 

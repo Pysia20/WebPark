@@ -22,7 +22,7 @@ export class WeepingAngel extends Entity {
 		return [
 			{
 				name: "Speed",
-				value: this.customFields.Speed,
+				value: this.customFields.Speed.value,
 				isMissing: (v) => !v || v <= 0,
 				isRequired: true,
 			},

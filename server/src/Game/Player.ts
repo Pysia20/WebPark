@@ -1,9 +1,10 @@
 import { PlayerInputs, Vector2 } from "@shared/commonModels";
 import { Entity } from "./Entity";
-import { PLAYER_CONFIG } from "@shared/commonVariables";
+import { PLAYER_CONFIG, WORLD_CONFIG } from "@shared/commonVariables";
 import { DummyEntityCustomFields } from "@shared/commonLevelModels";
 import { LOG } from "../Logger";
 import { clamp } from "../Global";
+import { Level } from "./Level";
 
 export class Player extends Entity {
 	public nick: string;
@@ -248,6 +249,13 @@ export class Player extends Entity {
 		}
 
 		return theList;
+	}
+
+	public handleBehaviour(level: Level) {
+		if (this.pos.x < 0 || this.pos.x > level.width * WORLD_CONFIG.CELL_SIZE)
+			level.shouldRestart = true;
+		if (this.pos.y < 0 || this.pos.y > level.height * WORLD_CONFIG.CELL_SIZE)
+			level.shouldRestart = true;
 	}
 
 	public override setGrounded() {

@@ -123,18 +123,19 @@ export class Grid {
 	}
 
 	public getNeighbours(node: Node, size: Vector2) {
-		const neighbours: Node[] = [];
+		const tempNeighbours: Node[] = [];
 		for (let i = -1; i <= size.y; i++) {
-			if (i != size.y) continue;
 			for (let j = -1; j <= size.x; j++) {
 				if (i == 0 && j == 0) continue;
-				if (j != size.x) continue;
+
+				if (j != -1 && j != size.x && i != -1 && j != size.x) continue;
 
 				const yIndex = i + node.y;
 				const xIndex = j + node.x;
 
 				if (yIndex < 0 || yIndex >= this.grid.length) continue;
 				if (xIndex < 0 || xIndex >= this.grid[0].length) continue;
+
 				if (this.grid[node.y][xIndex].isWall || this.grid[yIndex][node.x].isWall) continue;
 
 				if (i != 0 && j != 0) {
@@ -142,11 +143,36 @@ export class Grid {
 					if (this.grid[yIndex][node.x].isWall || this.grid[node.y][xIndex].isWall) continue;
 				}
 
-				neighbours.push(this.grid[yIndex][xIndex]);
+				tempNeighbours.push(this.grid[yIndex][xIndex]);
 			}
 		}
 
-		return neighbours;
+		// This also caused memory leak
+
+		const neighbours: Node[] = [];
+
+		// // Continous collision check
+		// tempNeighbours.forEach((n) => {
+		// 	let isOK = true;
+		// 	for (let j = 0; j < size.y; j++) {
+		// 		for (let i = 0; i < size.x; i++) {
+		// 			const isXInBound = n.x + i < this.width;
+		// 			const isYInBound = n.y - j < this.height;
+
+		// 			if (!isXInBound || !isYInBound) continue;
+
+		// 			if (this.grid[n.y - j][n.x + i].isWall) {
+		// 				isOK = false;
+		// 				break;
+		// 			}
+		// 		}
+		// 		if (!isOK) break;
+		// 	}
+
+		// 	if (isOK) neighbours.push(n);
+		// });
+
+		return tempNeighbours;
 	}
 
 	public pathFind(start: Vector2, end: Vector2, startSize: Vector2) {

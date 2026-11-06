@@ -10,7 +10,7 @@ export const COLLISION_MARGIN_X = COLLISION_MARGIN_Y;
 export const HORIZONTAL_BIAS = 1.5;
 export const DESPAWN_BUFFER = 300;
 export const CORNER_CORRECTION = 5;
-export const PATHFINDING_SCALE = 2;
+export const PATHFINDING_SCALE = 4;
 
 export const WORLD_CONFIG = {
 	CELL_SIZE: 64,

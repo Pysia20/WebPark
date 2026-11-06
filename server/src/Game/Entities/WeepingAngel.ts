@@ -117,7 +117,7 @@ export class WeepingAngel extends Entity {
 			y: this.size.y / PATHFINDING_RESOLUTION,
 		});
 
-		if (path?.length == 0 || !path) return;
+		if (!path || path.length <= 1) return;
 
 		const target: Vector2 = {
 			x: path![1].x * PATHFINDING_RESOLUTION,

@@ -4,7 +4,12 @@ import { EntityCustomFieldsData } from "@shared/commonLevelModels";
 import { getDistance, RequiredField } from "../../Global";
 import { Player } from "../Player";
 import { LOG } from "../../Logger";
-import { PLAYER_CONFIG } from "@shared/commonVariables";
+import {
+	PATHFINDING_RESOLUTION,
+	PATHFINDING_SCALE,
+	PLAYER_CONFIG,
+	WORLD_CONFIG,
+} from "@shared/commonVariables";
 
 //! DO NOT IMPORT!!!
 //? IT IS A TEMPLATE FOR CREATING NEW ENTITY TYPES
@@ -98,18 +103,26 @@ export class WeepingAngel extends Entity {
 		this.target = closestPlayer;
 
 		const thisPos: Vector2 = { ...this.pos };
-		thisPos.x = Math.round(thisPos.x / 64);
-		thisPos.y = Math.round(thisPos.y / 64);
+		thisPos.x = Math.round(thisPos.x / PATHFINDING_RESOLUTION);
+		thisPos.y = Math.round(thisPos.y / PATHFINDING_RESOLUTION);
 
 		const otherPos: Vector2 = { ...this.target.pos };
-		otherPos.x = Math.floor(otherPos.x / 64);
-		otherPos.y = Math.floor((otherPos.y + (PLAYER_CONFIG.HEIGHT - 64)) / 64);
+		otherPos.x = Math.floor(otherPos.x / PATHFINDING_RESOLUTION);
+		otherPos.y = Math.floor(
+			(otherPos.y + (PLAYER_CONFIG.HEIGHT - PATHFINDING_RESOLUTION)) / PATHFINDING_RESOLUTION,
+		);
 
-		const path = this.level?.grid.pathFind(thisPos, otherPos);
+		const path = this.level?.grid.pathFind(thisPos, otherPos, {
+			x: this.size.x / PATHFINDING_RESOLUTION,
+			y: this.size.y / PATHFINDING_RESOLUTION,
+		});
 
 		if (path?.length == 0 || !path) return;
 
-		const target: Vector2 = { x: path![0].x * 64, y: path![0].y * 64 };
+		const target: Vector2 = {
+			x: path![1].x * PATHFINDING_RESOLUTION,
+			y: path![1].y * PATHFINDING_RESOLUTION,
+		};
 
 		const v: Vector2 = { x: target.x - this.pos.x, y: target.y - this.pos.y };
 		const magnitude = Math.sqrt(v.x ** 2 + v.y ** 2);

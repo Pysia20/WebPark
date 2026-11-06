@@ -1,6 +1,6 @@
 import { Vector2 } from "@shared/commonModels";
 import { Level } from "./Level";
-import { ENTITY_VISUAL_CONFIG } from "@shared/commonVariables";
+import { WORLD_CONFIG, PATHFINDING_SCALE, PATHFINDING_RESOLUTION } from "@shared/commonVariables";
 import { PathfindingDebug } from "./PathfindingDebug";
 
 // Code heavly inspired by Sebastians Lague A* Pathfinding tutorial
@@ -42,8 +42,8 @@ export class Grid {
 	public generateGridOfLevel(level: Level) {
 		this.grid = [];
 
-		this.width = level.width;
-		this.height = level.height;
+		this.width = level.width * PATHFINDING_SCALE;
+		this.height = level.height * PATHFINDING_SCALE;
 		this.level = level;
 
 		for (let i = 0; i < this.height; i++) {
@@ -58,15 +58,15 @@ export class Grid {
 		// I mean it could be optimized
 
 		level.entities.forEach((e) => {
-			const entityWidth = Math.round(e.size.x / 64);
-			let entityHeight = Math.round((e.size.y + 1) / 64);
+			const entityWidth = Math.round(e.size.x / PATHFINDING_RESOLUTION);
+			let entityHeight = Math.round((e.size.y + 1) / PATHFINDING_RESOLUTION);
 
-			if (e.type == "Player") entityHeight = 1;
+			if (e.type == "Player") entityHeight = 1 * PATHFINDING_SCALE;
 
 			for (let i = 0; i < entityHeight; i++) {
 				for (let j = 0; j < entityWidth; j++) {
-					const entityX = Math.round(e.pos.x / 64);
-					const entityY = Math.round((e.pos.y - 1) / 64);
+					const entityX = Math.round(e.pos.x / PATHFINDING_RESOLUTION);
+					const entityY = Math.round((e.pos.y - 1) / PATHFINDING_RESOLUTION);
 
 					if (entityX < 0 || entityY < 0) continue;
 					if (entityX + j >= this.width || entityY + i >= this.height) continue;
@@ -122,11 +122,13 @@ export class Grid {
 		}
 	}
 
-	public getNeighbours(node: Node) {
+	public getNeighbours(node: Node, size: Vector2) {
 		const neighbours: Node[] = [];
-		for (let i = -1; i <= 1; i++) {
-			for (let j = -1; j <= 1; j++) {
+		for (let i = -1; i <= size.y; i++) {
+			if (i != size.y) continue;
+			for (let j = -1; j <= size.x; j++) {
 				if (i == 0 && j == 0) continue;
+				if (j != size.x) continue;
 
 				const yIndex = i + node.y;
 				const xIndex = j + node.x;
@@ -147,7 +149,14 @@ export class Grid {
 		return neighbours;
 	}
 
-	public pathFind(start: Vector2, end: Vector2) {
+	public pathFind(start: Vector2, end: Vector2, startSize: Vector2) {
+		// start.x *= PATHFINDING_SCALE;
+		// start.y *= PATHFINDING_SCALE;
+		// end.x *= PATHFINDING_SCALE;
+		// end.y *= PATHFINDING_SCALE;
+		// startSize.x *= PATHFINDING_SCALE;
+		// startSize.y *= PATHFINDING_SCALE;
+
 		if (start.x < 0 || start.x >= this.width) return;
 		if (start.y < 0 || start.y >= this.height) return;
 		if (end.x < 0 || end.x >= this.width) return;
@@ -188,7 +197,7 @@ export class Grid {
 				return path;
 			}
 
-			this.getNeighbours(currentNode).forEach((n) => {
+			this.getNeighbours(currentNode, startSize).forEach((n) => {
 				if (n.isWall || closedSet.includes(n)) {
 					return;
 				}

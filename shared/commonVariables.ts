@@ -10,10 +10,12 @@ export const COLLISION_MARGIN_X = COLLISION_MARGIN_Y;
 export const HORIZONTAL_BIAS = 1.5;
 export const DESPAWN_BUFFER = 300;
 export const CORNER_CORRECTION = 5;
+export const PATHFINDING_SCALE = 2;
 
 export const WORLD_CONFIG = {
 	CELL_SIZE: 64,
 };
+export const PATHFINDING_RESOLUTION = WORLD_CONFIG.CELL_SIZE / PATHFINDING_SCALE;
 
 export const ROOM_CONFIG = {
 	MAX_PLAYERS: 8,
@@ -69,7 +71,7 @@ const PALLETE = {
 	VIOLET: "#73577E",
 	WHITE: "#FFFCF1",
 	GRAY: "#BEBEB4",
-	BLACK: "#3E3E3E"
+	BLACK: "#3E3E3E",
 } as const;
 
 export const CAMERA_CONFIG = {

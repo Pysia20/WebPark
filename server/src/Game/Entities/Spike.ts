@@ -28,6 +28,12 @@ export class Spike extends Entity {
 		}
 	}
 
+	public override onUpTouching(other: Entity) {
+		if (other.type == "Player") {
+			this.shouldKill = true;
+		}
+	}
+
 	public override handleBehaviour(l: Level) {
 		if (this.shouldKill) {
 			this.shouldKill = false;

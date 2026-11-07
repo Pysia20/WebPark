@@ -160,6 +160,8 @@ export class Level {
 			});
 		});
 
+		this.entities.forEach((e) => (e.riders = []));
+
 		const dynamicEntities: Entity[] = [];
 
 		this.entities.forEach((e) => {

@@ -190,13 +190,12 @@ export class Player extends Entity {
 		return theList;
 	}
 
-	/*
+	/**
 	Finds the first player that is behind
 	Passes all the players except this and itself
 	(There cant be more than 1 behind i guess.)
 	Then the one behind, checks again for its behinds
 	*/
-
 	public getPlayersBehind(direction: 1 | -1, players: Player[]): Player[] {
 		let theList: Player[] = [this];
 

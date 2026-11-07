@@ -23,6 +23,7 @@ export abstract class Entity {
 	public isPassable: boolean = false;
 	public isPhantom: boolean = false;
 	public isInsideDoor: boolean = false;
+	public riders: Entity[] = [];
 
 	public getUsedFields(): RequiredField[] {
 		return [];
@@ -175,10 +176,16 @@ export abstract class Entity {
 
 	public moveXAxis() {
 		this.pos.x += this.velocity.x * (1 / CONFIG.TICKRATE);
+		this.riders.forEach((r) => {
+			r.pos.x += this.velocity.x * (1 / CONFIG.TICKRATE);
+		});
 	}
 
 	public moveYAxis() {
 		this.pos.y += this.velocity.y * (1 / CONFIG.TICKRATE);
+		this.riders.forEach((r) => {
+			r.pos.y += this.velocity.y * (1 / CONFIG.TICKRATE);
+		});
 	}
 
 	protected onRightCollision(overlap: number, other: Entity) {
@@ -202,6 +209,7 @@ export abstract class Entity {
 				other.velocity.y = 0;
 			}
 			other.setGrounded();
+			this.addRider(other);
 		}
 	}
 
@@ -222,6 +230,7 @@ export abstract class Entity {
 				other.velocity.y = 0;
 			}
 			other.setGrounded();
+			this.addRider(other);
 		}
 	}
 
@@ -296,6 +305,15 @@ export abstract class Entity {
 		if (a.isInsideDoor) return;
 		if (b.isInsideDoor) return;
 
+		if (b.checkGrounded(a)) {
+			a.setGrounded();
+			b.addRider(a);
+		}
+		if (a.checkGrounded(b)) {
+			b.setGrounded();
+			a.addRider(b);
+		}
+
 		const { collidesX, collidesY } = Entity.isColliding(a, b);
 		if (!collidesX || !collidesY) return;
 
@@ -354,8 +372,6 @@ export abstract class Entity {
 				Entity.checkPushing(a, b);
 			}
 
-			const relativeVelocityX = ((a.velocity.x - b.velocity.x) * 2) / 5;
-
 			// Average seems better, try with other players
 			const avergageSign = Math.sign(a.velocity.x * b.velocity.x);
 			const averageVelocity =
@@ -363,7 +379,7 @@ export abstract class Entity {
 
 			a.velocityStack.push({ x: -averageVelocity, y: 0 });
 			b.velocityStack.push({ x: averageVelocity, y: 0 });
-		} else {
+		} else if (overlap.x > overlap.y) {
 			if (diff.y > 0) {
 				if (a.isGrounded) {
 					b.pos.y -= overlap.y;
@@ -372,9 +388,10 @@ export abstract class Entity {
 					b.pos.y -= overlap.y / 2;
 				}
 
+				b.setGrounded();
+				a.addRider(b);
 				// Pushing out upwards
 				if (b.velocity.y > 0) {
-					b.isGrounded = true;
 					b.velocity.y = 0;
 				}
 			} else {
@@ -382,12 +399,13 @@ export abstract class Entity {
 					a.pos.y -= overlap.y;
 				} else {
 					a.pos.y -= overlap.y / 2;
-
-					// Pushing out downwards
 					b.pos.y += overlap.y / 2;
 				}
+
+				a.setGrounded();
+				b.addRider(a);
+
 				if (a.velocity.y > 0) {
-					a.isGrounded = true;
 					a.velocity.y = 0;
 				}
 			}
@@ -399,6 +417,10 @@ export abstract class Entity {
 		if (b.type == "CannonProjectile") {
 			a.level?.removeEntity(a);
 		}
+	}
+
+	public addRider(rider: Entity) {
+		if (!this.riders.includes(rider)) this.riders.push(rider);
 	}
 
 	public getData(): ServerEntityData {

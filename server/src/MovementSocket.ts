@@ -57,6 +57,7 @@ export function register(io: Server) {
 				return;
 			}
 
+			if (room.io == undefined) room.io = endpoint;
 			await socket.join(data.roomID);
 
 			if (room.getPlayers().get(data.userID)) {

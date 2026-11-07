@@ -24,7 +24,7 @@ export class Room {
 	public level: Level;
 	private gameLoop: NodeJS.Timeout | undefined;
 
-	private io: Namespace | undefined;
+	public io: Namespace | undefined;
 
 	constructor(id: string) {
 		this.id = id;
@@ -99,8 +99,6 @@ export class Room {
 	}
 
 	public startGameLoop(io: Namespace) {
-		this.io = io;
-
 		try {
 			this.level = this.level.reloadLevel();
 			this.gameLoop = setInterval(
@@ -164,7 +162,7 @@ export class Room {
 	public changeLevel(level: Level | undefined) {
 		if (this.players.size <= 0) return;
 
-		this.io?.to(this.id).emit("changeLevel", level?.getID());
+		this.io!.to(this.id).emit("changeLevel", level?.getID());
 		LOG.info(`Room ${this.id} changes level to ${level ? level.getID() : "/GROUP FINNISHED/"}`);
 
 		if (level) {

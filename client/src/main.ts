@@ -4,13 +4,12 @@ import { getServerData, onConnect, startNetworking } from "./Network";
 import { coordinator } from "./Coordinator";
 import { Vector2 } from "@shared/commonModels"
 import { loadAssets } from "./Assets";
-import { CameraController } from "./Camera";
+import {cam, CameraController} from "./Camera";
 import { leveler } from "./Leveler";
 import { finishLoad, pageSetup } from "./Weber";
 import { hud } from "./Hud";
 import { updateShaders } from "./Shaders";
 import { updateLerp } from "./FavoriteChild";
-import {lvlSelector} from "./LevelSelector";
 
 const app = new PIXI.Application()
 await app.init({
@@ -32,23 +31,19 @@ app.stage.addChild(worldContainer)
 app.stage.addChild(hudContainer)
 createMouseListiner(app, worldContainer)
 
-pageSetup(app)
-
 const assets = await loadAssets()
 
-lvlSelector.init(assets.mapAssets.levels)
-lvlSelector.fill()
+pageSetup(app, assets.mapAssets.levels)
 
 hud.init(hudContainer, app.screen.width, app.screen.height)
 coordinator.init(assets.playerTextures, worldContainer)
 leveler.init(worldContainer, assets.mapAssets.spritesheet, assets.mapAssets.levels, assets.mapAssets.entTextures)
 
 const map_size: Vector2 = {x: leveler.mapData.pxWid, y: leveler.mapData.pxHei}
-const camera = new CameraController(worldContainer, app.screen, map_size)
+cam.init(worldContainer, app.screen, map_size)
 
 onConnect(finishLoad)
 startNetworking()
-
 startSendingInputs()
 
 leveler.renderLevel()
@@ -60,7 +55,7 @@ app.ticker.add((time) => {
     const serverData = getServerData()
     if (serverData) {
         coordinator.update_players(serverData.playerData, time.deltaTime)
-        camera.update_cam(serverData)
+        cam.update_cam(serverData)
         leveler.updateEnts(serverData.entityData, time.deltaTime)
     }
     coordinator.update_positions()

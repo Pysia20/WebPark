@@ -15,20 +15,18 @@ class LevelSelector {
         for (const mapName of this.maps.keys()) {
             const item = document.createElement("div")
             item.classList.add("level")
-
-            const name = document.createElement("p")
-            name.innerHTML = mapName
-            name.onclick = () => {
+            item.onclick = () => {
                 emitLevel(mapName)
 
                 console.log("EMITTING: " + mapName)
             }
 
+            const name = document.createElement("p")
+            name.innerHTML = mapName
+
             item.appendChild(name)
 
             this.menu.appendChild(item)
-
-            console.log("test")
         }
     }
 }

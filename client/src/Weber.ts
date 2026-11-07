@@ -1,8 +1,10 @@
 import {emitReady, onGameStart, onPlayerJoin, onPlayerLeave, onReadyUpdate} from "./Network";
 import { Application } from "pixi.js";
 import { coordinator } from "./Coordinator";
+import {lvlSelector} from "./LevelSelector";
+import {LevelData} from "@shared/commonLevelModels";
 
-export function pageSetup(app: Application) {
+export function pageSetup(app: Application, assets: Map<string, LevelData>) {
     const readyButton = document.getElementById("readyButton") as HTMLButtonElement
     const container = document.querySelector(".container") as HTMLDivElement
     const roomIdDisplay = document.getElementById("roomID") as HTMLHeadingElement
@@ -34,6 +36,9 @@ export function pageSetup(app: Application) {
         readyButton.innerText = isReady ? "READY" : "NOT READY"
         emitReady(isReady)
     })
+
+    lvlSelector.init(assets)
+    lvlSelector.fill()
 }
 
 export function finishLoad() {

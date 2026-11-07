@@ -7,6 +7,7 @@ import { JohnEnt } from "./Entities/JohnEnt";
 import {BoorEnt} from "./Entities/Boor";
 import {ButtonEnt} from "./Entities/Button";
 import {PortalEnt} from "./Entities/Portal";
+import {cam} from "./Camera";
 
 class levelManager {
 	levels!: Map<string, LevelData>
@@ -64,6 +65,7 @@ class levelManager {
 
 		if (this.levels.has(level)) {
 			this.mapData = this.levels.get(level)!
+			cam.update_map({x: this.mapData.pxWid, y: this.mapData.pxHei})
 			this.renderLevel()
 		} else {
 			console.log("LEVEL: " + level + " NOT FOUND ON CLIENT")

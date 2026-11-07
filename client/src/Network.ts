@@ -63,6 +63,7 @@ socket.on("playerLeft", (playerID: number) => {
 
 socket.on("changeLevel", (newLevel: string | undefined) => {
     leveler.loadLevel(newLevel)
+    console.log("testttt")
 })
 
 socket.on("levelReloaded", () => {

@@ -13,6 +13,7 @@ export class Node {
 	public type: "Player" | "Wall" | "Entity" | "Angel" | "Air" = "Air";
 	public parent: Node | undefined; // If is a part of path, the preceding element
 	public isInPath: boolean = false;
+	public clearance: number = 0;
 
 	public readonly f = () => this.g + this.h; // Suom of distances
 
@@ -85,6 +86,27 @@ export class Grid {
 			}
 		});
 
+		// for (let y = this.height - 1; y >= 0; y--) {
+		// 	for (let x = this.width - 1; x >= 0; x--) {
+		// 		const current = this.grid[y][x];
+
+		// 		if (current.isWall) {
+		// 			current.clearance = 0;
+		// 			continue;
+		// 		}
+
+		// 		if (y == this.height - 1 || x == this.width - 1) {
+		// 			current.clearance = 1;
+		// 		} else {
+		// 			const right = this.grid[y][x + 1].clearance;
+		// 			const down = this.grid[y + 1][x].clearance;
+		// 			const diagonal = this.grid[y + 1][x + 1].clearance;
+
+		// 			current.clearance = 1 + Math.min(right, down, diagonal);
+		// 		}
+		// 	}
+		// }
+
 		if (PathfindingDebug) {
 			PathfindingDebug.notifyChange(this.level?.room.getID()!);
 		}
@@ -123,7 +145,7 @@ export class Grid {
 	}
 
 	public getNeighbours(node: Node, size: Vector2) {
-		const tempNeighbours: Node[] = [];
+		const neighbours: Node[] = [];
 		for (let i = -1; i <= size.y; i++) {
 			for (let j = -1; j <= size.x; j++) {
 				if (i == 0 && j == 0) continue;
@@ -143,36 +165,13 @@ export class Grid {
 					if (this.grid[yIndex][node.x].isWall || this.grid[node.y][xIndex].isWall) continue;
 				}
 
-				tempNeighbours.push(this.grid[yIndex][xIndex]);
+				if (this.grid[yIndex][xIndex].clearance <= size.y) continue;
+
+				neighbours.push(this.grid[yIndex][xIndex]);
 			}
 		}
 
-		// This also caused memory leak
-
-		const neighbours: Node[] = [];
-
-		// // Continous collision check
-		// tempNeighbours.forEach((n) => {
-		// 	let isOK = true;
-		// 	for (let j = 0; j < size.y; j++) {
-		// 		for (let i = 0; i < size.x; i++) {
-		// 			const isXInBound = n.x + i < this.width;
-		// 			const isYInBound = n.y - j < this.height;
-
-		// 			if (!isXInBound || !isYInBound) continue;
-
-		// 			if (this.grid[n.y - j][n.x + i].isWall) {
-		// 				isOK = false;
-		// 				break;
-		// 			}
-		// 		}
-		// 		if (!isOK) break;
-		// 	}
-
-		// 	if (isOK) neighbours.push(n);
-		// });
-
-		return tempNeighbours;
+		return neighbours;
 	}
 
 	public pathFind(start: Vector2, end: Vector2, startSize: Vector2) {

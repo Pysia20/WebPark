@@ -11,6 +11,7 @@ export const HORIZONTAL_BIAS = 1.5;
 export const DESPAWN_BUFFER = 300;
 export const CORNER_CORRECTION = 5;
 export const PATHFINDING_SCALE = 4;
+export const SPIKE_MARGIN = 16;
 
 export const WORLD_CONFIG = {
 	CELL_SIZE: 64,

@@ -48,25 +48,25 @@ export class WeepingAngel extends Entity {
 		return overX && overY;
 	}
 
-	protected override onRightCollision(overlap: number, other: Entity) {
-		if (other instanceof Player) super.onRightCollision(overlap, other);
-	}
+	// protected override onRightCollision(overlap: number, other: Entity) {
+	// 	if (other instanceof Player) super.onRightCollision(overlap, other);
+	// }
 
-	protected override onLeftCollision(overlap: number, other: Entity) {
-		if (other instanceof Player) super.onLeftCollision(overlap, other);
-	}
+	// protected override onLeftCollision(overlap: number, other: Entity) {
+	// 	if (other instanceof Player) super.onLeftCollision(overlap, other);
+	// }
 
-	protected override onUpCollision(overlap: number, other: Entity) {
-		if (other instanceof Player) super.onUpCollision(overlap, other);
-	}
+	// protected override onUpCollision(overlap: number, other: Entity) {
+	// 	if (other instanceof Player) super.onUpCollision(overlap, other);
+	// }
 
-	protected override onDownCollision(overlap: number, other: Entity) {
-		if (other instanceof Player) super.onDownCollision(overlap, other);
-	}
+	// protected override onDownCollision(overlap: number, other: Entity) {
+	// 	if (other instanceof Player) super.onDownCollision(overlap, other);
+	// }
 
-	protected override onUpTouching(other: Entity) {
-		if (other instanceof Player) super.onUpTouching(other);
-	}
+	// protected override onUpTouching(other: Entity) {
+	// 	if (other instanceof Player) super.onUpTouching(other);
+	// }
 
 	public override handleBehaviour() {
 		const players = [...this.level!.room.players.values()];
@@ -112,10 +112,18 @@ export class WeepingAngel extends Entity {
 			(otherPos.y + (PLAYER_CONFIG.HEIGHT - PATHFINDING_RESOLUTION)) / PATHFINDING_RESOLUTION,
 		);
 
-		const path = this.level?.grid.pathFind(thisPos, otherPos, {
-			x: this.size.x / PATHFINDING_RESOLUTION,
-			y: this.size.y / PATHFINDING_RESOLUTION,
-		});
+		const path = this.level?.grid.pathFind(
+			thisPos,
+			otherPos,
+			{
+				x: this.size.x / PATHFINDING_RESOLUTION + 2,
+				y: this.size.y / PATHFINDING_RESOLUTION + 2,
+			},
+			{
+				x: this.target.size.x / PATHFINDING_RESOLUTION,
+				y: this.target.size.y / PATHFINDING_RESOLUTION,
+			},
+		);
 
 		if (!path || path.length <= 1) return;
 

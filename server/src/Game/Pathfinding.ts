@@ -13,7 +13,6 @@ export class Node {
 	public type: "Player" | "Wall" | "Entity" | "Angel" | "Air" = "Air";
 	public parent: Node | undefined; // If is a part of path, the preceding element
 	public isInPath: boolean = false;
-	public clearance: number = 0;
 
 	public readonly f = () => this.g + this.h; // Suom of distances
 
@@ -86,27 +85,6 @@ export class Grid {
 			}
 		});
 
-		// for (let y = this.height - 1; y >= 0; y--) {
-		// 	for (let x = this.width - 1; x >= 0; x--) {
-		// 		const current = this.grid[y][x];
-
-		// 		if (current.isWall) {
-		// 			current.clearance = 0;
-		// 			continue;
-		// 		}
-
-		// 		if (y == this.height - 1 || x == this.width - 1) {
-		// 			current.clearance = 1;
-		// 		} else {
-		// 			const right = this.grid[y][x + 1].clearance;
-		// 			const down = this.grid[y + 1][x].clearance;
-		// 			const diagonal = this.grid[y + 1][x + 1].clearance;
-
-		// 			current.clearance = 1 + Math.min(right, down, diagonal);
-		// 		}
-		// 	}
-		// }
-
 		if (PathfindingDebug) {
 			PathfindingDebug.notifyChange(this.level?.room.getID()!);
 		}
@@ -146,42 +124,50 @@ export class Grid {
 
 	public getNeighbours(node: Node, size: Vector2) {
 		const neighbours: Node[] = [];
-		for (let i = -1; i <= size.y; i++) {
-			for (let j = -1; j <= size.x; j++) {
+		for (let i = -1; i <= 1; i++) {
+			for (let j = -1; j <= 1; j++) {
 				if (i == 0 && j == 0) continue;
-
-				if (j != -1 && j != size.x && i != -1 && j != size.x) continue;
 
 				const yIndex = i + node.y;
 				const xIndex = j + node.x;
 
-				if (yIndex < 0 || yIndex >= this.grid.length) continue;
-				if (xIndex < 0 || xIndex >= this.grid[0].length) continue;
-
-				if (this.grid[node.y][xIndex].isWall || this.grid[yIndex][node.x].isWall) continue;
-
-				if (i != 0 && j != 0) {
-					// Corner cutting fix
-					if (this.grid[yIndex][node.x].isWall || this.grid[node.y][xIndex].isWall) continue;
-				}
-
-				if (this.grid[yIndex][xIndex].clearance <= size.y) continue;
-
-				neighbours.push(this.grid[yIndex][xIndex]);
+				if (this.canAgentFit(xIndex, yIndex, size)) neighbours.push(this.grid[yIndex][xIndex]);
 			}
 		}
 
 		return neighbours;
 	}
 
-	public pathFind(start: Vector2, end: Vector2, startSize: Vector2) {
-		// start.x *= PATHFINDING_SCALE;
-		// start.y *= PATHFINDING_SCALE;
-		// end.x *= PATHFINDING_SCALE;
-		// end.y *= PATHFINDING_SCALE;
-		// startSize.x *= PATHFINDING_SCALE;
-		// startSize.y *= PATHFINDING_SCALE;
+	public isTargetReached(
+		agentPos: Vector2,
+		agentSize: Vector2,
+		targetPos: Vector2,
+		targetSize: Vector2,
+	): boolean {
+		const overlapX =
+			agentPos.x < targetPos.x + targetSize.x && agentPos.x + agentSize.x > targetPos.x;
 
+		const overlapY =
+			agentPos.y < targetPos.y + targetSize.y && agentPos.y + agentSize.y > targetPos.y;
+
+		return overlapX && overlapY;
+	}
+
+	public canAgentFit(x: number, y: number, size: Vector2) {
+		if (x < 0 || y < 0 || x + size.x > this.width || y + size.y > this.height) return false;
+
+		for (let j = 0; j < size.y; j++) {
+			for (let i = 0; i < size.x; i++) {
+				if (this.grid[y + j][x + i].isWall) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	public pathFind(start: Vector2, end: Vector2, startSize: Vector2, endSize: Vector2) {
 		if (start.x < 0 || start.x >= this.width) return;
 		if (start.y < 0 || start.y >= this.height) return;
 		if (end.x < 0 || end.x >= this.width) return;
@@ -214,8 +200,10 @@ export class Grid {
 			openSet.splice(openSet.indexOf(currentNode), 1);
 			closedSet.push(currentNode);
 
-			if (currentNode == endNode) {
-				const path = this.retrace(startNode, endNode);
+			if (
+				this.isTargetReached({ x: currentNode.x, y: currentNode.y }, startSize, end, endSize)
+			) {
+				const path = this.retrace(startNode, currentNode);
 
 				this.paths.push(path);
 				this.clearNodes();
@@ -227,10 +215,14 @@ export class Grid {
 					return;
 				}
 
-				const newCost = currentNode.g + this.getDistance(currentNode, n);
+				const isDiagonal = n.x !== currentNode.x && n.y !== currentNode.y;
+				const stepCost = isDiagonal ? 1.414 : 1;
+
+				const newCost = currentNode.g + stepCost;
+
 				if (newCost < n.g || !openSet.includes(n)) {
 					n.g = newCost;
-					n.h = this.getDistance(n, endNode);
+					n.h = this.getDistance({ x: n.x, y: n.y }, startSize, end, endSize);
 					n.parent = currentNode;
 
 					if (!openSet.includes(n)) openSet.push(n);
@@ -244,6 +236,8 @@ export class Grid {
 			row.forEach((n) => {
 				n.isInPath = false;
 				n.parent = undefined;
+				n.g = 0;
+				n.h = 0;
 			});
 		});
 	}
@@ -261,11 +255,28 @@ export class Grid {
 		return path.reverse();
 	}
 
-	public getDistance(a: Node, b: Node) {
-		const x = Math.abs(a.x - b.x);
-		const y = Math.abs(a.y - b.y);
+	public getDistance(
+		agentPos: Vector2,
+		agentSize: Vector2,
+		targetPos: Vector2,
+		targetSize: Vector2,
+	) {
+		let dx = 0;
 
-		if (x > y) return 14 * y + 10 * (x - y);
-		else return 14 * x + 10 * (y - x);
+		if (agentPos.x + agentSize.x <= targetPos.x) {
+			dx = targetPos.x - (agentPos.x + agentSize.x) + 1;
+		} else if (agentPos.x >= targetPos.x + targetSize.x) {
+			dx = agentPos.x - (targetPos.x + targetSize.x) + 1;
+		}
+
+		let dy = 0;
+
+		if (agentPos.y + agentSize.y <= targetPos.y) {
+			dy = targetPos.y - (agentPos.y + agentSize.y) + 1;
+		} else if (agentPos.y >= targetPos.y + targetSize.y) {
+			dy = agentPos.y - (targetPos.y + targetSize.y) + 1;
+		}
+
+		return dx + dy;
 	}
 }

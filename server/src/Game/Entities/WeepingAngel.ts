@@ -48,25 +48,25 @@ export class WeepingAngel extends Entity {
 		return overX && overY;
 	}
 
-	// protected override onRightCollision(overlap: number, other: Entity) {
-	// 	if (other instanceof Player) super.onRightCollision(overlap, other);
-	// }
+	protected override onRightCollision(overlap: number, other: Entity) {
+		if (other instanceof Player) super.onRightCollision(overlap, other);
+	}
 
-	// protected override onLeftCollision(overlap: number, other: Entity) {
-	// 	if (other instanceof Player) super.onLeftCollision(overlap, other);
-	// }
+	protected override onLeftCollision(overlap: number, other: Entity) {
+		if (other instanceof Player) super.onLeftCollision(overlap, other);
+	}
 
-	// protected override onUpCollision(overlap: number, other: Entity) {
-	// 	if (other instanceof Player) super.onUpCollision(overlap, other);
-	// }
+	protected override onUpCollision(overlap: number, other: Entity) {
+		if (other instanceof Player) super.onUpCollision(overlap, other);
+	}
 
-	// protected override onDownCollision(overlap: number, other: Entity) {
-	// 	if (other instanceof Player) super.onDownCollision(overlap, other);
-	// }
+	protected override onDownCollision(overlap: number, other: Entity) {
+		if (other instanceof Player) super.onDownCollision(overlap, other);
+	}
 
-	// protected override onUpTouching(other: Entity) {
-	// 	if (other instanceof Player) super.onUpTouching(other);
-	// }
+	protected override onUpTouching(other: Entity) {
+		if (other instanceof Player) super.onUpTouching(other);
+	}
 
 	public override handleBehaviour() {
 		const players = [...this.level!.room.players.values()];
@@ -103,21 +103,19 @@ export class WeepingAngel extends Entity {
 		this.target = closestPlayer;
 
 		const thisPos: Vector2 = { ...this.pos };
-		thisPos.x = Math.round(thisPos.x / PATHFINDING_RESOLUTION);
-		thisPos.y = Math.round(thisPos.y / PATHFINDING_RESOLUTION);
+		thisPos.x = Math.floor(thisPos.x / PATHFINDING_RESOLUTION);
+		thisPos.y = Math.floor(thisPos.y / PATHFINDING_RESOLUTION);
 
 		const otherPos: Vector2 = { ...this.target.pos };
 		otherPos.x = Math.floor(otherPos.x / PATHFINDING_RESOLUTION);
-		otherPos.y = Math.floor(
-			(otherPos.y + (PLAYER_CONFIG.HEIGHT - PATHFINDING_RESOLUTION)) / PATHFINDING_RESOLUTION,
-		);
+		otherPos.y = Math.floor(otherPos.y / PATHFINDING_RESOLUTION);
 
 		const path = this.level?.grid.pathFind(
 			thisPos,
 			otherPos,
 			{
-				x: this.size.x / PATHFINDING_RESOLUTION + 2,
-				y: this.size.y / PATHFINDING_RESOLUTION + 2,
+				x: this.size.x / PATHFINDING_RESOLUTION,
+				y: this.size.y / PATHFINDING_RESOLUTION,
 			},
 			{
 				x: this.target.size.x / PATHFINDING_RESOLUTION,
@@ -125,11 +123,11 @@ export class WeepingAngel extends Entity {
 			},
 		);
 
-		if (!path || path.length <= 1) return;
+		if (!path || path.length == 0) return;
 
 		const target: Vector2 = {
-			x: path![1].x * PATHFINDING_RESOLUTION,
-			y: path![1].y * PATHFINDING_RESOLUTION,
+			x: path![0].x * PATHFINDING_RESOLUTION,
+			y: path![0].y * PATHFINDING_RESOLUTION,
 		};
 
 		const v: Vector2 = { x: target.x - this.pos.x, y: target.y - this.pos.y };

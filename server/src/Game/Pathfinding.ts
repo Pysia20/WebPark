@@ -154,10 +154,11 @@ export class Grid {
 	}
 
 	public canAgentFit(x: number, y: number, size: Vector2) {
-		if (x < 0 || y < 0 || x + size.x > this.width || y + size.y > this.height) return false;
+		if (x < 0 || y < 0 || x + size.x + 1 > this.width || y + size.y + 1 > this.height)
+			return false;
 
-		for (let j = 0; j < size.y; j++) {
-			for (let i = 0; i < size.x; i++) {
+		for (let j = 0; j < size.y + 1; j++) {
+			for (let i = 0; i < size.x + 1; i++) {
 				if (this.grid[y + j][x + i].isWall) {
 					return false;
 				}

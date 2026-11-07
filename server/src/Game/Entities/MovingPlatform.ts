@@ -153,10 +153,10 @@ export class MovingPlatform extends Entity {
 			: this.customFields.Direction.value!;
 
 		this.thingsStanding.forEach((e) => {
-			if (currentDirection == "Left") e.pos.x -= this.speed;
-			else if (currentDirection == "Right") e.pos.x += this.speed;
-			else if (currentDirection == "Up") e.pos.y -= this.speed;
-			else if (currentDirection == "Down") e.pos.y += this.speed;
+			if (currentDirection == "Left") e.moveXAxis(-this.speed);
+			else if (currentDirection == "Right") e.moveXAxis(this.speed);
+			else if (currentDirection == "Up") e.moveYAxis(-this.speed);
+			else if (currentDirection == "Down") e.moveYAxis(this.speed);
 		});
 
 		if (currentDirection == "Left") this.pos.x -= this.speed;

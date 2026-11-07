@@ -174,17 +174,21 @@ export abstract class Entity {
 		this.isPushing = false;
 	}
 
-	public moveXAxis() {
-		this.pos.x += this.velocity.x * (1 / CONFIG.TICKRATE);
+	public moveXAxis(x?: number) {
+		const move = x ?? this.velocity.x * (1 / CONFIG.TICKRATE);
+
+		this.pos.x += move;
 		this.riders.forEach((r) => {
-			r.pos.x += this.velocity.x * (1 / CONFIG.TICKRATE);
+			r.pos.x += move;
 		});
 	}
 
-	public moveYAxis() {
-		this.pos.y += this.velocity.y * (1 / CONFIG.TICKRATE);
+	public moveYAxis(y?: number) {
+		const move = y ?? this.velocity.y * (1 / CONFIG.TICKRATE);
+
+		this.pos.y += move;
 		this.riders.forEach((r) => {
-			r.pos.y += this.velocity.y * (1 / CONFIG.TICKRATE);
+			r.pos.y += move;
 		});
 	}
 

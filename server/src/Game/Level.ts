@@ -6,7 +6,6 @@ import { Entity } from "./Entity";
 import { MapCollider } from "./Entities/MapCollider";
 import { Portal } from "./Entities/Portal";
 import { Grid } from "./Pathfinding";
-import { PathfindingDebug } from "./PathfindingDebug";
 
 export class Level {
 	public readonly levelTemplate: LevelTemplate;

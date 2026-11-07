@@ -125,13 +125,6 @@ export class Player extends Entity {
 				this.jumpHeldSinceTakeoff &&
 				this.jumpFrames <= PLAYER_CONFIG.JUMP_FRAMES_MAX;
 
-			// console.log(`
-			// 	CURRENT: ${this.currentInputs.jump}
-			// 	OLD: ${this.oldInputs.jump}
-			// 	SIENCE: ${this.jumpHeldSinceTakeoff}
-			// 	FRAMES: ${this.jumpFrames}
-			// 	`);
-
 			if (holdingJumpCondition) {
 				this.velocity.y = -PLAYER_CONFIG.JUMP_FORCE;
 				this.jumpFrames++;

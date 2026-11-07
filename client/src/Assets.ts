@@ -2,6 +2,7 @@ import { Texture, Assets } from "pixi.js"
 import { LevelData } from "@shared/commonLevelModels"
 import Level_0 from "@shared/maps/Level_0.json"
 import Level_1 from "@shared/maps/Level_1.json"
+import FourPlayers_1 from "@shared/maps/FourPlayers_1.json"
 
 export interface PlayerTextures {
 	torso: Texture
@@ -24,7 +25,6 @@ export async function loadAssets() {
 		"sprites/JohnEntity.png",
 		"sprites/Door.png",
 		"sprites/Cannon.png",
-		"sprites/Button.png",
 		"sprites/ButtonDoor.png",
 		"sprites/Bullet.png",
 		"sprites/MovingPlatform.png",
@@ -32,7 +32,9 @@ export async function loadAssets() {
 		"sprites/Pushable.png",
 		"sprites/Spike.png",
 		"sprites/Switch.png",
-		"sprites/torso.png"
+		"sprites/torso.png",
+		"sprites/Button/Button.png",
+		"sprites/Button/Base.png"
 	]);
 
 	//player asstes
@@ -44,18 +46,20 @@ export async function loadAssets() {
 	const mapLevels: Map<string, LevelData> = new Map()
 	mapLevels.set("Level_0", Level_0 as LevelData)
 	mapLevels.set("Level_1", Level_1 as LevelData)
+	mapLevels.set("FourPlayers_1", FourPlayers_1 as LevelData)
 	const entTextures: Map<string, Texture> = new Map()
 	entTextures.set("Door", loadedAssets["sprites/Door.png"])
-	entTextures.set("Button", loadedAssets["sprites/Button.png"])
 	entTextures.set("JohnEntity", loadedAssets["sprites/JohnEntity.png"])
 	entTextures.set("ButtonDoor", loadedAssets["sprites/ButtonDoor.png"])
 	entTextures.set("MovingPlatform", loadedAssets["sprites/MovingPlatform.png"])
 	entTextures.set("Pushable", loadedAssets["sprites/Pushable.png"])
 	entTextures.set("Spike", loadedAssets["sprites/Spike.png"])
 	entTextures.set("PlayerSpawner", loadedAssets["sprites/PlayerSpawner.png"])
+	entTextures.set("SwitchButton", loadedAssets["sprites/Switch.png"])
+	entTextures.set("Button", loadedAssets["sprites/Button/Button.png"])
+	entTextures.set("ButBase", loadedAssets["sprites/Button/Base.png"])
 	entTextures.set("Portal", Texture.EMPTY)
 	entTextures.set("Laser", Texture.EMPTY)
-	entTextures.set("SwitchButton", loadedAssets["sprites/Switch.png"])
 	const mapAssets: MapAssets = { spritesheet: mapSpritesheet, levels: mapLevels, entTextures: entTextures }
 
 	const assets: GameAssets = { playerTextures: playerTextures, mapAssets: mapAssets }

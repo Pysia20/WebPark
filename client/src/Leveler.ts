@@ -121,7 +121,8 @@ class levelManager {
 						newEnt = new BoorEnt(entData as ServerButtonDoorData, sprite)
 						break
 					case "Button":
-						newEnt = new ButtonEnt(entData as ServerButtonData, sprite)
+						const base = this.checkEntTexture("ButBase")
+						newEnt = new ButtonEnt(entData as ServerButtonData, sprite, base)
 						break
 					case "Portal":
 						newEnt = new PortalEnt(entData)

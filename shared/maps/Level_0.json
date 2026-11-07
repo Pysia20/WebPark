@@ -234,7 +234,7 @@
 					"__smartColor": "#FFA1A1",
 					"iid": "d9577910-bde0-11f1-88ae-ede8001c6ed9",
 					"width": 64,
-					"height": 32,
+					"height": 14,
 					"defUid": 8,
 					"px": [1664,1152],
 					"fieldInstances": [{ "__identifier": "ActivationGroup", "__type": "String", "__value": "1", "__tile": null, "defUid": 18, "realEditorValues": [{
@@ -253,7 +253,7 @@
 					"__smartColor": "#FFA1A1",
 					"iid": "e3c91e30-bde0-11f1-88ae-dd631a0010e7",
 					"width": 64,
-					"height": 32,
+					"height": 14,
 					"defUid": 8,
 					"px": [192,1024],
 					"fieldInstances": [{ "__identifier": "ActivationGroup", "__type": "String", "__value": "2", "__tile": null, "defUid": 18, "realEditorValues": [{
@@ -272,7 +272,7 @@
 					"__smartColor": "#FFA1A1",
 					"iid": "e43b6800-bde0-11f1-88ae-454834d5e215",
 					"width": 64,
-					"height": 32,
+					"height": 14,
 					"defUid": 8,
 					"px": [384,1024],
 					"fieldInstances": [{ "__identifier": "ActivationGroup", "__type": "String", "__value": "2", "__tile": null, "defUid": 18, "realEditorValues": [{
@@ -370,7 +370,7 @@
 					"__smartColor": "#FFA1A1",
 					"iid": "287ed6f0-bde0-11f1-88ae-394571a5bbab",
 					"width": 64,
-					"height": 32,
+					"height": 14,
 					"defUid": 8,
 					"px": [576,1024],
 					"fieldInstances": [{ "__identifier": "ActivationGroup", "__type": "String", "__value": "3", "__tile": null, "defUid": 18, "realEditorValues": [{
@@ -413,7 +413,7 @@
 					"__smartColor": "#FFA1A1",
 					"iid": "65a9b6d0-bde0-11f1-88ae-b14bad17fa87",
 					"width": 64,
-					"height": 32,
+					"height": 14,
 					"defUid": 8,
 					"px": [1088,576],
 					"fieldInstances": [{ "__identifier": "ActivationGroup", "__type": "String", "__value": "4", "__tile": null, "defUid": 18, "realEditorValues": [{
@@ -522,7 +522,7 @@
 					"__smartColor": "#FFA1A1",
 					"iid": "44d0f500-bde0-11f1-bf7a-f3c05b0e9eb0",
 					"width": 64,
-					"height": 32,
+					"height": 14,
 					"defUid": 8,
 					"px": [704,704],
 					"fieldInstances": [{ "__identifier": "ActivationGroup", "__type": "String", "__value": "buegfrh", "__tile": null, "defUid": 18, "realEditorValues": [{

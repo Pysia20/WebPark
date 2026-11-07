@@ -2,6 +2,7 @@ import { Sprite } from "pixi.js";
 import { ServerEntityData } from "@shared/commonModels";
 import { Ent } from "./Ent";
 import { ENTITY_VISUAL_CONFIG } from "@shared/commonVariables";
+import {lerpIt, lerpTheyThem} from "../FavoriteChild";
 
 export class JohnEnt extends Ent {
     sprite: Sprite
@@ -20,10 +21,9 @@ export class JohnEnt extends Ent {
     }
 
     update(data: ServerEntityData, deltaT: number) {
-        this.sprite.position.x += (data.pos.x - this.sprite.position.x) * this.LERP_SPEED
-        this.sprite.position.y += (data.pos.y - this.sprite.position.y) * this.LERP_SPEED
+        lerpTheyThem(this.sprite.position, data.pos, this.LERP_SPEED)
 
-        this.sprite.width += (data.visualSize.x - this.sprite.width) * this.LERP_SPEED
-        this.sprite.height += (data.visualSize.y - this.sprite.height) * this.LERP_SPEED
+        this.sprite.width = lerpIt(this.sprite.width, data.visualSize.x, this.LERP_SPEED)
+        this.sprite.height = lerpIt(this.sprite.height, data.visualSize.y, this.LERP_SPEED)
     }
 }

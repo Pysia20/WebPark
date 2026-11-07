@@ -444,36 +444,3 @@ export abstract class Entity {
 
 	public abstract clone(): Entity;
 }
-
-export class ExampleStaticEntity extends Entity {
-	public getUsedFields(): RequiredField[] {
-		return [
-			{
-				name: "ActivationCount",
-				value: this.customFields.ActivationCount.value,
-				isRequired: true,
-				isMissing: (v) => !v || v <= 0,
-			},
-		];
-	}
-
-	constructor(
-		pos: Vector2,
-		size: Vector2,
-		customFields: EntityCustomFieldsData,
-		type: EntityType,
-	) {
-		super(pos, size, customFields, type);
-	}
-
-	public clone() {
-		return new ExampleStaticEntity(
-			{ ...this.pos },
-			{ ...this.size },
-			{
-				...this.customFields,
-			},
-			this.type,
-		);
-	}
-}

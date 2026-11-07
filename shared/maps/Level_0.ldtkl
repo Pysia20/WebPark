@@ -145,22 +145,6 @@
 					"__worldY": -576
 				},
 				{
-					"__identifier": "Door",
-					"__grid": [16,8],
-					"__pivot": [0,1],
-					"__tags": [],
-					"__tile": null,
-					"__smartColor": "#FFD600",
-					"iid": "c0f1bed0-bde0-11f1-88ae-abe49f67c557",
-					"width": 64,
-					"height": 128,
-					"defUid": 10,
-					"px": [1024,576],
-					"fieldInstances": [],
-					"__worldX": 1024,
-					"__worldY": -384
-				},
-				{
 					"__identifier": "ButtonDoor",
 					"__grid": [28,17],
 					"__pivot": [0,1],
@@ -622,6 +606,38 @@
 					],
 					"__worldX": 320,
 					"__worldY": -384
+				},
+				{
+					"__identifier": "Door",
+					"__grid": [16,8],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#FFD600",
+					"iid": "e1b397e0-bde0-11f1-bd4c-79af59a1abf0",
+					"width": 64,
+					"height": 128,
+					"defUid": 10,
+					"px": [1024,576],
+					"fieldInstances": [],
+					"__worldX": 1024,
+					"__worldY": -384
+				},
+				{
+					"__identifier": "Spike",
+					"__grid": [13,6],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#FF1700",
+					"iid": "e2baa7a0-bde0-11f1-bd4c-494c16e36e64",
+					"width": 64,
+					"height": 64,
+					"defUid": 25,
+					"px": [832,448],
+					"fieldInstances": [{ "__identifier": "OnlyKillThePlayer", "__type": "Bool", "__value": false, "__tile": null, "defUid": 27, "realEditorValues": [] }],
+					"__worldX": 832,
+					"__worldY": -512
 				}
 			]
 		},
@@ -809,5 +825,5 @@
 			"entityInstances": []
 		}
 	],
-	"__neighbours": [ { "levelIid": "e7714ff0-bde0-11f1-ac0f-4501a3e35def", "dir": "e" }, { "levelIid": "e0c87f50-bde0-11f1-a206-f3c87080be5c", "dir": "w" }, { "levelIid": "8f826480-bde0-11f1-bf83-03e56f3547e9", "dir": "s" } ]
+	"__neighbours": [ { "levelIid": "e7714ff0-bde0-11f1-ac0f-4501a3e35def", "dir": "e" }, { "levelIid": "8f826480-bde0-11f1-bf83-03e56f3547e9", "dir": "s" } ]
 }

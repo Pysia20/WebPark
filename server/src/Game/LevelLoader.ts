@@ -59,21 +59,18 @@ class LevelLoader {
 	}
 
 	public GetNextLevel(room: Room): Level | undefined {
-		const groupLevels = this.loadedLevels.get(room.level.group);
+		const currentLevel = room.level;
 
-		if (groupLevels === undefined) {
-			LOG.error(`Group doesn't exist or didn't load (${room.level.group})`);
-			throw Error(`Group doesn't exist or didn't load (${room.level.group})`);
+		const group = currentLevel.group;
+		const currentIndex = currentLevel.groupIndex;
+
+		const groupedLevels = this.loadedLevels.get(group);
+
+		for (let lvl of groupedLevels!) {
+			if (lvl.groupIndex == currentIndex + 1) return new Level(lvl, room);
 		}
 
-		const nextLevel = groupLevels.at(room.level.groupIndex + 1);
-
-		if (nextLevel === undefined) {
-			return undefined;
-		}
-
-		LOG.info(`Creating level ${nextLevel.id}`);
-		return new Level(nextLevel, room);
+		return undefined;
 	}
 }
 

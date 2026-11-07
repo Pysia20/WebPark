@@ -3662,7 +3662,7 @@
 				{ "__identifier": "IndexInGroup", "__type": "Int", "__value": 0, "__tile": null, "defUid": 14, "realEditorValues": [] }
 			],
 			"layerInstances": null,
-			"__neighbours": [ { "levelIid": "e7714ff0-bde0-11f1-ac0f-4501a3e35def", "dir": "e" }, { "levelIid": "e0c87f50-bde0-11f1-a206-f3c87080be5c", "dir": "w" }, { "levelIid": "8f826480-bde0-11f1-bf83-03e56f3547e9", "dir": "s" } ]
+			"__neighbours": [ { "levelIid": "e7714ff0-bde0-11f1-ac0f-4501a3e35def", "dir": "e" }, { "levelIid": "8f826480-bde0-11f1-bf83-03e56f3547e9", "dir": "s" } ]
 		},
 		{
 			"identifier": "Level_1",
@@ -3694,32 +3694,6 @@
 			"__neighbours": [ { "levelIid": "91c7fbb0-96d0-11f1-bc36-b5ce94e694ef", "dir": "w" }, { "levelIid": "8f826480-bde0-11f1-bf83-03e56f3547e9", "dir": "sw" } ]
 		},
 		{
-			"identifier": "Level_2",
-			"iid": "e0c87f50-bde0-11f1-a206-f3c87080be5c",
-			"uid": 212,
-			"worldX": -256,
-			"worldY": 0,
-			"worldDepth": 0,
-			"pxWid": 256,
-			"pxHei": 256,
-			"__bgColor": "#696A79",
-			"bgColor": null,
-			"useAutoIdentifier": true,
-			"bgRelPath": null,
-			"bgPos": null,
-			"bgPivotX": 0.5,
-			"bgPivotY": 0.5,
-			"__smartColor": "#ADADB5",
-			"__bgPos": null,
-			"externalRelPath": "maps/Level_2.ldtkl",
-			"fieldInstances": [
-				{ "__identifier": "LevelGroup", "__type": "String", "__value": "Default", "__tile": null, "defUid": 13, "realEditorValues": [] },
-				{ "__identifier": "IndexInGroup", "__type": "Int", "__value": 0, "__tile": null, "defUid": 14, "realEditorValues": [] }
-			],
-			"layerInstances": null,
-			"__neighbours": [ { "levelIid": "91c7fbb0-96d0-11f1-bc36-b5ce94e694ef", "dir": "e" }, { "levelIid": "8f826480-bde0-11f1-bf83-03e56f3547e9", "dir": "se" } ]
-		},
-		{
 			"identifier": "FourPlayers_1",
 			"iid": "8f826480-bde0-11f1-bf83-03e56f3547e9",
 			"uid": 50,
@@ -3746,7 +3720,7 @@
 				{ "__identifier": "IndexInGroup", "__type": "Int", "__value": 0, "__tile": null, "defUid": 14, "realEditorValues": [] }
 			],
 			"layerInstances": null,
-			"__neighbours": [ { "levelIid": "91c7fbb0-96d0-11f1-bc36-b5ce94e694ef", "dir": "n" }, { "levelIid": "e7714ff0-bde0-11f1-ac0f-4501a3e35def", "dir": "ne" }, { "levelIid": "e0c87f50-bde0-11f1-a206-f3c87080be5c", "dir": "nw" } ]
+			"__neighbours": [ { "levelIid": "91c7fbb0-96d0-11f1-bc36-b5ce94e694ef", "dir": "n" }, { "levelIid": "e7714ff0-bde0-11f1-ac0f-4501a3e35def", "dir": "ne" } ]
 		}
 	],
 	"worlds": [],

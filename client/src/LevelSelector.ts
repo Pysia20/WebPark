@@ -1,4 +1,5 @@
 import {LevelData} from "@shared/commonLevelModels";
+import {emitLevel} from "./Network";
 
 
 class LevelSelector {
@@ -17,6 +18,11 @@ class LevelSelector {
 
             const name = document.createElement("p")
             name.innerHTML = mapName
+            name.onclick = () => {
+                emitLevel(mapName)
+
+                console.log("EMITTING: " + mapName)
+            }
 
             item.appendChild(name)
 

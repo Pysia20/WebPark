@@ -90,6 +90,10 @@ export function emitReady(isReady: boolean) {
     }
 }
 
+export function emitLevel(level: string) {
+    socket.emit("levelSelected", level)
+}
+
 export function onGameStart(func: () => void) {
     socket.once("tick", () => {
         func()

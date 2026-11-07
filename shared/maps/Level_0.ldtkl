@@ -638,6 +638,22 @@
 					"fieldInstances": [{ "__identifier": "OnlyKillThePlayer", "__type": "Bool", "__value": false, "__tile": null, "defUid": 27, "realEditorValues": [] }],
 					"__worldX": 832,
 					"__worldY": -512
+				},
+				{
+					"__identifier": "GravityField",
+					"__grid": [1,6],
+					"__pivot": [0,1],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#D343D7",
+					"iid": "44de9190-bde0-11f1-bd4c-a980d22baf8b",
+					"width": 384,
+					"height": 320,
+					"defUid": 213,
+					"px": [64,448],
+					"fieldInstances": [{ "__identifier": "GravityForce", "__type": "Float", "__value": -1, "__tile": null, "defUid": 214, "realEditorValues": [{ "id": "V_Float", "params": [-1] }] }],
+					"__worldX": 64,
+					"__worldY": -512
 				}
 			]
 		},

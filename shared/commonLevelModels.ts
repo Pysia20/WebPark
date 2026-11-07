@@ -133,6 +133,7 @@ export interface EntityCustomFieldsData {
 	ActivationGroups: CustomField<string[]>;
 	ActivatedByDefault: CustomField<Boolean>;
 	BouncePower: CustomField<number>;
+	GravityForce: CustomField<number>;
 }
 
 export type EntityCustomFieldTypeMap = {
@@ -149,6 +150,7 @@ export type EntityCustomFieldTypeMap = {
 	ActivationGroups: string[];
 	ActivatedByDefault: Boolean;
 	BouncePower: number;
+	GravityForce: number;
 };
 
 export type EntityCustomField = keyof EntityCustomFieldsData;
@@ -211,6 +213,10 @@ export const DummyEntityCustomFields: EntityCustomFieldsData = {
 		doesExist: false,
 		value: undefined,
 	},
+	GravityForce: {
+		doesExist: false,
+		value: undefined,
+	},
 } as const;
 
 export interface EntityFieldInstance {
@@ -246,4 +252,5 @@ export type EntityType =
 	| "Cannon"
 	| "CannonProjectile"
 	| "BouncePad"
-	| "WeepingAngel";
+	| "WeepingAngel"
+	| "GravityField";

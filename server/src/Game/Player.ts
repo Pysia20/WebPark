@@ -94,7 +94,7 @@ export class Player extends Entity {
 		}
 
 		if (!this.isGrounded) {
-			this.velocity.y += PLAYER_CONFIG.GRAVITY;
+			this.velocity.y += PLAYER_CONFIG.GRAVITY * this.gravityModifier;
 		}
 
 		if (!this.isInsideDoor) {

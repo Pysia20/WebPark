@@ -24,6 +24,7 @@ export abstract class Entity {
 	public isPhantom: boolean = false;
 	public isInsideDoor: boolean = false;
 	public riders: Entity[] = [];
+	public gravityModifier: number = 1;
 
 	public getUsedFields(): RequiredField[] {
 		return [];

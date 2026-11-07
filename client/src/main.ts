@@ -10,6 +10,7 @@ import { finishLoad, pageSetup } from "./Weber";
 import { hud } from "./Hud";
 import { updateShaders } from "./Shaders";
 import { updateLerp } from "./FavoriteChild";
+import {lvlSelector} from "./LevelSelector";
 
 const app = new PIXI.Application()
 await app.init({
@@ -34,6 +35,9 @@ createMouseListiner(app, worldContainer)
 pageSetup(app)
 
 const assets = await loadAssets()
+
+lvlSelector.init(assets.mapAssets.levels)
+lvlSelector.fill()
 
 hud.init(hudContainer, app.screen.width, app.screen.height)
 coordinator.init(assets.playerTextures, worldContainer)

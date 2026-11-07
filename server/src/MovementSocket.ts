@@ -14,6 +14,7 @@ import { Player } from "./Game/Player";
 import { LOG } from "./Logger";
 
 import v8 from "v8";
+import { MAP_LOADER } from "./Game/LevelLoader";
 
 type PlayerSocket = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, SocketData>;
 
@@ -221,6 +222,14 @@ export function register(io: Server) {
 			}
 
 			games.get(socket.data.roomID!)?.setInputsToPlayer(socket.data.userID!, inputs);
+		});
+
+		socket.on("levelSelected", (levelID) => {
+			const room = games.get(socket.data.roomID!);
+			if (!room) return;
+
+			room.changeLevel(MAP_LOADER.GetLevel(levelID, room));
+			// socket.to(socket.data.roomID!).emit("changeLevel", levelID);
 		});
 
 		socket.on("disconnect", (e) => {

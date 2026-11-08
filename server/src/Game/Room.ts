@@ -14,6 +14,7 @@ import CONFIG from "../../config.json";
 import { PlayerSpawner } from "./Entities/PlayerSpawner";
 import { Entity } from "./Entity";
 import { PathfindingDebug } from "./PathfindingDebug";
+import { conn } from "../DB";
 
 export class Room {
 	public readonly TICKRATE: number = CONFIG.TICKRATE; // Per second
@@ -23,6 +24,8 @@ export class Room {
 	public players: Map<number, Player> = new Map<number, Player>();
 	public level: Level;
 	private gameLoop: NodeJS.Timeout | undefined;
+
+	private levelStart: number = -1;
 
 	public io: Namespace | undefined;
 
@@ -101,6 +104,8 @@ export class Room {
 	public startGameLoop(io: Namespace) {
 		try {
 			this.level = this.level.reloadLevel();
+			this.levelStart = new Date().getTime();
+
 			this.gameLoop = setInterval(
 				async () => {
 					if (this.players.size <= 0) return;
@@ -159,8 +164,31 @@ export class Room {
 		}
 	}
 
+	public async handleSaveToLeaderboard() {
+		if (this.levelStart != -1) {
+			const timeSpent = new Date().getTime() - this.levelStart;
+			let usernames = "";
+
+			for (const [_, player] of this.players) {
+				usernames += player.nick + ";";
+			}
+
+			usernames = usernames.substring(0, usernames.length - 1);
+
+			const level = this.level.getID();
+
+			this.levelStart = -1;
+			const sql = `INSERT INTO Leaderboard(level, players, time) VALUES ("${level}", "${usernames}", ${timeSpent})`;
+			// console.log(sql);
+
+			await conn.query(sql);
+		}
+	}
+
 	public changeLevel(level: Level | undefined) {
 		if (this.players.size <= 0) return;
+
+		this.handleSaveToLeaderboard();
 
 		this.io!.to(this.id).emit("changeLevel", level?.getID());
 		LOG.info(`Room ${this.id} changes level to ${level ? level.getID() : "/GROUP FINNISHED/"}`);

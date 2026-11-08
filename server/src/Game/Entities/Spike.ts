@@ -47,8 +47,6 @@ export class Spike extends Entity {
 			Math.abs(this.pos.x + this.size.x - other.pos.x),
 		);
 
-		console.log(x);
-
 		if (x > SPIKE_MARGIN) {
 			this.shouldKill = true;
 		}

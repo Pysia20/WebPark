@@ -16,6 +16,8 @@ import { LOG } from "./Logger";
 import { ROOM_CONFIG } from "../../shared/commonVariables";
 
 import "./Game/PathfindingDebug/index";
+import { conn } from "./DB";
+import { LeaderboardData } from "@shared/commonModels";
 
 const app: ExpressInterface = Express();
 const server: Server = createServer(app);
@@ -70,6 +72,22 @@ app.post("/api/createRoom", (req: Request, res: Response) => {
 		roomID: roomID,
 		userID: userID,
 	});
+});
+
+app.get("/api/leaderboard/:id", async (req: Request, res: Response) => {
+	const { id } = req.params;
+
+	const sql = "SELECT  players, time, timestamp FROM Leaderboard WHERE level = ?;";
+	const [dbResponse] = await conn.execute(sql, [id]);
+
+	res.status(200).json(dbResponse);
+});
+
+app.get("/api/leaderboard/", async (req: Request, res: Response) => {
+	const sql = "SELECT level, players, time, timestamp FROM Leaderboard;";
+	const [dbResponse] = await conn.query(sql);
+
+	res.status(200).json(dbResponse);
 });
 
 app.get("/api/joinRoom/:id", (req: Request, res: Response) => {

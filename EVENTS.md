@@ -56,3 +56,11 @@
 - /api/joinRoom/:id:
    - Description: Joins user to a room of :id.
    - Type: {roomID: string, userID: number}
+
+- /api/leaderboard
+   - Description: Fetches the whole leaderboard
+   - Type: LeaderboardData
+
+- /api/leaderboard:id
+   - Description: Fetches the leaderboard of the level (id)
+   - Type: LevelLeaderboardData

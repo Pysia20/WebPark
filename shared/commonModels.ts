@@ -71,3 +71,13 @@ export type SomethingBrokeData = {
 	message: string; // Description of the error
 	eventName: string; // In which socket event the error occured
 };
+
+export interface LevelLeaderboardData {
+	player: string;
+	time: number;
+	timestamp: string;
+}
+
+export interface LeaderboardData extends LevelLeaderboardData {
+	level: string;
+}

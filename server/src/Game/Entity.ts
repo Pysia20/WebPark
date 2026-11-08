@@ -11,6 +11,7 @@ import {
 } from "@shared/commonVariables";
 import CONFIG from "../../config.json";
 import { Player } from "./Player";
+import { PoolConnection } from "mysql2";
 
 export abstract class Entity {
 	public id: number = -1;
@@ -89,6 +90,10 @@ export abstract class Entity {
 		return { collidesX, collidesY };
 	}
 
+	/**
+	 * "Other" is the one lowered
+	 * Aka if this true then "other" is grounded
+	 */
 	protected checkGrounded(other: Entity): boolean {
 		const xA = this.pos.x;
 		const yA = this.pos.y;
@@ -105,65 +110,98 @@ export abstract class Entity {
 		return isCollidingX && isCollidingY;
 	}
 
-	public calculateCollisionsX(other: Entity) {
-		if (other.isInsideDoor) return;
+	public static calculateCollisionsX(a: Entity, b: Entity) {
+		if (a.isInsideDoor || b.isInsideDoor) return;
 
-		const newPos = { ...other.pos };
-		newPos.y += COLLISION_MARGIN_Y / 2;
-		const newSize = { ...other.size };
-		newSize.y -= COLLISION_MARGIN_Y / 2;
+		const aPos: Vector2 = { ...a.pos };
+		const aSize: Vector2 = { ...a.size };
 
-		const { collidesX, collidesY } = Entity.isColliding(this, { pos: newPos, size: newSize });
+		const bPos: Vector2 = { ...b.pos };
+		const bSize: Vector2 = { ...b.size };
 
-		if (collidesX && collidesY) {
-			const centerA = this.pos.x + this.size.x / 2;
-			const centerB = other.pos.x + other.size.x / 2;
-			const diff = centerA - centerB;
-			const overlap = (this.size.x + other.size.x) / 2 - Math.abs(diff);
-			if (diff > 0) {
-				// Horizontal collision
-				// Pushing out to the right
-				this.onRightCollision(overlap, other);
-			} else {
-				// Pushing out to the left
-				this.onLeftCollision(overlap, other);
-			}
+		aPos.y += COLLISION_MARGIN_Y / 2;
+		aSize.y -= COLLISION_MARGIN_Y / 2;
 
-			this.onAnyCollision(other);
+		bPos.y += COLLISION_MARGIN_Y / 2;
+		bSize.y -= COLLISION_MARGIN_Y / 2;
+
+		const { collidesX, collidesY } = Entity.isColliding(
+			{ pos: aPos, size: aSize },
+			{ pos: bPos, size: bSize },
+		);
+
+		if (!(collidesX && collidesY)) return;
+
+		const centerA = a.pos.x + a.size.x / 2;
+		const centerB = b.pos.x + b.size.x / 2;
+
+		const diff = centerA - centerB;
+		const overlap = (a.size.x + b.size.x) / 2 - Math.abs(diff);
+
+		if (diff > 0) {
+			a.onRightCollision(overlap, b);
+			b.onLeftCollision(overlap, a);
+		} else {
+			a.onLeftCollision(overlap, b);
+			b.onRightCollision(overlap, a);
 		}
+
+		a.onAnyCollision(b);
+		b.onAnyCollision(a);
 	}
 
-	public calculateCollisionsY(other: Entity) {
-		if (other.isInsideDoor) return;
+	public static calculateCollisionsY(a: Entity, b: Entity) {
+		if (a.isInsideDoor || b.isInsideDoor) return;
 
-		const newPos = { ...other.pos };
-		newPos.x += COLLISION_MARGIN_X / 2;
-		const newSize = { ...other.size };
-		newSize.x -= COLLISION_MARGIN_X / 2;
+		const aPos: Vector2 = { ...a.pos };
+		const aSize: Vector2 = { ...a.size };
 
-		const { collidesX, collidesY } = Entity.isColliding(this, { pos: newPos, size: newSize });
+		const bPos: Vector2 = { ...b.pos };
+		const bSize: Vector2 = { ...b.size };
+
+		aPos.x += COLLISION_MARGIN_X / 2;
+		aSize.x -= COLLISION_MARGIN_X / 2;
+
+		bPos.x += COLLISION_MARGIN_X / 2;
+		bSize.x -= COLLISION_MARGIN_X / 2;
+
+		const { collidesX, collidesY } = Entity.isColliding(
+			{ pos: aPos, size: aSize },
+			{ pos: bPos, size: bSize },
+		);
 
 		if (collidesX && collidesY) {
-			const centerA = this.pos.y + this.size.y / 2;
-			const centerB = other.pos.y + other.size.y / 2;
+			const centerA = a.pos.y + a.size.y / 2;
+			const centerB = b.pos.y + b.size.y / 2;
+
 			const diff = centerA - centerB;
-			const overlap = (this.size.y + other.size.y) / 2 - Math.abs(diff);
+			const overlap = (a.size.y + b.size.y) / 2 - Math.abs(diff);
+
 			if (diff > 0) {
-				// Pushing out upwards
-				this.onUpCollision(overlap, other);
-			} else {
-				// Pushing out downwards
-				if (!other.cornerCorrection(this)) {
-					this.onDownCollision(overlap, other);
+				a.onUpCollision(overlap, b);
+				if (!a.cornerCorrection(b)) {
+					b.onDownCollision(overlap, a);
 				}
+			} else {
+				if (!b.cornerCorrection(a)) {
+					a.onDownCollision(overlap, b);
+				}
+				b.onUpCollision(overlap, a);
 			}
 
-			this.onAnyCollision(other);
-		} else if (this.checkGrounded(other)) {
-			this.onUpTouching(other);
-		}
-		if (!this.isPassable && other instanceof Player) {
-			other.checkJumpBuffering(this);
+			a.onAnyCollision(b);
+			b.onAnyCollision(a);
+		} else if (b.checkGrounded(a)) b.onUpTouching(a);
+		else if (a.checkGrounded(b)) a.onUpTouching(b);
+		else {
+			let players: Player[] = [];
+			if (a instanceof Player) players.push(a);
+			if (b instanceof Player) players.push(b);
+
+			players.forEach((p) => {
+				p.checkJumpBuffering(a);
+				p.checkJumpBuffering(b);
+			});
 		}
 	}
 

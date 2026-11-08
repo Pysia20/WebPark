@@ -62,6 +62,7 @@ export class Player extends Entity {
 	protected override onUpTouching(other: Entity) {}
 
 	public checkJumpBuffering(other: Entity) {
+		if (this == other) return;
 		if (!this.currentInputs.jump || this.isGrounded || this.velocity.y <= 0) return;
 
 		const jumpBufferDistance = Math.abs(this.velocity.y) * PLAYER_CONFIG.JUMP_BUFFER_TIME;

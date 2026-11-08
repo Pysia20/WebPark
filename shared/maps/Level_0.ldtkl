@@ -641,19 +641,19 @@
 				},
 				{
 					"__identifier": "GravityField",
-					"__grid": [1,6],
+					"__grid": [3,4],
 					"__pivot": [0,1],
 					"__tags": [],
 					"__tile": null,
 					"__smartColor": "#D343D7",
 					"iid": "44de9190-bde0-11f1-bd4c-a980d22baf8b",
-					"width": 384,
-					"height": 320,
+					"width": 192,
+					"height": 128,
 					"defUid": 213,
-					"px": [64,448],
+					"px": [192,320],
 					"fieldInstances": [{ "__identifier": "GravityForce", "__type": "Float", "__value": -1, "__tile": null, "defUid": 214, "realEditorValues": [{ "id": "V_Float", "params": [-1] }] }],
-					"__worldX": 64,
-					"__worldY": -512
+					"__worldX": 192,
+					"__worldY": -640
 				}
 			]
 		},

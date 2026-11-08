@@ -1,6 +1,6 @@
 import { Vector2 } from "@shared/commonModels";
 import { Entity } from "../Entity";
-import { EntityCustomFieldsData } from "@shared/commonLevelModels";
+import { EntityCustomFieldsData, EntityType } from "@shared/commonLevelModels";
 import { RequiredField } from "../../Global";
 
 //! DO NOT IMPORT!!!
@@ -13,6 +13,7 @@ import { RequiredField } from "../../Global";
 export class GravityField extends Entity {
 	private entitiesInside: Entity[] = [];
 	private tempInside: Entity[] = [];
+	private allowedEntities: EntityType[] = ["Player", "Pushable"];
 
 	public override getUsedFields(): RequiredField[] {
 		return [
@@ -29,9 +30,18 @@ export class GravityField extends Entity {
 	public override onDownCollision(overlap: number, other: Entity) {}
 	public override onRightCollision(overlap: number, other: Entity) {}
 	public override onLeftCollision(overlap: number, other: Entity) {}
-	public override onUpTouching(other: Entity) {}
+	public override onUpTouching(other: Entity) {
+		if (!this.allowedEntities.includes(other.type)) return;
+
+		this.tempInside.push(other);
+		if (!this.entitiesInside.includes(other)) {
+			other.gravityModifier = this.customFields.GravityForce.value!;
+		}
+	}
 
 	public override onAnyCollision(other: Entity) {
+		if (!this.allowedEntities.includes(other.type)) return;
+
 		this.tempInside.push(other);
 		if (!this.entitiesInside.includes(other)) {
 			other.gravityModifier = this.customFields.GravityForce.value!;

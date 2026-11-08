@@ -1,13 +1,13 @@
 import { GridTile, LayerInstance, LevelData } from "@shared/commonLevelModels"
 import { Container, Rectangle, Sprite, Texture } from "pixi.js"
-import {AnyEntityData, ServerButtonData, ServerButtonDoorData, ServerLaserEntityData} from "@shared/commonEntityData";
+import { AnyEntityData, ServerButtonData, ServerButtonDoorData, ServerLaserEntityData } from "@shared/commonEntityData";
 import { Ent } from "./Entities/Ent";
 import { LaserEnt } from "./Entities/Laser";
 import { JohnEnt } from "./Entities/JohnEnt";
 import {BoorEnt} from "./Entities/Boor";
 import {ButtonEnt} from "./Entities/Button";
 import {PortalEnt} from "./Entities/Portal";
-import {cam} from "./Camera";
+import { cam } from "./Camera";
 
 class levelManager {
 	levels!: Map<string, LevelData>

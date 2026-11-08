@@ -122,7 +122,7 @@ class levelManager {
 						break
 					case "Button":
 						const base = this.checkEntTexture("ButBase")
-						newEnt = new ButtonEnt(entData as ServerButtonData, sprite, base)
+						newEnt = new ButtonEnt(entData as ServerButtonData, sprite, base, this.mapData.layerInstances[0].__gridSize)
 						break
 					case "Portal":
 						newEnt = new PortalEnt(entData)

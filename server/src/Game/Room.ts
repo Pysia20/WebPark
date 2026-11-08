@@ -15,6 +15,7 @@ import { PlayerSpawner } from "./Entities/PlayerSpawner";
 import { Entity } from "./Entity";
 import { PathfindingDebug } from "./PathfindingDebug";
 import { conn } from "../DB";
+import { RowDataPacket } from "mysql2/promise";
 
 export class Room {
 	public readonly TICKRATE: number = CONFIG.TICKRATE; // Per second
@@ -25,7 +26,7 @@ export class Room {
 	public level: Level;
 	private gameLoop: NodeJS.Timeout | undefined;
 
-	private levelStart: number = -1;
+	public levelStart: number = -1;
 
 	public io: Namespace | undefined;
 
@@ -165,23 +166,50 @@ export class Room {
 	}
 
 	public async handleSaveToLeaderboard() {
-		if (this.levelStart != -1 && conn) {
-			const timeSpent = new Date().getTime() - this.levelStart;
-			let usernames = "";
+		if (this.levelStart == -1 || !conn) return;
 
-			for (const [_, player] of this.players) {
-				usernames += player.nick + ";";
-			}
+		const level = this.level.getID();
+		const timeSpent = new Date().getTime() - this.levelStart;
+		let usernames = "";
 
-			usernames = usernames.substring(0, usernames.length - 1);
+		for (const [_, player] of this.players) {
+			usernames += player.nick + ";";
+		}
+		usernames = usernames.substring(0, usernames.length - 1);
 
-			const level = this.level.getID();
+		interface row extends RowDataPacket {
+			id: number;
+			time: number;
+		}
 
+		const [currentLeaderboard] = await conn.query<row[]>(
+			"SELECT id, time FROM Leaderboard WHERE level = ? ORDER BY time ASC",
+			[level],
+		);
+
+		if (currentLeaderboard.length < CONFIG.LEADERBOARD_MAX_PLACES) {
 			const sql = `INSERT INTO Leaderboard(level, players, time) VALUES (?,?,?)`;
+			await conn.query(sql, [level, usernames, timeSpent]);
+			return;
+		}
 
+		let idToDelete = currentLeaderboard[CONFIG.LEADERBOARD_MAX_PLACES - 1].id;
+		let qualifies = false;
+
+		for (const row of currentLeaderboard) {
+			if (row.time > timeSpent) {
+				qualifies = true;
+				break;
+			}
+		}
+
+		if (qualifies) {
+			const sql = "INSERT INTO Leaderboard(level, players, time) VALUES (?,?,?);";
+			const sql2 = "DELETE FROM Leaderboard WHERE id = ?";
+
+			await conn.query(sql2, [idToDelete]);
 			await conn.query(sql, [level, usernames, timeSpent]);
 		}
-		this.levelStart = -1;
 	}
 
 	public changeLevel(level: Level | undefined) {
@@ -204,6 +232,8 @@ export class Room {
 			if (PathfindingDebug) {
 				PathfindingDebug.registerGrid(this.id, this.level.grid, this.level);
 			}
+
+			this.levelStart = new Date().getTime();
 		} else {
 			this.stopGameLoop();
 		}

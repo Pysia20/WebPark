@@ -78,7 +78,8 @@ app.get("/api/leaderboard/:id", async (req: Request, res: Response) => {
 	const { id } = req.params;
 
 	if (conn) {
-		const sql = "SELECT  players, time, timestamp FROM Leaderboard WHERE level = ?;";
+		const sql =
+			"SELECT  players, time, timestamp FROM Leaderboard WHERE level = ? ORDER BY time ASC;";
 		const [dbResponse] = await conn.execute(sql, [id]);
 
 		res.status(200).json(dbResponse);
@@ -93,7 +94,7 @@ app.get("/api/leaderboard/:id", async (req: Request, res: Response) => {
 
 app.get("/api/leaderboard/", async (req: Request, res: Response) => {
 	if (conn) {
-		const sql = "SELECT level, players, time, timestamp FROM Leaderboard;";
+		const sql = "SELECT level, players, time, timestamp FROM Leaderboard ORDER BY time ASC;";
 		const [dbResponse] = await conn.query(sql);
 
 		res.status(200).json(dbResponse);

@@ -5,5 +5,14 @@
 	"PATHFINDING_DEBUG_SERVER": false,
 	"PATHFINDING_DEBUG_SERVER_PORT": 3006,
 	"ENABLE_LEADERBOARD": true,
-	"LEADERBOARD_MAX_PLACES": 10
+	"LEADERBOARD_MAX_PLACES": 10,
+	"__docs": {
+		"PORT": "Port on which the program runs (3005)",
+		"SAVE_LOG": "Should the program save logs to a file? (False wil still print logs) (false)",
+		"TICKRATE": "How many times should the game update per second. (30)",
+		"PATHFINDING_DEBUG_SERVER": "Should a pathfinding debug tool also be started. (Has a memory leak for now) (false)",
+		"PATHFINDING_DEBUG_SERVER_PORT": "Port of the debug tool above. (3006)",
+		"ENABLE_LEADERBOARD": "Should the times be saved to a sql db. (true)",
+		"LEADERBOARD_MAX_PLACES": "How many places per level can be in db at once. (10)"
+	}
 }

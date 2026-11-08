@@ -36,7 +36,7 @@ export class CameraController {
 
         const rawPos: Vector2 = {x: (max.x + min.x)/2, y: (max.y + min.y)/2}
         const scaledScreen: Vector2 = {x: (this.screen.width/2) / targetZoom,y: (this.screen.height/2) / targetZoom}
-        //this wasn't even the issue aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
         const minX = scaledScreen.x - this.SPACER
         const maxX = (this.map_size.x - scaledScreen.x) + this.SPACER
         const targetX = minX > maxX ? this.map_size.x / 2 : Math.min(Math.max(rawPos.x, minX), maxX)

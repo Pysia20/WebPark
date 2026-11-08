@@ -4,7 +4,7 @@
 	"TICKRATE": 30,
 	"PATHFINDING_DEBUG_SERVER": false,
 	"PATHFINDING_DEBUG_SERVER_PORT": 3006,
-	"ENABLE_LEADERBOARD": true,
+	"ENABLE_LEADERBOARD": false,
 	"LEADERBOARD_MAX_PLACES": 10,
 	"__docs": {
 		"PORT": "Port on which the program runs (3005)",

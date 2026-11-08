@@ -1,4 +1,6 @@
 import mysql, { PoolOptions } from "mysql2/promise";
+import CONFIG from "../config.json";
+
 import * as dotenv from "dotenv";
 dotenv.config({ quiet: true });
 
@@ -9,4 +11,6 @@ const access: PoolOptions = {
 	database: "WebPark",
 };
 
-export const conn: mysql.Pool = mysql.createPool(access);
+export const conn: mysql.Pool | undefined = CONFIG.ENABLE_LEADERBOARD
+	? mysql.createPool(access)
+	: undefined;

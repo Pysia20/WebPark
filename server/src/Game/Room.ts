@@ -165,7 +165,7 @@ export class Room {
 	}
 
 	public async handleSaveToLeaderboard() {
-		if (this.levelStart != -1) {
+		if (this.levelStart != -1 && conn) {
 			const timeSpent = new Date().getTime() - this.levelStart;
 			let usernames = "";
 
@@ -177,11 +177,11 @@ export class Room {
 
 			const level = this.level.getID();
 
-			this.levelStart = -1;
 			const sql = `INSERT INTO Leaderboard(level, players, time) VALUES (?,?,?)`;
 
 			await conn.query(sql, [level, usernames, timeSpent]);
 		}
+		this.levelStart = -1;
 	}
 
 	public changeLevel(level: Level | undefined) {

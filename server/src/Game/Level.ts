@@ -180,6 +180,26 @@ export class Level {
 			}
 		}
 
+		// Checking collisions again when a player is squished
+
+		for (let i = 0; i < this.entities.length; i++) {
+			for (let j = i + 1; j < this.entities.length; j++) {
+				const a = this.entities[i];
+				const b = this.entities[j];
+
+				Entity.calculateCollisionsX(a, b);
+			}
+		}
+
+		for (let i = 0; i < this.entities.length; i++) {
+			for (let j = i + 1; j < this.entities.length; j++) {
+				const a = this.entities[i];
+				const b = this.entities[j];
+
+				Entity.calculateCollisionsY(a, b);
+			}
+		}
+
 		// 6. Other behaviour
 
 		this.entities.forEach((e) => e.handleBehaviour(this));

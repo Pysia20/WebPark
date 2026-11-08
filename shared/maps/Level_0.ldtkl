@@ -624,22 +624,6 @@
 					"__worldY": -384
 				},
 				{
-					"__identifier": "Spike",
-					"__grid": [13,6],
-					"__pivot": [0,1],
-					"__tags": [],
-					"__tile": null,
-					"__smartColor": "#FF1700",
-					"iid": "e2baa7a0-bde0-11f1-bd4c-494c16e36e64",
-					"width": 64,
-					"height": 64,
-					"defUid": 25,
-					"px": [832,448],
-					"fieldInstances": [{ "__identifier": "OnlyKillThePlayer", "__type": "Bool", "__value": false, "__tile": null, "defUid": 27, "realEditorValues": [] }],
-					"__worldX": 832,
-					"__worldY": -512
-				},
-				{
 					"__identifier": "GravityField",
 					"__grid": [3,4],
 					"__pivot": [0,1],

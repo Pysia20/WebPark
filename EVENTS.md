@@ -61,6 +61,6 @@
    - Description: Fetches the whole leaderboard
    - Type: LeaderboardData
 
-- /api/leaderboard:id
+- /api/leaderboard/:id
    - Description: Fetches the leaderboard of the level (id)
    - Type: LevelLeaderboardData

@@ -380,6 +380,8 @@ export abstract class Entity {
 			y: (a.size.y + b.size.y) / 2 - Math.abs(diff.y),
 		};
 
+		Entity.checkPushing(a, b);
+
 		if (overlap.x < overlap.y) {
 			if (diff.x > 0) {
 				// Pushing out to the right
@@ -395,8 +397,6 @@ export abstract class Entity {
 				} else {
 					b.pos.x -= overlap.x;
 				}
-
-				Entity.checkPushing(a, b);
 			} else {
 				// Pushing out to the left
 
@@ -411,17 +411,18 @@ export abstract class Entity {
 				} else {
 					b.pos.x += overlap.x;
 				}
-
-				Entity.checkPushing(a, b);
 			}
 
 			// Average seems better, try with other players
 			const avergageSign = Math.sign(a.velocity.x * b.velocity.x);
 			const averageVelocity =
-				((Math.abs(a.velocity.x) + Math.abs(b.velocity.y)) / 4) * avergageSign;
+				((Math.abs(a.velocity.x) + Math.abs(b.velocity.x)) / 4) * avergageSign;
 
-			a.velocityStack.push({ x: -averageVelocity, y: 0 });
-			b.velocityStack.push({ x: averageVelocity, y: 0 });
+			// a.velocityStack.push({ x: -averageVelocity, y: 0 });
+			// b.velocityStack.push({ x: averageVelocity, y: 0 });
+
+			a.velocity.x = -averageVelocity;
+			b.velocity.y = averageVelocity;
 		} else if (overlap.x > overlap.y) {
 			if (diff.y > 0) {
 				if (a.isGrounded) {

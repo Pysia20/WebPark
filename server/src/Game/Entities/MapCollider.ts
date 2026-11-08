@@ -7,10 +7,6 @@ export class MapCollider extends Entity {
 		super(pos, size, customFields, "MapCollider");
 	}
 
-	public override onAnyCollision(other: Entity) {
-		other.onAnyCollision(this);
-	}
-
 	public override clone() {
 		return new MapCollider(
 			{ ...this.pos },

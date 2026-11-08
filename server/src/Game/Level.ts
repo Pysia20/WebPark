@@ -142,22 +142,26 @@ export class Level {
 		this.entities.forEach((e) => e.moveXAxis());
 
 		// 3. Collisions for Axis 1
-		this.entities.forEach((e) => {
-			this.entities.forEach((other) => {
-				if (other == e) return;
-				e.calculateCollisionsX(other);
-			});
-		});
+		for (let i = 0; i < this.entities.length; i++) {
+			for (let j = i + 1; j < this.entities.length; j++) {
+				const a = this.entities[i];
+				const b = this.entities[j];
+
+				Entity.calculateCollisionsX(a, b);
+			}
+		}
 
 		// 4. Move Axis 2
 		this.entities.forEach((e) => e.moveYAxis());
 		// 5. Collisions for Axis 2
-		this.entities.forEach((e) => {
-			this.entities.forEach((other) => {
-				if (other == e) return;
-				e.calculateCollisionsY(other);
-			});
-		});
+		for (let i = 0; i < this.entities.length; i++) {
+			for (let j = i + 1; j < this.entities.length; j++) {
+				const a = this.entities[i];
+				const b = this.entities[j];
+
+				Entity.calculateCollisionsY(a, b);
+			}
+		}
 
 		this.entities.forEach((e) => (e.riders = []));
 
@@ -175,20 +179,6 @@ export class Level {
 				Entity.handleDynamicCollision(a, b);
 			}
 		}
-
-		this.entities.forEach((e) => {
-			this.entities.forEach((other) => {
-				if (other == e) return;
-				e.calculateCollisionsX(other);
-			});
-		});
-
-		this.entities.forEach((e) => {
-			this.entities.forEach((other) => {
-				if (other == e) return;
-				e.calculateCollisionsY(other);
-			});
-		});
 
 		// 6. Other behaviour
 

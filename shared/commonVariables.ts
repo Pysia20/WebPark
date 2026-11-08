@@ -203,6 +203,15 @@ export const ENTITY_VISUAL_CONFIG = {
 		JITTER_UNDAMP_SPEED: 0.32,
 	},
 
+	BUTTON: {
+		/** How far down it goes */
+		CLICK_OFFSET: 8,
+		OFF_COLOR: "#D76C6C",
+		ON_COLOR: "#F49461",
+
+		LERP: 0.3,
+	},
+
 	BOOR: {
 		CLOSE_RATIO: 0.15,
 		MIN_OPACITY: 0.5,

@@ -178,10 +178,9 @@ export class Room {
 			const level = this.level.getID();
 
 			this.levelStart = -1;
-			const sql = `INSERT INTO Leaderboard(level, players, time) VALUES ("${level}", "${usernames}", ${timeSpent})`;
-			// console.log(sql);
+			const sql = `INSERT INTO Leaderboard(level, players, time) VALUES (?,?,?)`;
 
-			await conn.query(sql);
+			await conn.query(sql, [level, usernames, timeSpent]);
 		}
 	}
 

@@ -44,7 +44,8 @@ export interface PlayerJoinedData {
 	level: string;
 }
 
-export type CollisionCheckResult = { // <=========================== I don't think this should be here ngl ====================================
+export type CollisionCheckResult = {
+	// <=========================== I don't think this should be here ngl ====================================
 	overlapX: number;
 	overlapY: number;
 	diffX: number;
@@ -58,7 +59,7 @@ export const RegisterUserDataZod = z
 	.object({
 		roomID: z.string().length(6),
 		userID: z.number(),
-		userNick: z.string(),
+		userNick: z.string().min(3).max(16),
 		color: z.string().length(7),
 	})
 	.strict();

@@ -107,6 +107,14 @@ And the client:
 pnpm --filter client dev
 ```
 
+> [!NOTE]
+> To make leaderboard work
+>
+> - Install mysql/mariadb.
+> - Create database and execute the prompt from `schema.sql` inside it.
+> - Add a `.env` file inside the server folder and copy the `template.env` into it then fill out with correct information.
+> - Make sure that leaderboard is enabled in the `config.json`.
+
 You also need to uncomment the proxy in client/vite.config.ts to allow the client to connect to the server (unless you know how to use nginx)
 The project will work without nginx, but we recomend using nginx. It wasn't build based on the vite proxy and unexpected bugs may appear.
 [To setup nginx follow this guide.](Nginx.md)

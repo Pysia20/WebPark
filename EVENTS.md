@@ -59,7 +59,7 @@
 
 - /api/leaderboard
    - Description: Fetches the whole leaderboard
-   - Type: LeaderboardData
+   - Type: LeaderboardData[]
 
 - /api/leaderboard/:id
    - Description: Fetches the leaderboard of the level (id)

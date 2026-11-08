@@ -1,4 +1,4 @@
-import {emitReady, onGameStart, onPlayerJoin, onPlayerLeave, onReadyUpdate} from "./Network";
+import {emitReady, getFullLeaderboard, onGameStart, onPlayerJoin, onPlayerLeave, onReadyUpdate} from "./Network";
 import { Application } from "pixi.js";
 import { coordinator } from "./Coordinator";
 import {lvlSelector} from "./LevelSelector";
@@ -39,10 +39,26 @@ export function pageSetup(app: Application, assets: Map<string, LevelData>) {
 
     lvlSelector.init(assets)
     lvlSelector.fill()
+    fillLeaderboard()
 }
 
 export function finishLoad() {
     const loadingScreen = document.querySelector(".loading") as HTMLDivElement
 
     loadingScreen.classList.add("hidden")
+}
+
+async function fillLeaderboard() {
+    const leaderboard = document.querySelector(".leaderboard") as HTMLDivElement
+
+    const data = await getFullLeaderboard()
+    for (const entry of data) {
+        const newEntry = document.createElement("div")
+        newEntry.classList.add("leaderboardEntry")
+        const theThingYouSee = document.createElement("p")
+        theThingYouSee.textContent = entry.level + ": " + entry.player + " | " + entry.time
+
+        newEntry.appendChild(theThingYouSee)
+        leaderboard.appendChild(newEntry)
+    }
 }

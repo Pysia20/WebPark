@@ -4,7 +4,7 @@ import {
     PlayerInputs,
     RegisterUserData,
     PlayerJoinedData,
-    SomethingBrokeData,
+    SomethingBrokeData, LeaderboardData,
 } from "@shared/commonModels" //WEBSTORM IS TRYING TO FORCE THIS FORMATING EVERY COMMIT SO SURE BRO IDC ANYMORE
 import { coordinator } from "./Coordinator";
 import { hud } from "./Hud";
@@ -81,6 +81,11 @@ export function emitInputs(data: PlayerInputs) {
 
 export function getServerData() {
     return serverData
+}
+
+export async function getFullLeaderboard(): Promise<LeaderboardData[]> {
+    const res = await fetch("api/leaderboard")
+    return res.json()
 }
 
 export function emitReady(isReady: boolean) {

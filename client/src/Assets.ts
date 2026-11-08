@@ -1,9 +1,9 @@
-import {Texture, Assets, Rectangle, TextureSource} from "pixi.js"
-import {GridTile, LayerInstance, LevelData} from "@shared/commonLevelModels"
+import { Texture, Assets, Rectangle } from "pixi.js"
+import { LevelData } from "@shared/commonLevelModels"
 import Level_0 from "@shared/maps/Level_0.json"
 import Level_1 from "@shared/maps/Level_1.json"
 import FourPlayers_1 from "@shared/maps/FourPlayers_1.json"
-import {Vector2} from "@shared/commonModels";
+import { Vector2 } from "@shared/commonModels";
 
 export interface PlayerTextures {
 	torso: Texture
@@ -36,25 +36,6 @@ function loadEnt(pos: Vector2, size: Vector2, gridSize: number, spriteSheet: Tex
 }
 
 export async function loadAssets() {
-	/*
-	const loadedAssets = await Assets.load([
-		"spritesheets/Tiles.png",
-		"sprites/JohnEntity.png",
-		"sprites/Door.png",
-		"sprites/Cannon.png",
-		"sprites/ButtonDoor.png",
-		"sprites/Bullet.png",
-		"sprites/MovingPlatform.png",
-		"sprites/PlayerSpawner.png",
-		"sprites/Pushable.png",
-		"sprites/Spike.png",
-		"sprites/Switch.png",
-		"sprites/torso.png",
-		"sprites/Button/Button.png",
-		"sprites/Button/Base.png"
-	]);
-
-	 */
 
 	const loadedAssets = await Assets.load([
 		"spritesheets/Tiles.png",
@@ -62,7 +43,7 @@ export async function loadAssets() {
 		"sprites/torso.png"
 	]);
 
-	//player asstes
+	//player assets
 	const playerTorso: Texture = loadedAssets["sprites/torso.png"]
 	const playerTextures: PlayerTextures = { torso: playerTorso }
 
@@ -82,12 +63,12 @@ export async function loadAssets() {
 	entTextures.set("MovingPlatform", loadEnt({x: 6, y: 2}, {x: 1, y: 1}, gridSize, entSpriteSheet))
 	entTextures.set("Pushable", loadEnt({x: 9, y: 1}, {x: 1, y: 1}, gridSize, entSpriteSheet))
 	entTextures.set("Spike", loadEnt({x: 2, y: 0}, {x: 1, y: 1}, gridSize, entSpriteSheet))
-	entTextures.set("PlayerSpawner", Texture.EMPTY)
 	entTextures.set("SwitchButton", loadEnt({x: 8, y: 1}, {x: 1, y: 1}, gridSize, entSpriteSheet))
 	entTextures.set("Button", loadEnt({x: 2, y: 1}, {x: 1, y: 1}, gridSize, entSpriteSheet))
 	entTextures.set("ButBase", loadEnt({x: 2, y: 2}, {x: 1, y: 1}, gridSize, entSpriteSheet))
 	entTextures.set("Portal", Texture.EMPTY)
 	entTextures.set("Laser", Texture.EMPTY)
+	entTextures.set("PlayerSpawner", Texture.EMPTY)
 
 	const mapAssets: MapAssets = { spritesheet: mapSpritesheet, levels: mapLevels, entTextures: entTextures }
 

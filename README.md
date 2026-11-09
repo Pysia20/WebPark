@@ -6,7 +6,7 @@
 
 ### An online multiplayer co-op game inspired by pico park
 
-### Currently, in early-ish development
+### Currently, in early-ish-ish development
 
 $\color{gray} \text{now mostly without pico park sprites! revolutionary stuff}$
 

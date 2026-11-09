@@ -206,8 +206,8 @@ export const ENTITY_VISUAL_CONFIG = {
 	BUTTON: {
 		/** How far down it goes */
 		CLICK_OFFSET: 8,
-		OFF_COLOR: "#D76C6C",
-		ON_COLOR: "#F49461",
+		OFF_COLOR: PALLETE.RED,
+		ON_COLOR: PALLETE.ORANGE,
 
 		LERP: 0.3,
 	},

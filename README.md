@@ -35,10 +35,10 @@ $\color{gray} \text{now mostly without pico park sprites! revolutionary stuff}$
 
 ## Planned features
 
-- Maybe even more entities? _...probably even more entities_
+- Proper levels
+- Proper menus
 - Better feeling movement
 - Drawing on the player cube to make your own face/mouth
-- Probably even more procedural animation because it's peak
 
 <br>
 

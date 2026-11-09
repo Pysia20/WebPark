@@ -116,7 +116,9 @@ class levelManager {
 
 				switch (entData.type) {
 					case "Laser":
-						newEnt = new LaserEnt(entData as ServerLaserEntityData)
+						const downSprite = this.checkEntTexture("LasDown")
+						const upSprite = this.checkEntTexture("LasUp")
+						newEnt = new LaserEnt(entData as ServerLaserEntityData, upSprite, downSprite)
 						break
 					case "ButtonDoor":
 						newEnt = new BoorEnt(entData as ServerButtonDoorData, sprite)

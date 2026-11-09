@@ -66,6 +66,8 @@ export async function loadAssets() {
 	entTextures.set("SwitchButton", loadEnt({x: 8, y: 1}, {x: 1, y: 1}, gridSize, entSpriteSheet))
 	entTextures.set("Button", loadEnt({x: 2, y: 1}, {x: 1, y: 1}, gridSize, entSpriteSheet))
 	entTextures.set("ButBase", loadEnt({x: 2, y: 2}, {x: 1, y: 1}, gridSize, entSpriteSheet))
+	entTextures.set("LasUp", loadEnt({x: 3, y: 0}, {x: 1, y: 1}, gridSize, entSpriteSheet))
+	entTextures.set("LasDown", loadEnt({x: 3, y: 2}, {x: 1, y: 1}, gridSize, entSpriteSheet))
 	entTextures.set("Portal", Texture.EMPTY)
 	entTextures.set("Laser", Texture.EMPTY)
 	entTextures.set("PlayerSpawner", Texture.EMPTY)

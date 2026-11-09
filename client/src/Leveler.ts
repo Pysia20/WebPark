@@ -8,6 +8,7 @@ import {BoorEnt} from "./Entities/Boor";
 import {ButtonEnt} from "./Entities/Button";
 import {PortalEnt} from "./Entities/Portal";
 import { cam } from "./Camera";
+import {PlatformEnt} from "./Entities/Platform";
 
 class levelManager {
 	levels!: Map<string, LevelData>
@@ -126,6 +127,10 @@ class levelManager {
 						break
 					case "Portal":
 						newEnt = new PortalEnt(entData)
+						break
+					case "MovingPlatform":
+						newEnt = new PlatformEnt(entData, sprite.texture)
+						console.log(entData)
 						break
 					default:
 						newEnt = new JohnEnt(entData, sprite)

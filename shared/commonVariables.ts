@@ -217,4 +217,13 @@ export const ENTITY_VISUAL_CONFIG = {
 		MIN_OPACITY: 0.5,
 		LARP: 0.25,
 	},
+
+	PLATFORM: {
+		/** How much space is left unscaled on top and bottom */
+		SLICE_WIDTH: 24,
+		/** How much space is left unscaled on left and right */
+		SLICE_HEIGHT: 5,
+
+		LARP: 0.3
+	}
 } as const;

@@ -132,7 +132,6 @@ class levelManager {
 						break
 					case "MovingPlatform":
 						newEnt = new PlatformEnt(entData, sprite.texture)
-						console.log(entData)
 						break
 					default:
 						newEnt = new JohnEnt(entData, sprite)
